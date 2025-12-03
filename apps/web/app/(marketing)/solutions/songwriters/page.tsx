@@ -252,7 +252,7 @@ export default function SolutionsForSongwritersPage() {
                         "Packed my bags before the morning light / Left a note where you'd find it
                         right..."
                       </p>
-                      <p className="mb-2 text-sm">🎸 Chord progression:</p>
+                      <p className="mb-2 text-sm">Chord progression:</p>
                       <p className="font-mono text-sm" style={{ color: 'var(--muted)' }}>
                         G - C - Em - D (I-IV-vi-V)
                       </p>
@@ -331,7 +331,7 @@ export default function SolutionsForSongwritersPage() {
                   </div>
                   <div className="mt-6 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                     <p className="text-center text-xs" style={{ color: 'var(--muted)' }}>
-                      💡 Pro tip: Register within 3 months of publication for statutory damages
+                      Pro tip: Register within 3 months of publication for statutory damages
                     </p>
                   </div>
                 </div>

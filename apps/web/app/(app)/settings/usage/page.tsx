@@ -149,7 +149,7 @@ function CreditCard({
             </div>
             {bonus > 0 && (
               <span className="mt-2 inline-block rounded bg-purple-500/20 px-2 py-0.5 text-xs text-purple-300">
-                ✨ +{bonus} bonus
+                +{bonus} bonus
               </span>
             )}
           </div>
@@ -177,7 +177,7 @@ function CreditCard({
           {/* Buy buttons */}
           {buyButtons && (
             <div className="border-t border-white/5 pt-4">
-              <p className="mb-2 text-xs text-gray-500">⚡ Power Up</p>
+              <p className="mb-2 text-xs text-gray-500">Power Up</p>
               {buyButtons}
             </div>
           )}
@@ -243,9 +243,9 @@ export default function UsagePage() {
   }
 
   const tierConfig = {
-    free: { name: 'Explorer', color: '#94a3b8', emoji: '🎸' },
-    creator: { name: 'Creator', color: '#f97316', emoji: '🎤' },
-    studio: { name: 'Studio', color: '#a855f7', emoji: '🎛️' },
+    free: { name: 'Explorer', color: '#94a3b8', emoji: '' },
+    creator: { name: 'Creator', color: '#f97316', emoji: '' },
+    studio: { name: 'Studio', color: '#a855f7', emoji: '' },
   };
 
   const tier = tierConfig[usage.tier];
@@ -486,7 +486,7 @@ export default function UsagePage() {
                 </div>
                 <BuyCreditsButton product="storage_250" className="w-full" />
                 <p className="mt-1 text-center text-xs text-gray-500">
-                  💎 Storage is permanent - never expires!
+                  Storage is permanent - never expires!
                 </p>
               </div>
             }
@@ -496,7 +496,6 @@ export default function UsagePage() {
         {/* Upgrade CTA */}
         {usage.tier !== 'studio' && (
           <div className="mt-8 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-6 text-center">
-            <span className="text-4xl">🚀</span>
             <h2 className="mt-2 text-xl font-bold text-white">
               Unlock {usage.tier === 'free' ? 'More Power' : 'Maximum Power'}
             </h2>
@@ -526,8 +525,7 @@ export default function UsagePage() {
         {/* Tips */}
         <div className="mt-8 grid gap-3 md:grid-cols-3">
           <div className="rounded-xl bg-white/5 p-4">
-            <span className="text-xl">💡</span>
-            <h4 className="mt-1 font-semibold text-white">Pro Tip</h4>
+            <h4 className="font-semibold text-white">Pro Tip</h4>
             <p className="mt-1 text-xs text-gray-400">
               Storage purchases are permanent - they never reset!
             </p>
@@ -540,8 +538,7 @@ export default function UsagePage() {
             </p>
           </div>
           <div className="rounded-xl bg-white/5 p-4">
-            <span className="text-xl">✨</span>
-            <h4 className="mt-1 font-semibold text-white">Bonus Credits</h4>
+            <h4 className="font-semibold text-white">Bonus Credits</h4>
             <p className="mt-1 text-xs text-gray-400">Purchased packs add to your monthly limit.</p>
           </div>
         </div>

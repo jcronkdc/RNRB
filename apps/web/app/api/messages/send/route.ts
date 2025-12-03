@@ -15,7 +15,7 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
-import { validateMessage } from '@/lib/spam-protection';
+import { recordMessage, validateMessage } from '@/lib/spam-protection';
 
 export async function POST(request: NextRequest) {
   try {
@@ -91,6 +91,10 @@ export async function POST(request: NextRequest) {
         content: trimmedContent,
       },
     });
+
+    // Record message for rate limiting AFTER successful database write
+    // This prevents state inconsistency if the DB save fails
+    recordMessage(senderId, recipientId, trimmedContent);
 
     // Broadcast via Ably if available
     if (process.env.ABLY_API_KEY) {

@@ -359,7 +359,7 @@ export default function EmailSettingsPage() {
   async function handleSaveSettings(e: React.FormEvent) {
     e.preventDefault();
     setRecoveryEmailError(null);
-    
+
     // Validate recovery email if provided
     if (settingsRecoveryEmail) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -372,7 +372,7 @@ export default function EmailSettingsPage() {
         return;
       }
     }
-    
+
     setSaving(true);
 
     try {
@@ -473,7 +473,7 @@ export default function EmailSettingsPage() {
         { step: 3, text: `Enter your name and email: ${createdEmail}` },
         { step: 4, text: 'Enter your password (copy from above)' },
         { step: 5, text: 'Tap "IMAP" and enter mail.rnrb.me for both servers' },
-        { step: 6, text: "Save and you're done! 🎉" },
+        { step: 6, text: "Save and you're done!" },
       ],
       android: [
         { step: 1, text: 'Open Gmail → Settings → Add Account' },
@@ -481,7 +481,7 @@ export default function EmailSettingsPage() {
         { step: 3, text: `Enter your email: ${createdEmail}` },
         { step: 4, text: 'Select "IMAP" when prompted' },
         { step: 5, text: 'Server: mail.rnrb.me, Port: 993, Security: SSL/TLS' },
-        { step: 6, text: "Enter your password and you're done! 🎉" },
+        { step: 6, text: "Enter your password and you're done!" },
       ],
       mac: [
         { step: 1, text: 'Open Mail → Mail menu → Add Account' },
@@ -489,7 +489,7 @@ export default function EmailSettingsPage() {
         { step: 3, text: `Enter name, email (${createdEmail}), and password` },
         { step: 4, text: 'Select "IMAP" → Server: mail.rnrb.me' },
         { step: 5, text: 'For SMTP, use mail.rnrb.me port 465' },
-        { step: 6, text: 'Done! Check your inbox 🎉' },
+        { step: 6, text: 'Done! Check your inbox' },
       ],
       windows: [
         { step: 1, text: 'Open Outlook → File → Add Account' },
@@ -497,7 +497,7 @@ export default function EmailSettingsPage() {
         { step: 3, text: 'Choose "IMAP" as account type' },
         { step: 4, text: 'Incoming: mail.rnrb.me:993 (SSL/TLS)' },
         { step: 5, text: 'Outgoing: mail.rnrb.me:465 (SSL/TLS)' },
-        { step: 6, text: "Enter your credentials and you're set! 🎉" },
+        { step: 6, text: "Enter your credentials and you're set!" },
       ],
     };
 
@@ -548,7 +548,7 @@ export default function EmailSettingsPage() {
               >
                 <CheckCircle className="h-10 w-10 text-white" />
               </motion.div>
-              <h1 className="mb-2 text-3xl font-black text-white">You're All Set! 🎸</h1>
+              <h1 className="mb-2 text-3xl font-black text-white">You're All Set!</h1>
               <p className="text-lg text-green-200">Your professional musician email is ready</p>
             </div>
 
@@ -748,7 +748,7 @@ export default function EmailSettingsPage() {
             >
               <Mail className="h-10 w-10 text-white drop-shadow-lg" />
             </motion.div>
-            <h1 
+            <h1
               className="mb-2 text-3xl font-black"
               style={{
                 background: 'linear-gradient(135deg, #ffffff 0%, #ffb347 50%, #ffd700 100%)',
@@ -759,8 +759,12 @@ export default function EmailSettingsPage() {
             >
               RNRB Mail
             </h1>
-            <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>Professional email for musicians</p>
-            <p className="mt-1 text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>Works with iPhone, Android, Mac & PC</p>
+            <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+              Professional email for musicians
+            </p>
+            <p className="mt-1 text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>
+              Works with iPhone, Android, Mac & PC
+            </p>
           </div>
 
           <div className="p-8">

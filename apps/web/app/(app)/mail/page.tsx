@@ -140,7 +140,7 @@ const QUICK_TEMPLATES = [
     id: 'fan-thanks',
     name: 'Thank a Fan',
     subject: 'RE: Your message',
-    body: 'Thank you so much for your kind words and support! Messages like yours mean the world to me. 🎵',
+    body: 'Thank you so much for your kind words and support! Messages like yours mean the world to me.',
   },
   {
     id: 'collab-yes',
@@ -232,7 +232,7 @@ export default function WebmailPage() {
             threadId: '2',
             from: [{ name: 'Sarah (Fan)', email: 'sarah.music.lover@gmail.com' }],
             to: [{ email: emailAddress }],
-            subject: 'Your music changed my life! 🎵',
+            subject: 'Your music changed my life!',
             preview:
               'I just had to reach out and tell you how much your latest album has meant to me during a difficult time...',
             receivedAt: new Date(Date.now() - 7200000).toISOString(),

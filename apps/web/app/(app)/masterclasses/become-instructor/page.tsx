@@ -169,10 +169,10 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="text-center"
           >
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
-              <GraduationCap className="h-12 w-12 text-white" />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)]">
+              <GraduationCap className="h-12 w-12 text-[var(--text)]" />
             </div>
-            <h2 className="mb-4 text-3xl font-bold text-white">Share Your Music Expertise</h2>
+            <h2 className="mb-4 text-3xl font-bold text-[var(--text)]">Share Your Music Expertise</h2>
             <p className="mx-auto mb-8 max-w-lg text-lg text-[var(--muted)]">
               Create masterclasses, reach thousands of aspiring musicians, and earn money doing what
               you love.
@@ -180,40 +180,40 @@ export default function BecomeInstructorPage() {
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
               <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <Video className="mb-4 h-10 w-10 text-purple-400" />
-                <h3 className="mb-2 font-bold text-white">Create Content</h3>
+                <Video className="mb-4 h-10 w-10 text-[var(--accent)]" />
+                <h3 className="mb-2 font-bold text-[var(--text)]">Create Content</h3>
                 <p className="text-sm text-[var(--muted)]">
                   Build comprehensive courses or host live sessions
                 </p>
               </div>
               <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <Users className="mb-4 h-10 w-10 text-purple-400" />
-                <h3 className="mb-2 font-bold text-white">Grow Your Audience</h3>
+                <Users className="mb-4 h-10 w-10 text-[var(--accent)]" />
+                <h3 className="mb-2 font-bold text-[var(--text)]">Grow Your Audience</h3>
                 <p className="text-sm text-[var(--muted)]">
                   Connect with passionate students worldwide
                 </p>
               </div>
               <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <DollarSign className="mb-4 h-10 w-10 text-purple-400" />
-                <h3 className="mb-2 font-bold text-white">Earn 85%</h3>
+                <DollarSign className="mb-4 h-10 w-10 text-[var(--accent)]" />
+                <h3 className="mb-2 font-bold text-[var(--text)]">Earn 85%</h3>
                 <p className="text-sm text-[var(--muted)]">Keep the majority of your earnings</p>
               </div>
             </div>
 
-            <div className="rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-6">
+            <div className="rounded-xl border border-[var(--accent)]/20 bg-gradient-to-r from-[var(--accent)]/10 to-[var(--gold)]/10 p-6">
               <div className="flex items-center justify-center gap-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">10K+</div>
+                  <div className="text-3xl font-bold text-[var(--text)]">10K+</div>
                   <div className="text-sm text-[var(--muted)]">Active Students</div>
                 </div>
                 <div className="h-12 w-px bg-[var(--border)]" />
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">$50K+</div>
+                  <div className="text-3xl font-bold text-[var(--text)]">$50K+</div>
                   <div className="text-sm text-[var(--muted)]">Paid to Instructors</div>
                 </div>
                 <div className="h-12 w-px bg-[var(--border)]" />
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-white">4.8</div>
+                  <div className="text-3xl font-bold text-[var(--text)]">4.8</div>
                   <div className="text-sm text-[var(--muted)]">Avg Rating</div>
                 </div>
               </div>
@@ -230,14 +230,14 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mx-auto max-w-xl"
           >
-            <h2 className="mb-2 text-2xl font-bold text-white">Your Instructor Profile</h2>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Your Instructor Profile</h2>
             <p className="mb-8 text-[var(--muted)]">This is how students will see you</p>
 
             {/* Avatar */}
             <div className="mb-6 flex items-center gap-4">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-dashed border-[var(--border)] bg-[var(--panel)] transition-colors hover:border-purple-500"
+                className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-dashed border-[var(--border)] bg-[var(--panel)] transition-colors hover:border-[var(--accent)]"
               >
                 {avatarUrl ? (
                   <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
@@ -255,7 +255,7 @@ export default function BecomeInstructorPage() {
               <div>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-purple-400 hover:text-purple-300"
+                  className="text-[var(--accent)] hover:text-[var(--accent-hover)]"
                 >
                   Upload photo
                 </button>
@@ -273,7 +273,7 @@ export default function BecomeInstructorPage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="How should students know you?"
-                className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
             </div>
 
@@ -288,7 +288,7 @@ export default function BecomeInstructorPage() {
                 onChange={(e) => setHeadline(e.target.value)}
                 placeholder="e.g., Grammy-winning producer & songwriter"
                 maxLength={80}
-                className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
               <p className="mt-1 text-xs text-[var(--muted)]">{headline.length}/80</p>
             </div>
@@ -302,7 +302,7 @@ export default function BecomeInstructorPage() {
                 placeholder="Tell students about your background, experience, and what makes you unique..."
                 rows={4}
                 maxLength={1000}
-                className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
               <p className="mt-1 text-xs text-[var(--muted)]">{bio.length}/1000</p>
             </div>
@@ -319,7 +319,7 @@ export default function BecomeInstructorPage() {
                   value={socialLinks.instagram}
                   onChange={(e) => setSocialLinks({ ...socialLinks, instagram: e.target.value })}
                   placeholder="Instagram username"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 />
               </div>
               <div className="relative">
@@ -329,7 +329,7 @@ export default function BecomeInstructorPage() {
                   value={socialLinks.twitter}
                   onChange={(e) => setSocialLinks({ ...socialLinks, twitter: e.target.value })}
                   placeholder="Twitter/X username"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 />
               </div>
               <div className="relative">
@@ -339,7 +339,7 @@ export default function BecomeInstructorPage() {
                   value={socialLinks.youtube}
                   onChange={(e) => setSocialLinks({ ...socialLinks, youtube: e.target.value })}
                   placeholder="YouTube channel URL"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 />
               </div>
               <div className="relative">
@@ -349,7 +349,7 @@ export default function BecomeInstructorPage() {
                   value={socialLinks.website}
                   onChange={(e) => setSocialLinks({ ...socialLinks, website: e.target.value })}
                   placeholder="Personal website URL"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 />
               </div>
             </div>
@@ -365,7 +365,7 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mx-auto max-w-xl"
           >
-            <h2 className="mb-2 text-2xl font-bold text-white">Your Expertise</h2>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Your Expertise</h2>
             <p className="mb-8 text-[var(--muted)]">Select all areas you can teach</p>
 
             {/* Categories */}
@@ -380,7 +380,7 @@ export default function BecomeInstructorPage() {
                     onClick={() => toggleCategory(category)}
                     className={`rounded-full px-4 py-2 text-sm transition-colors ${
                       selectedCategories.includes(category)
-                        ? 'bg-purple-500 text-white'
+                        ? 'bg-[var(--accent)] text-[var(--text)]'
                         : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
                     }`}
                   >
@@ -402,7 +402,7 @@ export default function BecomeInstructorPage() {
                     onClick={() => setSkillLevel(level)}
                     className={`rounded-lg px-4 py-3 text-sm transition-colors ${
                       skillLevel === level
-                        ? 'bg-purple-500 text-white'
+                        ? 'bg-[var(--accent)] text-[var(--text)]'
                         : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
                     }`}
                   >
@@ -414,10 +414,10 @@ export default function BecomeInstructorPage() {
 
             {/* Stats Preview */}
             {selectedCategories.length > 0 && (
-              <div className="rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-4">
+              <div className="rounded-xl border border-[var(--accent)]/20 bg-gradient-to-r from-[var(--accent)]/10 to-[var(--gold)]/10 p-4">
                 <div className="mb-2 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-purple-400" />
-                  <span className="font-medium text-white">Market Demand</span>
+                  <TrendingUp className="h-5 w-5 text-[var(--accent)]" />
+                  <span className="font-medium text-[var(--text)]">Market Demand</span>
                 </div>
                 <p className="text-sm text-[var(--muted)]">
                   Courses in {selectedCategories[0]} are in high demand! Students are actively
@@ -437,19 +437,19 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mx-auto max-w-xl"
           >
-            <h2 className="mb-2 text-2xl font-bold text-white">Payment Setup</h2>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Payment Setup</h2>
             <p className="mb-8 text-[var(--muted)]">
               Connect your Stripe account to receive payouts
             </p>
 
             {/* Revenue Split */}
             <div className="mb-6 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-              <h3 className="mb-4 font-bold text-white">Revenue Split</h3>
+              <h3 className="mb-4 font-bold text-[var(--text)]">Revenue Split</h3>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-[var(--muted)]">Your share</span>
-                    <span className="text-2xl font-bold text-green-400">85%</span>
+                    <span className="text-2xl font-bold text-[var(--sage)]">85%</span>
                   </div>
                   <div className="h-3 w-full overflow-hidden rounded-full bg-[var(--bg)]">
                     <div className="h-full w-[85%] rounded-full bg-gradient-to-r from-green-500 to-emerald-500" />
@@ -463,36 +463,36 @@ export default function BecomeInstructorPage() {
 
             {/* How It Works */}
             <div className="mb-6 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-              <h3 className="mb-4 font-bold text-white">How Payouts Work</h3>
+              <h3 className="mb-4 font-bold text-[var(--text)]">How Payouts Work</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-500/20">
-                    <span className="text-sm text-purple-400">1</span>
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                    <span className="text-sm text-[var(--accent)]">1</span>
                   </div>
                   <div>
-                    <div className="font-medium text-white">Students Enroll</div>
+                    <div className="font-medium text-[var(--text)]">Students Enroll</div>
                     <div className="text-sm text-[var(--muted)]">
                       Payment is collected when students purchase your course
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-500/20">
-                    <span className="text-sm text-purple-400">2</span>
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                    <span className="text-sm text-[var(--accent)]">2</span>
                   </div>
                   <div>
-                    <div className="font-medium text-white">Earnings Accumulate</div>
+                    <div className="font-medium text-[var(--text)]">Earnings Accumulate</div>
                     <div className="text-sm text-[var(--muted)]">
                       Track your earnings in real-time from your dashboard
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-500/20">
-                    <span className="text-sm text-purple-400">3</span>
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/20">
+                    <span className="text-sm text-[var(--accent)]">3</span>
                   </div>
                   <div>
-                    <div className="font-medium text-white">Monthly Payouts</div>
+                    <div className="font-medium text-[var(--text)]">Monthly Payouts</div>
                     <div className="text-sm text-[var(--muted)]">
                       Funds are automatically transferred to your bank account
                     </div>
@@ -507,11 +507,11 @@ export default function BecomeInstructorPage() {
                 type="checkbox"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-0.5 h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-purple-500 focus:ring-purple-500"
+                className="mt-0.5 h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-[var(--accent)] focus:ring-[var(--accent)]"
               />
               <span className="text-sm text-[var(--muted)]">
                 I agree to the{' '}
-                <Link href="/legal/instructor-terms" className="text-purple-400 hover:underline">
+                <Link href="/legal/instructor-terms" className="text-[var(--accent)] hover:underline">
                   Instructor Terms of Service
                 </Link>{' '}
                 and understand the revenue split arrangement.
@@ -535,21 +535,21 @@ export default function BecomeInstructorPage() {
               transition={{ type: 'spring', delay: 0.2 }}
               className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500"
             >
-              <CheckCircle className="h-12 w-12 text-white" />
+              <CheckCircle className="h-12 w-12 text-[var(--text)]" />
             </motion.div>
-            <h2 className="mb-4 text-3xl font-bold text-white">Welcome, Instructor!</h2>
+            <h2 className="mb-4 text-3xl font-bold text-[var(--text)]">Welcome, Instructor!</h2>
             <p className="mx-auto mb-8 max-w-lg text-lg text-[var(--muted)]">
               Your instructor profile has been created. Now let's create your first masterclass!
             </p>
 
             <div className="flex items-center justify-center gap-4">
               <Link href="/masterclasses/instructor">
-                <button className="rounded-full bg-[var(--panel)] px-6 py-3 text-white transition-colors hover:bg-[var(--border)]">
+                <button className="rounded-full bg-[var(--panel)] px-6 py-3 text-[var(--text)] transition-colors hover:bg-[var(--border)]">
                   Go to Dashboard
                 </button>
               </Link>
               <Link href="/masterclasses/create">
-                <button className="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 text-white transition-opacity hover:opacity-90">
+                <button className="rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 text-[var(--text)] transition-opacity hover:opacity-90">
                   Create First Course
                 </button>
               </Link>
@@ -566,9 +566,9 @@ export default function BecomeInstructorPage() {
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
           <Link href="/masterclasses" className="flex items-center gap-3">
             <Image src="/logo-dark.png" alt="Logo" width={40} height={40} />
-            <span className="font-bold text-white">Become an Instructor</span>
+            <span className="font-bold text-[var(--text)]">Become an Instructor</span>
           </Link>
-          <Link href="/masterclasses" className="text-[var(--muted)] hover:text-white">
+          <Link href="/masterclasses" className="text-[var(--muted)] hover:text-[var(--text)]">
             Cancel
           </Link>
         </div>
@@ -588,29 +588,29 @@ export default function BecomeInstructorPage() {
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
                       isComplete
-                        ? 'bg-green-500'
+                        ? 'bg-[var(--sage)]'
                         : isActive
-                          ? 'bg-purple-500'
+                          ? 'bg-[var(--accent)]'
                           : 'border border-[var(--border)] bg-[var(--panel)]'
                     }`}
                   >
                     {isComplete ? (
-                      <CheckCircle className="h-5 w-5 text-white" />
+                      <CheckCircle className="h-5 w-5 text-[var(--text)]" />
                     ) : (
                       <Icon
-                        className={`h-5 w-5 ${isActive ? 'text-white' : 'text-[var(--muted)]'}`}
+                        className={`h-5 w-5 ${isActive ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`}
                       />
                     )}
                   </div>
                   <span
-                    className={`mt-2 text-xs ${isActive ? 'text-white' : 'text-[var(--muted)]'}`}
+                    className={`mt-2 text-xs ${isActive ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`}
                   >
                     {step.title}
                   </span>
                 </div>
                 {index < STEPS.length - 1 && (
                   <div
-                    className={`mx-2 h-0.5 w-12 ${isComplete ? 'bg-green-500' : 'bg-[var(--border)]'}`}
+                    className={`mx-2 h-0.5 w-12 ${isComplete ? 'bg-[var(--sage)]' : 'bg-[var(--border)]'}`}
                   />
                 )}
               </div>
@@ -627,7 +627,7 @@ export default function BecomeInstructorPage() {
             <button
               onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
               disabled={currentStep === 0}
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-[var(--muted)] hover:text-white disabled:opacity-0"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-[var(--muted)] hover:text-[var(--text)] disabled:opacity-0"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
@@ -637,7 +637,7 @@ export default function BecomeInstructorPage() {
               <button
                 onClick={() => setCurrentStep(currentStep + 1)}
                 disabled={!canProceed()}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 text-white disabled:opacity-50"
+                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 text-[var(--text)] disabled:opacity-50"
               >
                 Continue
                 <ChevronRight className="h-4 w-4" />
@@ -646,7 +646,7 @@ export default function BecomeInstructorPage() {
               <button
                 onClick={handleSubmit}
                 disabled={!canProceed() || isSubmitting}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 text-white disabled:opacity-50"
+                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 text-[var(--text)] disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

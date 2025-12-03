@@ -199,26 +199,21 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all ${
               hasCelebrated || activity.celebrationCount > 0
                 ? 'bg-orange-500/20 text-orange-400'
-                : 'hover:bg-black/5 dark:hover:bg-white/10'
+                : 'text-gray-500 hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white'
             }`}
-            style={{
-              color: hasCelebrated || activity.celebrationCount > 0 ? undefined : 'var(--muted)',
-            }}
           >
             <Sparkles className="h-4 w-4" />
             <span>{activity.celebrationCount + (hasCelebrated ? 1 : 0)}</span>
           </motion.button>
 
-          <button
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all hover:bg-black/5 dark:hover:bg-white/10"
-            style={{ color: 'var(--muted)' }}
+          <button 
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 transition-all hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
           >
             <MessageCircle className="h-4 w-4" />
           </button>
 
-          <button
-            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all hover:bg-black/5 dark:hover:bg-white/10"
-            style={{ color: 'var(--muted)' }}
+          <button 
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-500 transition-all hover:bg-black/5 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/10 dark:hover:text-white"
           >
             <Share2 className="h-4 w-4" />
           </button>

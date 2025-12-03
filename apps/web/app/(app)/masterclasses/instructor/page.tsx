@@ -81,7 +81,7 @@ function StatCard({
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
       <div className="mb-4 flex items-start justify-between">
-        <div className="rounded-lg bg-[var(--accent)]/10 p-3">
+        <div className="bg-[var(--accent)]/10 rounded-lg p-3">
           <Icon className="h-6 w-6 text-[var(--accent)]" />
         </div>
         {trend && (
@@ -100,7 +100,7 @@ function StatCard({
 function ClassCard({ masterclass }: { masterclass: InstructorProfile['masterclasses'][0] }) {
   return (
     <Link href={`/masterclasses/instructor/${masterclass.id}/edit`}>
-      <div className="flex items-center gap-4 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 transition-all hover:border-purple-500/50">
+      <div className="hover:border-[var(--accent)]/50 flex items-center gap-4 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4 transition-all">
         <div className="relative h-16 w-24 flex-shrink-0 overflow-hidden rounded-lg">
           {masterclass.thumbnailUrl ? (
             <Image
@@ -110,20 +110,20 @@ function ClassCard({ masterclass }: { masterclass: InstructorProfile['masterclas
               className="object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50">
-              <GraduationCap className="h-6 w-6 text-white/30" />
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#2a2620] to-[#352f28]">
+              <GraduationCap className="text-[var(--accent)]/30 h-6 w-6" />
             </div>
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <h4 className="truncate font-medium text-white">{masterclass.title}</h4>
+          <h4 className="truncate font-medium text-[var(--text)]">{masterclass.title}</h4>
           <div className="mt-1 flex items-center gap-4 text-sm text-[var(--muted)]">
             <span
               className={`capitalize ${
                 masterclass.status === 'published'
-                  ? 'text-green-400'
+                  ? 'text-[var(--sage)]'
                   : masterclass.status === 'draft'
-                    ? 'text-yellow-400'
+                    ? 'text-[var(--warning)]'
                     : 'text-[var(--muted)]'
               }`}
             >
@@ -132,14 +132,14 @@ function ClassCard({ masterclass }: { masterclass: InstructorProfile['masterclas
             <span>{masterclass._count.enrollments} students</span>
             {masterclass.averageRating > 0 && (
               <span className="flex items-center gap-1">
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                <Star className="h-3 w-3 fill-[var(--gold)] text-[var(--gold)]" />
                 {masterclass.averageRating.toFixed(1)}
               </span>
             )}
           </div>
         </div>
         <div className="text-right">
-          <div className="font-bold text-white">
+          <div className="font-bold text-[var(--text)]">
             {masterclass.isFree ? 'Free' : `$${masterclass.price?.toFixed(2)}`}
           </div>
         </div>
@@ -206,7 +206,7 @@ export default function InstructorDashboardPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
       </div>
     );
   }
@@ -230,10 +230,12 @@ export default function InstructorDashboardPage() {
           </div>
 
           <div className="mb-12 text-center">
-            <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+            <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--gold)]">
               <GraduationCap className="h-10 w-10 text-white" />
             </div>
-            <h1 className="mb-4 text-4xl font-bold text-white">Become a Masterclass Instructor</h1>
+            <h1 className="mb-4 text-4xl font-bold text-[var(--text)]">
+              Become a Masterclass Instructor
+            </h1>
             <p className="mx-auto max-w-2xl text-xl text-[var(--muted)]">
               Share your expertise with aspiring musicians worldwide. Create courses, host live
               sessions, and earn money doing what you love.
@@ -242,29 +244,29 @@ export default function InstructorDashboardPage() {
 
           <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6 text-center">
-              <div className="mb-2 text-3xl font-bold text-purple-400">70%</div>
-              <div className="font-medium text-white">Revenue Share</div>
+              <div className="mb-2 text-3xl font-bold text-[var(--accent)]">70%</div>
+              <div className="font-medium text-[var(--text)]">Revenue Share</div>
               <div className="mt-1 text-sm text-[var(--muted)]">You keep 70% of all earnings</div>
             </div>
             <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6 text-center">
-              <div className="mb-2 text-3xl font-bold text-purple-400">Unlimited</div>
-              <div className="font-medium text-white">Students</div>
+              <div className="mb-2 text-3xl font-bold text-[var(--accent)]">Unlimited</div>
+              <div className="font-medium text-[var(--text)]">Students</div>
               <div className="mt-1 text-sm text-[var(--muted)]">Reach musicians globally</div>
             </div>
             <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6 text-center">
-              <div className="mb-2 text-3xl font-bold text-purple-400">Live + VOD</div>
-              <div className="font-medium text-white">Flexible Format</div>
+              <div className="mb-2 text-3xl font-bold text-[var(--accent)]">Live + VOD</div>
+              <div className="font-medium text-[var(--text)]">Flexible Format</div>
               <div className="mt-1 text-sm text-[var(--muted)]">Live sessions or pre-recorded</div>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-900/50 to-pink-900/50 p-8">
-            <h2 className="mb-6 text-2xl font-bold text-white">Get Started</h2>
+          <div className="border-[var(--accent)]/20 from-[var(--accent)]/15 to-[var(--gold)]/15 rounded-2xl border bg-gradient-to-r p-8">
+            <h2 className="mb-6 text-2xl font-bold text-[var(--text)]">Get Started</h2>
             <Link href="/masterclasses/instructor/setup">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 py-4 font-semibold text-white"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] py-4 font-semibold text-white"
               >
                 Create Instructor Profile
                 <ArrowRight className="h-5 w-5" />
@@ -291,19 +293,19 @@ export default function InstructorDashboardPage() {
                   className="object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 text-xl font-bold text-white">
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-xl font-bold text-white">
                   {instructor.displayName.charAt(0)}
                 </div>
               )}
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">{instructor.displayName}</h1>
+              <h1 className="text-2xl font-bold text-[var(--text)]">{instructor.displayName}</h1>
               <p className="text-[var(--muted)]">{instructor.headline || 'Instructor'}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/masterclasses/instructor/settings">
-              <button className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-3 text-[var(--muted)] transition-colors hover:text-white">
+              <button className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-3 text-[var(--muted)] transition-colors hover:text-[var(--text)]">
                 <Settings className="h-5 w-5" />
               </button>
             </Link>
@@ -311,7 +313,7 @@ export default function InstructorDashboardPage() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-3 font-medium text-white"
+                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-4 py-3 font-medium text-white"
               >
                 <Plus className="h-5 w-5" />
                 New Masterclass
@@ -325,11 +327,11 @@ export default function InstructorDashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 flex items-start gap-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4"
+            className="border-[var(--warning)]/30 bg-[var(--warning)]/10 mb-8 flex items-start gap-4 rounded-xl border p-4"
           >
-            <AlertCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-yellow-400" />
+            <AlertCircle className="mt-0.5 h-6 w-6 flex-shrink-0 text-[var(--warning)]" />
             <div className="flex-1">
-              <h3 className="font-medium text-yellow-400">Set Up Payouts</h3>
+              <h3 className="font-medium text-[var(--warning)]">Set Up Payouts</h3>
               <p className="mt-1 text-sm text-[var(--muted)]">
                 Connect your Stripe account to receive payments for your masterclasses. You'll earn
                 70% of every sale.
@@ -340,7 +342,7 @@ export default function InstructorDashboardPage() {
               whileTap={{ scale: 0.98 }}
               onClick={handleStripeConnect}
               disabled={connectingStripe}
-              className="flex items-center gap-2 rounded-lg bg-yellow-500 px-4 py-2 font-medium text-black"
+              className="flex items-center gap-2 rounded-lg bg-[var(--warning)] px-4 py-2 font-medium text-black"
             >
               {connectingStripe ? (
                 <span className="h-5 w-5 animate-spin rounded-full border-2 border-black border-t-transparent" />
@@ -383,10 +385,10 @@ export default function InstructorDashboardPage() {
         {/* Masterclasses List */}
         <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)]">
           <div className="flex items-center justify-between border-b border-[var(--border)] p-6">
-            <h2 className="text-xl font-bold text-white">Your Masterclasses</h2>
+            <h2 className="text-xl font-bold text-[var(--text)]">Your Masterclasses</h2>
             <Link
               href="/masterclasses/instructor/new"
-              className="text-sm text-purple-400 hover:text-purple-300"
+              className="text-sm text-[var(--accent)] hover:text-[var(--accent-hover)]"
             >
               Create New
             </Link>
@@ -401,7 +403,9 @@ export default function InstructorDashboardPage() {
             ) : (
               <div className="py-12 text-center">
                 <GraduationCap className="mx-auto mb-4 h-12 w-12 text-[var(--muted)]" />
-                <h3 className="mb-2 text-lg font-medium text-white">No Masterclasses Yet</h3>
+                <h3 className="mb-2 text-lg font-medium text-[var(--text)]">
+                  No Masterclasses Yet
+                </h3>
                 <p className="mb-6 text-[var(--muted)]">
                   Create your first masterclass and start teaching!
                 </p>
@@ -409,7 +413,7 @@ export default function InstructorDashboardPage() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-medium text-white"
+                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 font-medium text-white"
                   >
                     <Plus className="h-5 w-5" />
                     Create Your First Masterclass

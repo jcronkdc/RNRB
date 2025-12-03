@@ -534,7 +534,7 @@ function ProfileSettingsContent() {
       setMessage({
         type: 'success',
         text: isSetup
-          ? "🎸 Profile complete! Welcome to Rock N' Roll Basement!"
+          ? "Profile complete! Welcome to Rock N' Roll Basement!"
           : 'Profile updated successfully!',
       });
 
@@ -604,7 +604,7 @@ function ProfileSettingsContent() {
 
       // Update profile
       setProfile({ ...profile, profile_picture_url: publicUrl });
-      setMessage({ type: 'success', text: '🎸 Profile picture uploaded!' });
+      setMessage({ type: 'success', text: 'Profile picture uploaded!' });
     } catch (error: unknown) {
       setMessage({ type: 'error', text: error instanceof Error ? error.message : 'Upload failed' });
     } finally {
@@ -1819,7 +1819,7 @@ function ProfileSettingsContent() {
               <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
                 <div className="text-center sm:text-left">
                   <p className="font-medium" style={{ color: 'var(--text)' }}>
-                    {profile.is_public ? '🎸 Your profile is public' : '🔒 Your profile is private'}
+                    {profile.is_public ? 'Your profile is public' : 'Your profile is private'}
                   </p>
                   <p className="text-sm" style={{ color: 'var(--muted)' }}>
                     {isSetup

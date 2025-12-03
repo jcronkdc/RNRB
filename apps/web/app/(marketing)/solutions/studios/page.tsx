@@ -636,7 +636,7 @@ export default function SolutionsForStudiosPage() {
                   </div>
                   <div className="pt-4" style={{ borderTop: '1px solid var(--border)' }}>
                     <p className="text-center text-xs" style={{ color: 'var(--muted)' }}>
-                      📈 Revenue up 18% from last month
+                      Revenue up 18% from last month
                     </p>
                   </div>
                 </div>

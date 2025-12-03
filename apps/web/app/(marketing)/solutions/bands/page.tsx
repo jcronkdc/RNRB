@@ -426,7 +426,7 @@ export default function SolutionsForBandsPage() {
                     }}
                   >
                     <p className="text-center text-xs text-violet-300">
-                      ✨ AI suggests moving "Slow Burn" earlier for better energy flow
+                      AI suggests moving "Slow Burn" earlier for better energy flow
                     </p>
                   </div>
                 </div>

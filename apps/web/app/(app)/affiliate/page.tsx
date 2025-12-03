@@ -314,7 +314,7 @@ export default function AffiliateDashboard() {
         >
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Earnings Over Time</h2>
-            <button className="flex items-center gap-1 text-sm" style={{ color: 'var(--muted)' }}>
+            <button className="flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-white/50 dark:hover:text-white">
               <Download className="h-4 w-4" />
               Export
             </button>

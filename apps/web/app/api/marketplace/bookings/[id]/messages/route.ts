@@ -2,7 +2,7 @@
  * Booking Messages API
  *
  * Real-time messaging between client and provider for a booking
- * 
+ *
  * Security Features:
  * - Rate limiting (10 messages/minute per user)
  * - Spam content filtering
@@ -14,7 +14,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
-import { checkRateLimits, checkMessageForSpam, checkDuplicateMessage, recordMessage } from '@/lib/spam-protection';
+import {
+  checkRateLimits,
+  checkMessageForSpam,
+  checkDuplicateMessage,
+  recordMessage,
+} from '@/lib/spam-protection';
 
 /**
  * GET - Get messages for a booking
@@ -95,8 +100,31 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const trimmedContent = content.trim();
 
-    // 🔒 SPAM PROTECTION: Check rate limits
-    const rateLimit = checkRateLimits(userId);
+    // First, verify user has access and determine recipient
+    // This must happen BEFORE rate limiting so we can check per-recipient cooldowns
+    const booking = await prisma.serviceBooking.findUnique({
+      where: { id },
+      include: {
+        provider: { select: { userId: true } },
+      },
+    });
+
+    if (!booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    const isClient = booking.clientId === userId;
+    const isProvider = booking.provider.userId === userId;
+
+    if (!isClient && !isProvider) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    // Determine recipient for rate limiting (needed for per-recipient cooldown)
+    const recipientId = isClient ? booking.provider.userId : booking.clientId;
+
+    // 🔒 SPAM PROTECTION: Check rate limits (includes per-recipient 5s cooldown)
+    const rateLimit = checkRateLimits(userId, recipientId);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: rateLimit.reason || 'Too many messages. Please slow down.' },
@@ -121,29 +149,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       );
     }
 
-    // Verify user has access
-    const booking = await prisma.serviceBooking.findUnique({
-      where: { id },
-      include: {
-        provider: { select: { userId: true } },
-      },
-    });
-
-    if (!booking) {
-      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
-    }
-
-    const isClient = booking.clientId === userId;
-    const isProvider = booking.provider.userId === userId;
-
-    if (!isClient && !isProvider) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-    }
-
-    // Determine recipient for rate limiting
-    const recipientId = isClient ? booking.provider.userId : booking.clientId;
-
-    // Record message for rate limiting
+    // Record message for rate limiting (for future checks)
     recordMessage(userId, recipientId, trimmedContent);
 
     const message = await prisma.bookingMessage.create({

@@ -99,13 +99,13 @@ function StatCard({
       className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6"
     >
       <div className="mb-4 flex items-start justify-between">
-        <div className="rounded-xl bg-purple-500/10 p-3">
-          <Icon className="h-6 w-6 text-purple-400" />
+        <div className="rounded-xl bg-[var(--accent)]/10 p-3">
+          <Icon className="h-6 w-6 text-[var(--accent)]" />
         </div>
         {change !== undefined && (
           <div
             className={`flex items-center gap-1 rounded-full px-2 py-1 text-sm ${
-              change >= 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
+              change >= 0 ? 'bg-[var(--sage)]/10 text-[var(--sage)]' : 'bg-[var(--error)]/10 text-[var(--error)]'
             }`}
           >
             {change >= 0 ? (
@@ -117,7 +117,7 @@ function StatCard({
           </div>
         )}
       </div>
-      <div className="mb-1 text-3xl font-bold text-white">{formatValue(value)}</div>
+      <div className="mb-1 text-3xl font-bold text-[var(--text)]">{formatValue(value)}</div>
       <div className="text-sm text-[var(--muted)]">{title}</div>
     </motion.div>
   );
@@ -133,7 +133,7 @@ function RevenueChart({
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="font-bold text-white">Revenue Over Time</h3>
+        <h3 className="font-bold text-[var(--text)]">Revenue Over Time</h3>
         <button className="flex items-center gap-2 rounded-lg bg-[var(--bg)] px-3 py-1 text-sm text-[var(--muted)]">
           <Calendar className="h-4 w-4" />
           Monthly
@@ -145,7 +145,7 @@ function RevenueChart({
         {data.map((item, index) => (
           <div key={item.month} className="flex flex-1 flex-col items-center">
             <div
-              className="w-full rounded-t-lg bg-gradient-to-t from-purple-500/50 to-purple-500 transition-all hover:from-purple-500/70 hover:to-purple-400"
+              className="w-full rounded-t-lg bg-gradient-to-t from-[var(--accent)]/50 to-[var(--accent)] transition-all hover:from-[var(--accent)]/70 hover:to-[var(--accent-hover)]"
               style={{ height: `${(item.revenue / maxRevenue) * 100}%`, minHeight: 4 }}
             />
             <div className="mt-2 text-xs text-[var(--muted)]">{item.month}</div>
@@ -155,7 +155,7 @@ function RevenueChart({
 
       <div className="mt-6 flex items-center justify-center gap-6">
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-purple-500" />
+          <div className="h-3 w-3 rounded-full bg-[var(--accent)]" />
           <span className="text-sm text-[var(--muted)]">Revenue</span>
         </div>
       </div>
@@ -167,8 +167,8 @@ function TopCoursesTable({ courses }: { courses: AnalyticsData['topCourses'] }) 
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="font-bold text-white">Top Performing Courses</h3>
-        <Link href="/masterclasses/instructor" className="text-sm text-purple-400 hover:underline">
+        <h3 className="font-bold text-[var(--text)]">Top Performing Courses</h3>
+        <Link href="/masterclasses/instructor" className="text-sm text-[var(--accent)] hover:underline">
           View All
         </Link>
       </div>
@@ -190,27 +190,27 @@ function TopCoursesTable({ courses }: { courses: AnalyticsData['topCourses'] }) 
                 <td className="py-4">
                   <Link
                     href={`/masterclasses/${course.id}`}
-                    className="font-medium text-white group-hover:text-purple-400"
+                    className="font-medium text-[var(--text)] group-hover:text-[var(--accent)]"
                   >
                     {course.title}
                   </Link>
                 </td>
-                <td className="py-4 text-right text-white">{course.students}</td>
-                <td className="py-4 text-right text-green-400">${course.revenue.toFixed(2)}</td>
+                <td className="py-4 text-right text-[var(--text)]">{course.students}</td>
+                <td className="py-4 text-right text-[var(--sage)]">${course.revenue.toFixed(2)}</td>
                 <td className="py-4 text-right">
                   <div className="flex items-center justify-end gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-white">{course.rating.toFixed(1)}</span>
+                    <Star className="h-4 w-4 fill-[var(--gold)] text-[var(--gold)]" />
+                    <span className="text-[var(--text)]">{course.rating.toFixed(1)}</span>
                   </div>
                 </td>
                 <td className="py-4 text-right">
                   <span
                     className={`${
                       course.completionRate >= 70
-                        ? 'text-green-400'
+                        ? 'text-[var(--sage)]'
                         : course.completionRate >= 40
-                          ? 'text-yellow-400'
-                          : 'text-red-400'
+                          ? 'text-[var(--warning)]'
+                          : 'text-[var(--error)]'
                     }`}
                   >
                     {course.completionRate}%

@@ -266,9 +266,9 @@ function VideoPlayer({
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="flex h-20 w-20 items-center justify-center rounded-full bg-purple-500"
+              className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--accent)]"
             >
-              <Play className="ml-1 h-10 w-10 text-white" />
+              <Play className="ml-1 h-10 w-10 text-[var(--text)]" />
             </motion.button>
           </motion.div>
         )}
@@ -291,26 +291,26 @@ function VideoPlayer({
                 max={duration}
                 value={currentTime}
                 onChange={(e) => seek(parseFloat(e.target.value))}
-                className="h-1 w-full cursor-pointer appearance-none rounded-full bg-white/30 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-purple-500"
+                className="h-1 w-full cursor-pointer appearance-none rounded-full bg-white/30 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent)]"
               />
             </div>
 
             <div className="flex items-center justify-between">
               {/* Left controls */}
               <div className="flex items-center gap-3">
-                <button onClick={togglePlay} className="text-white hover:text-purple-400">
+                <button onClick={togglePlay} className="text-[var(--text)] hover:text-[var(--accent)]">
                   {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 </button>
-                <button onClick={() => skip(-10)} className="text-white hover:text-purple-400">
+                <button onClick={() => skip(-10)} className="text-[var(--text)] hover:text-[var(--accent)]">
                   <SkipBack className="h-5 w-5" />
                 </button>
-                <button onClick={() => skip(10)} className="text-white hover:text-purple-400">
+                <button onClick={() => skip(10)} className="text-[var(--text)] hover:text-[var(--accent)]">
                   <SkipForward className="h-5 w-5" />
                 </button>
 
                 {/* Volume */}
                 <div className="flex items-center gap-2">
-                  <button onClick={toggleMute} className="text-white hover:text-purple-400">
+                  <button onClick={toggleMute} className="text-[var(--text)] hover:text-[var(--accent)]">
                     {isMuted || volume === 0 ? (
                       <VolumeX className="h-5 w-5" />
                     ) : (
@@ -329,7 +329,7 @@ function VideoPlayer({
                 </div>
 
                 {/* Time */}
-                <span className="text-sm text-white">
+                <span className="text-sm text-[var(--text)]">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
               </div>
@@ -340,7 +340,7 @@ function VideoPlayer({
                 <select
                   value={playbackRate}
                   onChange={(e) => changePlaybackRate(parseFloat(e.target.value))}
-                  className="rounded border border-white/30 bg-transparent px-2 py-1 text-sm text-white"
+                  className="rounded border border-white/30 bg-transparent px-2 py-1 text-sm text-[var(--text)]"
                 >
                   <option value={0.5}>0.5x</option>
                   <option value={0.75}>0.75x</option>
@@ -350,7 +350,7 @@ function VideoPlayer({
                   <option value={2}>2x</option>
                 </select>
 
-                <button onClick={toggleFullscreen} className="text-white hover:text-purple-400">
+                <button onClick={toggleFullscreen} className="text-[var(--text)] hover:text-[var(--accent)]">
                   {isFullscreen ? (
                     <Minimize className="h-5 w-5" />
                   ) : (
@@ -500,7 +500,7 @@ export default function WatchPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
       </div>
     );
   }
@@ -510,12 +510,12 @@ export default function WatchPage() {
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <Lock className="mx-auto mb-4 h-16 w-16 text-[var(--muted)]" />
-          <h2 className="mb-2 text-2xl font-bold text-white">Access Required</h2>
+          <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Access Required</h2>
           <p className="mb-6 text-[var(--muted)]">
             You need to enroll in this masterclass to watch lessons.
           </p>
           <Link href={`/masterclasses/${slug}`}>
-            <button className="rounded-full bg-purple-500 px-6 py-3 text-white">
+            <button className="rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)]">
               View Masterclass
             </button>
           </Link>
@@ -534,24 +534,24 @@ export default function WatchPage() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 p-4">
           <div className="flex items-center gap-4">
-            <Link href={`/masterclasses/${slug}`} className="text-[var(--muted)] hover:text-white">
+            <Link href={`/masterclasses/${slug}`} className="text-[var(--muted)] hover:text-[var(--text)]">
               <ChevronLeft className="h-6 w-6" />
             </Link>
             <div>
-              <h1 className="font-bold text-white">{masterclass.title}</h1>
+              <h1 className="font-bold text-[var(--text)]">{masterclass.title}</h1>
               <p className="text-sm text-[var(--muted)]">{currentLesson?.title}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowNotes(!showNotes)}
-              className={`rounded-lg p-2 ${showNotes ? 'bg-purple-500 text-white' : 'text-[var(--muted)] hover:text-white'}`}
+              className={`rounded-lg p-2 ${showNotes ? 'bg-[var(--accent)] text-[var(--text)]' : 'text-[var(--muted)] hover:text-[var(--text)]'}`}
             >
               <MessageSquare className="h-5 w-5" />
             </button>
             <button
               onClick={() => setShowSidebar(!showSidebar)}
-              className="rounded-lg p-2 text-[var(--muted)] hover:text-white"
+              className="rounded-lg p-2 text-[var(--muted)] hover:text-[var(--text)]"
             >
               <List className="h-5 w-5" />
             </button>
@@ -578,7 +578,7 @@ export default function WatchPage() {
             <button
               onClick={() => goToLesson(currentLessonIndex - 1)}
               disabled={currentLessonIndex === 0}
-              className="flex items-center gap-2 rounded-lg bg-[var(--panel)] px-4 py-2 text-white disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-[var(--panel)] px-4 py-2 text-[var(--text)] disabled:opacity-50"
             >
               <ChevronLeft className="h-4 w-4" />
               Previous
@@ -591,7 +591,7 @@ export default function WatchPage() {
             <button
               onClick={() => goToLesson(currentLessonIndex + 1)}
               disabled={currentLessonIndex === lessons.length - 1}
-              className="flex items-center gap-2 rounded-lg bg-purple-500 px-4 py-2 text-white disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-[var(--text)] disabled:opacity-50"
             >
               Next
               <ChevronRight className="h-4 w-4" />
@@ -600,7 +600,7 @@ export default function WatchPage() {
 
           {/* Lesson info */}
           <div className="mt-6">
-            <h2 className="mb-2 text-xl font-bold text-white">{currentLesson?.title}</h2>
+            <h2 className="mb-2 text-xl font-bold text-[var(--text)]">{currentLesson?.title}</h2>
             {currentLesson?.description && (
               <p className="text-[var(--muted)]">{currentLesson.description}</p>
             )}
@@ -609,7 +609,7 @@ export default function WatchPage() {
           {/* Resources */}
           {currentLesson?.resources && currentLesson.resources.length > 0 && (
             <div className="mt-6">
-              <h3 className="mb-3 font-bold text-white">Lesson Resources</h3>
+              <h3 className="mb-3 font-bold text-[var(--text)]">Lesson Resources</h3>
               <div className="space-y-2">
                 {currentLesson.resources.map((resource) => (
                   <a
@@ -619,9 +619,9 @@ export default function WatchPage() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 rounded-lg bg-[var(--panel)] p-3 transition-colors hover:bg-[var(--border)]"
                   >
-                    <Download className="h-5 w-5 text-purple-400" />
+                    <Download className="h-5 w-5 text-[var(--accent)]" />
                     <div className="flex-1">
-                      <div className="font-medium text-white">{resource.title}</div>
+                      <div className="font-medium text-[var(--text)]">{resource.title}</div>
                       <div className="text-xs text-[var(--muted)]">
                         {resource.fileType.toUpperCase()}
                       </div>
@@ -641,13 +641,13 @@ export default function WatchPage() {
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-6"
               >
-                <h3 className="mb-3 font-bold text-white">My Notes</h3>
+                <h3 className="mb-3 font-bold text-[var(--text)]">My Notes</h3>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   onBlur={saveNotes}
                   placeholder="Take notes on this lesson..."
-                  className="h-40 w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="h-40 w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
                 />
               </motion.div>
             )}
@@ -666,10 +666,10 @@ export default function WatchPage() {
           >
             <div className="border-b border-[var(--border)] p-4">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-bold text-white">Course Content</h3>
+                <h3 className="font-bold text-[var(--text)]">Course Content</h3>
                 <button
                   onClick={() => setShowSidebar(false)}
-                  className="text-[var(--muted)] hover:text-white"
+                  className="text-[var(--muted)] hover:text-[var(--text)]"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -679,13 +679,13 @@ export default function WatchPage() {
               <div className="mb-2">
                 <div className="mb-1 flex items-center justify-between text-sm">
                   <span className="text-[var(--muted)]">Progress</span>
-                  <span className="text-white">
+                  <span className="text-[var(--text)]">
                     {completedCount}/{lessons.length}
                   </span>
                 </div>
                 <div className="h-2 w-full rounded-full bg-[var(--bg)]">
                   <div
-                    className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
+                    className="h-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] transition-all"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -704,7 +704,7 @@ export default function WatchPage() {
                     onClick={() => goToLesson(index)}
                     className={`mb-1 w-full rounded-lg p-3 text-left transition-colors ${
                       isCurrent
-                        ? 'border border-purple-500/50 bg-purple-500/20'
+                        ? 'border border-[var(--accent)]/50 bg-[var(--accent)]/20'
                         : 'hover:bg-[var(--bg)]'
                     }`}
                   >
@@ -712,21 +712,21 @@ export default function WatchPage() {
                       <div
                         className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
                           isComplete
-                            ? 'bg-green-500'
+                            ? 'bg-[var(--sage)]'
                             : isCurrent
-                              ? 'bg-purple-500'
+                              ? 'bg-[var(--accent)]'
                               : 'bg-[var(--bg)]'
                         }`}
                       >
                         {isComplete ? (
-                          <CheckCircle className="h-4 w-4 text-white" />
+                          <CheckCircle className="h-4 w-4 text-[var(--text)]" />
                         ) : (
-                          <span className="text-sm text-white">{index + 1}</span>
+                          <span className="text-sm text-[var(--text)]">{index + 1}</span>
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div
-                          className={`truncate font-medium ${isCurrent ? 'text-white' : 'text-[var(--muted)]'}`}
+                          className={`truncate font-medium ${isCurrent ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`}
                         >
                           {lesson.title}
                         </div>

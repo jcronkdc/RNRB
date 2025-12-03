@@ -178,15 +178,17 @@ export async function POST(req: NextRequest) {
     // 🎵 Generate music using Replicate MusicGen
     console.log(`[AI Music] Generating track for user ${userId}:`);
     console.log(`[AI Music] Prompt: "${prompt.slice(0, 100)}..."`);
-    console.log(`[AI Music] Duration: ${validatedData.duration}s, Tempo: ${validatedData.tempo} BPM`);
+    console.log(
+      `[AI Music] Duration: ${validatedData.duration}s, Tempo: ${validatedData.tempo} BPM`
+    );
 
     let output: unknown;
-    
+
     try {
       // Use the latest MusicGen stereo model
       // See: https://replicate.com/meta/musicgen
       output = await replicate.run(
-        'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3550b9bdb1a48910d',
+        'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3550b9bdb1a48910f',
         {
           input: {
             prompt: prompt,
@@ -198,12 +200,12 @@ export async function POST(req: NextRequest) {
           },
         }
       );
-      
+
       console.log(`[AI Music] Replicate response type: ${typeof output}`);
       console.log(`[AI Music] Replicate response:`, JSON.stringify(output).slice(0, 200));
     } catch (replicateError: any) {
       console.error('[AI Music] Replicate API error:', replicateError);
-      
+
       // Check for specific error types
       if (replicateError.message?.includes('Invalid model version')) {
         // Try with default model (no model_version specified) - this lets Replicate choose
@@ -223,7 +225,7 @@ export async function POST(req: NextRequest) {
 
     // MusicGen returns audio URL - could be string directly or in an object/array
     let audioUrl: string;
-    
+
     if (typeof output === 'string') {
       audioUrl = output;
     } else if (Array.isArray(output) && output.length > 0 && typeof output[0] === 'string') {
@@ -244,7 +246,7 @@ export async function POST(req: NextRequest) {
       console.error('[AI Music] Invalid audio URL:', audioUrl);
       throw new Error('AI generation failed - invalid audio URL returned');
     }
-    
+
     console.log(`[AI Music] Generated audio URL: ${audioUrl.slice(0, 100)}...`);
 
     // Download the generated audio
@@ -432,7 +434,7 @@ export async function GET(req: NextRequest) {
     const replicate = getReplicateClient();
     const replicateConfigured = !!replicate;
     const replicateTokenPrefix = process.env.REPLICATE_API_TOKEN?.slice(0, 5) || 'NOT SET';
-    
+
     // Check Supabase storage config
     let supabaseConfigured = false;
     let supabaseError: string | null = null;
@@ -446,7 +448,7 @@ export async function GET(req: NextRequest) {
     // Test Replicate connection if configured
     let replicateStatus = 'not_tested';
     let replicateError: string | null = null;
-    
+
     if (replicateConfigured && replicate) {
       try {
         // Just verify the client can be created - don't make an actual API call
@@ -486,20 +488,27 @@ export async function GET(req: NextRequest) {
         extraDuration: CREDIT_COSTS.extraDuration,
         extraInstruments: CREDIT_COSTS.extraInstruments,
       },
-      troubleshooting: !replicateConfigured ? [
-        'REPLICATE_API_TOKEN environment variable is not set',
-        'Get your token from: https://replicate.com/account/api-tokens',
-        'Token should start with "r8_"',
-      ] : !supabaseConfigured ? [
-        'Supabase storage is not configured',
-        'Ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set',
-      ] : [],
+      troubleshooting: !replicateConfigured
+        ? [
+            'REPLICATE_API_TOKEN environment variable is not set',
+            'Get your token from: https://replicate.com/account/api-tokens',
+            'Token should start with "r8_"',
+          ]
+        : !supabaseConfigured
+          ? [
+              'Supabase storage is not configured',
+              'Ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set',
+            ]
+          : [],
     });
   } catch (error) {
     console.error('GET /api/tracks/generate error:', error);
-    return NextResponse.json({ 
-      error: 'Failed to check status',
-      message: error instanceof Error ? error.message : 'Unknown error',
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Failed to check status',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    );
   }
 }

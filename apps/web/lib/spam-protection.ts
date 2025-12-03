@@ -1,6 +1,6 @@
 /**
  * Spam Protection Utility for Messaging
- * 
+ *
  * Features:
  * - Rate limiting per user (messages per minute/hour)
  * - Duplicate content detection
@@ -13,14 +13,17 @@
 import { prisma } from '@cronkwaters/db';
 
 // In-memory rate limit store (use Redis in production for multi-instance)
-const messageLimits = new Map<string, { count: number; firstMessageAt: number; lastMessageAt: number }>();
+const messageLimits = new Map<
+  string,
+  { count: number; firstMessageAt: number; lastMessageAt: number }
+>();
 const recentMessages = new Map<string, { content: string; sentAt: number }[]>();
 const blockedUsers = new Map<string, Set<string>>(); // userId -> Set of blocked userIds
 
 // Rate limit configurations
 const RATE_LIMITS = {
   MESSAGES_PER_MINUTE: 10, // Max 10 messages per minute
-  MESSAGES_PER_HOUR: 100, // Max 100 messages per hour  
+  MESSAGES_PER_HOUR: 100, // Max 100 messages per hour
   MESSAGES_PER_DAY: 500, // Max 500 messages per day
   COOLDOWN_SAME_RECIPIENT_MS: 5000, // 5 seconds between messages to same person
   DUPLICATE_WINDOW_MS: 60000, // 1 minute window to check for duplicates
@@ -116,10 +119,7 @@ export function checkMessageForSpam(content: string): SpamCheckResult {
 /**
  * Check rate limits for a user
  */
-export function checkRateLimits(
-  userId: string,
-  recipientId?: string
-): RateLimitResult {
+export function checkRateLimits(userId: string, recipientId?: string): RateLimitResult {
   const now = Date.now();
   const userKey = `msg:${userId}`;
   const recipientKey = recipientId ? `msg:${userId}:${recipientId}` : null;
@@ -141,7 +141,7 @@ export function checkRateLimits(
 
   // Check per-minute rate limit
   let userLimit = messageLimits.get(userKey);
-  
+
   if (!userLimit) {
     userLimit = { count: 0, firstMessageAt: now, lastMessageAt: now };
     messageLimits.set(userKey, userLimit);
@@ -190,10 +190,10 @@ export function recordMessage(userId: string, recipientId?: string, content?: st
   if (content) {
     const recentKey = `recent:${userId}`;
     let recent = recentMessages.get(recentKey) || [];
-    
+
     // Remove old messages outside window
-    recent = recent.filter(m => now - m.sentAt < RATE_LIMITS.DUPLICATE_WINDOW_MS);
-    
+    recent = recent.filter((m) => now - m.sentAt < RATE_LIMITS.DUPLICATE_WINDOW_MS);
+
     // Add new message
     recent.push({ content, sentAt: now });
     recentMessages.set(recentKey, recent);
@@ -210,7 +210,7 @@ export function checkDuplicateMessage(userId: string, content: string): boolean 
 
   // Check for exact duplicates in the window
   const duplicateCount = recent.filter(
-    m => m.content === content && now - m.sentAt < RATE_LIMITS.DUPLICATE_WINDOW_MS
+    (m) => m.content === content && now - m.sentAt < RATE_LIMITS.DUPLICATE_WINDOW_MS
   ).length;
 
   return duplicateCount >= 2; // Allow 1 repeat, block on 3rd
@@ -321,8 +321,8 @@ export async function loadBlockedUsers(userId: string): Promise<Set<string>> {
       where: { blockerId: userId },
       select: { blockedId: true },
     });
-    
-    const blocked = new Set(blocks.map(b => b.blockedId));
+
+    const blocked = new Set(blocks.map((b) => b.blockedId));
     blockedUsers.set(userId, blocked);
     return blocked;
   } catch {
@@ -379,7 +379,7 @@ setInterval(() => {
   }
 
   for (const [key, messages] of recentMessages.entries()) {
-    const filtered = messages.filter(m => now - m.sentAt < RATE_LIMITS.DUPLICATE_WINDOW_MS);
+    const filtered = messages.filter((m) => now - m.sentAt < RATE_LIMITS.DUPLICATE_WINDOW_MS);
     if (filtered.length === 0) {
       recentMessages.delete(key);
     } else {
@@ -387,4 +387,3 @@ setInterval(() => {
     }
   }
 }, 300000); // Clean every 5 minutes
-
