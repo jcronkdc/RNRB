@@ -297,6 +297,9 @@ importers:
       '@mux/mux-player-react':
         specifier: ^3.2.2
         version: 3.9.1(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@next/bundle-analyzer':
+        specifier: ^15.0.0
+        version: 15.5.6
       '@prisma/client':
         specifier: ^5.20.0
         version: 5.22.0(prisma@5.22.0)
@@ -436,9 +439,6 @@ importers:
       '@cronkwaters/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@next/bundle-analyzer':
-        specifier: ^15.5.6
-        version: 15.5.6
       '@testing-library/jest-dom':
         specifier: ^6.6.3
         version: 6.9.1
