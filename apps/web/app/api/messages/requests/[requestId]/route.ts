@@ -107,10 +107,22 @@ export async function DELETE(
       return NextResponse.json({ error: 'Invalid request ID' }, { status: 400 });
     }
 
+    // Construct the proper DM channel ID
+    // Messages are stored with channelId in "dm:userId1:userId2" format (sorted alphabetically)
+    // If requestId is "request:senderId" format, we need to construct the actual channelId
+    let channelId: string;
+    if (parts[0] === 'request') {
+      // Construct dm channel ID with IDs sorted alphabetically for consistency
+      const sortedIds = [userId, senderId].sort();
+      channelId = `dm:${sortedIds[0]}:${sortedIds[1]}`;
+    } else {
+      channelId = requestId;
+    }
+
     // Mark messages as deleted (soft delete)
     await prisma.chatMessage.updateMany({
       where: {
-        channelId: requestId,
+        channelId,
         senderId,
       },
       data: {

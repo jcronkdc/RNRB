@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 import {
-  checkRateLimits,
+  reserveRateLimit,
   checkMessageForSpam,
   checkDuplicateMessage,
   recordMessage,
@@ -123,16 +123,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Determine recipient for rate limiting (needed for per-recipient cooldown)
     const recipientId = isClient ? booking.provider.userId : booking.clientId;
 
-    // 🔒 SPAM PROTECTION: Check rate limits (includes per-recipient 5s cooldown)
-    const rateLimit = checkRateLimits(userId, recipientId);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: rateLimit.reason || 'Too many messages. Please slow down.' },
-        { status: 429 }
-      );
-    }
-
-    // 🔒 SPAM PROTECTION: Check for spam content
+    // 🔒 SPAM PROTECTION: Check for spam content (check BEFORE reserving rate limit)
     const spamCheck = checkMessageForSpam(trimmedContent);
     if (spamCheck.isSpam) {
       return NextResponse.json(
@@ -141,7 +132,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       );
     }
 
-    // 🔒 SPAM PROTECTION: Check for duplicate messages
+    // 🔒 SPAM PROTECTION: Check for duplicate messages (check BEFORE reserving rate limit)
     if (checkDuplicateMessage(userId, trimmedContent)) {
       return NextResponse.json(
         { error: 'Please avoid sending duplicate messages.' },
@@ -149,22 +140,40 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       );
     }
 
-    const message = await prisma.bookingMessage.create({
-      data: {
-        bookingId: id,
-        senderId: userId,
-        content: trimmedContent,
-        attachments: attachments || null,
-      },
-      include: {
-        sender: {
-          select: { name: true, image: true },
-        },
-      },
-    });
+    // 🔒 SPAM PROTECTION: Atomically check AND reserve rate limit slot
+    // This prevents the race condition where multiple concurrent requests could
+    // all pass the check before any of them record the message.
+    const rateLimitReservation = reserveRateLimit(userId, recipientId);
+    if (!rateLimitReservation.allowed) {
+      return NextResponse.json(
+        { error: rateLimitReservation.reason || 'Too many messages. Please slow down.' },
+        { status: 429 }
+      );
+    }
 
-    // Record message for rate limiting AFTER successful database write
-    // This prevents state inconsistency if the DB save fails
+    // If DB write fails, we release the rate limit reservation
+    let message;
+    try {
+      message = await prisma.bookingMessage.create({
+        data: {
+          bookingId: id,
+          senderId: userId,
+          content: trimmedContent,
+          attachments: attachments || null,
+        },
+        include: {
+          sender: {
+            select: { name: true, image: true },
+          },
+        },
+      });
+    } catch (dbError) {
+      // Release the rate limit reservation since the message wasn't actually sent
+      rateLimitReservation.release();
+      throw dbError;
+    }
+
+    // Record message content for duplicate detection (rate limit already handled by reservation)
     recordMessage(userId, recipientId, trimmedContent);
 
     // TODO: Send real-time notification via Ably

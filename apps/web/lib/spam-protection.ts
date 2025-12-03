@@ -125,7 +125,7 @@ export function checkMessageForSpam(content: string): SpamCheckResult {
 }
 
 /**
- * Check rate limits for a user
+ * Check rate limits for a user (read-only check, no state modification)
  */
 export function checkRateLimits(userId: string, recipientId?: string): RateLimitResult {
   const now = Date.now();
@@ -173,26 +173,115 @@ export function checkRateLimits(userId: string, recipientId?: string): RateLimit
 }
 
 /**
- * Record a sent message for rate limiting
+ * Atomically check and reserve a rate limit slot.
+ *
+ * This solves the race condition where multiple concurrent requests could all pass
+ * checkRateLimits() before any of them call recordMessage(). By combining the check
+ * and increment into a single atomic operation, we ensure that concurrent requests
+ * are properly serialized.
+ *
+ * Usage:
+ * ```
+ * const reservation = reserveRateLimit(userId, recipientId);
+ * if (!reservation.allowed) {
+ *   return error(reservation.reason);
+ * }
+ * try {
+ *   await databaseWrite();
+ *   // Success - don't call release, the slot is consumed
+ * } catch (error) {
+ *   reservation.release(); // Rollback on failure
+ *   throw error;
+ * }
+ * ```
  */
-export function recordMessage(userId: string, recipientId?: string, content?: string): void {
+export function reserveRateLimit(userId: string, recipientId?: string): RateLimitReservation {
   const now = Date.now();
   const userKey = `msg:${userId}`;
+  const recipientKey = recipientId ? `msg:${userId}:${recipientId}` : null;
 
-  // Update user rate limit
+  // Check cooldown to same recipient BEFORE reserving
+  if (recipientKey) {
+    const lastToRecipient = messageLimits.get(recipientKey);
+    if (lastToRecipient) {
+      const timeSinceLast = now - lastToRecipient.lastMessageAt;
+      if (timeSinceLast < RATE_LIMITS.COOLDOWN_SAME_RECIPIENT_MS) {
+        return {
+          allowed: false,
+          reason: 'Please wait before sending another message to this person',
+          retryAfterMs: RATE_LIMITS.COOLDOWN_SAME_RECIPIENT_MS - timeSinceLast,
+          release: () => {}, // No-op since we didn't reserve anything
+        };
+      }
+    }
+  }
+
+  // Get or create user limit
   let userLimit = messageLimits.get(userKey);
   if (!userLimit) {
     userLimit = { count: 0, firstMessageAt: now, lastMessageAt: now };
+    messageLimits.set(userKey, userLimit);
   }
+
+  // Reset if over a minute
+  if (now - userLimit.firstMessageAt > 60000) {
+    userLimit.count = 0;
+    userLimit.firstMessageAt = now;
+  }
+
+  // Check if at limit BEFORE incrementing
+  if (userLimit.count >= RATE_LIMITS.MESSAGES_PER_MINUTE) {
+    return {
+      allowed: false,
+      reason: 'Too many messages. Please slow down.',
+      retryAfterMs: 60000 - (now - userLimit.firstMessageAt),
+      release: () => {}, // No-op since we didn't reserve anything
+    };
+  }
+
+  // ATOMICALLY increment the count (reserve the slot)
+  const previousCount = userLimit.count;
   userLimit.count++;
   userLimit.lastMessageAt = now;
-  messageLimits.set(userKey, userLimit);
 
-  // Update recipient cooldown
-  if (recipientId) {
-    const recipientKey = `msg:${userId}:${recipientId}`;
+  // Also reserve the recipient cooldown slot
+  const previousRecipientLimit = recipientKey ? messageLimits.get(recipientKey) : null;
+  if (recipientKey) {
     messageLimits.set(recipientKey, { count: 1, firstMessageAt: now, lastMessageAt: now });
   }
+
+  // Return with release function for rollback on failure
+  return {
+    allowed: true,
+    release: () => {
+      // Rollback: decrement the count
+      const currentLimit = messageLimits.get(userKey);
+      if (currentLimit && currentLimit.count > 0) {
+        currentLimit.count--;
+      }
+
+      // Rollback: restore previous recipient cooldown state
+      if (recipientKey) {
+        if (previousRecipientLimit) {
+          messageLimits.set(recipientKey, previousRecipientLimit);
+        } else {
+          messageLimits.delete(recipientKey);
+        }
+      }
+    },
+  };
+}
+
+/**
+ * Record a sent message for duplicate detection only.
+ *
+ * NOTE: For rate limiting, use `reserveRateLimit()` instead to avoid race conditions.
+ * This function is now primarily used for duplicate message detection tracking.
+ *
+ * @deprecated for rate limiting - use reserveRateLimit() for atomic check+reserve
+ */
+export function recordMessage(userId: string, recipientId?: string, content?: string): void {
+  const now = Date.now();
 
   // Store recent message for duplicate detection
   if (content) {
@@ -391,41 +480,78 @@ export async function loadBlockedUsers(userId: string): Promise<Set<string>> {
 }
 
 /**
- * Comprehensive spam check - combines all checks
- * Returns delivery type to determine if message goes to inbox or requests
+ * Result of validateMessage with rate limit reservation
+ */
+export interface MessageValidationResult {
+  valid: boolean;
+  error?: string;
+  deliveryType?: MessageDeliveryType;
+  /** Call this to release the rate limit reservation if the DB write fails */
+  releaseRateLimit: () => void;
+}
+
+/**
+ * Comprehensive spam check - combines all checks with atomic rate limit reservation.
+ *
+ * IMPORTANT: This function now atomically reserves a rate limit slot if validation passes.
+ * If your DB write fails, you MUST call `result.releaseRateLimit()` to avoid penalizing
+ * the user for a message that wasn't actually sent.
+ *
+ * Usage:
+ * ```
+ * const validation = await validateMessage(senderId, recipientId, content);
+ * if (!validation.valid) {
+ *   return error(validation.error);
+ * }
+ * try {
+ *   await databaseWrite();
+ *   recordMessage(senderId, recipientId, content); // For duplicate detection
+ * } catch (error) {
+ *   validation.releaseRateLimit(); // Rollback on failure
+ *   throw error;
+ * }
+ * ```
  */
 export async function validateMessage(
   senderId: string,
   recipientId: string,
   content: string
-): Promise<{ valid: boolean; error?: string; deliveryType?: MessageDeliveryType }> {
-  // 1. Check rate limits
-  const rateLimit = checkRateLimits(senderId, recipientId);
-  if (!rateLimit.allowed) {
-    return { valid: false, error: rateLimit.reason };
-  }
+): Promise<MessageValidationResult> {
+  const noopRelease = () => {};
 
-  // 2. Check for spam content
+  // 1. Check for spam content FIRST (before reserving rate limit)
   const spamCheck = checkMessageForSpam(content);
   if (spamCheck.isSpam) {
-    return { valid: false, error: 'Message flagged as spam' };
+    return { valid: false, error: 'Message flagged as spam', releaseRateLimit: noopRelease };
   }
 
-  // 3. Check for duplicates
+  // 2. Check for duplicates BEFORE reserving rate limit
   if (checkDuplicateMessage(senderId, content)) {
-    return { valid: false, error: 'Please avoid sending duplicate messages' };
+    return {
+      valid: false,
+      error: 'Please avoid sending duplicate messages',
+      releaseRateLimit: noopRelease,
+    };
   }
 
-  // 4. Check if user can message recipient and get delivery type
+  // 3. Check if user can message recipient and get delivery type
   const canMessage = await canUserMessage(senderId, recipientId);
   if (!canMessage.allowed) {
-    return { valid: false, error: canMessage.reason };
+    return { valid: false, error: canMessage.reason, releaseRateLimit: noopRelease };
   }
 
-  // NOTE: Do NOT call recordMessage here - it's called in the route handler
-  // AFTER successful database write to prevent counting failed messages
+  // 4. ATOMICALLY check and reserve rate limit slot
+  // This is done LAST so we don't consume a rate limit slot for invalid messages
+  const rateLimitReservation = reserveRateLimit(senderId, recipientId);
+  if (!rateLimitReservation.allowed) {
+    return { valid: false, error: rateLimitReservation.reason, releaseRateLimit: noopRelease };
+  }
 
-  return { valid: true, deliveryType: canMessage.deliveryType };
+  return {
+    valid: true,
+    deliveryType: canMessage.deliveryType,
+    releaseRateLimit: rateLimitReservation.release,
+  };
 }
 
 // Clean up old entries periodically
