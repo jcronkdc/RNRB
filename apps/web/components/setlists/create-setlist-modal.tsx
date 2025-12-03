@@ -355,9 +355,7 @@ export default function CreateSetlistModal({
                       </li>
                       <li>
                         • <strong>Key changes:</strong>{' '}
-                        {keyChanges > 3
-                          ? '⚠️ Many key changes can tire your voice'
-                          : '✓ Good variety'}
+                        {keyChanges > 3 ? 'Many key changes can tire your voice' : 'Good variety'}
                       </li>
                       <li>
                         • <strong>Collaborate:</strong> Share in project chat for band feedback!

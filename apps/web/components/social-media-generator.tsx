@@ -157,9 +157,9 @@ export function SocialMediaGenerator({
 
           <div className="rnrb-card border-yellow-500/20 bg-yellow-500/5 p-4">
             <p className="text-xs text-muted-foreground">
-              <strong className="text-yellow-500">⚠️ Important:</strong> These are AI-generated
-              drafts. Edit to match your voice and ensure accuracy before posting. Share with your
-              team for feedback using the chat feature.
+              <strong className="text-yellow-500">Important:</strong> These are AI-generated drafts.
+              Edit to match your voice and ensure accuracy before posting. Share with your team for
+              feedback using the chat feature.
             </p>
           </div>
         </div>

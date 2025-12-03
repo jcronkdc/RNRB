@@ -83,7 +83,7 @@ const QUALITY_PRESETS: {
     name: 'Fast',
     description: 'Quick processing, good quality',
     time: '~1-2 min',
-    icon: '⚡',
+    icon: '',
   },
   {
     id: 'balanced',
@@ -97,7 +97,7 @@ const QUALITY_PRESETS: {
     name: 'High Quality',
     description: 'Best separation, slower',
     time: '~6-10 min',
-    icon: '✨',
+    icon: '',
   },
 ];
 

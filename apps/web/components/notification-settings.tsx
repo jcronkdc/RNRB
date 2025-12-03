@@ -146,7 +146,7 @@ export function NotificationSettings() {
     try {
       const registration = await navigator.serviceWorker.ready;
       await registration.showNotification("Rock N' Roll Basement", {
-        body: "🎸 Notifications are working! You'll get alerts for live streams, meetings, and more.",
+        body: "Notifications are working! You'll get alerts for live streams, meetings, and more.",
         icon: '/icon-192.png',
         badge: '/icon-192.png',
         tag: 'test',

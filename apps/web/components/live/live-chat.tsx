@@ -104,7 +104,7 @@ function MessageItem({
           {/* Tip amount */}
           {message.type === 'tip' && (
             <span className="rounded bg-yellow-500/20 px-1.5 py-0.5 text-xs text-yellow-400">
-              💎 Tipped
+              Tipped
             </span>
           )}
         </div>

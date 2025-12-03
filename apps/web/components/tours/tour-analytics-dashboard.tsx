@@ -291,12 +291,12 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                     </div>
                     {leg.drivingTime > 8 && (
                       <p className="mt-2 text-sm text-red-500">
-                        ⚠️ Long drive - consider a rest day or splitting the trip
+                        Long drive - consider a rest day or splitting the trip
                       </p>
                     )}
                     {leg.daysBetween === 1 && leg.drivingTime > 4 && (
                       <p className="mt-2 text-sm text-yellow-500">
-                        ⚠️ Tight schedule - back-to-back shows with {Math.round(leg.drivingTime)} hr
+                        Tight schedule - back-to-back shows with {Math.round(leg.drivingTime)} hr
                         drive
                       </p>
                     )}

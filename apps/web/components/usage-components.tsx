@@ -139,8 +139,8 @@ export function UsageHistory({
             {percentageUsed < 50
               ? "✓ You're on track with your usage"
               : percentageUsed < 80
-                ? '⚠️ Monitor your usage to avoid running out'
-                : '🔴 Consider upgrading to avoid service interruption'}
+                ? 'Monitor your usage to avoid running out'
+                : 'Consider upgrading to avoid service interruption'}
           </p>
         </div>
       )}

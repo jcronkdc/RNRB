@@ -222,7 +222,7 @@ export function WaveformComments({
       ctx.fillStyle = '#ffffff';
       ctx.font = '8px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('💬', markerX, 11);
+      ctx.fillText('●', markerX, 11);
     });
 
     // Draw playhead

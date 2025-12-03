@@ -188,7 +188,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
           </div>
 
           <p className="mt-6 text-xs text-muted-foreground">
-            🎸 <strong>Creator Tier ($17.99/mo)</strong> includes AI features and 10 projects.
+            <strong>Creator Tier ($17.99/mo)</strong> includes AI features and 10 projects.
             <br />
             Studio is for serious bands who need video collaboration.
           </p>

@@ -166,6 +166,7 @@ model User {
   libraryCollections LibraryCollection[]
   sharedFiles        LibraryFileShare[]  @relation("SharedByUser")
   receivedShares     LibraryFileShare[]  @relation("SharedWithUser")
+  libraryShareLinks  LibraryShareLink[]
 
   // AI Assistant
   assistantConversations AssistantConversation[]
@@ -2741,7 +2742,8 @@ model LibraryFile {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Sharing
-  shares LibraryFileShare[]
+  shares     LibraryFileShare[]
+  shareLinks LibraryShareLink[]
 
   @@index([userId])
   @@index([type])
@@ -2782,6 +2784,32 @@ model LibraryFileShare {
   @@index([fileId])
   @@index([sharedById])
   @@index([sharedWithId])
+}
+
+// Public shareable links for library files (Dropbox-style)
+model LibraryShareLink {
+  id        String  @id @default(cuid())
+  fileId    String
+  userId    String  // Owner of the file
+  token     String  @unique // Unique token for link access
+  name      String? // Custom name for the link
+
+  // Security
+  password    String? // Optional password (hashed)
+  canDownload Boolean @default(true)
+  maxViews    Int?    // Maximum number of views
+  viewCount   Int     @default(0)
+  expiresAt   DateTime?
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  file LibraryFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  user User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+  @@index([userId])
 }
 
 // Collections for organizing library files

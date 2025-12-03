@@ -52,7 +52,7 @@ const PRESET_BACKGROUNDS = [
     name: 'Concert',
     type: 'image' as const,
     url: '/backgrounds/concert.jpg',
-    preview: '🎤',
+    preview: '♪',
   },
   {
     id: 'nature',
@@ -87,14 +87,14 @@ const PRESET_BACKGROUNDS = [
     name: 'Purple Gradient',
     type: 'gradient' as const,
     value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    preview: '💜',
+    preview: '◆',
   },
   {
     id: 'gradient-blue',
     name: 'Blue Gradient',
     type: 'gradient' as const,
     value: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-    preview: '💙',
+    preview: '◆',
   },
   {
     id: 'gradient-sunset',
@@ -401,7 +401,7 @@ function BackgroundCard({
         <div className="absolute inset-0" style={getPreviewStyle()}>
           {(background.type === 'none' || background.type === 'blur') && (
             <div className="absolute inset-0 flex items-center justify-center text-2xl">
-              {background.type === 'none' ? '🚫' : '🌫️'}
+              {background.type === 'none' ? '×' : '~'}
             </div>
           )}
         </div>

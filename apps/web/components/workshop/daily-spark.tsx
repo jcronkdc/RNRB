@@ -52,8 +52,8 @@ export function DailySpark({ className = '', onComplete }: DailySparkProps) {
   };
 
   const categoryIcons = {
-    create: '🎵',
-    learn: '📚',
+    create: '♪',
+    learn: '',
     connect: '🤝',
     reflect: '💭',
   };
@@ -86,7 +86,6 @@ export function DailySpark({ className = '', onComplete }: DailySparkProps) {
               exit={{ scale: 0 }}
               className="text-center"
             >
-              <div className="mb-2 text-4xl">✨</div>
               <p className="text-lg font-medium text-white">Beautiful!</p>
               <p className="text-sm text-white/80">You showed up today.</p>
             </motion.div>
@@ -159,7 +158,7 @@ export function DailySpark({ className = '', onComplete }: DailySparkProps) {
         }}
       >
         {completed
-          ? 'Come back tomorrow for a new spark ✨'
+          ? 'Come back tomorrow for a new spark'
           : 'Small actions lead to big breakthroughs'}
       </div>
     </motion.div>

@@ -2704,6 +2704,44 @@ export const VideoIcon = createIcon(
 // Flag (additional export)
 export const FlagIcon = Flag;
 
+// UserX - blocked user
+export const UserX = createIcon(
+  <>
+    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+    <circle cx="8.5" cy="7" r="4" />
+    <line x1="18" y1="8" x2="23" y2="13" />
+    <line x1="23" y1="8" x2="18" y2="13" />
+  </>,
+  'UserX'
+);
+
+// Ban - block/prohibit
+export const Ban = createIcon(
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+  </>,
+  'Ban'
+);
+
+// Ghost - invisible/ignored user
+export const Ghost = createIcon(
+  <>
+    <path d="M9 10h.01M15 10h.01M12 2a8 8 0 00-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 00-8-8z" />
+  </>,
+  'Ghost'
+);
+
+// MessageSquareOff - muted conversation
+export const MessageSquareOff = createIcon(
+  <>
+    <path d="M21 15V5a2 2 0 00-2-2H9" />
+    <path d="M3 3l18 18" />
+    <path d="M3 7v8a2 2 0 002 2h14l-4 4" />
+  </>,
+  'MessageSquareOff'
+);
+
 // Type alias for LucideIcon compatibility
 export type LucideIcon = typeof Activity;
 
@@ -2946,9 +2984,13 @@ export const Icons = {
   UserPlus,
   Users,
   UserSearch,
+  UserX,
   Video,
   VideoIcon,
   VideoOff,
+  Ban,
+  Ghost,
+  MessageSquareOff,
   Volume2,
   VolumeX,
   Wand2,
