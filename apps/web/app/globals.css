@@ -3332,13 +3332,32 @@ html.light button[class*='from-violet'] svg {
 /* AI Assistant and Workspace Builder specific fixes */
 html.light button[aria-label*='AI'],
 html.light button[name*='AI'],
-html.light button[title*='AI'] {
+html.light button[title*='AI'],
+html.light button[aria-label='Open AI Assistant'],
+html.light button[title='AI Assistant'] {
   color: #ffffff !important;
 }
 
 html.light button[aria-label*='AI'] *,
 html.light button[name*='AI'] *,
-html.light button[title*='AI'] * {
+html.light button[title*='AI'] *,
+html.light button[aria-label='Open AI Assistant'] *,
+html.light button[aria-label='Open AI Assistant'] span,
+html.light button[title='AI Assistant'] *,
+html.light button[title='AI Assistant'] span {
+  color: #ffffff !important;
+}
+
+/* Ultra-specific: Any button with both gradient AND text-white */
+html.light button.text-white[class*='bg-gradient'],
+html.light button.text-white[class*='from-'],
+html.light button[class*='text-white'][class*='bg-gradient'],
+html.light button[class*='text-white'][class*='from-'] {
+  color: #ffffff !important;
+}
+
+html.light button[class*='text-white'][class*='bg-gradient'] *,
+html.light button[class*='text-white'][class*='from-'] * {
   color: #ffffff !important;
 }
 
