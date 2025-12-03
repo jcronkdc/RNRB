@@ -16,7 +16,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, name, adminKey } = body;
+    const { email, password, name, adminKey, subscriptionTier } = body;
 
     // SECURITY: Require admin key from environment
     const expectedKey = process.env.ADMIN_PASSWORD_RESET_KEY;
@@ -35,19 +35,23 @@ export async function POST(request: Request) {
     }
 
     // Validation
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: 'Email required' }, { status: 400 });
     }
 
-    if (password.length < 8) {
+    if (!password && !subscriptionTier) {
+      return NextResponse.json({ error: 'Password or subscriptionTier required' }, { status: 400 });
+    }
+
+    if (password && password.length < 8) {
       return NextResponse.json(
         { error: 'Password must be at least 8 characters' },
         { status: 400 }
       );
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash the password if provided
+    const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({
@@ -56,46 +60,56 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
-      // User exists - update their password
-      console.log('[ADMIN] Updating password for existing user:', {
+      // User exists - update their password and/or subscription
+      console.log('[ADMIN] Updating user:', {
         id: existingUser.id,
         email: existingUser.email,
         hadPassword: !!existingUser.password,
+        newTier: subscriptionTier,
       });
 
-      await prisma.user.update({
+      const updateData: Record<string, unknown> = {};
+      if (password) {
+        updateData.password = hashedPassword;
+      }
+      if (subscriptionTier) {
+        updateData.subscriptionTier = subscriptionTier;
+        updateData.subscriptionStatus = 'active';
+      }
+
+      const updatedUser = await prisma.user.update({
         where: { id: existingUser.id },
-        data: { password: hashedPassword },
+        data: updateData,
+        select: { id: true, email: true, name: true, isOwner: true, subscriptionTier: true },
       });
 
-      console.log('[ADMIN] Password updated successfully for:', existingUser.email);
+      console.log('[ADMIN] User updated successfully:', existingUser.email);
 
       return NextResponse.json({
         success: true,
         action: 'updated',
-        message: 'Password updated successfully',
-        user: {
-          id: existingUser.id,
-          email: existingUser.email,
-          name: existingUser.name,
-          isOwner: existingUser.isOwner,
-        },
+        message: password ? 'Password updated successfully' : 'User updated successfully',
+        user: updatedUser,
       });
     } else {
       // User doesn't exist - create them
-      console.log('[ADMIN] Creating new user:', email);
+      if (!password) {
+        return NextResponse.json({ error: 'Password required for new user' }, { status: 400 });
+      }
+
+      console.log('[ADMIN] Creating new user:', email, 'with tier:', subscriptionTier || 'free');
 
       const newUser = await prisma.user.create({
         data: {
           email,
           password: hashedPassword,
           name: name || email.split('@')[0],
-          subscriptionTier: 'free',
+          subscriptionTier: subscriptionTier || 'free',
           subscriptionStatus: 'active',
           isOwner: email === 'justincronk@pm.me', // Platform owner
           profileCompleted: false,
         },
-        select: { id: true, email: true, name: true, isOwner: true },
+        select: { id: true, email: true, name: true, isOwner: true, subscriptionTier: true },
       });
 
       console.log('[ADMIN] User created successfully:', newUser.email);
