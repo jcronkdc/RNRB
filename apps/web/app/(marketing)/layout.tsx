@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
-// Use Edge Runtime for faster TTFB on marketing pages
-// Edge runs closer to users (300+ locations vs ~20 regions)
-export const runtime = 'edge';
+// Use Node.js runtime (required because parent layout uses auth with nodemailer)
+// Edge runtime is incompatible with Node.js built-in modules like 'stream', 'crypto'
+export const runtime = 'nodejs';
 
 // Enable dynamic rendering with short revalidation for fresh content
 export const revalidate = 3600; // Revalidate every hour
