@@ -2590,6 +2590,13 @@ html.light {
     color: var(--text-secondary) !important;
   }
 
+  /* All labels and small text should be readable */
+  main label,
+  main span,
+  main div {
+    /* Don't override color if element has gradient background */
+  }
+
   /* Cards and interactive elements */
   main [class*='card'],
   main [class*='tile'],
@@ -2598,25 +2605,62 @@ html.light {
     border-color: var(--border) !important;
   }
 
+  /* Rounded interactive elements (cards, buttons without gradients) */
+  main [class*='rounded-2xl'],
+  main [class*='rounded-xl'] {
+    border-color: var(--border) !important;
+  }
+
+  /* PRESERVE WHITE TEXT INSIDE GRADIENT ELEMENTS */
   /* Button text inside gradient buttons should stay white */
-  [class*='bg-gradient-to'] {
+  [class*='bg-gradient-to'],
+  [class*='bg-gradient-to'] span,
+  [class*='bg-gradient-to'] svg {
     color: white !important;
   }
 
   [class*='from-emerald'],
+  [class*='from-emerald'] span,
   [class*='from-orange'],
+  [class*='from-orange'] span,
   [class*='from-purple'],
+  [class*='from-purple'] span,
   [class*='from-blue'],
+  [class*='from-blue'] span,
   [class*='from-pink'],
+  [class*='from-pink'] span,
   [class*='from-amber'],
+  [class*='from-amber'] span,
   [class*='from-slate'],
+  [class*='from-slate'] span,
   [class*='from-sky'],
+  [class*='from-sky'] span,
   [class*='from-violet'],
+  [class*='from-violet'] span,
   [class*='from-lime'],
+  [class*='from-lime'] span,
   [class*='from-fuchsia'],
+  [class*='from-fuchsia'] span,
   [class*='from-teal'],
+  [class*='from-teal'] span,
   [class*='from-rose'],
-  [class*='from-brand'] {
+  [class*='from-rose'] span,
+  [class*='from-red'],
+  [class*='from-red'] span,
+  [class*='from-brand'],
+  [class*='from-brand'] span {
+    color: white !important;
+  }
+
+  /* Fix buttons in top bar and common UI */
+  header button span,
+  nav button span {
+    color: var(--text) !important;
+  }
+
+  /* But gradient buttons in header should stay white */
+  header [class*='bg-gradient'] span,
+  header [class*='from-'] span {
     color: white !important;
   }
 }
