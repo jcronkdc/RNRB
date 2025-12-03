@@ -19,6 +19,7 @@ import {
   Send,
   Lock,
   Eye,
+  EyeOff,
   Globe,
   Shield,
   ExternalLink,
@@ -63,7 +64,7 @@ export function LibraryShareModal({
 }: LibraryShareModalProps) {
   // Tab state - 'people' for sharing with users, 'link' for public links
   const [activeTab, setActiveTab] = useState<'people' | 'link'>('link');
-  
+
   // People sharing state
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
@@ -89,6 +90,7 @@ export function LibraryShareModal({
   const [emailRecipient, setEmailRecipient] = useState('');
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [showLinkPassword, setShowLinkPassword] = useState(false);
 
   // Fetch collaborators (users the current user has worked with)
   const { data: collaborators } = useSWR<Collaborator[]>('/api/collaborators?limit=50', fetcher, {
@@ -224,7 +226,7 @@ export function LibraryShareModal({
         method: 'DELETE',
       });
       if (response.ok) {
-        setExistingLinks(prev => prev.filter(l => l.id !== linkId));
+        setExistingLinks((prev) => prev.filter((l) => l.id !== linkId));
         if (generatedLink?.id === linkId) {
           setGeneratedLink(null);
         }
@@ -322,23 +324,23 @@ export function LibraryShareModal({
           {/* Header */}
           <div className="border-b border-gray-800 p-4">
             <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/20">
-                <Share2 className="h-5 w-5 text-orange-500" />
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/20">
+                  <Share2 className="h-5 w-5 text-orange-500" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-white">Share Files</h2>
+                  <p className="text-sm text-gray-400">
+                    {fileIds.length} file{fileIds.length !== 1 ? 's' : ''} selected
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-lg font-semibold text-white">Share Files</h2>
-                <p className="text-sm text-gray-400">
-                  {fileIds.length} file{fileIds.length !== 1 ? 's' : ''} selected
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white"
-            >
-              <X className="h-5 w-5" />
-            </button>
+              <button
+                onClick={onClose}
+                className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
 
             {/* Tabs - Dropbox style */}
@@ -412,7 +414,7 @@ export function LibraryShareModal({
                     </div>
                     <span className="font-medium text-green-400">Link Created!</span>
                   </div>
-                  
+
                   {/* Link URL */}
                   <div className="mb-3 flex items-center gap-2 rounded-lg bg-gray-900/50 p-2">
                     <input
@@ -547,13 +549,28 @@ export function LibraryShareModal({
                       </label>
                       <div className="flex items-center gap-2">
                         <Lock className="h-4 w-4 text-gray-500" />
-                        <input
-                          type="password"
-                          value={linkPassword}
-                          onChange={(e) => setLinkPassword(e.target.value)}
-                          placeholder="Set a password"
-                          className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
-                        />
+                        <div className="relative flex-1">
+                          <input
+                            type={showLinkPassword ? 'text' : 'password'}
+                            value={linkPassword}
+                            onChange={(e) => setLinkPassword(e.target.value)}
+                            placeholder="Set a password"
+                            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 pr-10 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowLinkPassword(!showLinkPassword)}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-500 transition-colors hover:bg-gray-700 hover:text-gray-300"
+                            tabIndex={-1}
+                            aria-label={showLinkPassword ? 'Hide password' : 'Show password'}
+                          >
+                            {showLinkPassword ? (
+                              <EyeOff className="h-4 w-4" />
+                            ) : (
+                              <Eye className="h-4 w-4" />
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -900,9 +917,7 @@ export function LibraryShareModal({
 
               {/* Footer */}
               <div className="flex items-center justify-between border-t border-gray-800 p-4">
-                <div className="text-xs text-gray-500">
-                  Recipients will receive a notification
-                </div>
+                <div className="text-xs text-gray-500">Recipients will receive a notification</div>
 
                 <div className="flex gap-2">
                   <button

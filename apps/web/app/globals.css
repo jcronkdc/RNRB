@@ -3259,32 +3259,37 @@ html.light {
   /* Gunmetal gray: #4A5568 (slate-600) - professional, industrial feel */
 
   /* Make buttons more distinct in light mode with gunmetal borders */
-  button:not([class*='bg-gradient']):not([class*='from-']) {
+  button:not([class*='bg-gradient']):not([class*='from-']):not(.gradient-btn) {
     border: 1px solid #6b7280 !important; /* gunmetal gray */
   }
 
   /* Header/toolbar buttons need more definition - gunmetal style */
-  header button,
-  [class*='top-bar'] button,
-  nav button {
+  /* EXCLUDE gradient buttons and buttons with inline gradients (.gradient-btn) */
+  header button:not([class*='bg-gradient']):not([class*='from-']):not(.gradient-btn),
+  [class*='top-bar'] button:not([class*='bg-gradient']):not([class*='from-']):not(.gradient-btn),
+  nav button:not([class*='bg-gradient']):not([class*='from-']):not(.gradient-btn) {
     border: 1px solid #9ca3af !important; /* lighter gunmetal */
     background-color: rgba(255, 255, 255, 0.85) !important;
   }
 
-  /* Don't add borders to gradient buttons (they look good as-is) */
+  /* Don't add borders or backgrounds to gradient buttons (they have their own styling) */
   button[class*='bg-gradient'],
-  button[class*='from-'] {
+  button[class*='from-'],
+  button.gradient-btn {
     border: none !important;
+    /* Don't override background on gradient buttons */
   }
 
   /* Icon buttons in toolbars - gunmetal accent */
-  button[class*='rounded-xl']:not([class*='bg-gradient']):not([class*='from-']) {
+  button[class*='rounded-xl']:not([class*='bg-gradient']):not([class*='from-']):not(.gradient-btn) {
     background-color: rgba(255, 255, 255, 0.9) !important;
     border: 1px solid #9ca3af !important; /* gunmetal gray */
     box-shadow: 0 1px 3px rgba(75, 85, 99, 0.15) !important; /* subtle gunmetal shadow */
   }
 
-  button[class*='rounded-xl']:hover:not([class*='bg-gradient']):not([class*='from-']) {
+  button[class*='rounded-xl']:hover:not([class*='bg-gradient']):not([class*='from-']):not(
+      .gradient-btn
+    ) {
     background-color: #ffffff !important;
     border-color: #6b7280 !important; /* darker gunmetal on hover */
     box-shadow: 0 2px 6px rgba(75, 85, 99, 0.25) !important;
@@ -3363,14 +3368,42 @@ html.light button[class*='text-white'][class*='from-'] * {
 
 /* === GRADIENT BUTTON CLASS === */
 /* This class is used for buttons with inline gradient styles */
-.gradient-btn {
+/* Reset background-color to let the inline style gradient show */
+html.light .gradient-btn,
+html.light button.gradient-btn,
+html.light header button.gradient-btn {
+  background-color: unset !important;
+  background: unset !important;
   color: #ffffff !important;
 }
 
+/* Specific gradient button backgrounds */
+html.light .gradient-btn-orange {
+  background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%) !important;
+}
+
+html.light .gradient-btn-red {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+}
+
+html.light .gradient-btn-purple {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+}
+
+html.light .gradient-btn-amber {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+}
+
+html.light .gradient-btn-sky {
+  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+}
+
+html.light .gradient-btn *,
 .gradient-btn * {
   color: #ffffff !important;
 }
 
+html.light .gradient-btn svg,
 .gradient-btn svg {
   color: #ffffff !important;
 }

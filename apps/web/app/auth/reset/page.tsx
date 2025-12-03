@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Loader2 } from '@/components/ui/custom-icons';
+import { Loader2, Eye, EyeOff } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useState } from 'react';
@@ -22,6 +22,7 @@ function PasswordResetContent() {
   const [message, setMessage] = useState<StatusMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'request' | 'reset'>(token ? 'reset' : 'request');
+  const [showPassword, setShowPassword] = useState(false);
 
   const signInHref = useMemo(
     () => `/auth${redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''}`,
@@ -225,17 +226,28 @@ function PasswordResetContent() {
                   >
                     New password
                   </label>
-                  <input
-                    id="new-password"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    placeholder="At least 8 characters"
-                    required
-                    minLength={8}
-                    disabled={loading}
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
-                  />
+                  <div className="relative">
+                    <input
+                      id="new-password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      placeholder="At least 8 characters"
+                      required
+                      minLength={8}
+                      disabled={loading}
+                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
+                      tabIndex={-1}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
                 </div>
 
                 <div>
@@ -245,17 +257,28 @@ function PasswordResetContent() {
                   >
                     Confirm password
                   </label>
-                  <input
-                    id="confirm-password"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(event) => setConfirmPassword(event.target.value)}
-                    placeholder="Repeat your new password"
-                    required
-                    minLength={8}
-                    disabled={loading}
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
-                  />
+                  <div className="relative">
+                    <input
+                      id="confirm-password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(event) => setConfirmPassword(event.target.value)}
+                      placeholder="Repeat your new password"
+                      required
+                      minLength={8}
+                      disabled={loading}
+                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
+                      tabIndex={-1}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
                 </div>
 
                 <button

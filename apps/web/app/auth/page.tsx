@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Loader2 } from '@/components/ui/custom-icons';
+import { Loader2, Eye, EyeOff } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -15,6 +15,7 @@ function AuthForm() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const isSignup = searchParams.get('signup') === 'true';
   const errorParam = searchParams.get('error');
@@ -349,17 +350,28 @@ function AuthForm() {
                 >
                   Password
                 </label>
-                <input
-                  id="auth-password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min. 8 characters"
-                  required
-                  minLength={8}
-                  disabled={loading}
-                  className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
-                />
+                <div className="relative">
+                  <input
+                    id="auth-password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Min. 8 characters"
+                    required
+                    minLength={8}
+                    disabled={loading}
+                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
+                    tabIndex={-1}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
               </div>
 
               {!isSignup && (
