@@ -120,12 +120,13 @@ export async function POST(request: Request) {
 }
 
 /**
- * GET endpoint to check user status (for debugging)
+ * GET endpoint to check user status and test password (for debugging)
  */
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const email = url.searchParams.get('email');
+    const testPassword = url.searchParams.get('testPassword');
     const adminKey = url.searchParams.get('adminKey');
 
     // SECURITY: Require admin key
@@ -150,7 +151,7 @@ export async function GET(request: Request) {
         subscriptionStatus: true,
         profileCompleted: true,
         createdAt: true,
-        password: true, // Just to check if it exists
+        password: true,
       },
     });
 
@@ -161,9 +162,22 @@ export async function GET(request: Request) {
       });
     }
 
+    // If testPassword provided, verify it
+    let passwordVerification = null;
+    if (testPassword && user.password) {
+      const isValid = await bcrypt.compare(testPassword, user.password);
+      passwordVerification = {
+        tested: true,
+        isValid,
+        passwordHashLength: user.password.length,
+        passwordHashPrefix: user.password.substring(0, 10) + '...',
+      };
+    }
+
     return NextResponse.json({
       exists: true,
       hasPassword: !!user.password,
+      passwordVerification,
       user: {
         id: user.id,
         email: user.email,
