@@ -110,8 +110,8 @@ export function TopBar() {
     <header
       className="fixed left-0 right-0 top-0 z-30 h-14 backdrop-blur-xl lg:ml-[260px]"
       style={{
-        background: 'rgba(30, 30, 30, 0.8)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'var(--topbar-bg, rgba(30, 30, 30, 0.8))',
+        borderBottom: '1px solid var(--border)',
       }}
     >
       <div className="flex h-full items-center justify-between px-4 lg:px-6">
@@ -124,7 +124,7 @@ export function TopBar() {
           <button
             onClick={() => setSearchOpen(!searchOpen)}
             className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-white/5 lg:px-4"
-            style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
+            style={{ border: '1px solid var(--border)' }}
           >
             <Users className="h-4 w-4 text-gray-400 group-hover:text-orange-400" />
             <span className="hidden text-sm text-gray-400 group-hover:text-white sm:inline">
@@ -226,8 +226,8 @@ export function TopBar() {
             onClick={() => router.push('/credits')}
             className="group hidden items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-white/5 sm:flex lg:px-4"
             style={{
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              background: 'rgba(255, 99, 71, 0.1)',
+              border: '1px solid var(--border)',
+              background: 'var(--accent-dim)',
             }}
             title={
               creditsData
@@ -248,7 +248,7 @@ export function TopBar() {
             <button
               onClick={() => setProfileOpen(!profileOpen)}
               className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-all hover:bg-white/5 lg:px-3"
-              style={{ border: '1px solid rgba(255, 255, 255, 0.1)' }}
+              style={{ border: '1px solid var(--border)' }}
             >
               {user?.image ? (
                 <img
@@ -285,13 +285,13 @@ export function TopBar() {
                   exit={{ opacity: 0, y: -10, scale: 0.95 }}
                   className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl"
                   style={{
-                    background: 'rgba(30, 30, 30, 0.95)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+                    background: 'var(--panel)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'var(--shadow-lg)',
                     backdropFilter: 'blur(20px)',
                   }}
                 >
-                  <div className="border-b p-4" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
+                  <div className="border-b p-4" style={{ borderColor: 'var(--border)' }}>
                     <p className="text-sm font-medium text-white">{user?.name || 'Artist'}</p>
                     <p className="mt-1 text-xs text-gray-400">{user?.email}</p>
                     {creditsData && !creditsData.unlimited && (
@@ -340,10 +340,7 @@ export function TopBar() {
                       <span className="text-sm text-gray-300">Billing & Credits</span>
                     </button>
 
-                    <div
-                      className="my-2 border-t"
-                      style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
-                    />
+                    <div className="my-2 border-t" style={{ borderColor: 'var(--border)' }} />
 
                     <button
                       onClick={handleSignOut}

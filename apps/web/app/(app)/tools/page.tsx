@@ -19,9 +19,9 @@ import {
   LayoutGrid,
   List,
 } from '@/components/ui/custom-icons';
-import Image from 'next/image';
 import Link from 'next/link';
 
+import { ThemeLogo } from '@/components/theme';
 import { ChromaticTuner } from '@/components/tools/chromatic-tuner';
 import { ClickTrackGenerator } from '@/components/tools/click-track-generator';
 import { PracticeLogger } from '@/components/tools/practice-logger';
@@ -241,23 +241,14 @@ function ToolsContent() {
       {/* Logo & Header Section */}
       <div className="relative z-10">
         <div className="mx-auto max-w-7xl px-4 py-8">
-          {/* RR Logo - white logo for dark bg */}
+          {/* RR Logo - Theme Aware */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             className="mb-6 flex flex-col items-center"
           >
-            <Link href="/" className="group inline-block">
-              <Image
-                src="/logo-dark.png"
-                alt="Rock N' Roll Basement"
-                width={140}
-                height={57}
-                priority
-                className="transition-opacity duration-200 group-hover:opacity-80"
-              />
-            </Link>
+            <ThemeLogo size="lg" priority />
           </motion.div>
 
           {/* Page Title */}
@@ -267,7 +258,9 @@ function ToolsContent() {
             transition={{ delay: 0.1 }}
             className="mb-8 text-center"
           >
-            <h1 className="mb-3 text-3xl font-bold text-white md:text-4xl">Musician's Toolbox</h1>
+            <h1 className="mb-3 text-3xl font-bold md:text-4xl" style={{ color: 'var(--text)' }}>
+              Musician's Toolbox
+            </h1>
             <p className="text-lg" style={{ color: 'var(--muted)' }}>
               Professional tools for practice, performance & business
             </p>
