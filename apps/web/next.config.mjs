@@ -90,8 +90,8 @@ const nextConfig = {
       'lodash',
       'posthog-js',
     ],
-    // CSS optimization
-    optimizeCss: true,
+    // CSS optimization disabled - requires 'critters' module which has SSR compatibility issues
+    // optimizeCss: true,
   },
   images: {
     // Enable AVIF and WebP for modern formats (Lighthouse recommendation)

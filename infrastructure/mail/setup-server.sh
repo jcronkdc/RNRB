@@ -415,3 +415,4 @@ chmod 600 /root/mail-server-credentials.txt
 echo -e "${GREEN}Credentials saved to: /root/mail-server-credentials.txt${NC}"
 
 
+

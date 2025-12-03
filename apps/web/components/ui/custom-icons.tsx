@@ -1209,6 +1209,20 @@ export const MonitorX = createIcon(
   'MonitorX'
 );
 
+// Presentation - presenter/stage mode display
+export const Presentation = createIcon(
+  <>
+    <path d="M2 3h20" />
+    <path d="M21 3v11a2 2 0 01-2 2H5a2 2 0 01-2-2V3" />
+    <path d="M7 21l5-5 5 5" />
+    <path d="M12 16v-5" />
+    <path d="M8 8h.01" />
+    <path d="M12 8h.01" />
+    <path d="M16 8h.01" />
+  </>,
+  'Presentation'
+);
+
 // Moon - dark mode
 export const Moon = createIcon(
   <>
@@ -2446,6 +2460,250 @@ export const ToteBag = createIcon(
   'ToteBag'
 );
 
+// =====================
+// MISSING ICONS (Build Fix)
+// =====================
+
+// FileArchive - archived/compressed file
+export const FileArchive = createIcon(
+  <>
+    <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z" />
+    <polyline points="14 2 14 8 20 8" />
+    <path d="M10 12v-1" />
+    <path d="M10 18v-2" />
+    <path d="M10 15v-1" />
+  </>,
+  'FileArchive'
+);
+
+// Inbox - message inbox
+export const Inbox = createIcon(
+  <>
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+    <path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" />
+  </>,
+  'Inbox'
+);
+
+// ReplyAll - reply to all
+export const ReplyAll = createIcon(
+  <>
+    <polyline points="7 17 2 12 7 7" />
+    <polyline points="12 17 7 12 12 7" />
+    <path d="M22 18v-2a4 4 0 00-4-4H7" />
+  </>,
+  'ReplyAll'
+);
+
+// Archive - archive item
+export const Archive = createIcon(
+  <>
+    <rect x="2" y="3" width="20" height="5" rx="1" />
+    <path d="M4 8v11a2 2 0 002 2h12a2 2 0 002-2V8" />
+    <path d="M10 12h4" />
+  </>,
+  'Archive'
+);
+
+// Move - move/drag item
+export const Move = createIcon(
+  <>
+    <polyline points="5 9 2 12 5 15" />
+    <polyline points="9 5 12 2 15 5" />
+    <polyline points="15 19 12 22 9 19" />
+    <polyline points="19 9 22 12 19 15" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <line x1="12" y1="2" x2="12" y2="22" />
+  </>,
+  'Move'
+);
+
+// Truck - shipping/delivery
+export const Truck = createIcon(
+  <>
+    <path d="M1 3h15v13H1z" />
+    <path d="M16 8h4l3 3v5h-7V8z" />
+    <circle cx="5.5" cy="18.5" r="2.5" />
+    <circle cx="18.5" cy="18.5" r="2.5" />
+  </>,
+  'Truck'
+);
+
+// Film - video/film reel
+export const Film = createIcon(
+  <>
+    <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18" />
+    <line x1="7" y1="2" x2="7" y2="22" />
+    <line x1="17" y1="2" x2="17" y2="22" />
+    <line x1="2" y1="12" x2="22" y2="12" />
+    <line x1="2" y1="7" x2="7" y2="7" />
+    <line x1="2" y1="17" x2="7" y2="17" />
+    <line x1="17" y1="17" x2="22" y2="17" />
+    <line x1="17" y1="7" x2="22" y2="7" />
+  </>,
+  'Film'
+);
+
+// Banknote - paper money
+export const Banknote = createIcon(
+  <>
+    <rect x="2" y="6" width="20" height="12" rx="2" />
+    <circle cx="12" cy="12" r="2" />
+    <path d="M6 12h.01M18 12h.01" />
+  </>,
+  'Banknote'
+);
+
+// PiggyBank - savings
+export const PiggyBank = createIcon(
+  <>
+    <path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2z" />
+    <path d="M2 9v1c0 1.1.9 2 2 2h1" />
+    <path d="M16 11h.01" />
+  </>,
+  'PiggyBank'
+);
+
+// Cloud - cloud storage
+export const Cloud = createIcon(
+  <>
+    <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" />
+  </>,
+  'Cloud'
+);
+
+// CloudOff - disconnected from cloud
+export const CloudOff = createIcon(
+  <>
+    <path d="M2 2l20 20" />
+    <path d="M5.25 5.23A9 9 0 003 11.8 5.3 5.3 0 001 16a5 5 0 005 5h9" />
+    <path d="M17 17h.8a5 5 0 00.6-9.97A9 9 0 008.8 4.8" />
+  </>,
+  'CloudOff'
+);
+
+// PanelLeftClose - close left panel
+export const PanelLeftClose = createIcon(
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 3v18" />
+    <path d="M16 15l-3-3 3-3" />
+  </>,
+  'PanelLeftClose'
+);
+
+// PanelLeft - left panel
+export const PanelLeft = createIcon(
+  <>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 3v18" />
+  </>,
+  'PanelLeft'
+);
+
+// PenTool - pen/design tool
+export const PenTool = createIcon(
+  <>
+    <path d="M12 19l7-7 3 3-7 7-3-3z" />
+    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+    <path d="M2 2l7.586 7.586" />
+    <circle cx="11" cy="11" r="2" />
+  </>,
+  'PenTool'
+);
+
+// Server - server/hosting
+export const Server = createIcon(
+  <>
+    <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+    <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+    <line x1="6" y1="6" x2="6.01" y2="6" />
+    <line x1="6" y1="18" x2="6.01" y2="18" />
+  </>,
+  'Server'
+);
+
+// FileEdit - edit file
+export const FileEdit = createIcon(
+  <>
+    <path d="M4 13.5V4a2 2 0 012-2h8.5L20 7.5V20a2 2 0 01-2 2h-5.5" />
+    <polyline points="14 2 14 8 20 8" />
+    <path d="M10.42 12.61a2.1 2.1 0 112.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44z" />
+  </>,
+  'FileEdit'
+);
+
+// Map - map/navigation
+export const Map = createIcon(
+  <>
+    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+    <line x1="8" y1="2" x2="8" y2="18" />
+    <line x1="16" y1="6" x2="16" y2="22" />
+  </>,
+  'Map'
+);
+
+// Pen - writing pen
+export const Pen = createIcon(
+  <>
+    <path d="M17 3a2.85 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+  </>,
+  'Pen'
+);
+
+// Key - key/access
+export const Key = createIcon(
+  <>
+    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+  </>,
+  'Key'
+);
+
+// Copyright - copyright symbol
+export const Copyright = createIcon(
+  <>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M15 9.354a4 4 0 100 5.292" />
+  </>,
+  'Copyright'
+);
+
+// ZoomOut - zoom out
+export const ZoomOut = createIcon(
+  <>
+    <circle cx="11" cy="11" r="8" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    <line x1="8" y1="11" x2="14" y2="11" />
+  </>,
+  'ZoomOut'
+);
+
+// QrCode - QR code
+export const QrCode = createIcon(
+  <>
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <rect x="14" y="14" width="3" height="3" />
+    <rect x="18" y="14" width="3" height="3" />
+    <rect x="14" y="18" width="3" height="3" />
+    <rect x="18" y="18" width="3" height="3" />
+  </>,
+  'QrCode'
+);
+
+// VideoIcon - video camera (alias)
+export const VideoIcon = createIcon(
+  <>
+    <polygon points="23 7 16 12 23 17 23 7" />
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+  </>,
+  'VideoIcon'
+);
+
+// Flag (additional export)
+export const FlagIcon = Flag;
+
 // Type alias for LucideIcon compatibility
 export type LucideIcon = typeof Activity;
 
@@ -2454,6 +2712,7 @@ export const Icons = {
   Activity,
   AlertCircle,
   AlertTriangle,
+  Archive,
   ArrowDown,
   ArrowDownRight,
   ArrowLeft,
@@ -2462,6 +2721,7 @@ export const Icons = {
   ArrowUpRight,
   AtSign,
   Award,
+  Banknote,
   BarChart,
   BarChart3,
   BadgeCheck,
@@ -2491,11 +2751,14 @@ export const Icons = {
   Circle,
   ClipboardList,
   Clock,
+  Cloud,
+  CloudOff,
   Coffee,
   Command,
   Compass,
   Coins,
   Copy,
+  Copyright,
   CreditCard,
   Crown,
   Disc,
@@ -2512,10 +2775,17 @@ export const Icons = {
   EyeOff,
   Facebook,
   File,
+  FileArchive,
   FileAudio,
   FileCheck,
+  FileEdit,
+  FileMusic,
   FileText,
+  FileType,
+  Film,
   Filter,
+  Flag,
+  FlagIcon,
   Flame,
   FlaskConical,
   Folder,
@@ -2526,9 +2796,7 @@ export const Icons = {
   CircuitBoard,
   RefreshCcw,
   CheckSquare,
-  FileMusic,
   ScrollText,
-  FileType,
   Gauge,
   Gift,
   GitBranch,
@@ -2548,8 +2816,10 @@ export const Icons = {
   Home,
   Image,
   ImageIcon,
+  Inbox,
   Info,
   Instagram,
+  Key,
   Keyboard,
   LayoutDashboard,
   LayoutGrid,
@@ -2568,6 +2838,7 @@ export const Icons = {
   Lock,
   LogOut,
   Mail,
+  Map,
   MapPin,
   Maximize,
   Maximize2,
@@ -2590,23 +2861,31 @@ export const Icons = {
   MoreVertical,
   Mouse,
   MousePointer2,
+  Move,
   Music,
   Music2,
   Music4,
   Navigation,
   Newspaper,
   Palette,
+  PanelLeft,
+  PanelLeftClose,
   Paperclip,
   Pause,
+  Pen,
+  PenTool,
   Phone,
   PhoneOff,
   Piano,
   PieChart,
+  PiggyBank,
   Pin,
   Play,
   PlayCircle,
   Plus,
+  Presentation,
   Printer,
+  QrCode,
   Quote,
   Radio,
   Redo,
@@ -2614,12 +2893,14 @@ export const Icons = {
   Repeat,
   Repeat2,
   Reply,
+  ReplyAll,
   RotateCcw,
   RotateCw,
   Ruler,
   Save,
   Search,
   Send,
+  Server,
   Settings,
   Settings2,
   Share2,
@@ -2652,6 +2933,7 @@ export const Icons = {
   TrendingDown,
   TrendingUp,
   Trophy,
+  Truck,
   Tv,
   Twitter,
   Type,
@@ -2665,6 +2947,7 @@ export const Icons = {
   Users,
   UserSearch,
   Video,
+  VideoIcon,
   VideoOff,
   Volume2,
   VolumeX,
@@ -2677,6 +2960,7 @@ export const Icons = {
   Youtube,
   Zap,
   ZoomIn,
+  ZoomOut,
   // Merchandise Product Icons
   TShirt,
   Hoodie,

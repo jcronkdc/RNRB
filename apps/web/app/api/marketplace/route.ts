@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     // Rate limiting
     const identifier = request.ip ?? 'anonymous';
-    const { success } = await standardLimiter.limit(identifier);
+    const { success } = await standardLimiter.check(identifier);
     if (!success) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
 
     // Rate limiting
     const identifier = session.user.id;
-    const { success } = await standardLimiter.limit(identifier);
+    const { success } = await standardLimiter.check(identifier);
     if (!success) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }

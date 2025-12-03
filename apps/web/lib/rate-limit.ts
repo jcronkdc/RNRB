@@ -177,6 +177,16 @@ export const authLimiter = rateLimit({
 });
 
 /**
+ * Public endpoint rate limiter (30 requests per minute)
+ * For unauthenticated public API endpoints like newsletter, support tickets
+ */
+export const publicLimiter = rateLimit({
+  interval: 60 * 1000, // 1 minute
+  limit: 30,
+  prefix: 'public',
+});
+
+/**
  * Ably token rate limiter (120 requests per minute)
  * Higher limit because:
  * - Tokens are valid for 1 hour, so we're not worried about token abuse

@@ -19,7 +19,6 @@ import {
   ShoppingBag,
   Mail,
 } from '@/components/ui/custom-icons';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
@@ -27,11 +26,8 @@ import { useState, useEffect } from 'react';
 import { GlobalUserSearch } from './global-user-search';
 import { MobileMenuButton } from './sidebar-nav';
 
-// Dynamically import NotificationBell to avoid SSR issues
-const NotificationBell = dynamic(
-  () => import('./notification-bell').then((m) => ({ default: m.NotificationBell })),
-  { ssr: false }
-);
+// Import NotificationBell directly - using dynamic caused webpack issues
+import { NotificationBell } from './notification-bell';
 
 export function TopBar() {
   const router = useRouter();

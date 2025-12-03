@@ -3,6 +3,9 @@ import { Prisma } from '@prisma/client';
 export { prisma, safeDelete } from './prisma';
 export { Prisma };
 
+// Alias for compatibility with files importing 'db' instead of 'prisma'
+export { prisma as db } from './prisma';
+
 // Re-export Prisma types for convenience
 export type { Org as Organization, Membership, User, Project, Song, Asset } from '@prisma/client';
 // Re-export Prisma enum types
