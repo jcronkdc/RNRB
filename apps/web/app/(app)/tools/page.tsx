@@ -287,31 +287,43 @@ function ToolsContent() {
                 className={`rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat.id
                     ? 'bg-gradient-to-r from-brand-primary to-orange-500 text-white shadow-lg shadow-brand-primary/25'
-                    : 'border border-white/10 bg-white/5 text-[color:var(--muted)] hover:border-white/20 hover:bg-white/10 hover:text-white'
+                    : ''
                 }`}
+                style={
+                  activeCategory !== cat.id
+                    ? {
+                        background: 'var(--panel)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--muted)',
+                      }
+                    : undefined
+                }
               >
                 {cat.name}
               </motion.button>
             ))}
           </div>
-          <div className="flex gap-1 rounded-xl border border-white/10 bg-white/5 p-1.5 backdrop-blur-sm">
+          <div
+            className="flex gap-1 rounded-xl p-1.5 backdrop-blur-sm"
+            style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+          >
             <button
               onClick={() => setViewMode('grid')}
-              className={`rounded-lg p-2.5 transition-all duration-200 ${
-                viewMode === 'grid'
-                  ? 'bg-white/15 text-white shadow-inner'
-                  : 'text-[color:var(--muted)] hover:bg-white/10 hover:text-white'
-              }`}
+              className="rounded-lg p-2.5 transition-all duration-200"
+              style={{
+                background: viewMode === 'grid' ? 'var(--panel-active)' : 'transparent',
+                color: viewMode === 'grid' ? 'var(--text)' : 'var(--muted)',
+              }}
             >
               <LayoutGrid className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`rounded-lg p-2.5 transition-all duration-200 ${
-                viewMode === 'list'
-                  ? 'bg-white/15 text-white shadow-inner'
-                  : 'text-[color:var(--muted)] hover:bg-white/10 hover:text-white'
-              }`}
+              className="rounded-lg p-2.5 transition-all duration-200"
+              style={{
+                background: viewMode === 'list' ? 'var(--panel-active)' : 'transparent',
+                color: viewMode === 'list' ? 'var(--text)' : 'var(--muted)',
+              }}
             >
               <List className="h-4 w-4" />
             </button>
@@ -327,7 +339,10 @@ function ToolsContent() {
           >
             <button
               onClick={() => setActiveTool(null)}
-              className="mb-4 text-sm text-[color:var(--muted)] hover:text-white"
+              className="mb-4 text-sm transition-colors"
+              style={{ color: 'var(--muted)' }}
+              onMouseOver={(e) => (e.currentTarget.style.color = 'var(--text)')}
+              onMouseOut={(e) => (e.currentTarget.style.color = 'var(--muted)')}
             >
               ← Back to all tools
             </button>
@@ -351,11 +366,15 @@ function ToolsContent() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.05 }}
                 onClick={() => tool.status === 'ready' && setActiveTool(tool.id)}
-                className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
+                className={`group relative overflow-hidden rounded-2xl transition-all duration-300 ${
                   tool.status === 'ready'
-                    ? 'cursor-pointer border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] hover:border-white/20 hover:from-white/[0.12] hover:to-white/[0.04] hover:shadow-xl hover:shadow-black/20'
-                    : 'cursor-not-allowed border-white/5 bg-white/[0.02] opacity-50'
+                    ? 'cursor-pointer hover:shadow-xl'
+                    : 'cursor-not-allowed opacity-50'
                 } ${viewMode === 'list' ? 'flex items-center gap-4' : ''}`}
+                style={{
+                  background: 'var(--panel)',
+                  border: '1px solid var(--border)',
+                }}
               >
                 {/* Gradient glow on hover */}
                 <div
@@ -384,16 +403,22 @@ function ToolsContent() {
                   {/* Content */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-white transition-colors group-hover:text-white">
+                      <h3
+                        className="text-lg font-semibold transition-colors"
+                        style={{ color: 'var(--text)' }}
+                      >
                         {tool.name}
                       </h3>
                       {tool.status === 'coming-soon' && (
-                        <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-white/60">
+                        <span
+                          className="rounded-full px-2.5 py-1 text-xs font-medium"
+                          style={{ background: 'var(--panel-hover)', color: 'var(--muted)' }}
+                        >
                           Coming Soon
                         </span>
                       )}
                     </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-white/60">
+                    <p className="mt-1.5 text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
                       {tool.description}
                     </p>
                   </div>
@@ -401,10 +426,20 @@ function ToolsContent() {
                   {/* Category Badge & Arrow */}
                   {viewMode === 'grid' && (
                     <div className="mt-5 flex items-center justify-between">
-                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium capitalize text-white/50">
+                      <span
+                        className="rounded-full px-3 py-1.5 text-xs font-medium capitalize"
+                        style={{
+                          background: 'var(--panel-hover)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--muted)',
+                        }}
+                      >
                         {tool.category}
                       </span>
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5 text-white/40 transition-all duration-300 group-hover:bg-white/10 group-hover:text-white">
+                      <span
+                        className="flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300"
+                        style={{ background: 'var(--panel-hover)', color: 'var(--muted)' }}
+                      >
                         →
                       </span>
                     </div>
@@ -412,7 +447,10 @@ function ToolsContent() {
 
                   {/* List view arrow */}
                   {viewMode === 'list' && tool.status === 'ready' && (
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/40 transition-all duration-300 group-hover:bg-white/10 group-hover:text-white">
+                    <span
+                      className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300"
+                      style={{ background: 'var(--panel-hover)', color: 'var(--muted)' }}
+                    >
                       →
                     </span>
                   )}
@@ -427,32 +465,41 @@ function ToolsContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mt-16 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-8 backdrop-blur-sm"
+          className="mt-16 overflow-hidden rounded-2xl p-8 backdrop-blur-sm"
+          style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
           <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
             <div className="group">
               <div className="bg-gradient-to-br from-emerald-400 to-teal-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 {TOOLS.filter((t) => t.status === 'ready').length}
               </div>
-              <div className="mt-1 text-sm font-medium text-white/50">Tools Ready</div>
+              <div className="mt-1 text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                Tools Ready
+              </div>
             </div>
             <div className="group">
               <div className="bg-gradient-to-br from-amber-400 to-orange-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 {TOOLS.filter((t) => t.status === 'coming-soon').length}
               </div>
-              <div className="mt-1 text-sm font-medium text-white/50">Coming Soon</div>
+              <div className="mt-1 text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                Coming Soon
+              </div>
             </div>
             <div className="group">
               <div className="bg-gradient-to-br from-purple-400 to-pink-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 {CATEGORIES.length - 1}
               </div>
-              <div className="mt-1 text-sm font-medium text-white/50">Categories</div>
+              <div className="mt-1 text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                Categories
+              </div>
             </div>
             <div className="group">
               <div className="bg-gradient-to-br from-brand-primary to-rose-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 100%
               </div>
-              <div className="mt-1 text-sm font-medium text-white/50">Free Forever</div>
+              <div className="mt-1 text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                Free Forever
+              </div>
             </div>
           </div>
         </motion.div>
