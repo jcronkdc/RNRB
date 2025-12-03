@@ -217,21 +217,48 @@ export function checkDuplicateMessage(userId: string, content: string): boolean 
 }
 
 /**
- * Check if a user can message another user
+ * Message delivery type - determines where the message goes
+ */
+export type MessageDeliveryType = 'direct' | 'request' | 'blocked';
+
+/**
+ * Check if a user can message another user and where the message should go
  */
 export async function canUserMessage(
   senderId: string,
   recipientId: string
-): Promise<{ allowed: boolean; reason?: string }> {
+): Promise<{ allowed: boolean; deliveryType: MessageDeliveryType; reason?: string }> {
   // Check if blocked
   const senderBlocked = blockedUsers.get(recipientId);
   if (senderBlocked?.has(senderId)) {
-    return { allowed: false, reason: 'You cannot message this user' };
+    return { allowed: false, deliveryType: 'blocked', reason: 'You cannot message this user' };
   }
 
-  // Check connection status (must be friends or following each other)
+  // Also check database for blocks
   try {
-    // Check if they follow each other (mutual = friends) or sender follows recipient
+    const block = await prisma.userBlock.findFirst({
+      where: {
+        blockerId: recipientId,
+        blockedId: senderId,
+      },
+    });
+    if (block) {
+      // Cache it
+      let blocked = blockedUsers.get(recipientId);
+      if (!blocked) {
+        blocked = new Set();
+        blockedUsers.set(recipientId, blocked);
+      }
+      blocked.add(senderId);
+      return { allowed: false, deliveryType: 'blocked', reason: 'You cannot message this user' };
+    }
+  } catch {
+    // UserBlock model might not exist
+  }
+
+  // Check connection status
+  try {
+    // Check if they follow each other (mutual = friends) or have any connection
     const [senderFollowsRecipient, recipientFollowsSender] = await Promise.all([
       prisma.userFollow.findFirst({
         where: { followerId: senderId, followingId: recipientId },
@@ -241,19 +268,44 @@ export async function canUserMessage(
       }),
     ]);
 
-    // Allow if either follows the other (at minimum, sender must follow)
-    if (!senderFollowsRecipient && !recipientFollowsSender) {
-      return {
-        allowed: false,
-        reason: 'You must follow this user or be friends to send messages',
-      };
-    }
+    const isFriends = senderFollowsRecipient && recipientFollowsSender;
+    const isConnected = senderFollowsRecipient || recipientFollowsSender;
 
-    return { allowed: true };
+    if (isFriends) {
+      // Friends can message directly
+      return { allowed: true, deliveryType: 'direct' };
+    } else if (isConnected) {
+      // One-way follow: goes to direct inbox but could be marked
+      return { allowed: true, deliveryType: 'direct' };
+    } else {
+      // No connection: goes to Message Requests
+      return { allowed: true, deliveryType: 'request' };
+    }
   } catch (error) {
     console.error('Error checking message permissions:', error);
-    // Fail open to avoid blocking legitimate messages
-    return { allowed: true };
+    // Default to request for safety
+    return { allowed: true, deliveryType: 'request' };
+  }
+}
+
+/**
+ * Check if a conversation is a message request (from non-friend)
+ */
+export async function isMessageRequest(userId: string, otherUserId: string): Promise<boolean> {
+  try {
+    const [userFollowsOther, otherFollowsUser] = await Promise.all([
+      prisma.userFollow.findFirst({
+        where: { followerId: userId, followingId: otherUserId },
+      }),
+      prisma.userFollow.findFirst({
+        where: { followerId: otherUserId, followingId: userId },
+      }),
+    ]);
+
+    // It's a request if there's no mutual connection
+    return !userFollowsOther && !otherFollowsUser;
+  } catch {
+    return false;
   }
 }
 
@@ -361,8 +413,8 @@ export async function validateMessage(
     return { valid: false, error: canMessage.reason };
   }
 
-  // Record the message for future rate limiting
-  recordMessage(senderId, recipientId, content);
+  // NOTE: Do NOT call recordMessage here - it's called in the route handler
+  // AFTER successful database write to prevent counting failed messages
 
   return { valid: true };
 }

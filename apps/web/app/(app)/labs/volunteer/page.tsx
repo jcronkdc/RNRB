@@ -251,7 +251,7 @@ export default function VolunteerPortalPage() {
           <div className="mb-8 rounded-xl border border-white/10 bg-white/5 p-4">
             <p className="text-sm text-gray-400">
               You're volunteer #
-              {volunteerStats?.volunteerCount ? volunteerStats.volunteerCount + 1 : '...'} 🎉
+              {volunteerStats?.volunteerCount ? volunteerStats.volunteerCount + 1 : '...'}
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">

@@ -668,7 +668,7 @@ export default function PublicProfilePage() {
                           border: '1px solid rgba(255, 215, 0, 0.3)',
                         }}
                       >
-                        🎸 {instrument}
+                        {instrument}
                       </span>
                     ))}
                   </div>

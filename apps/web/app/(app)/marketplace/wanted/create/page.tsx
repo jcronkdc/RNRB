@@ -68,7 +68,7 @@ const CONDITIONS = [
 ];
 
 const URGENCY_OPTIONS = [
-  { id: 'urgent', name: '🔥 Urgent', description: 'Need it ASAP' },
+  { id: 'urgent', name: 'Urgent', description: 'Need it ASAP' },
   { id: 'normal', name: 'Normal', description: 'No rush, but actively looking' },
   { id: 'flexible', name: 'Flexible', description: 'Will wait for the right deal' },
 ];

@@ -240,7 +240,7 @@ export default function SongwritingFeaturePage() {
               </div>
               <div className="mt-6 border-t border-border pt-6">
                 <p className="text-center text-sm text-muted-foreground">
-                  🎯 <strong>Real musicians love it:</strong> "Cut my songwriting time in half while
+                  <strong>Real musicians love it:</strong> "Cut my songwriting time in half while
                   exploring ideas I'd never have tried" - Sarah K., Nashville
                 </p>
               </div>
@@ -269,7 +269,7 @@ export default function SongwritingFeaturePage() {
           {/* What Makes It Different */}
           <div className="grid gap-8 md:grid-cols-2">
             <Card className="rnrb-card p-6">
-              <h3 className="mb-3 text-xl font-semibold">🎵 Understands Music Theory</h3>
+              <h3 className="mb-3 text-xl font-semibold">Understands Music Theory</h3>
               <ul className="space-y-2 text-muted-foreground">
                 <li>• Voice leading principles</li>
                 <li>• Harmonic function</li>

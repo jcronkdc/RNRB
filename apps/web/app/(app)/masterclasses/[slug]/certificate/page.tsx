@@ -247,7 +247,7 @@ export default function CertificatePage() {
           <span>Course Completed!</span>
         </div>
         <h1 className="mb-2 text-3xl font-bold text-[var(--text)]">
-          Congratulations, {certificate.studentName}! 🎉
+          Congratulations, {certificate.studentName}!
         </h1>
         <p className="text-[var(--muted)]">You've earned your certificate of completion</p>
       </motion.div>

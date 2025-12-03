@@ -538,7 +538,6 @@ export default function StreamersPage() {
                 className="card text-center"
                 style={{ background: 'var(--sage-dim)', borderColor: 'var(--sage)' }}
               >
-                <div className="mb-4 text-5xl">🎉</div>
                 <h3 className="mb-2 text-2xl font-bold" style={{ color: 'var(--sage)' }}>
                   Application Submitted!
                 </h3>

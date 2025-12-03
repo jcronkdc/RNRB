@@ -295,7 +295,7 @@ export default function PerformerModePage() {
               {currentSong.isEncore && (
                 <div className="mt-4">
                   <span className="inline-flex items-center rounded-full border border-purple-500/30 bg-purple-500/20 px-4 py-1 text-sm font-semibold text-purple-200">
-                    🎸 ENCORE
+                    ENCORE
                   </span>
                 </div>
               )}

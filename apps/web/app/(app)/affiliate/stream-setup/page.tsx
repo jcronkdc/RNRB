@@ -452,8 +452,8 @@ export default function StreamSetupPage() {
               formats: ['Header', 'Post Image', 'Thread Template'],
             },
             { platform: 'Instagram', icon: '📸', formats: ['Story', 'Post', 'Reel Cover'] },
-            { platform: 'YouTube', icon: '▶️', formats: ['Thumbnail', 'End Screen', 'Banner'] },
-            { platform: 'TikTok', icon: '🎵', formats: ['Profile', 'Video Cover', 'Bio Link'] },
+            { platform: 'YouTube', icon: '', formats: ['Thumbnail', 'End Screen', 'Banner'] },
+            { platform: 'TikTok', icon: '', formats: ['Profile', 'Video Cover', 'Bio Link'] },
           ].map((social, index) => (
             <div
               key={index}

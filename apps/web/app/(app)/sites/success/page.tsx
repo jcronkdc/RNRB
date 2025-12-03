@@ -334,7 +334,7 @@ function DeploymentSuccessContent() {
           </AnimatePresence>
 
           <h1 className="mb-2 text-3xl font-bold text-white">
-            {deployStatus.status === 'live' ? '🎉 Your Site is Live!' : 'Deploying Your Site...'}
+            {deployStatus.status === 'live' ? 'Your Site is Live!' : 'Deploying Your Site...'}
           </h1>
           <p className="text-gray-400">{deployStatus.message}</p>
 
