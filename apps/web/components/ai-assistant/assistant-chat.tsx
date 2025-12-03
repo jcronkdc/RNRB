@@ -2,7 +2,6 @@
 
 import { Button, cn } from '@cronkwaters/ui';
 import {
-  X,
   Minus,
   Send,
   Sparkles,
@@ -217,11 +216,6 @@ export function AssistantChat() {
     }
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
-    setIsMinimized(false);
-  };
-
   const handleMinimize = () => {
     setIsMinimized(!isMinimized);
   };
@@ -230,30 +224,42 @@ export function AssistantChat() {
     handleSendMessage(prompt);
   };
 
-  // Floating button
-  if (!isOpen) {
+  // Minimized state - show only icon button (cannot close completely)
+  if (!isOpen || isMinimized) {
     return (
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setIsOpen(true);
+          setIsMinimized(false);
+        }}
         className={cn(
           'fixed bottom-6 right-6 z-50',
           'flex items-center gap-2',
-          'rounded-full px-4 py-3',
-          'bg-gradient-to-r from-brand-primary to-purple-600 text-white',
+          'rounded-full',
+          'gradient-btn bg-gradient-to-r from-brand-primary to-purple-600',
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
-          'group'
+          'group',
+          // Compact when minimized, full when not opened yet
+          isMinimized ? 'p-3' : 'px-4 py-3'
         )}
         aria-label="Open AI Assistant"
+        title="AI Assistant"
       >
-        <Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12" />
-        <span className="font-semibold">AI Assistant</span>
+        <div className="relative">
+          <Sparkles className="h-5 w-5 transition-transform group-hover:rotate-12" />
+          {/* Green dot to show it's active when minimized */}
+          {isMinimized && (
+            <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
+          )}
+        </div>
+        {!isMinimized && <span className="font-semibold">AI Assistant</span>}
       </button>
     );
   }
 
-  // Chat widget
+  // Chat widget (expanded state)
   return (
     <div
       className={cn(
@@ -261,7 +267,7 @@ export function AssistantChat() {
         'w-[420px] max-w-[calc(100vw-2rem)]',
         'rounded-2xl shadow-2xl backdrop-blur-xl',
         'flex flex-col',
-        isMinimized ? 'h-14' : 'h-[650px] max-h-[calc(100vh-2rem)]'
+        'h-[650px] max-h-[calc(100vh-2rem)]'
       )}
       style={{
         background: 'var(--panel)',
@@ -301,25 +307,16 @@ export function AssistantChat() {
             onClick={handleMinimize}
             className="h-8 w-8 hover:bg-black/5 dark:hover:bg-white/10"
             style={{ color: 'var(--muted)' }}
+            title="Minimize to icon"
           >
             <Minus className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleClose}
-            className="h-8 w-8 hover:bg-black/5 dark:hover:bg-white/10"
-            style={{ color: 'var(--muted)' }}
-          >
-            <X className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      {!isMinimized && (
-        <>
-          {/* Messages */}
-          <div className="flex-1 space-y-4 overflow-y-auto p-4">
+      <>
+        {/* Messages */}
+        <div className="flex-1 space-y-4 overflow-y-auto p-4">
             {messages.length === 0 && (
               <div className="flex h-full flex-col px-2">
                 {/* Welcome */}
@@ -567,8 +564,7 @@ export function AssistantChat() {
               Enter to send • Shift+Enter for new line
             </p>
           </div>
-        </>
-      )}
+      </>
     </div>
   );
 }

@@ -123,14 +123,14 @@ export function TopBar() {
           {/* Search - Facebook-style people search */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-white/5 lg:px-4"
+            className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-black/5 dark:hover:bg-white/5 lg:px-4"
             style={{ border: '1px solid var(--border)' }}
           >
-            <Users className="h-4 w-4 text-gray-400 group-hover:text-orange-400" />
-            <span className="hidden text-sm text-gray-400 group-hover:text-white sm:inline">
+            <Users className="h-4 w-4 group-hover:text-orange-400" style={{ color: 'var(--muted)' }} />
+            <span className="hidden text-sm sm:inline" style={{ color: 'var(--muted)' }}>
               Find People
             </span>
-            <div className="ml-2 hidden items-center gap-1 opacity-50 lg:ml-4 lg:flex">
+            <div className="ml-2 hidden items-center gap-1 opacity-50 lg:ml-4 lg:flex" style={{ color: 'var(--muted)' }}>
               <Command className="h-3 w-3" />
               <span className="text-xs">⇧F</span>
             </div>
@@ -141,7 +141,7 @@ export function TopBar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/create')}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            className="gradient-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
               boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
@@ -157,7 +157,7 @@ export function TopBar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/live/go')}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            className="gradient-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
               boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
@@ -172,7 +172,7 @@ export function TopBar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/meet')}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            className="gradient-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
               boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
@@ -187,7 +187,7 @@ export function TopBar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/my-merch')}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            className="gradient-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
               boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
@@ -203,7 +203,7 @@ export function TopBar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/mail')}
-            className="flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium text-white lg:gap-2 lg:px-4"
+            className="gradient-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
               boxShadow: '0 4px 12px rgba(56, 189, 248, 0.3)',
@@ -247,7 +247,7 @@ export function TopBar() {
           <div className="relative">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-all hover:bg-white/5 lg:px-3"
+              className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-all hover:bg-black/5 dark:hover:bg-white/5 lg:px-3"
               style={{ border: '1px solid var(--border)' }}
             >
               {user?.image ? (
@@ -265,14 +265,15 @@ export function TopBar() {
                     border: '2px solid rgba(255, 99, 71, 0.5)',
                   }}
                 >
-                  <User className="h-5 w-5 text-white" />
+                  <User className="h-5 w-5" style={{ color: '#ffffff' }} />
                 </div>
               )}
-              <span className="hidden max-w-[120px] truncate text-sm font-medium text-white sm:block">
+              <span className="hidden max-w-[120px] truncate text-sm font-medium sm:block" style={{ color: 'var(--text)' }}>
                 {user?.name || user?.email?.split('@')[0] || 'Artist'}
               </span>
               <ChevronDown
-                className={`hidden h-4 w-4 text-gray-400 transition-transform sm:block ${profileOpen ? 'rotate-180' : ''}`}
+                className={`hidden h-4 w-4 transition-transform sm:block ${profileOpen ? 'rotate-180' : ''}`}
+                style={{ color: 'var(--muted)' }}
               />
             </button>
 
@@ -292,8 +293,8 @@ export function TopBar() {
                   }}
                 >
                   <div className="border-b p-4" style={{ borderColor: 'var(--border)' }}>
-                    <p className="text-sm font-medium text-white">{user?.name || 'Artist'}</p>
-                    <p className="mt-1 text-xs text-gray-400">{user?.email}</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>{user?.name || 'Artist'}</p>
+                    <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>{user?.email}</p>
                     {creditsData && !creditsData.unlimited && (
                       <div className="mt-2 flex items-center gap-2 text-xs">
                         <Zap className={`h-3 w-3 ${creditsColor}`} />
@@ -310,11 +311,11 @@ export function TopBar() {
                           setProfileOpen(false);
                           window.open(`/u/${userProfile.username}`, '_blank');
                         }}
-                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-white/5"
+                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-black/5 dark:hover:bg-white/5"
                       >
                         <Globe className="h-4 w-4 text-orange-400" />
-                        <span className="text-sm text-gray-300">View My Profile</span>
-                        <ExternalLink className="ml-auto h-3 w-3 text-gray-500" />
+                        <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>View My Profile</span>
+                        <ExternalLink className="ml-auto h-3 w-3" style={{ color: 'var(--muted)' }} />
                       </button>
                     )}
 
@@ -323,10 +324,10 @@ export function TopBar() {
                         setProfileOpen(false);
                         router.push('/settings/profile');
                       }}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-white/5"
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-black/5 dark:hover:bg-white/5"
                     >
-                      <User className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-300">Profile Settings</span>
+                      <User className="h-4 w-4" style={{ color: 'var(--muted)' }} />
+                      <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Profile Settings</span>
                     </button>
 
                     <button
@@ -334,10 +335,10 @@ export function TopBar() {
                         setProfileOpen(false);
                         router.push('/credits');
                       }}
-                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-white/5"
+                      className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-black/5 dark:hover:bg-white/5"
                     >
-                      <CreditCard className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-300">Billing & Credits</span>
+                      <CreditCard className="h-4 w-4" style={{ color: 'var(--muted)' }} />
+                      <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>Billing & Credits</span>
                     </button>
 
                     <div className="my-2 border-t" style={{ borderColor: 'var(--border)' }} />
@@ -346,8 +347,8 @@ export function TopBar() {
                       onClick={handleSignOut}
                       className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-all hover:bg-red-500/10"
                     >
-                      <LogOut className="h-4 w-4 text-gray-400 group-hover:text-red-400" />
-                      <span className="text-sm text-gray-300 group-hover:text-red-400">
+                      <LogOut className="h-4 w-4 group-hover:text-red-400" style={{ color: 'var(--muted)' }} />
+                      <span className="text-sm group-hover:text-red-400" style={{ color: 'var(--text-secondary)' }}>
                         Sign Out
                       </span>
                     </button>

@@ -21,6 +21,10 @@ export interface Workspace {
   order: number;
   isDefault: boolean;
   tools: WorkspaceTool[];
+  // Custom image personalization
+  headerImage?: string;    // URL for header/banner image
+  backgroundColor?: string; // Custom background color or gradient
+  accentColor?: string;     // Custom accent color for this workspace
 }
 
 export interface UserPreferences {
@@ -60,6 +64,10 @@ interface WorkspaceContextValue {
   removeToolFromWorkspace: (workspaceId: string, toolKey: string) => Promise<void>;
   reorderTools: (workspaceId: string, toolIds: string[]) => Promise<void>;
   updateToolSize: (toolId: string, size: 'compact' | 'normal' | 'large') => Promise<void>;
+
+  // Workspace customization
+  updateWorkspaceImage: (workspaceId: string, imageUrl: string | null) => Promise<void>;
+  updateWorkspaceColors: (workspaceId: string, colors: { backgroundColor?: string; accentColor?: string }) => Promise<void>;
 
   // Preferences
   updatePreferences: (updates: Partial<UserPreferences>) => Promise<void>;
@@ -437,6 +445,54 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     [userId]
   );
 
+  const updateWorkspaceImage = useCallback(
+    async (workspaceId: string, imageUrl: string | null) => {
+      setWorkspaces((prev) =>
+        prev.map((ws) => (ws.id === workspaceId ? { ...ws, headerImage: imageUrl || undefined } : ws))
+      );
+      setHasUnsavedChanges(true);
+
+      if (userId) {
+        try {
+          await fetch(`/api/workspaces/${workspaceId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ headerImage: imageUrl }),
+          });
+        } catch (error) {
+          console.error('Failed to update workspace image:', error);
+        }
+      }
+    },
+    [userId]
+  );
+
+  const updateWorkspaceColors = useCallback(
+    async (workspaceId: string, colors: { backgroundColor?: string; accentColor?: string }) => {
+      setWorkspaces((prev) =>
+        prev.map((ws) =>
+          ws.id === workspaceId
+            ? { ...ws, backgroundColor: colors.backgroundColor, accentColor: colors.accentColor }
+            : ws
+        )
+      );
+      setHasUnsavedChanges(true);
+
+      if (userId) {
+        try {
+          await fetch(`/api/workspaces/${workspaceId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(colors),
+          });
+        } catch (error) {
+          console.error('Failed to update workspace colors:', error);
+        }
+      }
+    },
+    [userId]
+  );
+
   const updatePreferences = useCallback(
     async (updates: Partial<UserPreferences>) => {
       setPreferences((prev) => (prev ? { ...prev, ...updates } : null));
@@ -501,6 +557,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     removeToolFromWorkspace,
     reorderTools,
     updateToolSize,
+    updateWorkspaceImage,
+    updateWorkspaceColors,
     updatePreferences,
     resetToDefaults,
     getToolDefinitions,

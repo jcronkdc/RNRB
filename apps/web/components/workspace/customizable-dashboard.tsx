@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 
 import { useWorkspace } from './workspace-context';
@@ -11,6 +10,8 @@ import { WorkspaceTabs } from './workspace-tabs';
 import { WorkspaceGrid } from './workspace-grid';
 import { WorkspaceCreatorModal } from './workspace-creator-modal';
 import { ToolCatalogModal } from './tool-catalog-modal';
+import { AIWorkspaceChat } from './ai-workspace-chat';
+import { WorkspaceCustomizer } from './workspace-customizer';
 import { WorkshopWelcome, DailySpark } from '@/components/workshop';
 import { InstallAppButton } from '@/components/install-app-button';
 import {
@@ -20,6 +21,7 @@ import {
   Download,
   Briefcase,
   Palette,
+  Image,
 } from '@/components/ui/custom-icons';
 
 /**
@@ -35,6 +37,7 @@ export function CustomizableDashboard() {
   // Modal states
   const [isCreatorOpen, setIsCreatorOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
+  const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
 
   // Loading state
   if (status === 'loading' || isLoading) {
@@ -73,25 +76,39 @@ export function CustomizableDashboard() {
 
       {/* Main content */}
       <div className="relative mx-auto max-w-7xl px-4 py-6">
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 flex justify-center"
-        >
-          <Link href="/" className="transition-transform hover:scale-105">
-            <Image
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              width={120}
-              height={40}
-              priority
-            />
-          </Link>
-        </motion.div>
-
         {/* Welcome Header */}
         {preferences?.showWelcome && <WorkshopWelcome className="mb-6" />}
+
+        {/* Custom Workspace Header (if user has set a background) */}
+        {activeWorkspace?.headerImage && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 relative h-32 rounded-2xl overflow-hidden"
+          >
+            <img
+              src={activeWorkspace.headerImage}
+              alt={`${activeWorkspace.name} header`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute bottom-4 left-4">
+              <h2 className="text-2xl font-bold text-white">{activeWorkspace.name}</h2>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Custom Background Gradient (if set and no image) */}
+        {activeWorkspace?.backgroundColor && !activeWorkspace?.headerImage && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 relative h-24 rounded-2xl overflow-hidden flex items-center px-6"
+            style={{ background: activeWorkspace.backgroundColor }}
+          >
+            <h2 className="text-xl font-bold text-white drop-shadow-lg">{activeWorkspace.name}</h2>
+          </motion.div>
+        )}
 
         {/* Workspace Tabs */}
         <motion.section
@@ -119,10 +136,23 @@ export function CustomizableDashboard() {
                     Editing "{activeWorkspace?.name}"
                   </h3>
                   <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                    Drag tools to reorder • Click the X to remove • Add new tools below
+                    Drag tools to reorder • Click size buttons to resize • Add new tools below
                   </p>
                 </div>
               </div>
+              {/* Customize workspace button */}
+              <button
+                onClick={() => setIsCustomizerOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-[1.02]"
+                style={{ 
+                  background: 'var(--surface)',
+                  color: 'var(--text)',
+                  border: '1px solid var(--border)'
+                }}
+              >
+                <Image className="h-4 w-4" />
+                Customize Look
+              </button>
             </div>
           </motion.div>
         )}
@@ -392,6 +422,15 @@ export function CustomizableDashboard() {
           workspaceName={activeWorkspace.name}
         />
       )}
+
+      {/* Workspace Customizer Modal */}
+      <WorkspaceCustomizer
+        isOpen={isCustomizerOpen}
+        onClose={() => setIsCustomizerOpen(false)}
+      />
+
+      {/* AI Workspace Builder Chat */}
+      <AIWorkspaceChat />
     </div>
   );
 }

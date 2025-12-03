@@ -3361,4 +3361,18 @@ html.light button[class*='text-white'][class*='from-'] * {
   color: #ffffff !important;
 }
 
+/* === GRADIENT BUTTON CLASS === */
+/* This class is used for buttons with inline gradient styles */
+.gradient-btn {
+  color: #ffffff !important;
+}
+
+.gradient-btn * {
+  color: #ffffff !important;
+}
+
+.gradient-btn svg {
+  color: #ffffff !important;
+}
+
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */
