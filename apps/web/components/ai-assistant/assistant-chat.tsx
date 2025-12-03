@@ -225,6 +225,7 @@ export function AssistantChat() {
   };
 
   // Minimized state - show only icon button (cannot close completely)
+  // CRITICAL: force-white-text class ensures white text in all modes
   if (!isOpen || isMinimized) {
     return (
       <button
@@ -232,11 +233,13 @@ export function AssistantChat() {
           setIsOpen(true);
           setIsMinimized(false);
         }}
+        data-ai-floating-btn="true"
         className={cn(
           'fixed bottom-6 right-6 z-50',
           'flex items-center gap-2',
           'rounded-full',
-          'ai-floating-btn bg-gradient-to-r from-brand-primary to-purple-600',
+          'ai-floating-btn force-white-text text-white',
+          'bg-gradient-to-r from-brand-primary to-purple-600',
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
@@ -244,22 +247,18 @@ export function AssistantChat() {
           // Compact when minimized, full when not opened yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
-        style={{ color: '#ffffff' }}
         aria-label="Open AI Assistant"
         title="AI Assistant"
       >
-        <div className="relative">
-          <Sparkles
-            className="h-5 w-5 transition-transform group-hover:rotate-12"
-            style={{ color: '#ffffff' }}
-          />
+        <div className="relative text-white">
+          <Sparkles className="h-5 w-5 text-white transition-transform group-hover:rotate-12" />
           {/* Green dot to show it's active when minimized */}
           {isMinimized && (
             <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
           )}
         </div>
         {!isMinimized && (
-          <span className="ai-floating-btn-text font-semibold" style={{ color: '#ffffff' }}>
+          <span className="ai-floating-btn-text force-white-text font-semibold text-white">
             AI Assistant
           </span>
         )}

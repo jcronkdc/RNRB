@@ -282,6 +282,7 @@ export function AIWorkspaceChat() {
   };
 
   // Minimized state - just an icon button (cannot close completely)
+  // CRITICAL: force-white-text class ensures white text in all modes
   if (!isOpen || isMinimized) {
     return (
       <motion.button
@@ -290,22 +291,23 @@ export function AIWorkspaceChat() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={handleExpand}
+        data-ai-floating-btn="true"
         className={cn(
           'fixed bottom-24 right-6 z-40',
           'flex items-center gap-2 rounded-full',
-          'font-semibold shadow-lg',
-          'ai-floating-btn bg-gradient-to-r from-violet-600 to-purple-600',
+          'font-semibold text-white shadow-lg',
+          'ai-floating-btn force-white-text',
+          'bg-gradient-to-r from-violet-600 to-purple-600',
           'hover:shadow-xl hover:shadow-purple-500/30',
           'transition-shadow duration-300',
           // Show compact version when minimized (just icon), full when not open yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
-        style={{ color: '#ffffff' }}
         title="AI Workspace Builder"
       >
-        <Wand2 className="h-5 w-5" style={{ color: '#ffffff' }} />
+        <Wand2 className="h-5 w-5 text-white" />
         {!isMinimized && (
-          <span className="ai-floating-btn-text" style={{ color: '#ffffff' }}>
+          <span className="ai-floating-btn-text force-white-text text-white">
             AI Workspace Builder
           </span>
         )}

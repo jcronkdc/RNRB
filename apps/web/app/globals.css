@@ -2504,14 +2504,12 @@ html.light {
 
   /* Direct white text - using multiple selector patterns for max compatibility */
   /* EXCLUDE: gradient backgrounds, buttons, brand elements where white is intentional */
-  /* Also exclude children of .ai-floating-btn and .topbar-btn */
+  /* Also exclude children of .ai-floating-btn, .topbar-btn, and .force-white-text */
   [class*='text-white']:not([class*='text-white\/']):not([class*='brand']):not(
       [class*='button']
     ):not([class*='btn']):not([class*='bg-gradient']):not([class*='from-']):not(button):not(
       [role='button']
-    ):not(.ai-floating-btn):not(.ai-floating-btn *):not(.ai-floating-btn-text):not(.topbar-btn):not(
-      .topbar-btn *
-    ) {
+    ):not(.ai-floating-btn):not(.ai-floating-btn-text):not(.topbar-btn):not(.force-white-text) {
     color: var(--text) !important;
   }
 
@@ -3549,6 +3547,41 @@ html.light .ai-floating-btn-text,
 html.light span.ai-floating-btn-text {
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
+}
+
+/* === NUCLEAR OVERRIDE - DATA ATTRIBUTE SELECTOR (highest specificity) === */
+/* These use data attributes which are NOT affected by class-based overrides */
+[data-ai-floating-btn='true'],
+[data-ai-floating-btn='true'] *,
+html.light [data-ai-floating-btn='true'],
+html.light [data-ai-floating-btn='true'] * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Ensure SVG paths inside AI buttons are white */
+[data-ai-floating-btn='true'] svg,
+[data-ai-floating-btn='true'] svg path,
+html.light [data-ai-floating-btn='true'] svg,
+html.light [data-ai-floating-btn='true'] svg path {
+  color: #ffffff !important;
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+/* === FORCE WHITE TEXT UTILITY CLASS === */
+/* Use this class on any element that MUST have white text regardless of mode */
+/* Using text-shadow as a visual reinforcement for contrast */
+.force-white-text,
+.force-white-text *,
+html.light .force-white-text,
+html.light .force-white-text * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow:
+    0 0 0 #ffffff,
+    0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */
