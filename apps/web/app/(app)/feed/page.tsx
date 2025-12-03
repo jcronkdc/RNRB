@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ThemeLogo } from '@/components/theme';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
@@ -116,7 +117,10 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
                 className="object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-lg font-bold text-white">
+              <div
+                className="flex h-full w-full items-center justify-center text-lg font-bold"
+                style={{ color: 'white' }}
+              >
                 {(activity.user?.name || 'U')[0]}
               </div>
             )}
@@ -134,27 +138,40 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
           <div className="flex items-start justify-between">
             <div>
               <Link href={`/u/${activity.user?.id}`}>
-                <span className="font-semibold text-white hover:text-orange-400">
+                <span
+                  className="font-semibold hover:text-orange-400"
+                  style={{ color: 'var(--text)' }}
+                >
                   {activity.user?.name || 'Anonymous'}
                 </span>
               </Link>
-              <p className="mt-0.5 text-sm text-white/70">{activity.title}</p>
+              <p className="mt-0.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                {activity.title}
+              </p>
             </div>
-            <span className="shrink-0 text-xs text-white/40">{activity.timeAgo}</span>
+            <span className="shrink-0 text-xs" style={{ color: 'var(--muted)' }}>
+              {activity.timeAgo}
+            </span>
           </div>
 
           {/* Description */}
           {activity.description && (
-            <p className="mt-2 text-sm text-white/60">{activity.description}</p>
+            <p className="mt-2 text-sm" style={{ color: 'var(--muted)' }}>
+              {activity.description}
+            </p>
           )}
 
           {/* Related content preview */}
           {(activity.song || activity.project || activity.show) && (
-            <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+            <div
+              className="mt-3 rounded-xl p-3"
+              style={{ background: 'var(--panel-hover)', border: '1px solid var(--border)' }}
+            >
               {activity.song && (
                 <Link
                   href={`/songs/${activity.song.id}`}
-                  className="flex items-center gap-2 text-sm text-white hover:text-orange-400"
+                  className="flex items-center gap-2 text-sm hover:text-orange-400"
+                  style={{ color: 'var(--text)' }}
                 >
                   <Music className="h-4 w-4" />
                   {activity.song.title}
@@ -164,7 +181,8 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
               {activity.project && (
                 <Link
                   href={`/projects/${activity.project.slug}`}
-                  className="flex items-center gap-2 text-sm text-white hover:text-orange-400"
+                  className="flex items-center gap-2 text-sm hover:text-orange-400"
+                  style={{ color: 'var(--text)' }}
                 >
                   <Sparkles className="h-4 w-4" />
                   {activity.project.name}
@@ -174,7 +192,8 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
               {activity.show && (
                 <Link
                   href={`/shows/${activity.show.slug}`}
-                  className="flex items-center gap-2 text-sm text-white hover:text-orange-400"
+                  className="flex items-center gap-2 text-sm hover:text-orange-400"
+                  style={{ color: 'var(--text)' }}
                 >
                   <Calendar className="h-4 w-4" />
                   {activity.show.name}
@@ -215,7 +234,10 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
           </button>
         </div>
 
-        <button className="rounded-lg p-1.5 text-white/30 transition-colors hover:bg-white/10 hover:text-white">
+        <button
+          className="rounded-lg p-1.5 transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+          style={{ color: 'var(--muted)' }}
+        >
           <MoreHorizontal className="h-4 w-4" />
         </button>
       </div>
@@ -228,8 +250,11 @@ function TrendingSidebar({ trending }: { trending: any }) {
   return (
     <div className="space-y-4">
       {/* Trending Tags */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-        <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
+      <div
+        className="rounded-2xl p-5"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+      >
+        <h3 className="mb-4 flex items-center gap-2 font-semibold" style={{ color: 'var(--text)' }}>
           <TrendingUp className="h-5 w-5 text-orange-400" />
           Trending
         </h3>
@@ -239,21 +264,30 @@ function TrendingSidebar({ trending }: { trending: any }) {
               <Link
                 key={tag}
                 href={`/explore?tag=${tag}`}
-                className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-white/10"
+                className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-black/5 dark:hover:bg-white/10"
               >
-                <span className="text-sm text-white">#{tag}</span>
-                <span className="text-xs text-white/40">{trending.counts?.[i] || 0}</span>
+                <span className="text-sm" style={{ color: 'var(--text)' }}>
+                  #{tag}
+                </span>
+                <span className="text-xs" style={{ color: 'var(--muted)' }}>
+                  {trending.counts?.[i] || 0}
+                </span>
               </Link>
             ))
           ) : (
-            <p className="text-sm text-white/40">No trending tags yet</p>
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+              No trending tags yet
+            </p>
           )}
         </div>
       </div>
 
       {/* Suggested Musicians */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-        <h3 className="mb-4 flex items-center gap-2 font-semibold text-white">
+      <div
+        className="rounded-2xl p-5"
+        style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+      >
+        <h3 className="mb-4 flex items-center gap-2 font-semibold" style={{ color: 'var(--text)' }}>
           <Users className="h-5 w-5 text-purple-400" />
           Connect
         </h3>
@@ -263,7 +297,7 @@ function TrendingSidebar({ trending }: { trending: any }) {
               <Link
                 key={musician.id}
                 href={`/u/${musician.id}`}
-                className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-white/10"
+                className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-black/5 dark:hover:bg-white/10"
               >
                 <div className="h-10 w-10 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
                   {musician.image ? (
@@ -275,21 +309,28 @@ function TrendingSidebar({ trending }: { trending: any }) {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center text-sm font-bold text-white">
+                    <div
+                      className="flex h-full w-full items-center justify-center text-sm font-bold"
+                      style={{ color: 'white' }}
+                    >
                       {(musician.name || 'U')[0]}
                     </div>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">{musician.name}</p>
-                  <p className="truncate text-xs text-white/50">
+                  <p className="truncate text-sm font-medium" style={{ color: 'var(--text)' }}>
+                    {musician.name}
+                  </p>
+                  <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>
                     {musician.instruments?.slice(0, 2).join(', ') || 'Musician'}
                   </p>
                 </div>
               </Link>
             ))
           ) : (
-            <p className="text-sm text-white/40">No suggestions yet</p>
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+              No suggestions yet
+            </p>
           )}
         </div>
         <Link
@@ -382,7 +423,7 @@ export default function FeedPage() {
   }, [activities.length, hasMore, loadingMore, loading, loadActivities]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
+    <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full bg-orange-500/5 blur-[120px]" />
@@ -396,18 +437,13 @@ export default function FeedPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <Link href="/" className="mb-6 inline-block">
-            <Image
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              width={140}
-              height={56}
-              className="transition-transform hover:scale-105"
-              priority
-            />
-          </Link>
-          <h1 className="mb-2 text-3xl font-bold text-white">Activity Feed</h1>
-          <p className="text-white/60">See what musicians in your network are creating</p>
+          <div className="mb-6">
+            <ThemeLogo size="md" alt="Rock N' Roll Basement" priority />
+          </div>
+          <h1 className="mb-2 text-3xl font-bold" style={{ color: 'var(--text)' }}>
+            Activity Feed
+          </h1>
+          <p style={{ color: 'var(--muted)' }}>See what musicians in your network are creating</p>
         </motion.div>
 
         <div className="grid gap-8 lg:grid-cols-12">
@@ -416,17 +452,22 @@ export default function FeedPage() {
             {loading ? (
               <div className="flex flex-col items-center justify-center gap-3 py-20">
                 <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
-                <p className="text-sm text-white/50">{microCopy.loading.feed}</p>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  {microCopy.loading.feed}
+                </p>
               </div>
             ) : activities.length === 0 ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] p-12 text-center"
+                className="rounded-2xl p-12 text-center"
+                style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
               >
-                <Zap className="mx-auto mb-4 h-12 w-12 text-white/30" />
-                <h3 className="mb-2 text-lg font-semibold text-white">Your network awaits</h3>
-                <p className="mb-4 text-sm text-white/50">
+                <Zap className="mx-auto mb-4 h-12 w-12" style={{ color: 'var(--muted)' }} />
+                <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
+                  Your network awaits
+                </h3>
+                <p className="mb-4 text-sm" style={{ color: 'var(--muted)' }}>
                   Connect with musicians, share your work, and see what the community is creating.
                 </p>
                 <Link
