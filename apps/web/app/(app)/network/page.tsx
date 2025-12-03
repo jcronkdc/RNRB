@@ -8,6 +8,7 @@ import {
   Search,
   Loader2,
   ArrowRight,
+  MessageCircle,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -64,14 +65,18 @@ export default function NetworkPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      
+
       if (response.ok) {
         // Remove from following list
-        setNetworkData(prev => prev ? {
-          ...prev,
-          following: prev.following.filter(u => u.id !== userId),
-          followingCount: prev.followingCount - 1,
-        } : null);
+        setNetworkData((prev) =>
+          prev
+            ? {
+                ...prev,
+                following: prev.following.filter((u) => u.id !== userId),
+                followingCount: prev.followingCount - 1,
+              }
+            : null
+        );
       }
     } catch (error) {
       console.error('Error unfollowing:', error);
@@ -87,17 +92,23 @@ export default function NetworkPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      
+
       if (response.ok) {
         // Update follower to show they're now followed
-        setNetworkData(prev => prev ? {
-          ...prev,
-          followers: prev.followers.map(u => 
-            u.id === userId ? { ...u, isFollowingBack: true } : u
-          ),
-          following: [...prev.following, prev.followers.find(u => u.id === userId)!].filter(Boolean),
-          followingCount: prev.followingCount + 1,
-        } : null);
+        setNetworkData((prev) =>
+          prev
+            ? {
+                ...prev,
+                followers: prev.followers.map((u) =>
+                  u.id === userId ? { ...u, isFollowingBack: true } : u
+                ),
+                following: [...prev.following, prev.followers.find((u) => u.id === userId)!].filter(
+                  Boolean
+                ),
+                followingCount: prev.followingCount + 1,
+              }
+            : null
+        );
       }
     } catch (error) {
       console.error('Error following back:', error);
@@ -109,15 +120,15 @@ export default function NetworkPage() {
   const filteredList = (list: NetworkUser[]) => {
     if (!searchQuery.trim()) return list;
     const query = searchQuery.toLowerCase();
-    return list.filter(user => 
-      user.name?.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query)
+    return list.filter(
+      (user) => user.name?.toLowerCase().includes(query) || user.email.toLowerCase().includes(query)
     );
   };
 
-  const currentList = activeTab === 'following' 
-    ? filteredList(networkData?.following || [])
-    : filteredList(networkData?.followers || []);
+  const currentList =
+    activeTab === 'following'
+      ? filteredList(networkData?.following || [])
+      : filteredList(networkData?.followers || []);
 
   if (loading) {
     return (
@@ -309,7 +320,7 @@ export default function NetworkPage() {
               {activeTab === 'following' ? 'Not following anyone yet' : 'No followers yet'}
             </h3>
             <p style={{ color: 'var(--muted)', marginBottom: '24px' }}>
-              {activeTab === 'following' 
+              {activeTab === 'following'
                 ? 'Discover musicians and start building your network'
                 : 'Share your profile and create great content to gain followers'}
             </p>
@@ -346,9 +357,9 @@ export default function NetworkPage() {
                 }}
               >
                 <div className="flex items-center justify-between">
-                  <Link 
+                  <Link
                     href={`/community/users/${user.id}`}
-                    className="flex items-center gap-4 flex-1"
+                    className="flex flex-1 items-center gap-4"
                   >
                     {/* Avatar */}
                     <div
@@ -369,7 +380,9 @@ export default function NetworkPage() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <Users style={{ height: '24px', width: '24px', color: 'var(--accent)' }} />
+                          <Users
+                            style={{ height: '24px', width: '24px', color: 'var(--accent)' }}
+                          />
                         </div>
                       )}
                     </div>
@@ -434,58 +447,81 @@ export default function NetworkPage() {
                     </div>
                   </Link>
 
-                  {/* Action Button */}
-                  {activeTab === 'following' ? (
-                    <button
-                      onClick={() => handleUnfollow(user.id)}
-                      disabled={unfollowingId === user.id}
+                  {/* Action Buttons */}
+                  <div className="flex items-center gap-2">
+                    {activeTab === 'following' ? (
+                      <button
+                        onClick={() => handleUnfollow(user.id)}
+                        disabled={unfollowingId === user.id}
+                        style={{
+                          padding: '8px 16px',
+                          borderRadius: 'var(--radius-sm)',
+                          fontWeight: '500',
+                          fontSize: '0.875rem',
+                          backgroundColor: 'var(--bg)',
+                          color: 'var(--text)',
+                          border: '1px solid var(--border)',
+                          opacity: unfollowingId === user.id ? 0.5 : 1,
+                          cursor: unfollowingId === user.id ? 'wait' : 'pointer',
+                        }}
+                      >
+                        {unfollowingId === user.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          'Unfollow'
+                        )}
+                      </button>
+                    ) : !user.isFollowingBack ? (
+                      <button
+                        onClick={() => handleFollowBack(user.id)}
+                        disabled={followingBackId === user.id}
+                        style={{
+                          padding: '8px 16px',
+                          borderRadius: 'var(--radius-sm)',
+                          fontWeight: '500',
+                          fontSize: '0.875rem',
+                          backgroundColor: 'var(--accent)',
+                          color: '#fff',
+                          border: 'none',
+                          opacity: followingBackId === user.id ? 0.5 : 1,
+                          cursor: followingBackId === user.id ? 'wait' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        {followingBackId === user.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <>
+                            <UserPlus className="h-4 w-4" />
+                            Follow Back
+                          </>
+                        )}
+                      </button>
+                    ) : null}
+
+                    {/* Message Button - Always visible */}
+                    <Link
+                      href={`/mail/compose?to=${user.id}`}
                       style={{
-                        padding: '8px 20px',
+                        padding: '8px 16px',
                         borderRadius: 'var(--radius-sm)',
                         fontWeight: '500',
                         fontSize: '0.875rem',
-                        backgroundColor: 'var(--bg)',
+                        backgroundColor: 'var(--panel)',
                         color: 'var(--text)',
                         border: '1px solid var(--border)',
-                        opacity: unfollowingId === user.id ? 0.5 : 1,
-                        cursor: unfollowingId === user.id ? 'wait' : 'pointer',
-                      }}
-                    >
-                      {unfollowingId === user.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        'Unfollow'
-                      )}
-                    </button>
-                  ) : !user.isFollowingBack ? (
-                    <button
-                      onClick={() => handleFollowBack(user.id)}
-                      disabled={followingBackId === user.id}
-                      style={{
-                        padding: '8px 20px',
-                        borderRadius: 'var(--radius-sm)',
-                        fontWeight: '500',
-                        fontSize: '0.875rem',
-                        backgroundColor: 'var(--accent)',
-                        color: 'var(--text)',
-                        border: 'none',
-                        opacity: followingBackId === user.id ? 0.5 : 1,
-                        cursor: followingBackId === user.id ? 'wait' : 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '6px',
+                        textDecoration: 'none',
                       }}
                     >
-                      {followingBackId === user.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <>
-                          <UserPlus className="h-4 w-4" />
-                          Follow Back
-                        </>
-                      )}
-                    </button>
-                  ) : null}
+                      <MessageCircle className="h-4 w-4" />
+                      Message
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -531,4 +567,3 @@ export default function NetworkPage() {
     </div>
   );
 }
-

@@ -62,7 +62,7 @@ export default function DiscoverPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
-  
+
   // Suggested users
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(true);
@@ -92,11 +92,11 @@ export default function DiscoverPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.isFollowing) {
-          setFollowingIds(prev => new Set([...prev, userId]));
+          setFollowingIds((prev) => new Set([...prev, userId]));
         }
       }
     } catch (error) {
@@ -453,16 +453,18 @@ export default function DiscoverPage() {
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {searchResults.map((user) => (
-                <UserProfileCard 
-                  key={user.id} 
-                  {...user} 
+                <UserProfileCard
+                  key={user.id}
+                  {...user}
                   isFollowing={user.isFollowing}
                   onFollowChange={(userId, isFollowing, newCount) => {
-                    setSearchResults(prev => prev.map(u => 
-                      u.id === userId 
-                        ? { ...u, isFollowing, stats: { ...u.stats, followers: newCount } }
-                        : u
-                    ));
+                    setSearchResults((prev) =>
+                      prev.map((u) =>
+                        u.id === userId
+                          ? { ...u, isFollowing, stats: { ...u.stats, followers: newCount } }
+                          : u
+                      )
+                    );
                   }}
                 />
               ))}
@@ -604,7 +606,7 @@ export default function DiscoverPage() {
                     }}
                   >
                     <Link href={`/community/users/${user.id}`}>
-                      <div className="flex items-center gap-3 mb-3">
+                      <div className="mb-3 flex items-center gap-3">
                         <div
                           style={{
                             height: '48px',
@@ -623,7 +625,9 @@ export default function DiscoverPage() {
                             />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center">
-                              <Users style={{ height: '20px', width: '20px', color: 'var(--accent)' }} />
+                              <Users
+                                style={{ height: '20px', width: '20px', color: 'var(--accent)' }}
+                              />
                             </div>
                           )}
                         </div>
@@ -662,9 +666,9 @@ export default function DiscoverPage() {
                         </div>
                       </div>
                     </Link>
-                    
+
                     {user.profile?.genres && user.profile.genres.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mb-3">
+                      <div className="mb-3 flex flex-wrap gap-1">
                         {user.profile.genres.slice(0, 2).map((genre) => (
                           <span
                             key={genre}
@@ -681,37 +685,62 @@ export default function DiscoverPage() {
                         ))}
                       </div>
                     )}
-                    
-                    <button
-                      onClick={() => handleFollowSuggested(user.id)}
-                      disabled={followingIds.has(user.id)}
-                      style={{
-                        width: '100%',
-                        padding: '8px 16px',
-                        borderRadius: 'var(--radius-sm)',
-                        fontWeight: '500',
-                        fontSize: '0.875rem',
-                        backgroundColor: followingIds.has(user.id) ? 'var(--bg)' : 'var(--accent)',
-                        color: 'var(--text)',
-                        border: followingIds.has(user.id) ? '1px solid var(--border)' : 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                      }}
-                    >
-                      {followingIds.has(user.id) ? (
-                        <>
-                          <UserCheck className="h-4 w-4" />
-                          Following
-                        </>
-                      ) : (
-                        <>
-                          <UserPlus className="h-4 w-4" />
-                          Follow
-                        </>
-                      )}
-                    </button>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleFollowSuggested(user.id)}
+                        disabled={followingIds.has(user.id)}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          fontWeight: '500',
+                          fontSize: '0.875rem',
+                          backgroundColor: followingIds.has(user.id)
+                            ? 'var(--bg)'
+                            : 'var(--accent)',
+                          color: followingIds.has(user.id) ? 'var(--text)' : '#fff',
+                          border: followingIds.has(user.id) ? '1px solid var(--border)' : 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        {followingIds.has(user.id) ? (
+                          <>
+                            <UserCheck className="h-4 w-4" />
+                            Following
+                          </>
+                        ) : (
+                          <>
+                            <UserPlus className="h-4 w-4" />
+                            Follow
+                          </>
+                        )}
+                      </button>
+                      <Link
+                        href={`/mail/compose?to=${user.id}`}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          borderRadius: 'var(--radius-sm)',
+                          fontWeight: '500',
+                          fontSize: '0.875rem',
+                          backgroundColor: 'var(--panel)',
+                          color: 'var(--text)',
+                          border: '1px solid var(--border)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '6px',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <Mail className="h-4 w-4" />
+                        Message
+                      </Link>
+                    </div>
                   </div>
                 ))}
               </div>

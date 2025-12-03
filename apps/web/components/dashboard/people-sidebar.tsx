@@ -11,9 +11,11 @@ import {
   Sparkles,
   ChevronRight,
   RefreshCw,
+  MessageCircle,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 interface SuggestedUser {
@@ -33,6 +35,13 @@ export function PeopleSidebar() {
   const [loading, setLoading] = useState(true);
   const [followingIds, setFollowingIds] = useState<Set<string>>(new Set());
   const [refreshing, setRefreshing] = useState(false);
+  const router = useRouter();
+
+  const handleMessage = (userId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/mail/compose?to=${userId}`);
+  };
 
   const loadSuggestions = async () => {
     try {
@@ -177,17 +186,26 @@ export function PeopleSidebar() {
                   ) : null}
                 </div>
 
-                {/* Follow Button */}
-                <button
-                  onClick={(e) => handleFollow(user.id, e)}
-                  className={`flex-shrink-0 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                    followingIds.has(user.id)
-                      ? 'border border-white/20 bg-white/5 text-white hover:border-red-500/50 hover:text-red-400'
-                      : 'bg-orange-500 text-white hover:bg-orange-600'
-                  }`}
-                >
-                  {followingIds.has(user.id) ? 'Following' : 'Follow'}
-                </button>
+                {/* Action Buttons */}
+                <div className="flex flex-shrink-0 items-center gap-1.5">
+                  <button
+                    onClick={(e) => handleFollow(user.id, e)}
+                    className={`rounded-full px-2.5 py-1.5 text-xs font-medium transition-all ${
+                      followingIds.has(user.id)
+                        ? 'border border-white/20 bg-white/5 text-white hover:border-red-500/50 hover:text-red-400'
+                        : 'bg-orange-500 text-white hover:bg-orange-600'
+                    }`}
+                  >
+                    {followingIds.has(user.id) ? 'Following' : 'Follow'}
+                  </button>
+                  <button
+                    onClick={(e) => handleMessage(user.id, e)}
+                    className="rounded-full border border-white/20 bg-white/5 p-1.5 text-gray-400 transition-all hover:border-purple-500/50 hover:text-purple-400"
+                    title="Send message"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </Link>
           ))

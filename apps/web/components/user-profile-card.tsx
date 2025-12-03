@@ -1,9 +1,19 @@
 'use client';
 
 import { Card } from '@cronkwaters/ui';
-import { Users, Music, MapPin, CheckCircle, UserPlus, UserCheck, Loader2 } from '@/components/ui/custom-icons';
+import {
+  Users,
+  Music,
+  MapPin,
+  CheckCircle,
+  UserPlus,
+  UserCheck,
+  Loader2,
+  MessageCircle,
+} from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
 
 interface MusicianProfile {
@@ -32,36 +42,58 @@ export interface UserProfileCardProps {
   onFollowChange?: (userId: string, isFollowing: boolean, newFollowerCount: number) => void;
 }
 
-export function UserProfileCard({ id, name, image, email, profile, stats, isFollowing: initialIsFollowing = false, onFollowChange }: UserProfileCardProps) {
+export function UserProfileCard({
+  id,
+  name,
+  image,
+  email,
+  profile,
+  stats,
+  isFollowing: initialIsFollowing = false,
+  onFollowChange,
+}: UserProfileCardProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isLoading, setIsLoading] = useState(false);
   const [followerCount, setFollowerCount] = useState(stats.followers);
+  const router = useRouter();
 
-  const handleFollowClick = useCallback(async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (isLoading) return;
-    
-    setIsLoading(true);
-    try {
-      const response = await fetch(`/api/community/users/${id}/follow`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setIsFollowing(data.isFollowing);
-        setFollowerCount(data.followerCount);
-        onFollowChange?.(id, data.isFollowing, data.followerCount);
+  const handleFollowClick = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      if (isLoading) return;
+
+      setIsLoading(true);
+      try {
+        const response = await fetch(`/api/community/users/${id}/follow`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setIsFollowing(data.isFollowing);
+          setFollowerCount(data.followerCount);
+          onFollowChange?.(id, data.isFollowing, data.followerCount);
+        }
+      } catch (error) {
+        console.error('Error toggling follow:', error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error toggling follow:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [id, isLoading, onFollowChange]);
+    },
+    [id, isLoading, onFollowChange]
+  );
+
+  const handleMessageClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      router.push(`/mail/compose?to=${id}`);
+    },
+    [id, router]
+  );
 
   return (
     <Link href={`/community/users/${id}`}>
@@ -149,31 +181,32 @@ export function UserProfileCard({ id, name, image, email, profile, stats, isFoll
             </div>
           )}
 
-          {/* Stats and Follow Button Row */}
-          <div className="flex items-center justify-between border-t border-border/50 pt-4">
-            <div className="flex items-center gap-4">
-              <div className="text-center">
-                <div className="font-display text-lg font-bold">{followerCount}</div>
-                <div className="text-xs text-muted-foreground">Followers</div>
-              </div>
-              <div className="text-center">
-                <div className="font-display text-lg font-bold">{stats.following}</div>
-                <div className="text-xs text-muted-foreground">Following</div>
-              </div>
-              <div className="text-center">
-                <div className="font-display text-lg font-bold">{stats.tracks}</div>
-                <div className="text-xs text-muted-foreground">Tracks</div>
-              </div>
+          {/* Stats Row */}
+          <div className="flex items-center gap-4 border-t border-border/50 pt-4">
+            <div className="text-center">
+              <div className="font-display text-lg font-bold">{followerCount}</div>
+              <div className="text-xs text-muted-foreground">Followers</div>
             </div>
-            
+            <div className="text-center">
+              <div className="font-display text-lg font-bold">{stats.following}</div>
+              <div className="text-xs text-muted-foreground">Following</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-lg font-bold">{stats.tracks}</div>
+              <div className="text-xs text-muted-foreground">Tracks</div>
+            </div>
+          </div>
+
+          {/* Action Buttons Row */}
+          <div className="mt-3 flex items-center gap-2">
             {/* Follow Button */}
             <button
               onClick={handleFollowClick}
               disabled={isLoading}
-              className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
               style={{
                 backgroundColor: isFollowing ? 'var(--bg)' : 'var(--accent)',
-                color: 'var(--text)',
+                color: isFollowing ? 'var(--text)' : '#fff',
                 border: isFollowing ? '1px solid var(--border)' : 'none',
               }}
             >
@@ -190,6 +223,20 @@ export function UserProfileCard({ id, name, image, email, profile, stats, isFoll
                   Follow
                 </>
               )}
+            </button>
+
+            {/* Message Button */}
+            <button
+              onClick={handleMessageClick}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all hover:scale-[1.02]"
+              style={{
+                backgroundColor: 'var(--panel)',
+                color: 'var(--text)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              <MessageCircle className="h-4 w-4" />
+              Message
             </button>
           </div>
 

@@ -24,17 +24,108 @@ import {
   ArrowLeft,
 } from '@/components/ui/custom-icons';
 
-// Printful product categories
+// Curated keywords for band/artist merch - only show products matching these
+const ALLOWED_PRODUCT_KEYWORDS = [
+  // T-Shirts & Tops
+  't-shirt',
+  'tee',
+  'tank top',
+  'tank',
+  'long sleeve',
+  'longsleeve',
+  // Hoodies & Outerwear
+  'hoodie',
+  'sweatshirt',
+  'pullover',
+  'crewneck',
+  'fleece',
+  'zip-up',
+  'zip up',
+  // Headwear
+  'hat',
+  'cap',
+  'beanie',
+  'snapback',
+  'trucker',
+  'bucket hat',
+  'dad hat',
+  // Posters & Art
+  'poster',
+  'print',
+  'canvas',
+  'framed',
+  'wall art',
+  // Stickers
+  'sticker',
+  'decal',
+  'kiss-cut',
+  'die-cut',
+  // Bags
+  'tote',
+  'tote bag',
+  // Drinkware
+  'mug',
+  'coffee mug',
+  'tumbler',
+];
+
+// Categories for filtering within our curated selection
 const CATEGORIES = [
-  { id: 'all', name: 'All Products', icon: Package },
-  { id: 'mens-shirts', name: "Men's T-Shirts", icon: TShirt },
-  { id: 'womens-shirts', name: "Women's T-Shirts", icon: TShirt },
-  { id: 'hoodies', name: 'Hoodies & Sweatshirts', icon: Hoodie },
-  { id: 'hats', name: 'Hats', icon: BaseballCap },
-  { id: 'mugs', name: 'Mugs & Drinkware', icon: CoffeeMug },
-  { id: 'posters', name: 'Posters & Wall Art', icon: Poster },
-  { id: 'stickers', name: 'Stickers', icon: StickerIcon },
-  { id: 'accessories', name: 'Accessories', icon: ShoppingBag },
+  { id: 'all', name: 'All Products', icon: Package, keywords: [] },
+  {
+    id: 'tshirts',
+    name: 'T-Shirts',
+    icon: TShirt,
+    keywords: ['t-shirt', 'tee', 'short sleeve'],
+  },
+  {
+    id: 'longsleeve',
+    name: 'Long Sleeve',
+    icon: TShirt,
+    keywords: ['long sleeve', 'longsleeve'],
+  },
+  {
+    id: 'tanks',
+    name: 'Tank Tops',
+    icon: TShirt,
+    keywords: ['tank top', 'tank', 'sleeveless'],
+  },
+  {
+    id: 'hoodies',
+    name: 'Hoodies & Sweatshirts',
+    icon: Hoodie,
+    keywords: ['hoodie', 'sweatshirt', 'pullover', 'crewneck', 'fleece', 'zip'],
+  },
+  {
+    id: 'hats',
+    name: 'Hats',
+    icon: BaseballCap,
+    keywords: ['hat', 'cap', 'beanie', 'snapback', 'trucker', 'bucket', 'dad hat'],
+  },
+  {
+    id: 'posters',
+    name: 'Posters & Wall Art',
+    icon: Poster,
+    keywords: ['poster', 'print', 'canvas', 'art', 'wall', 'framed'],
+  },
+  {
+    id: 'stickers',
+    name: 'Stickers',
+    icon: StickerIcon,
+    keywords: ['sticker', 'decal'],
+  },
+  {
+    id: 'totes',
+    name: 'Tote Bags',
+    icon: ShoppingBag,
+    keywords: ['tote', 'bag'],
+  },
+  {
+    id: 'mugs',
+    name: 'Mugs',
+    icon: CoffeeMug,
+    keywords: ['mug', 'tumbler', 'coffee'],
+  },
 ];
 
 interface PrintfulProduct {
@@ -88,13 +179,12 @@ export default function PrintfulCatalogPage() {
     fetchCategories();
   }, []);
 
-  // Fetch Printful catalog
+  // Fetch Printful catalog (once - we filter client-side)
   useEffect(() => {
     const fetchCatalog = async () => {
       setIsLoading(true);
       try {
-        const categoryParam = selectedCategory !== 'all' ? `&category=${selectedCategory}` : '';
-        const response = await fetch(`/api/merch/printful?action=catalog${categoryParam}`);
+        const response = await fetch('/api/merch/printful?action=catalog');
         const data = await response.json();
 
         if (data.success && data.catalog) {
@@ -109,10 +199,24 @@ export default function PrintfulCatalogPage() {
       }
     };
     fetchCatalog();
-  }, [selectedCategory]);
+  }, []);
 
-  // Filter products by search
+  // Filter products by category and search
   const filteredProducts = products.filter((product) => {
+    // First, filter by category
+    if (selectedCategory !== 'all') {
+      const category = CATEGORIES.find((c) => c.id === selectedCategory);
+      if (category && category.keywords.length > 0) {
+        const productText =
+          `${product.model} ${product.type_name} ${product.brand || ''}`.toLowerCase();
+        const matchesCategory = category.keywords.some((keyword) =>
+          productText.includes(keyword.toLowerCase())
+        );
+        if (!matchesCategory) return false;
+      }
+    }
+
+    // Then, filter by search query
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
