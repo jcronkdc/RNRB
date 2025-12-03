@@ -958,8 +958,10 @@ export default function LibraryPage() {
             >
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold text-white sm:text-3xl">My Library</h1>
-                  <p className="mt-1 text-sm text-gray-400">
+                  <h1 className="text-2xl font-bold sm:text-3xl" style={{ color: 'var(--text)' }}>
+                    My Library
+                  </h1>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }}>
                     {total} file{total !== 1 ? 's' : ''} • Your complete songwriter toolkit
                   </p>
                 </div>
@@ -978,14 +980,15 @@ export default function LibraryPage() {
                   </button>
 
                   {/* View Toggle */}
-                  <div className="flex rounded-lg bg-gray-900 p-1">
+                  <div className="flex rounded-lg p-1" style={{ background: 'var(--panel)' }}>
                     <button
                       onClick={() => setViewMode('grid')}
                       className={`rounded-md p-2 transition-all ${
                         viewMode === 'grid'
                           ? 'bg-orange-500 text-white'
-                          : 'text-gray-400 hover:text-white'
+                          : 'hover:bg-black/10 dark:hover:bg-white/10'
                       }`}
+                      style={{ color: viewMode === 'grid' ? undefined : 'var(--muted)' }}
                     >
                       <Grid3x3 className="h-4 w-4" />
                     </button>
@@ -994,8 +997,9 @@ export default function LibraryPage() {
                       className={`rounded-md p-2 transition-all ${
                         viewMode === 'list'
                           ? 'bg-orange-500 text-white'
-                          : 'text-gray-400 hover:text-white'
+                          : 'hover:bg-black/10 dark:hover:bg-white/10'
                       }`}
+                      style={{ color: viewMode === 'list' ? undefined : 'var(--muted)' }}
                     >
                       <List className="h-4 w-4" />
                     </button>
