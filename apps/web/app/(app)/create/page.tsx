@@ -31,51 +31,25 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { ProjectSelector } from '@/components/project-selector';
 
-// Style chips for genre/mood/tempo
-const styleOptions = {
-  genre: [
-    'Rock',
-    'Pop',
-    'Electronic',
-    'Hip Hop',
-    'Jazz',
-    'Classical',
-    'Country',
-    'Metal',
-    'Indie',
-    'R&B',
-    'Funk',
-    'Blues',
-  ],
-  mood: [
-    'Energetic',
-    'Chill',
-    'Happy',
-    'Sad',
-    'Dark',
-    'Uplifting',
-    'Aggressive',
-    'Dreamy',
-    'Mysterious',
-    'Romantic',
-    'Epic',
-    'Groovy',
-  ],
-  instruments: [
-    'Guitar',
-    'Piano',
-    'Drums',
-    'Bass',
-    'Synth',
-    'Strings',
-    'Brass',
-    'Vocals',
-    'Saxophone',
-    'Violin',
-    'Flute',
-    'Percussion',
-  ],
-};
+// Instrument options
+const instrumentOptions = [
+  'Guitar',
+  'Piano',
+  'Drums',
+  'Bass',
+  'Synth',
+  'Strings',
+  'Brass',
+  'Vocals',
+  'Saxophone',
+  'Violin',
+  'Flute',
+  'Percussion',
+  'Organ',
+  'Harmonica',
+  'Banjo',
+  'Mandolin',
+];
 
 // Example prompts for inspiration
 const examplePrompts = [
@@ -93,11 +67,7 @@ export default function CreatePage() {
   const { data: session } = useSession();
 
   const [prompt, setPrompt] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
   const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
-  const [customGenre, setCustomGenre] = useState('');
-  const [customMood, setCustomMood] = useState('');
   const [duration, setDuration] = useState(15); // seconds (MusicGen supports 5-30s)
   const [tempo, setTempo] = useState(120); // BPM
   const [seed, setSeed] = useState('');
@@ -123,8 +93,8 @@ export default function CreatePage() {
   }, [duration, selectedInstruments.length]);
 
   const validateInputs = useCallback(() => {
-    if (!prompt.trim() && selectedGenres.length === 0 && selectedMoods.length === 0) {
-      setError('Please provide a description or select at least one genre/mood');
+    if (!prompt.trim()) {
+      setError('Please describe what kind of track you want');
       return false;
     }
 
@@ -145,7 +115,7 @@ export default function CreatePage() {
 
     setError(null);
     return true;
-  }, [prompt, selectedGenres, selectedMoods, duration, tempo]);
+  }, [prompt, duration, tempo]);
 
   const handleGenerate = async () => {
     if (!validateInputs()) return;
@@ -176,9 +146,7 @@ export default function CreatePage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: prompt.trim() || undefined, // Only send if not empty (API requires min 1 char)
-          genres: selectedGenres,
-          moods: selectedMoods,
+          prompt: prompt.trim(),
           instruments: selectedInstruments,
           duration,
           tempo,
@@ -244,10 +212,7 @@ export default function CreatePage() {
     }
   };
 
-  const canGenerate =
-    (prompt.trim() || selectedGenres.length > 0 || selectedMoods.length > 0) &&
-    status !== 'generating' &&
-    status !== 'success';
+  const canGenerate = prompt.trim().length > 0 && status !== 'generating' && status !== 'success';
 
   const isDisabled = status === 'generating' || status === 'success';
 
@@ -407,13 +372,13 @@ export default function CreatePage() {
                   {/* Steps */}
                   <div className="mb-6">
                     <h3 className="mb-3 font-medium text-white">Steps:</h3>
-                    <div className="grid gap-2 sm:grid-cols-4">
+                    <div className="grid gap-2 sm:grid-cols-3">
                       <div className="flex items-center gap-2">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
                           1
                         </span>
                         <span className="text-sm" style={{ color: 'var(--muted)' }}>
-                          Describe or select style
+                          Describe what you want
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -421,20 +386,12 @@ export default function CreatePage() {
                           2
                         </span>
                         <span className="text-sm" style={{ color: 'var(--muted)' }}>
-                          Choose duration & tempo
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
-                          3
-                        </span>
-                        <span className="text-sm" style={{ color: 'var(--muted)' }}>
                           Click "Generate Track"
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
-                          4
+                          3
                         </span>
                         <span className="text-sm" style={{ color: 'var(--muted)' }}>
                           Listen & add to project
@@ -558,194 +515,42 @@ export default function CreatePage() {
               </div>
             </div>
 
-            {/* Style Chips */}
-            <div className="space-y-6">
-              {/* Genre */}
-              <div>
-                <label className="mb-3 block text-sm font-medium">
-                  Genre
-                  {selectedGenres.length > 0 && (
-                    <span className="ml-2 text-xs text-[color:var(--muted)]">
-                      ({selectedGenres.length} selected, max 3)
-                    </span>
-                  )}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {styleOptions.genre.map((genre) => (
-                    <button
-                      key={genre}
-                      onClick={() => toggleChip(genre, selectedGenres, setSelectedGenres, 3)}
-                      className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                        selectedGenres.includes(genre)
-                          ? 'text-[color:var(--accent)]-foreground bg-[color:var(--accent)]'
-                          : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
-                      }`}
-                      disabled={isDisabled}
-                    >
-                      {genre}
-                    </button>
-                  ))}
-                  {/* Custom genres that were added */}
-                  {selectedGenres
-                    .filter((g) => !styleOptions.genre.includes(g))
-                    .map((customG) => (
-                      <button
-                        key={customG}
-                        onClick={() => toggleChip(customG, selectedGenres, setSelectedGenres, 3)}
-                        className="text-[color:var(--accent)]-foreground rounded-xl bg-[color:var(--accent)] px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
-                        disabled={isDisabled}
-                      >
-                        {customG} ×
-                      </button>
-                    ))}
-                </div>
-                {/* Custom genre input */}
-                <div className="mt-3 flex gap-2">
-                  <input
-                    type="text"
-                    value={customGenre}
-                    onChange={(e) => setCustomGenre(e.target.value)}
-                    placeholder="Add custom genre..."
-                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isDisabled || selectedGenres.length >= 3}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && customGenre.trim() && selectedGenres.length < 3) {
-                        e.preventDefault();
-                        if (!selectedGenres.includes(customGenre.trim())) {
-                          setSelectedGenres([...selectedGenres, customGenre.trim()]);
-                        }
-                        setCustomGenre('');
-                      }
-                    }}
-                  />
+            {/* Instruments (Optional) */}
+            <div>
+              <label className="mb-3 block text-sm font-medium">
+                Instruments
+                <span className="ml-2 text-xs text-[color:var(--muted)]">
+                  (optional - select specific instruments to feature)
+                </span>
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {instrumentOptions.map((instrument) => (
                   <button
-                    type="button"
-                    onClick={() => {
-                      if (
-                        customGenre.trim() &&
-                        selectedGenres.length < 3 &&
-                        !selectedGenres.includes(customGenre.trim())
-                      ) {
-                        setSelectedGenres([...selectedGenres, customGenre.trim()]);
-                        setCustomGenre('');
-                      }
-                    }}
-                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isDisabled || !customGenre.trim() || selectedGenres.length >= 3}
+                    key={instrument}
+                    onClick={() =>
+                      toggleChip(instrument, selectedInstruments, setSelectedInstruments, 6)
+                    }
+                    className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+                      selectedInstruments.includes(instrument)
+                        ? 'bg-orange-500 text-white'
+                        : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
+                    }`}
+                    disabled={isDisabled}
                   >
-                    Add
+                    <Mic2 className="h-3 w-3" />
+                    {instrument}
                   </button>
-                </div>
+                ))}
               </div>
-
-              {/* Mood */}
-              <div>
-                <label className="mb-3 block text-sm font-medium">
-                  Mood
-                  {selectedMoods.length > 0 && (
-                    <span className="ml-2 text-xs text-[color:var(--muted)]">
-                      ({selectedMoods.length} selected, max 3)
-                    </span>
-                  )}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {styleOptions.mood.map((mood) => (
-                    <button
-                      key={mood}
-                      onClick={() => toggleChip(mood, selectedMoods, setSelectedMoods, 3)}
-                      className={`rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                        selectedMoods.includes(mood)
-                          ? 'text-[color:var(--accent)]-foreground bg-[color:var(--accent)]'
-                          : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
-                      }`}
-                      disabled={isDisabled}
-                    >
-                      {mood}
-                    </button>
-                  ))}
-                  {/* Custom moods that were added */}
-                  {selectedMoods
-                    .filter((m) => !styleOptions.mood.includes(m))
-                    .map((customM) => (
-                      <button
-                        key={customM}
-                        onClick={() => toggleChip(customM, selectedMoods, setSelectedMoods, 3)}
-                        className="text-[color:var(--accent)]-foreground rounded-xl bg-[color:var(--accent)] px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50"
-                        disabled={isDisabled}
-                      >
-                        {customM} ×
-                      </button>
-                    ))}
-                </div>
-                {/* Custom mood input */}
-                <div className="mt-3 flex gap-2">
-                  <input
-                    type="text"
-                    value={customMood}
-                    onChange={(e) => setCustomMood(e.target.value)}
-                    placeholder="Add custom mood..."
-                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isDisabled || selectedMoods.length >= 3}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && customMood.trim() && selectedMoods.length < 3) {
-                        e.preventDefault();
-                        if (!selectedMoods.includes(customMood.trim())) {
-                          setSelectedMoods([...selectedMoods, customMood.trim()]);
-                        }
-                        setCustomMood('');
-                      }
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (
-                        customMood.trim() &&
-                        selectedMoods.length < 3 &&
-                        !selectedMoods.includes(customMood.trim())
-                      ) {
-                        setSelectedMoods([...selectedMoods, customMood.trim()]);
-                        setCustomMood('');
-                      }
-                    }}
-                    className="rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-2 text-sm transition hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isDisabled || !customMood.trim() || selectedMoods.length >= 3}
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-
-              {/* Instruments */}
-              <div>
-                <label className="mb-3 block text-sm font-medium">
-                  Instruments
-                  {selectedInstruments.length > 0 && (
-                    <span className="ml-2 text-xs text-[color:var(--muted)]">
-                      ({selectedInstruments.length} selected)
-                    </span>
-                  )}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {styleOptions.instruments.map((instrument) => (
-                    <button
-                      key={instrument}
-                      onClick={() =>
-                        toggleChip(instrument, selectedInstruments, setSelectedInstruments, 6)
-                      }
-                      className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                        selectedInstruments.includes(instrument)
-                          ? 'text-[color:var(--accent)]-foreground bg-[color:var(--accent)]'
-                          : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
-                      }`}
-                      disabled={isDisabled}
-                    >
-                      <Mic2 className="h-3 w-3" />
-                      {instrument}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {selectedInstruments.length > 0 && (
+                <button
+                  onClick={() => setSelectedInstruments([])}
+                  className="mt-2 text-xs text-[color:var(--muted)] transition hover:text-white"
+                  disabled={isDisabled}
+                >
+                  Clear all
+                </button>
+              )}
             </div>
 
             {/* Duration & Parameters */}
@@ -996,9 +801,7 @@ export default function CreatePage() {
                     <Volume2 className="h-5 w-5 text-[color:var(--muted)]" />
                     <span className="text-sm text-[color:var(--muted)]">
                       Your track:{' '}
-                      <span className="font-medium text-white">
-                        {selectedMoods[0] || 'AI'} {selectedGenres[0] || ''} Track
-                      </span>
+                      <span className="font-medium text-white">AI Generated Sketch</span>
                     </span>
                   </div>
                 </div>
@@ -1029,8 +832,6 @@ export default function CreatePage() {
                       setGeneratedSongId(null);
                       setShowProjectSelector(false);
                       setPrompt('');
-                      setSelectedGenres([]);
-                      setSelectedMoods([]);
                       setSelectedInstruments([]);
                       (window as any).__rnrbDemoMode = false;
                     }}

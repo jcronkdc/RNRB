@@ -21,11 +21,9 @@ import { trackUsage, getUsageSummary } from '@/lib/usage-tracking';
 export const runtime = 'nodejs';
 export const maxDuration = 120; // 2 minute timeout for AI generation
 
-// Validation schema
+// Validation schema - prompt is required, everything else is optional
 const generateTrackSchema = z.object({
-  prompt: z.string().min(1).max(500).optional(),
-  genres: z.array(z.string()).max(3).default([]),
-  moods: z.array(z.string()).max(3).default([]),
+  prompt: z.string().min(1, 'Please describe what kind of track you want').max(500),
   instruments: z.array(z.string()).max(6).default([]),
   duration: z.number().min(5).max(30).default(15), // MusicGen max is ~30s
   tempo: z.number().min(60).max(200).default(120),
@@ -85,14 +83,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const validatedData = generateTrackSchema.parse(body);
 
-    // Validate at least one input is provided
-    if (
-      !validatedData.prompt &&
-      validatedData.genres.length === 0 &&
-      validatedData.moods.length === 0
-    ) {
+    // Validate prompt is provided
+    if (!validatedData.prompt) {
       return NextResponse.json(
-        { error: 'Please provide a prompt or select at least one genre/mood' },
+        { error: 'Please describe what kind of track you want' },
         { status: 400 }
       );
     }
@@ -140,10 +134,10 @@ export async function POST(req: NextRequest) {
           userId,
           tempo: validatedData.tempo,
           visibility: 'private',
-          description: `Demo track - ${prompt}\n\nNote: This is a demo. Configure REPLICATE_API_TOKEN for real AI music generation.`,
-          // Use a royalty-free demo audio sample
-          audioUrl: '/demo-audio/ai-demo-track.mp3',
-          audioPath: 'demo/ai-demo-track.mp3',
+          description: `AI Sketch: ${validatedData.prompt}\n\n${validatedData.instruments.length > 0 ? `Instruments: ${validatedData.instruments.join(', ')}\n` : ''}Duration: ${validatedData.duration}s | Tempo: ${validatedData.tempo} BPM\n\n[Demo Mode - Configure REPLICATE_API_TOKEN for real AI music generation]`,
+          // No audio URL in demo mode - the song is a placeholder
+          audioUrl: null,
+          audioPath: null,
         },
       });
 
@@ -157,10 +151,9 @@ export async function POST(req: NextRequest) {
         song: {
           id: demoSong.id,
           title: demoSong.title,
-          audioUrl: '/demo-audio/ai-demo-track.mp3',
+          audioUrl: null, // No audio in demo mode
           duration: validatedData.duration,
-          genre: validatedData.genres[0] || null,
-          mood: validatedData.moods[0] || null,
+          instruments: validatedData.instruments,
         },
         songId: demoSong.id, // For project selector
         trackId: demoSong.id, // Legacy compatibility
@@ -267,9 +260,10 @@ export async function POST(req: NextRequest) {
         title: song.title,
         audioUrl: urlData.publicUrl,
         duration: validatedData.duration,
-        genre: validatedData.genres[0] || null,
-        mood: validatedData.moods[0] || null,
+        instruments: validatedData.instruments,
       },
+      songId: song.id, // For project selector
+      trackId: song.id, // Legacy compatibility
       generation: {
         creditsUsed: creditsNeeded,
         model: 'musicgen-stereo-melody-large',
@@ -320,22 +314,10 @@ export async function POST(req: NextRequest) {
 function buildGenerationPrompt(params: z.infer<typeof generateTrackSchema>): string {
   const parts: string[] = [];
 
-  // User's custom prompt first
-  if (params.prompt) {
-    parts.push(params.prompt);
-  }
+  // User's description is the primary input
+  parts.push(params.prompt);
 
-  // Genre styling
-  if (params.genres.length > 0) {
-    parts.push(`${params.genres.join(' and ')} style`);
-  }
-
-  // Mood/atmosphere
-  if (params.moods.length > 0) {
-    parts.push(`${params.moods.join(', ')} feeling`);
-  }
-
-  // Instruments (if specific)
+  // Instruments (if specified)
   if (params.instruments.length > 0) {
     parts.push(`featuring ${params.instruments.join(', ')}`);
   }
@@ -348,28 +330,16 @@ function buildGenerationPrompt(params: z.infer<typeof generateTrackSchema>): str
     parts.push(`in the key of ${params.keySignature}`);
   }
 
-  return parts.join(', ') || 'instrumental music track';
+  return parts.join(', ');
 }
 
 /**
  * Generate a title for the track based on parameters
  */
 function generateTrackTitle(params: z.infer<typeof generateTrackSchema>): string {
-  const parts: string[] = [];
-
-  if (params.moods.length > 0) {
-    parts.push(capitalize(params.moods[0]));
-  }
-
-  if (params.genres.length > 0) {
-    parts.push(capitalize(params.genres[0]));
-  }
-
-  if (parts.length === 0) {
-    parts.push('AI');
-  }
-
-  parts.push('Track');
+  // Extract a meaningful title from the prompt (first few words)
+  const promptWords = params.prompt.split(' ').slice(0, 4).join(' ');
+  const shortTitle = promptWords.length > 25 ? promptWords.slice(0, 25) + '...' : promptWords;
 
   const timestamp = new Date().toLocaleString('en-US', {
     month: 'short',
@@ -378,7 +348,7 @@ function generateTrackTitle(params: z.infer<typeof generateTrackSchema>): string
     minute: '2-digit',
   });
 
-  return `${parts.join(' ')} - ${timestamp}`;
+  return `${capitalize(shortTitle)} - ${timestamp}`;
 }
 
 /**

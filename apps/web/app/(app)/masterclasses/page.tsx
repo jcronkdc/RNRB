@@ -89,7 +89,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
     <Link href={`/masterclasses/${masterclass.slug}`}>
       <motion.div
         whileHover={{ y: -4 }}
-        className="group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] transition-all hover:border-purple-500/50"
+        className="hover:border-[var(--accent)]/50 group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] transition-all"
       >
         {/* Thumbnail */}
         <div className="relative aspect-video">
@@ -101,8 +101,8 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
               className="object-cover"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-900/50 to-pink-900/50">
-              <GraduationCap className="h-12 w-12 text-white/30" />
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#2a2620] to-[#352f28]">
+              <GraduationCap className="text-[var(--accent)]/30 h-12 w-12" />
             </div>
           )}
 
@@ -111,7 +111,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
             <motion.div
               initial={{ scale: 0.8 }}
               whileHover={{ scale: 1.1 }}
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-purple-500"
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--accent)]"
             >
               <Play className="ml-1 h-6 w-6 text-white" />
             </motion.div>
@@ -144,12 +144,12 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
         {/* Content */}
         <div className="p-4">
           {/* Category */}
-          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-purple-400">
+          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-[var(--accent)]">
             {masterclass.category.replace('_', ' ')}
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-lg font-bold text-white transition-colors group-hover:text-purple-300">
+          <h3 className="mb-2 line-clamp-2 text-lg font-bold text-[var(--text)] transition-colors group-hover:text-[var(--accent)]">
             {masterclass.title}
           </h3>
 
@@ -164,7 +164,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
                   className="object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 text-xs font-bold text-white">
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-xs font-bold text-white">
                   {masterclass.instructor.displayName.charAt(0)}
                 </div>
               )}
@@ -172,7 +172,9 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
             <span className="text-sm text-[var(--muted)]">
               {masterclass.instructor.displayName}
             </span>
-            {masterclass.instructor.verified && <BadgeCheck className="h-4 w-4 text-blue-400" />}
+            {masterclass.instructor.verified && (
+              <BadgeCheck className="h-4 w-4 text-[var(--sky)]" />
+            )}
           </div>
 
           {/* Stats */}
@@ -187,7 +189,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
             </span>
             {masterclass.averageRating > 0 && (
               <span className="flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
+                <Star className="h-3.5 w-3.5 fill-[var(--gold)] text-[var(--gold)]" />
                 {masterclass.averageRating.toFixed(1)}
               </span>
             )}
@@ -196,10 +198,10 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
           {/* Price */}
           <div className="flex items-center justify-between">
             {masterclass.isFree ? (
-              <span className="font-bold text-green-400">Free</span>
+              <span className="font-bold text-[var(--sage)]">Free</span>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-white">
+                <span className="text-lg font-bold text-[var(--text)]">
                   ${masterclass.price?.toFixed(2)}
                 </span>
                 {masterclass.originalPrice &&
@@ -227,7 +229,7 @@ function FeaturedInstructor({
     <Link href={`/masterclasses/instructors/${instructor.id}`}>
       <motion.div
         whileHover={{ scale: 1.02 }}
-        className="flex items-center gap-4 rounded-xl border border-purple-500/20 bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-4 transition-all hover:border-purple-500/50"
+        className="border-[var(--accent)]/20 from-[var(--accent)]/10 to-[var(--gold)]/10 hover:border-[var(--accent)]/50 flex items-center gap-4 rounded-xl border bg-gradient-to-r p-4 transition-all"
       >
         <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
           {instructor.profileImage ? (
@@ -238,22 +240,24 @@ function FeaturedInstructor({
               className="object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500 text-xl font-bold text-white">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-xl font-bold text-white">
               {instructor.displayName.charAt(0)}
             </div>
           )}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="truncate font-bold text-white">{instructor.displayName}</h4>
-            {instructor.verified && <BadgeCheck className="h-4 w-4 flex-shrink-0 text-blue-400" />}
+            <h4 className="truncate font-bold text-[var(--text)]">{instructor.displayName}</h4>
+            {instructor.verified && (
+              <BadgeCheck className="h-4 w-4 flex-shrink-0 text-[var(--sky)]" />
+            )}
           </div>
           <p className="truncate text-sm text-[var(--muted)]">{instructor.headline}</p>
           <div className="mt-1 flex items-center gap-3 text-xs text-[var(--muted)]">
             <span>{instructor._count.masterclasses} classes</span>
             {instructor.averageRating > 0 && (
               <span className="flex items-center gap-1">
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                <Star className="h-3 w-3 fill-[var(--gold)] text-[var(--gold)]" />
                 {instructor.averageRating.toFixed(1)}
               </span>
             )}
@@ -329,13 +333,13 @@ export default function MasterclassesPage() {
 
           {/* Title */}
           <div className="mb-8 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-purple-500/10 px-4 py-2 text-sm font-medium text-purple-400">
+            <div className="bg-[var(--accent)]/10 mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[var(--accent)]">
               <GraduationCap className="h-4 w-4" />
               Masterclasses
             </div>
-            <h1 className="mb-2 text-3xl font-bold text-white md:text-4xl">
+            <h1 className="mb-2 text-3xl font-bold text-[var(--text)] md:text-4xl">
               Learn From the{' '}
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] bg-clip-text text-transparent">
                 Best in Music
               </span>
             </h1>
@@ -354,13 +358,13 @@ export default function MasterclassesPage() {
                 placeholder="Search masterclasses, instructors, or topics..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] py-3 pl-12 pr-4 text-white placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               />
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors ${
                   showFilters
-                    ? 'bg-purple-500 text-white'
+                    ? 'bg-[var(--accent)] text-white'
                     : 'text-[var(--muted)] hover:bg-[var(--border)]'
                 }`}
               >
@@ -383,7 +387,7 @@ export default function MasterclassesPage() {
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-white"
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)]"
                     >
                       {CATEGORIES.map((cat) => (
                         <option key={cat.value} value={cat.value}>
@@ -399,7 +403,7 @@ export default function MasterclassesPage() {
                     <select
                       value={skillLevel}
                       onChange={(e) => setSkillLevel(e.target.value)}
-                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-white"
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)]"
                     >
                       {SKILL_LEVELS.map((level) => (
                         <option key={level.value} value={level.value}>
@@ -414,9 +418,9 @@ export default function MasterclassesPage() {
                         type="checkbox"
                         checked={showFreeOnly}
                         onChange={(e) => setShowFreeOnly(e.target.checked)}
-                        className="h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-purple-500 focus:ring-purple-500"
+                        className="h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-[var(--accent)] focus:ring-[var(--accent)]"
                       />
-                      <span className="text-white">Free classes only</span>
+                      <span className="text-[var(--text)]">Free classes only</span>
                     </label>
                   </div>
                 </div>
@@ -437,7 +441,7 @@ export default function MasterclassesPage() {
                 onClick={() => setCategory(cat.value)}
                 className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 transition-all ${
                   category === cat.value
-                    ? 'bg-purple-500 text-white'
+                    ? 'bg-[var(--accent)] text-white'
                     : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
                 }`}
               >
@@ -452,8 +456,8 @@ export default function MasterclassesPage() {
         {featuredInstructors.length > 0 && !search && !category && (
           <section className="mb-12">
             <div className="mb-4 flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-yellow-400" />
-              <h2 className="text-xl font-bold text-white">Featured Instructors</h2>
+              <Sparkles className="h-5 w-5 text-[var(--gold)]" />
+              <h2 className="text-xl font-bold text-[var(--text)]">Featured Instructors</h2>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {featuredInstructors.map((instructor) => (
@@ -467,7 +471,7 @@ export default function MasterclassesPage() {
         {isLoading ? (
           <div className="flex h-64 items-center justify-center">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
               <p className="text-[var(--muted)]">Loading masterclasses...</p>
             </div>
           </div>
@@ -482,7 +486,7 @@ export default function MasterclassesPage() {
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--panel)]">
               <GraduationCap className="h-10 w-10 text-[var(--muted)]" />
             </div>
-            <h2 className="mb-2 text-2xl font-bold text-white">No Masterclasses Found</h2>
+            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">No Masterclasses Found</h2>
             <p className="mb-6 text-[var(--muted)]">
               {search || category
                 ? 'Try adjusting your filters or search terms'
@@ -492,7 +496,7 @@ export default function MasterclassesPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 font-semibold text-white"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 font-semibold text-white"
               >
                 <GraduationCap className="h-5 w-5" />
                 Become an Instructor
@@ -506,9 +510,9 @@ export default function MasterclassesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-16 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-900/50 to-pink-900/50 p-8 text-center"
+            className="border-[var(--accent)]/20 from-[var(--accent)]/15 to-[var(--gold)]/15 mt-16 rounded-2xl border bg-gradient-to-r p-8 text-center"
           >
-            <h3 className="mb-2 text-2xl font-bold text-white">Share Your Expertise</h3>
+            <h3 className="mb-2 text-2xl font-bold text-[var(--text)]">Share Your Expertise</h3>
             <p className="mx-auto mb-6 max-w-xl text-[var(--muted)]">
               Are you a professional musician, producer, or industry expert? Create your own
               masterclass and earn money teaching what you love.
@@ -517,7 +521,7 @@ export default function MasterclassesPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-black"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3 font-semibold text-white"
               >
                 <GraduationCap className="h-5 w-5" />
                 Become an Instructor

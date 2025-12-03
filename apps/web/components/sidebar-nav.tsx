@@ -36,6 +36,7 @@ import {
   Tag,
   Palette,
   Mail,
+  Bell,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -96,9 +97,20 @@ const navSections: NavSection[] = [
   {
     title: 'Home',
     description: 'Your workshop',
+    items: [{ label: 'Workshop', href: '/dashboard', icon: Home }],
+  },
+  {
+    title: 'Social',
+    description: 'Your community',
     items: [
-      { label: 'Workshop', href: '/dashboard', icon: Home },
-      { label: 'Activity', href: '/feed', icon: Sparkles },
+      { label: 'Feed', href: '/social', icon: Sparkles },
+      { label: 'Explore', href: '/social/explore', icon: Compass },
+      { label: 'My Network', href: '/social/network', icon: Users },
+      { label: 'Friends', href: '/social/friends', icon: Heart, badge: 'NEW' },
+      { label: 'Discover', href: '/social/discover', icon: UserSearch },
+      { label: 'Messages', href: '/social/messages', icon: MessageSquare },
+      { label: 'Notifications', href: '/social/notifications', icon: Bell },
+      { label: 'My Profile', href: '/social/profile', icon: Guitar },
     ],
   },
   {
@@ -124,15 +136,12 @@ const navSections: NavSection[] = [
   },
   {
     title: 'Connect',
-    description: 'Find your people',
+    description: 'Communicate',
     items: [
       { label: 'RNRB Mail', href: '/settings/email', icon: Mail, badge: 'NEW' },
       { label: 'Meet', href: '/meet', icon: Video, badge: 'NEW' },
-      { label: 'My Network', href: '/network', icon: Users, badge: 'NEW' },
-      { label: 'Discover', href: '/discover', icon: UserSearch },
       { label: 'Collaborate', href: '/collaboration', icon: Users },
       { label: 'Collab Board', href: '/collaboration-needs', icon: Headphones },
-      { label: 'Messages', href: '/messages', icon: MessageSquare },
     ],
   },
   {

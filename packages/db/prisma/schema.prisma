@@ -251,6 +251,10 @@ model User {
   // Push Notifications
   pushSubscriptions PushSubscription[]
 
+  // Custom Workspaces - User-owned dashboard customization
+  workspaces      UserWorkspace[]
+  userPreferences UserPreferences?
+
   @@index([email])
   @@index([stripeCustomerId])
   @@index([stripeSubscriptionId])
@@ -274,6 +278,61 @@ model PushSubscription {
 
   @@unique([userId, endpoint]) // One subscription per device per user
   @@index([userId])
+}
+
+// ====================================
+// CUSTOM WORKSPACES - User-owned Dashboard Customization
+// ====================================
+
+/// A custom workspace/tab that users create to organize their tools
+model UserWorkspace {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String   // User-defined name (e.g., "Writing Room", "Tour HQ")
+  icon      String   @default("layout") // Icon key for the workspace tab
+  order     Int      @default(0) // Position in the tab bar
+  isDefault Boolean  @default(false) // The "Home" workspace that can't be deleted
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tools WorkspaceTool[]
+
+  @@index([userId])
+  @@index([userId, order])
+}
+
+/// A tool placed within a workspace, with position data for layout
+model WorkspaceTool {
+  id          String   @id @default(cuid())
+  workspaceId String
+  toolKey     String   // Key matching the tool catalog (e.g., "songwriting", "studio", "tours")
+  order       Int      @default(0) // Position within the workspace grid
+  size        String   @default("normal") // "compact", "normal", "large" for card size variants
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace UserWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, toolKey]) // Each tool appears once per workspace
+  @@index([workspaceId])
+  @@index([workspaceId, order])
+}
+
+/// User-wide preferences for theming and display settings
+model UserPreferences {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  theme            String   @default("system") // "light", "dark", "system"
+  accentColor      String   @default("default") // Color scheme key
+  colorScheme      String   @default("midnight") // Preset theme name
+  compactMode      Boolean  @default(false) // Dense layout option
+  showWelcome      Boolean  @default(true) // Show welcome message on dashboard
+  editModeHintSeen Boolean  @default(false) // Has user seen the edit mode tutorial
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Org {
