@@ -95,20 +95,25 @@ export default function NetworkPage() {
 
       if (response.ok) {
         // Update follower to show they're now followed
-        setNetworkData((prev) =>
-          prev
-            ? {
-                ...prev,
-                followers: prev.followers.map((u) =>
-                  u.id === userId ? { ...u, isFollowingBack: true } : u
-                ),
-                following: [...prev.following, prev.followers.find((u) => u.id === userId)!].filter(
-                  Boolean
-                ),
-                followingCount: prev.followingCount + 1,
-              }
-            : null
-        );
+        setNetworkData((prev) => {
+          if (!prev) return null;
+
+          const userToFollow = prev.followers.find((u) => u.id === userId);
+          if (!userToFollow) {
+            // User not found in followers - don't create inconsistent state
+            console.warn('handleFollowBack: User not found in followers array:', userId);
+            return prev;
+          }
+
+          return {
+            ...prev,
+            followers: prev.followers.map((u) =>
+              u.id === userId ? { ...u, isFollowingBack: true } : u
+            ),
+            following: [...prev.following, userToFollow],
+            followingCount: prev.followingCount + 1,
+          };
+        });
       }
     } catch (error) {
       console.error('Error following back:', error);

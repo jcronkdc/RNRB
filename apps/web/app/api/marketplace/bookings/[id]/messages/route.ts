@@ -2,12 +2,19 @@
  * Booking Messages API
  *
  * Real-time messaging between client and provider for a booking
+ * 
+ * Security Features:
+ * - Rate limiting (10 messages/minute per user)
+ * - Spam content filtering
+ * - Duplicate message detection
+ * - Access control (only booking participants)
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
+import { checkRateLimits, checkMessageForSpam, checkDuplicateMessage, recordMessage } from '@/lib/spam-protection';
 
 /**
  * GET - Get messages for a booking
@@ -77,12 +84,41 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const userId = session.user.id;
     const { id } = await params;
     const body = await request.json();
     const { content, attachments } = body;
 
     if (!content || content.trim().length === 0) {
       return NextResponse.json({ error: 'Message content required' }, { status: 400 });
+    }
+
+    const trimmedContent = content.trim();
+
+    // 🔒 SPAM PROTECTION: Check rate limits
+    const rateLimit = checkRateLimits(userId);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: rateLimit.reason || 'Too many messages. Please slow down.' },
+        { status: 429 }
+      );
+    }
+
+    // 🔒 SPAM PROTECTION: Check for spam content
+    const spamCheck = checkMessageForSpam(trimmedContent);
+    if (spamCheck.isSpam) {
+      return NextResponse.json(
+        { error: 'Message flagged as potential spam. Please revise your message.' },
+        { status: 400 }
+      );
+    }
+
+    // 🔒 SPAM PROTECTION: Check for duplicate messages
+    if (checkDuplicateMessage(userId, trimmedContent)) {
+      return NextResponse.json(
+        { error: 'Please avoid sending duplicate messages.' },
+        { status: 400 }
+      );
     }
 
     // Verify user has access
@@ -97,18 +133,24 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    const isClient = booking.clientId === session.user.id;
-    const isProvider = booking.provider.userId === session.user.id;
+    const isClient = booking.clientId === userId;
+    const isProvider = booking.provider.userId === userId;
 
     if (!isClient && !isProvider) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    // Determine recipient for rate limiting
+    const recipientId = isClient ? booking.provider.userId : booking.clientId;
+
+    // Record message for rate limiting
+    recordMessage(userId, recipientId, trimmedContent);
+
     const message = await prisma.bookingMessage.create({
       data: {
         bookingId: id,
-        senderId: session.user.id,
-        content: content.trim(),
+        senderId: userId,
+        content: trimmedContent,
         attachments: attachments || null,
       },
       include: {

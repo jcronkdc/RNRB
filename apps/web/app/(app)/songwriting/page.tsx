@@ -538,7 +538,7 @@ export default function SongwritingPage() {
 
   const tabs = [
     { id: 'structure', label: 'Structure' },
-    { id: 'preview', label: '✨ Preview' },
+    { id: 'preview', label: 'Preview' },
     { id: 'chords', label: 'Chords' },
     { id: 'lyrics', label: 'Lyrics' },
     { id: 'copyright', label: 'Copyright' },

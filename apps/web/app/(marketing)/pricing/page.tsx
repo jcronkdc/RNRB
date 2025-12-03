@@ -163,7 +163,7 @@ export default function PricingPage() {
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
                 <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
-                  Less than 3 lattes ☕
+                  Less than 3 lattes
                 </p>
                 <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                   <li className="flex items-start gap-2">
@@ -261,7 +261,7 @@ export default function PricingPage() {
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
                 <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
-                  Price of 1 pizza 🍕
+                  Price of 1 pizza
                 </p>
                 <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
                   <li className="flex items-start gap-2">

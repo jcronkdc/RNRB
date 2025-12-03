@@ -176,28 +176,76 @@ export async function POST(req: NextRequest) {
     await trackUsage(userId, 'aiRequests', creditsNeeded);
 
     // 🎵 Generate music using Replicate MusicGen
-    console.log(`[AI Music] Generating track: "${prompt.slice(0, 50)}..."`);
+    console.log(`[AI Music] Generating track for user ${userId}:`);
+    console.log(`[AI Music] Prompt: "${prompt.slice(0, 100)}..."`);
+    console.log(`[AI Music] Duration: ${validatedData.duration}s, Tempo: ${validatedData.tempo} BPM`);
 
-    const output = await replicate.run(
-      'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3550b9bdb1a48910f',
-      {
-        input: {
-          prompt: prompt,
-          duration: validatedData.duration,
-          model_version: 'stereo-melody-large',
-          output_format: 'mp3',
-          normalization_strategy: 'peak',
-          seed: validatedData.seed,
-        },
+    let output: unknown;
+    
+    try {
+      // Use the latest MusicGen stereo model
+      // See: https://replicate.com/meta/musicgen
+      output = await replicate.run(
+        'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3550b9bdb1a48910d',
+        {
+          input: {
+            prompt: prompt,
+            duration: Math.min(validatedData.duration, 30), // MusicGen max is 30s
+            model_version: 'stereo-large', // Options: melody, large, stereo-melody, stereo-large
+            output_format: 'mp3',
+            normalization_strategy: 'peak',
+            ...(validatedData.seed !== undefined && { seed: validatedData.seed }),
+          },
+        }
+      );
+      
+      console.log(`[AI Music] Replicate response type: ${typeof output}`);
+      console.log(`[AI Music] Replicate response:`, JSON.stringify(output).slice(0, 200));
+    } catch (replicateError: any) {
+      console.error('[AI Music] Replicate API error:', replicateError);
+      
+      // Check for specific error types
+      if (replicateError.message?.includes('Invalid model version')) {
+        // Try with default model (no model_version specified) - this lets Replicate choose
+        console.log('[AI Music] Retrying with default model (no model_version)...');
+        output = await replicate.run('meta/musicgen', {
+          input: {
+            prompt: prompt,
+            duration: Math.min(validatedData.duration, 30),
+            output_format: 'mp3',
+            // Omit model_version to use Replicate's default
+          },
+        });
+      } else {
+        throw replicateError;
       }
-    );
-
-    // MusicGen returns a URL to the generated audio
-    const audioUrl = output as unknown as string;
-
-    if (!audioUrl || typeof audioUrl !== 'string') {
-      throw new Error('AI generation failed - no audio URL returned');
     }
+
+    // MusicGen returns audio URL - could be string directly or in an object/array
+    let audioUrl: string;
+    
+    if (typeof output === 'string') {
+      audioUrl = output;
+    } else if (Array.isArray(output) && output.length > 0 && typeof output[0] === 'string') {
+      // Some versions return an array of URLs
+      audioUrl = output[0];
+    } else if (output && typeof output === 'object' && 'audio' in output) {
+      // Some versions return { audio: "url" }
+      audioUrl = (output as { audio: string }).audio;
+    } else if (output && typeof output === 'object' && 'output' in output) {
+      // Some versions return { output: "url" }
+      audioUrl = (output as { output: string }).output;
+    } else {
+      console.error('[AI Music] Unexpected output format:', JSON.stringify(output));
+      throw new Error('AI generation failed - unexpected response format');
+    }
+
+    if (!audioUrl || typeof audioUrl !== 'string' || !audioUrl.startsWith('http')) {
+      console.error('[AI Music] Invalid audio URL:', audioUrl);
+      throw new Error('AI generation failed - invalid audio URL returned');
+    }
+    
+    console.log(`[AI Music] Generated audio URL: ${audioUrl.slice(0, 100)}...`);
 
     // Download the generated audio
     const audioResponse = await fetch(audioUrl);
@@ -266,7 +314,7 @@ export async function POST(req: NextRequest) {
       trackId: song.id, // Legacy compatibility
       generation: {
         creditsUsed: creditsNeeded,
-        model: 'musicgen-stereo-melody-large',
+        model: 'musicgen-stereo-large',
         prompt: prompt,
       },
       storage: {
@@ -370,8 +418,8 @@ function sanitizeFilename(str: string): string {
 }
 
 /**
- * GET /api/tracks/generate/status/:id
- * Check status of a generation job (for async generation)
+ * GET /api/tracks/generate
+ * Check status of AI generation feature and verify configuration
  */
 export async function GET(req: NextRequest) {
   try {
@@ -380,17 +428,57 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    // Return info about AI generation feature
+    // Check all required configurations
     const replicate = getReplicateClient();
+    const replicateConfigured = !!replicate;
+    const replicateTokenPrefix = process.env.REPLICATE_API_TOKEN?.slice(0, 5) || 'NOT SET';
+    
+    // Check Supabase storage config
+    let supabaseConfigured = false;
+    let supabaseError: string | null = null;
+    try {
+      const supabase = getSupabaseStorageClient();
+      supabaseConfigured = true;
+    } catch (e: any) {
+      supabaseError = e.message;
+    }
+
+    // Test Replicate connection if configured
+    let replicateStatus = 'not_tested';
+    let replicateError: string | null = null;
+    
+    if (replicateConfigured && replicate) {
+      try {
+        // Just verify the client can be created - don't make an actual API call
+        // to avoid charges during health checks
+        replicateStatus = 'configured';
+      } catch (e: any) {
+        replicateStatus = 'error';
+        replicateError = e.message;
+      }
+    } else {
+      replicateStatus = 'not_configured';
+    }
 
     return NextResponse.json({
-      available: !!replicate,
+      status: replicateConfigured && supabaseConfigured ? 'ready' : 'incomplete',
+      timestamp: new Date().toISOString(),
+      configuration: {
+        replicate: {
+          configured: replicateConfigured,
+          tokenPrefix: replicateTokenPrefix,
+          status: replicateStatus,
+          error: replicateError,
+        },
+        supabase: {
+          configured: supabaseConfigured,
+          error: supabaseError,
+        },
+      },
       model: 'meta/musicgen',
       capabilities: {
         maxDuration: 30,
         formats: ['mp3'],
-        genreSupport: true,
-        moodSupport: true,
         instrumentSupport: true,
       },
       pricing: {
@@ -398,8 +486,20 @@ export async function GET(req: NextRequest) {
         extraDuration: CREDIT_COSTS.extraDuration,
         extraInstruments: CREDIT_COSTS.extraInstruments,
       },
+      troubleshooting: !replicateConfigured ? [
+        'REPLICATE_API_TOKEN environment variable is not set',
+        'Get your token from: https://replicate.com/account/api-tokens',
+        'Token should start with "r8_"',
+      ] : !supabaseConfigured ? [
+        'Supabase storage is not configured',
+        'Ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set',
+      ] : [],
     });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to get status' }, { status: 500 });
+    console.error('GET /api/tracks/generate error:', error);
+    return NextResponse.json({ 
+      error: 'Failed to check status',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    }, { status: 500 });
   }
 }

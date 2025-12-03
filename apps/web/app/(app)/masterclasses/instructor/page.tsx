@@ -81,18 +81,18 @@ function StatCard({
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
       <div className="mb-4 flex items-start justify-between">
-        <div className="rounded-lg bg-purple-500/10 p-3">
-          <Icon className="h-6 w-6 text-purple-400" />
+        <div className="rounded-lg bg-[var(--accent)]/10 p-3">
+          <Icon className="h-6 w-6 text-[var(--accent)]" />
         </div>
         {trend && (
           <TrendingUp
-            className={`h-5 w-5 ${trend === 'up' ? 'text-green-400' : 'rotate-180 text-red-400'}`}
+            className={`h-5 w-5 ${trend === 'up' ? 'text-[var(--sage)]' : 'rotate-180 text-[var(--error)]'}`}
           />
         )}
       </div>
-      <div className="mb-1 text-2xl font-bold text-white">{value}</div>
+      <div className="mb-1 text-2xl font-bold text-[var(--text)]">{value}</div>
       <div className="text-sm text-[var(--muted)]">{label}</div>
-      {subtext && <div className="mt-1 text-xs text-purple-400">{subtext}</div>}
+      {subtext && <div className="mt-1 text-xs text-[var(--accent)]">{subtext}</div>}
     </div>
   );
 }

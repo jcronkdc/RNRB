@@ -97,7 +97,11 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-5 backdrop-blur-sm transition-all hover:border-white/20"
+      className="rounded-2xl p-5 backdrop-blur-sm transition-all"
+      style={{
+        background: 'var(--panel)',
+        border: '1px solid var(--border)',
+      }}
     >
       {/* Header */}
       <div className="mb-4 flex items-start gap-3">
@@ -183,7 +187,10 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between border-t border-white/10 pt-3">
+      <div
+        className="flex items-center justify-between pt-3"
+        style={{ borderTop: '1px solid var(--border)' }}
+      >
         <div className="flex items-center gap-1">
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -192,18 +199,27 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all ${
               hasCelebrated || activity.celebrationCount > 0
                 ? 'bg-orange-500/20 text-orange-400'
-                : 'text-white/50 hover:bg-white/10 hover:text-white'
+                : 'hover:bg-black/5 dark:hover:bg-white/10'
             }`}
+            style={{
+              color: hasCelebrated || activity.celebrationCount > 0 ? undefined : 'var(--muted)',
+            }}
           >
-            <span className="text-base">🎉</span>
+            <Sparkles className="h-4 w-4" />
             <span>{activity.celebrationCount + (hasCelebrated ? 1 : 0)}</span>
           </motion.button>
 
-          <button className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all hover:bg-black/5 dark:hover:bg-white/10"
+            style={{ color: 'var(--muted)' }}
+          >
             <MessageCircle className="h-4 w-4" />
           </button>
 
-          <button className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-white/50 transition-all hover:bg-white/10 hover:text-white">
+          <button
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-all hover:bg-black/5 dark:hover:bg-white/10"
+            style={{ color: 'var(--muted)' }}
+          >
             <Share2 className="h-4 w-4" />
           </button>
         </div>
