@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import {
   Activity,
@@ -11,7 +12,9 @@ import {
   Database,
   FileText,
   Home,
+  Loader2,
   Shield,
+  ShieldAlert,
   Users,
 } from 'lucide-react';
 
@@ -33,12 +36,13 @@ function BugBadge() {
     const fetchAlerts = async () => {
       try {
         const res = await fetch('/api/admin/error-alerts?acknowledged=false');
+        if (!res.ok) return;
         const data = await res.json();
         if (data.unreadCount !== undefined) {
           setUnreadCount(data.unreadCount);
         }
       } catch {
-        // Ignore errors
+        // Ignore errors - user may not have access
       }
     };
 
@@ -60,6 +64,76 @@ function BugBadge() {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [isOwner, setIsOwner] = useState<boolean | null>(null);
+  const [checking, setChecking] = useState(true);
+
+  // Check if user is the platform owner
+  useEffect(() => {
+    async function checkOwnerAccess() {
+      if (status === 'loading') return;
+
+      if (!session?.user) {
+        router.replace('/auth/signin?callbackUrl=/admin');
+        return;
+      }
+
+      try {
+        // Verify owner status via API
+        const res = await fetch('/api/admin/verify-owner');
+        if (res.ok) {
+          const data = await res.json();
+          setIsOwner(data.isOwner === true);
+        } else {
+          setIsOwner(false);
+        }
+      } catch {
+        setIsOwner(false);
+      } finally {
+        setChecking(false);
+      }
+    }
+
+    checkOwnerAccess();
+  }, [session, status, router]);
+
+  // Loading state
+  if (status === 'loading' || checking) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f]">
+        <div className="text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-orange-500" />
+          <p className="mt-4 text-sm text-zinc-400">Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Access denied
+  if (!isOwner) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f] p-8">
+        <div className="max-w-md text-center">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-500/20">
+            <ShieldAlert className="h-10 w-10 text-red-500" />
+          </div>
+          <h1 className="mb-2 text-2xl font-bold text-white">Access Denied</h1>
+          <p className="mb-6 text-zinc-400">
+            This area is restricted to the platform owner only. If you believe this is an error,
+            please contact support.
+          </p>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center gap-2 rounded-xl bg-zinc-800 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
+          >
+            <Home className="h-4 w-4" />
+            Return to Dashboard
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-[#0a0a0f]">
@@ -73,7 +147,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </div>
             <div>
               <p className="font-bold text-white">Admin Panel</p>
-              <p className="text-xs text-zinc-500">CronkWaters</p>
+              <p className="text-xs text-zinc-500">Owner Only</p>
             </div>
           </Link>
         </div>
