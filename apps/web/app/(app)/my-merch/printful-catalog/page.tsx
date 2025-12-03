@@ -182,9 +182,7 @@ export default function PrintfulCatalogPage() {
   // Helper to check if a product matches our curated selection
   const isAllowedProduct = useCallback((product: PrintfulProduct) => {
     const productText = `${product.model} ${product.type_name}`.toLowerCase();
-    return ALLOWED_PRODUCT_KEYWORDS.some(keyword => 
-      productText.includes(keyword.toLowerCase())
-    );
+    return ALLOWED_PRODUCT_KEYWORDS.some((keyword) => productText.includes(keyword.toLowerCase()));
   }, []);
 
   // Fetch Printful catalog (once - we filter client-side)
@@ -197,8 +195,8 @@ export default function PrintfulCatalogPage() {
 
         if (data.success && data.catalog) {
           // Filter out discontinued products AND only keep curated products
-          const curatedProducts = data.catalog.filter((p: PrintfulProduct) => 
-            !p.is_discontinued && isAllowedProduct(p)
+          const curatedProducts = data.catalog.filter(
+            (p: PrintfulProduct) => !p.is_discontinued && isAllowedProduct(p)
           );
           setProducts(curatedProducts);
         }
@@ -295,9 +293,7 @@ export default function PrintfulCatalogPage() {
                 <Package className="h-7 w-7 text-purple-400" />
               </div>
             </div>
-            <h1 className="mb-3 text-3xl font-bold text-white md:text-4xl">
-              Band Merch Catalog
-            </h1>
+            <h1 className="mb-3 text-3xl font-bold text-white md:text-4xl">Band Merch Catalog</h1>
             <p className="text-lg text-white/60">
               {products.length} curated products for artist merchandise
             </p>
