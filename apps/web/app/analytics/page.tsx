@@ -397,7 +397,7 @@ export default function AnalyticsPage() {
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white">
-                        {stats.streakDays} Day Streak! 🔥
+                        {stats.streakDays} Day Streak!
                       </h3>
                       <p className="text-sm text-muted-foreground">
                         You've been creating music for {stats.streakDays} days in a row

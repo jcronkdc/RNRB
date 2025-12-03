@@ -149,9 +149,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       );
     }
 
-    // Record message for rate limiting (for future checks)
-    recordMessage(userId, recipientId, trimmedContent);
-
     const message = await prisma.bookingMessage.create({
       data: {
         bookingId: id,
@@ -165,6 +162,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         },
       },
     });
+
+    // Record message for rate limiting AFTER successful database write
+    // This prevents state inconsistency if the DB save fails
+    recordMessage(userId, recipientId, trimmedContent);
 
     // TODO: Send real-time notification via Ably
     // TODO: Send email notification if recipient offline

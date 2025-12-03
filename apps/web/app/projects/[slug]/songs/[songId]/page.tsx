@@ -695,9 +695,9 @@ export default function SongDetailPage() {
                 {/* Save Notice */}
                 <Card className="border-blue-500/30 bg-blue-500/5 p-4">
                   <p className="text-sm text-gray-300">
-                    <strong className="text-white">💡 Auto-Save:</strong> Your copyright information
-                    is automatically saved as you type. Make sure to register your song with your
-                    PRO to get official codes!
+                    <strong className="text-white">Auto-Save:</strong> Your copyright information is
+                    automatically saved as you type. Make sure to register your song with your PRO
+                    to get official codes!
                   </p>
                 </Card>
 
@@ -819,7 +819,7 @@ export default function SongDetailPage() {
             </div>
           </div>
           <p className="mt-4 text-xs text-[color:var(--muted)]">
-            💡 Invite collaborators to this specific song for focused collaboration on lyrics,
+            Invite collaborators to this specific song for focused collaboration on lyrics,
             production, and recording
           </p>
         </Card>

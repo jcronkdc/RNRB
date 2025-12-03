@@ -59,6 +59,14 @@ interface RateLimitResult {
   retryAfterMs?: number;
 }
 
+interface RateLimitReservation {
+  allowed: boolean;
+  reason?: string;
+  retryAfterMs?: number;
+  /** Call this to release the reservation if the operation fails (e.g., DB write fails) */
+  release: () => void;
+}
+
 /**
  * Check if a message is spam
  */
@@ -384,12 +392,13 @@ export async function loadBlockedUsers(userId: string): Promise<Set<string>> {
 
 /**
  * Comprehensive spam check - combines all checks
+ * Returns delivery type to determine if message goes to inbox or requests
  */
 export async function validateMessage(
   senderId: string,
   recipientId: string,
   content: string
-): Promise<{ valid: boolean; error?: string }> {
+): Promise<{ valid: boolean; error?: string; deliveryType?: MessageDeliveryType }> {
   // 1. Check rate limits
   const rateLimit = checkRateLimits(senderId, recipientId);
   if (!rateLimit.allowed) {
@@ -407,7 +416,7 @@ export async function validateMessage(
     return { valid: false, error: 'Please avoid sending duplicate messages' };
   }
 
-  // 4. Check if user can message recipient
+  // 4. Check if user can message recipient and get delivery type
   const canMessage = await canUserMessage(senderId, recipientId);
   if (!canMessage.allowed) {
     return { valid: false, error: canMessage.reason };
@@ -416,7 +425,7 @@ export async function validateMessage(
   // NOTE: Do NOT call recordMessage here - it's called in the route handler
   // AFTER successful database write to prevent counting failed messages
 
-  return { valid: true };
+  return { valid: true, deliveryType: canMessage.deliveryType };
 }
 
 // Clean up old entries periodically

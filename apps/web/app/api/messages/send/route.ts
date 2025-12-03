@@ -7,8 +7,11 @@
  * - Rate limiting (10 messages/minute, 5 second cooldown per recipient)
  * - Spam content filtering
  * - Duplicate message detection
- * - Connection requirement (must follow or be friends)
  * - User blocking support
+ *
+ * Message Routing:
+ * - Friends/connections: Message goes to direct inbox
+ * - Non-friends: Message goes to "Message Requests" folder
  */
 
 import { prisma } from '@cronkwaters/db';
@@ -117,6 +120,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Determine if this went to requests or direct inbox
+    const isMessageRequest = validation.deliveryType === 'request';
+
     return NextResponse.json({
       success: true,
       message: {
@@ -130,6 +136,11 @@ export async function POST(request: NextRequest) {
         },
         createdAt: message.createdAt,
       },
+      // Let the sender know if message went to requests
+      deliveryType: validation.deliveryType,
+      notice: isMessageRequest
+        ? `Your message was sent to ${recipient.name || 'this user'}'s message requests since you're not connected.`
+        : undefined,
     });
   } catch (error) {
     console.error('Error sending message:', error);
