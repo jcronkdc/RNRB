@@ -2998,4 +2998,211 @@ html.dark {
   }
 }
 
+/* ========================================
+   ☀️ ADDITIONAL LIGHT MODE FIXES
+   Comprehensive overrides for dark-mode-specific classes
+   ======================================== */
+
+html.light {
+  /* === GRAY BACKGROUND OVERRIDES === */
+  [class*='bg-gray-900'],
+  [class*='bg-gray-950'] {
+    background-color: var(--panel) !important;
+  }
+
+  [class*='bg-gray-800'] {
+    background-color: var(--panel-hover) !important;
+  }
+
+  [class*='bg-gray-700'] {
+    background-color: var(--panel-active) !important;
+  }
+
+  /* === GRAY BORDER OVERRIDES === */
+  [class*='border-gray-800'],
+  [class*='border-gray-700'] {
+    border-color: var(--border) !important;
+  }
+
+  [class*='border-gray-600'] {
+    border-color: var(--border-strong) !important;
+  }
+
+  /* === BLACK BACKGROUND OVERRIDES === */
+  [class*='bg-black/'] {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+  }
+
+  [class*='bg-black/70'],
+  [class*='bg-black/80'] {
+    background-color: rgba(0, 0, 0, 0.7) !important; /* Keep modals dark-ish */
+  }
+
+  /* === ZINC COLOR OVERRIDES === */
+  [class*='text-zinc-100'],
+  [class*='text-zinc-200'],
+  [class*='text-zinc-300'] {
+    color: var(--text) !important;
+  }
+
+  [class*='text-zinc-400'],
+  [class*='text-zinc-500'] {
+    color: var(--muted) !important;
+  }
+
+  [class*='bg-zinc-800'],
+  [class*='bg-zinc-900'] {
+    background-color: var(--panel) !important;
+  }
+
+  [class*='border-zinc-700'],
+  [class*='border-zinc-800'] {
+    border-color: var(--border) !important;
+  }
+
+  /* === INPUT STYLING FOR LIGHT MODE === */
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='search'],
+  input[type='number'],
+  input[type='tel'],
+  input[type='url'],
+  textarea,
+  select {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted-soft) !important;
+  }
+
+  /* === PROSE STYLING FOR LIGHT MODE === */
+  .prose,
+  .prose-invert {
+    color: var(--text) !important;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6,
+  .prose-invert h1,
+  .prose-invert h2,
+  .prose-invert h3 {
+    color: var(--text) !important;
+  }
+
+  .prose p,
+  .prose-invert p {
+    color: var(--text-secondary) !important;
+  }
+
+  /* === SIDEBAR/ASIDE FIXES === */
+  aside {
+    background-color: var(--panel) !important;
+  }
+
+  aside [class*='bg-gray-'] {
+    background-color: transparent !important;
+  }
+
+  /* === CODE/PRE ELEMENTS === */
+  pre,
+  code {
+    background-color: var(--panel) !important;
+    color: var(--text) !important;
+  }
+
+  /* === TOOLTIP/DROPDOWN BACKGROUNDS === */
+  [role='menu'],
+  [role='listbox'],
+  [role='dialog'] {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border) !important;
+  }
+
+  /* === FIX ICONS IN LIGHT MODE === */
+  /* Muted icons */
+  svg[class*='text-white/'] {
+    color: var(--muted) !important;
+  }
+
+  /* Keep colored icons their proper colors */
+  svg[class*='text-orange'],
+  svg[class*='text-green'],
+  svg[class*='text-red'],
+  svg[class*='text-blue'],
+  svg[class*='text-purple'],
+  svg[class*='text-pink'],
+  svg[class*='text-yellow'],
+  svg[class*='text-emerald'],
+  svg[class*='text-cyan'],
+  svg[class*='text-amber'],
+  svg[class*='text-teal'],
+  svg[class*='text-brand'] {
+    /* Keep original color */
+    color: inherit;
+  }
+
+  /* === RING/FOCUS COLORS === */
+  [class*='ring-white/'] {
+    --tw-ring-color: var(--border) !important;
+  }
+
+  /* === BACKDROP FILTER SUPPORT === */
+  [class*='backdrop-blur'] {
+    background-color: rgba(250, 248, 245, 0.9) !important;
+  }
+
+  /* === LOADING STATES === */
+  [class*='animate-pulse'] {
+    opacity: 0.7;
+  }
+
+  /* === SKELETON SCREENS === */
+  [class*='skeleton'],
+  [class*='animate-shimmer'] {
+    background-color: var(--panel) !important;
+  }
+
+  /* === ACTIVE/SELECTED STATES === */
+  [class*='bg-orange-500/10'],
+  [class*='bg-orange-500/20'] {
+    background-color: rgba(213, 81, 47, 0.1) !important;
+  }
+
+  [class*='bg-purple-500/10'],
+  [class*='bg-purple-500/20'] {
+    background-color: rgba(139, 92, 246, 0.1) !important;
+  }
+
+  [class*='bg-blue-500/10'],
+  [class*='bg-blue-500/20'] {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+  }
+
+  [class*='bg-green-500/10'],
+  [class*='bg-green-500/20'],
+  [class*='bg-emerald-500/10'],
+  [class*='bg-emerald-500/20'] {
+    background-color: rgba(16, 185, 129, 0.1) !important;
+  }
+
+  [class*='bg-red-500/10'],
+  [class*='bg-red-500/20'] {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+  }
+
+  [class*='bg-pink-500/10'],
+  [class*='bg-pink-500/20'] {
+    background-color: rgba(236, 72, 153, 0.1) !important;
+  }
+}
+
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */

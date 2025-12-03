@@ -259,22 +259,33 @@ export function AssistantChat() {
       className={cn(
         'fixed bottom-6 right-6 z-50',
         'w-[420px] max-w-[calc(100vw-2rem)]',
-        'bg-zinc-900/98 rounded-2xl border border-zinc-700/50 shadow-2xl backdrop-blur-xl',
+        'rounded-2xl shadow-2xl backdrop-blur-xl',
         'flex flex-col',
-        'ring-1 ring-white/10',
         isMinimized ? 'h-14' : 'h-[650px] max-h-[calc(100vh-2rem)]'
       )}
+      style={{
+        background: 'var(--panel)',
+        border: '1px solid var(--border)',
+      }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between rounded-t-2xl border-b border-zinc-700/50 bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-brand-primary/10 px-4 py-3">
+      <div
+        className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-brand-primary/10 px-4 py-3"
+        style={{ borderBottom: '1px solid var(--border)' }}
+      >
         <div className="flex items-center gap-3">
           <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
             <Sparkles className="h-5 w-5 text-white" />
-            <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-zinc-900 bg-green-400" />
+            <div
+              className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-green-400"
+              style={{ border: '2px solid var(--panel)' }}
+            />
           </div>
           <div>
-            <h3 className="font-semibold text-white">AI Assistant</h3>
-            <p className="text-xs text-zinc-400">
+            <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
+              AI Assistant
+            </h3>
+            <p className="text-xs" style={{ color: 'var(--muted)' }}>
               {isStreaming
                 ? 'Typing...'
                 : currentAction
@@ -288,7 +299,8 @@ export function AssistantChat() {
             variant="ghost"
             size="icon"
             onClick={handleMinimize}
-            className="h-8 w-8 text-zinc-400 hover:bg-white/10 hover:text-white"
+            className="h-8 w-8 hover:bg-black/5 dark:hover:bg-white/10"
+            style={{ color: 'var(--muted)' }}
           >
             <Minus className="h-4 w-4" />
           </Button>
@@ -296,7 +308,8 @@ export function AssistantChat() {
             variant="ghost"
             size="icon"
             onClick={handleClose}
-            className="h-8 w-8 text-zinc-400 hover:bg-white/10 hover:text-white"
+            className="h-8 w-8 hover:bg-black/5 dark:hover:bg-white/10"
+            style={{ color: 'var(--muted)' }}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -314,10 +327,10 @@ export function AssistantChat() {
                   <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
                     <Sparkles className="h-8 w-8 text-white" />
                   </div>
-                  <h4 className="mb-1 text-lg font-semibold text-white">
+                  <h4 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text)' }}>
                     Hey! I'm your AI Assistant
                   </h4>
-                  <p className="text-sm text-zinc-400">
+                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
                     I know your songs, projects, and preferences. Ask me anything!
                   </p>
                 </div>
@@ -328,13 +341,18 @@ export function AssistantChat() {
                     <p className="mb-1 text-xs font-medium text-brand-primary">
                       {proactiveSuggestion.trigger}
                     </p>
-                    <p className="text-sm text-zinc-300">{proactiveSuggestion.suggestion}</p>
+                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      {proactiveSuggestion.suggestion}
+                    </p>
                   </div>
                 )}
 
                 {/* Quick actions */}
                 <div className="mt-auto">
-                  <p className="mb-3 text-xs font-medium uppercase tracking-wider text-zinc-500">
+                  <p
+                    className="mb-3 text-xs font-medium uppercase tracking-wider"
+                    style={{ color: 'var(--muted-soft)' }}
+                  >
                     Quick Actions
                   </p>
                   <div className="grid grid-cols-2 gap-2">
@@ -344,12 +362,16 @@ export function AssistantChat() {
                         onClick={() => handleQuickAction(action.prompt)}
                         className={cn(
                           'flex items-center gap-2 rounded-xl p-3',
-                          'border border-zinc-700/50 bg-zinc-800/50',
-                          'text-left text-sm text-zinc-300',
-                          'hover:border-zinc-600 hover:bg-zinc-800 hover:text-white',
+                          'text-left text-sm',
+                          'hover:bg-black/5 dark:hover:bg-white/5',
                           'transition-all duration-200',
                           'group'
                         )}
+                        style={{
+                          border: '1px solid var(--border)',
+                          background: 'var(--panel)',
+                          color: 'var(--text-secondary)',
+                        }}
                       >
                         <action.icon className="h-4 w-4 text-brand-primary transition-transform group-hover:scale-110" />
                         <span>{action.label}</span>
@@ -370,8 +392,17 @@ export function AssistantChat() {
                     'max-w-[85%] rounded-2xl px-4 py-3 text-sm',
                     message.role === 'user'
                       ? 'bg-gradient-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-brand-primary/20'
-                      : 'border border-zinc-700/50 bg-zinc-800/80 text-zinc-100'
+                      : ''
                   )}
+                  style={
+                    message.role === 'assistant'
+                      ? {
+                          border: '1px solid var(--border)',
+                          background: 'var(--panel)',
+                          color: 'var(--text)',
+                        }
+                      : undefined
+                  }
                 >
                   {message.role === 'assistant' && (
                     <div className="mb-2 flex items-center gap-2">
@@ -380,7 +411,10 @@ export function AssistantChat() {
                       </div>
                       <span className="text-xs font-medium text-brand-primary">AI Assistant</span>
                       {message.isStreaming && (
-                        <span className="ml-auto flex items-center gap-1 text-xs text-zinc-500">
+                        <span
+                          className="ml-auto flex items-center gap-1 text-xs"
+                          style={{ color: 'var(--muted-soft)' }}
+                        >
                           <Loader2 className="h-3 w-3 animate-spin" />
                           typing
                         </span>
@@ -399,7 +433,13 @@ export function AssistantChat() {
 
             {isLoading && !isStreaming && (
               <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-2xl border border-zinc-700/50 bg-zinc-800/80 px-4 py-3">
+                <div
+                  className="max-w-[85%] rounded-2xl px-4 py-3"
+                  style={{
+                    border: '1px solid var(--border)',
+                    background: 'var(--panel)',
+                  }}
+                >
                   <div className="flex items-center gap-3">
                     <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
@@ -410,7 +450,7 @@ export function AssistantChat() {
                         />
                       ))}
                     </div>
-                    <span className="text-xs text-zinc-400">
+                    <span className="text-xs" style={{ color: 'var(--muted)' }}>
                       {currentAction ? `Running ${currentAction}...` : 'Thinking...'}
                     </span>
                   </div>
@@ -441,7 +481,13 @@ export function AssistantChat() {
           </div>
 
           {/* Input */}
-          <div className="border-t border-zinc-700/50 bg-zinc-800/30 p-3">
+          <div
+            className="p-3"
+            style={{
+              borderTop: '1px solid var(--border)',
+              background: 'var(--panel-hover)',
+            }}
+          >
             {messages.length > 0 && (
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex gap-1">
@@ -452,11 +498,12 @@ export function AssistantChat() {
                       disabled={isLoading || isStreaming}
                       className={cn(
                         'flex items-center gap-1 rounded-lg px-2 py-1',
-                        'text-xs text-zinc-400',
-                        'hover:bg-zinc-700/50 hover:text-white',
+                        'text-xs',
+                        'hover:bg-black/5 dark:hover:bg-white/5',
                         'transition-colors',
                         'disabled:cursor-not-allowed disabled:opacity-50'
                       )}
+                      style={{ color: 'var(--muted)' }}
                     >
                       <action.icon className="h-3 w-3" />
                       <span className="hidden sm:inline">{action.label}</span>
@@ -468,7 +515,8 @@ export function AssistantChat() {
                   size="sm"
                   onClick={reset}
                   disabled={isLoading || isStreaming}
-                  className="h-auto py-1 text-xs text-zinc-400 hover:text-white"
+                  className="h-auto py-1 text-xs hover:bg-black/5 dark:hover:bg-white/5"
+                  style={{ color: 'var(--muted)' }}
                 >
                   <MessageSquare className="mr-1 h-3 w-3" />
                   New
@@ -484,12 +532,15 @@ export function AssistantChat() {
                 placeholder="Ask me anything..."
                 className={cn(
                   'flex-1 resize-none rounded-xl px-4 py-3',
-                  'bg-zinc-900 text-sm text-white',
-                  'border border-zinc-700',
+                  'text-sm',
                   'focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20',
-                  'placeholder:text-zinc-500',
                   'max-h-32'
                 )}
+                style={{
+                  background: 'var(--bg)',
+                  color: 'var(--text)',
+                  border: '1px solid var(--border)',
+                }}
                 rows={1}
                 disabled={isLoading || isStreaming}
               />
@@ -512,7 +563,7 @@ export function AssistantChat() {
                 </Button>
               )}
             </div>
-            <p className="mt-2 text-center text-xs text-zinc-500">
+            <p className="mt-2 text-center text-xs" style={{ color: 'var(--muted-soft)' }}>
               Enter to send • Shift+Enter for new line
             </p>
           </div>
