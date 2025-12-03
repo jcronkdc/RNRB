@@ -16,14 +16,16 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Script to run before React hydration to prevent flash
 // This gets injected into the HTML head
+// Default to dark theme for first-time visitors
 export const themeScript = `
   (function() {
     function getTheme() {
       const stored = localStorage.getItem('rnrb-theme');
       if (stored === 'light' || stored === 'dark') return stored;
-      if (stored === 'system' || !stored) {
+      if (stored === 'system') {
         return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
+      // No stored preference = default to dark
       return 'dark';
     }
     const theme = getTheme();
@@ -41,7 +43,7 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'system',
+  defaultTheme = 'dark',
   storageKey = 'rnrb-theme',
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);

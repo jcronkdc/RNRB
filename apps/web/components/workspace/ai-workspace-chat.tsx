@@ -1,14 +1,16 @@
 'use client';
 
 /**
- * AI WORKSPACE CHAT
+ * AI WORKSPACE CHAT - ENHANCED VERSION
  *
- * A beautiful conversational interface for creating workspaces with natural language.
+ * A powerful conversational interface for customizing workspaces with natural language.
+ *
  * Features:
- * - Floating button with sparkle effect
+ * - Full workspace customization (create, rename, add/remove tools)
+ * - Banner visibility control (hide merch/email banners)
  * - Conversational chat interface
  * - Preview cards for workspace suggestions
- * - Smooth animations with Framer Motion
+ * - Immediate execution of modifications
  * - Template gallery for quick creation
  */
 
@@ -36,8 +38,9 @@ import {
   ListMusic,
   ShoppingBag,
   Headphones,
+  Check,
 } from '@/components/ui/custom-icons';
-import { useWorkspace } from './workspace-context';
+import { useWorkspace, type WorkspaceSettings } from './workspace-context';
 import { WORKSPACE_TEMPLATES, type WorkspaceTemplate } from './workspace-templates';
 import { getToolByKey } from './tool-catalog';
 
@@ -68,6 +71,16 @@ interface WorkspacePreview {
   gradient?: string;
   description?: string;
   matchedTemplate?: string;
+  settings?: WorkspaceSettings;
+}
+
+// Modification instructions from AI
+interface WorkspaceModification {
+  workspaceId?: string;
+  newName?: string;
+  addTools?: string[];
+  removeTools?: string[];
+  settings?: WorkspaceSettings;
 }
 
 interface Message {
@@ -77,15 +90,18 @@ interface Message {
   previews?: WorkspacePreview[];
   suggestions?: string[];
   requiresConfirmation?: boolean;
+  modification?: WorkspaceModification;
+  action?: string;
+  executeImmediately?: boolean;
   timestamp: Date;
 }
 
-// Suggested prompts for users
+// Suggested prompts for users - showcasing full customization power
 const SUGGESTED_PROMPTS = [
   { text: 'Create a songwriting workspace', icon: Music4 },
-  { text: 'Set up my tour management area', icon: MapPin },
-  { text: 'Build a collaboration hub', icon: Users },
-  { text: 'What workspace should I use?', icon: Sparkles },
+  { text: 'Rename this tab to Songwriting', icon: Wand2 },
+  { text: 'Remove the merch and email banners', icon: Minus },
+  { text: 'Add collaboration tools here', icon: Users },
 ];
 
 export function AIWorkspaceChat() {
@@ -100,7 +116,16 @@ export function AIWorkspaceChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const { createWorkspace, addToolToWorkspace, workspaces, setActiveWorkspace } = useWorkspace();
+  const {
+    createWorkspace,
+    addToolToWorkspace,
+    removeToolFromWorkspace,
+    updateWorkspace,
+    updateWorkspaceSettings,
+    workspaces,
+    activeWorkspace,
+    setActiveWorkspace,
+  } = useWorkspace();
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -115,6 +140,50 @@ export function AIWorkspaceChat() {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [isOpen]);
+
+  // Execute a modification (rename, add/remove tools, settings)
+  const executeModification = useCallback(
+    async (modification: WorkspaceModification) => {
+      const targetId = modification.workspaceId || activeWorkspace?.id;
+      if (!targetId) return;
+
+      try {
+        // Rename workspace
+        if (modification.newName) {
+          await updateWorkspace(targetId, { name: modification.newName });
+        }
+
+        // Add tools
+        if (modification.addTools && modification.addTools.length > 0) {
+          for (const toolKey of modification.addTools) {
+            await addToolToWorkspace(targetId, toolKey);
+          }
+        }
+
+        // Remove tools
+        if (modification.removeTools && modification.removeTools.length > 0) {
+          for (const toolKey of modification.removeTools) {
+            await removeToolFromWorkspace(targetId, toolKey);
+          }
+        }
+
+        // Update settings (banner visibility, etc.)
+        if (modification.settings) {
+          await updateWorkspaceSettings(targetId, modification.settings);
+        }
+      } catch (error) {
+        console.error('Failed to execute modification:', error);
+        throw error;
+      }
+    },
+    [
+      activeWorkspace?.id,
+      updateWorkspace,
+      addToolToWorkspace,
+      removeToolFromWorkspace,
+      updateWorkspaceSettings,
+    ]
+  );
 
   // Send message to AI
   const sendMessage = useCallback(
@@ -139,6 +208,7 @@ export function AIWorkspaceChat() {
           id: w.id,
           name: w.name,
           tools: w.tools.map((t) => t.toolKey),
+          settings: w.settings,
         }));
 
         const response = await fetch('/api/assistant/workspace-builder', {
@@ -147,10 +217,17 @@ export function AIWorkspaceChat() {
           body: JSON.stringify({
             message: messageText,
             existingWorkspaces,
+            currentWorkspaceId: activeWorkspace?.id,
+            currentWorkspaceName: activeWorkspace?.name,
           }),
         });
 
         const data = await response.json();
+
+        // If executeImmediately is true, execute the modification right away
+        if (data.executeImmediately && data.modification) {
+          await executeModification(data.modification);
+        }
 
         const assistantMessage: Message = {
           id: `msg-${Date.now()}-assistant`,
@@ -161,6 +238,9 @@ export function AIWorkspaceChat() {
           previews: data.previews || (data.preview ? [data.preview] : undefined),
           suggestions: data.suggestions,
           requiresConfirmation: data.requiresConfirmation,
+          modification: data.modification,
+          action: data.action,
+          executeImmediately: data.executeImmediately,
           timestamp: new Date(),
         };
 
@@ -179,7 +259,7 @@ export function AIWorkspaceChat() {
         setIsLoading(false);
       }
     },
-    [isLoading, workspaces]
+    [isLoading, workspaces, activeWorkspace?.id, activeWorkspace?.name, executeModification]
   );
 
   // Create workspace from preview
@@ -295,7 +375,7 @@ export function AIWorkspaceChat() {
         className={cn(
           'fixed bottom-24 right-6 z-40',
           'flex items-center gap-2 rounded-full',
-          'font-semibold text-white shadow-lg',
+          'font-semibold shadow-lg',
           'ai-floating-btn force-white-text',
           'bg-gradient-to-r from-violet-600 to-purple-600',
           'hover:shadow-xl hover:shadow-purple-500/30',
@@ -303,11 +383,20 @@ export function AIWorkspaceChat() {
           // Show compact version when minimized (just icon), full when not open yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
+        style={{ color: '#ffffff' }}
         title="AI Workspace Builder"
       >
-        <Wand2 className="h-5 w-5 text-white" />
+        <Wand2 className="h-5 w-5" style={{ color: '#ffffff' }} />
         {!isMinimized && (
-          <span className="ai-floating-btn-text force-white-text text-white">
+          <span
+            className="ai-floating-btn-text force-white-text font-semibold"
+            ref={(el) => {
+              if (el) {
+                el.style.setProperty('color', '#ffffff', 'important');
+                el.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+              }
+            }}
+          >
             AI Workspace Builder
           </span>
         )}

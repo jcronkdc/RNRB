@@ -14,10 +14,24 @@ import {
   Square,
   Loader2,
 } from '@/components/ui/custom-icons';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { useAssistant } from '@/hooks/use-assistant';
+
+// Force white text on AI button span using ref (to bypass CSS !important rules)
+function useForceWhiteText() {
+  const spanRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (spanRef.current) {
+      spanRef.current.style.cssText =
+        'color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;';
+    }
+  }, []);
+
+  return spanRef;
+}
 
 // Quick action buttons based on context
 const QUICK_ACTIONS = {
@@ -238,7 +252,7 @@ export function AssistantChat() {
           'fixed bottom-6 right-6 z-50',
           'flex items-center gap-2',
           'rounded-full',
-          'ai-floating-btn force-white-text text-white',
+          'ai-floating-btn force-white-text',
           'bg-gradient-to-r from-brand-primary to-purple-600',
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
@@ -247,18 +261,30 @@ export function AssistantChat() {
           // Compact when minimized, full when not opened yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
+        style={{ color: '#ffffff' }}
         aria-label="Open AI Assistant"
         title="AI Assistant"
       >
-        <div className="relative text-white">
-          <Sparkles className="h-5 w-5 text-white transition-transform group-hover:rotate-12" />
+        <div className="relative" style={{ color: '#ffffff' }}>
+          <Sparkles
+            className="h-5 w-5 transition-transform group-hover:rotate-12"
+            style={{ color: '#ffffff' }}
+          />
           {/* Green dot to show it's active when minimized */}
           {isMinimized && (
             <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
           )}
         </div>
         {!isMinimized && (
-          <span className="ai-floating-btn-text force-white-text font-semibold text-white">
+          <span
+            className="ai-floating-btn-text force-white-text font-semibold"
+            ref={(el) => {
+              if (el) {
+                el.style.setProperty('color', '#ffffff', 'important');
+                el.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+              }
+            }}
+          >
             AI Assistant
           </span>
         )}

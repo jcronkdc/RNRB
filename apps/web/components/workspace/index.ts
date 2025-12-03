@@ -8,7 +8,12 @@
 
 // Context provider
 export { WorkspaceProvider, useWorkspace } from './workspace-context';
-export type { Workspace, WorkspaceTool, UserPreferences } from './workspace-context';
+export type {
+  Workspace,
+  WorkspaceTool,
+  UserPreferences,
+  WorkspaceSettings,
+} from './workspace-context';
 
 // UI Components
 export { WorkspaceTabs } from './workspace-tabs';

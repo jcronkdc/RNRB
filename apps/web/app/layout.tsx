@@ -195,7 +195,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="font-sans antialiased">
         <ErrorBoundary>
           <SessionProvider session={session}>
-            <ThemeProvider defaultTheme="system">
+            <ThemeProvider defaultTheme="dark">
               <ErrorMonitoringProvider>
                 <TRPCReactProvider>
                   <PostHogProvider>

@@ -13,6 +13,12 @@ export interface WorkspaceTool {
   size: 'compact' | 'normal' | 'large';
 }
 
+export interface WorkspaceSettings {
+  showMerchBanner?: boolean;
+  showEmailBanner?: boolean;
+  showPromotionalBanners?: boolean;
+}
+
 export interface Workspace {
   id: string;
   userId: string;
@@ -22,9 +28,11 @@ export interface Workspace {
   isDefault: boolean;
   tools: WorkspaceTool[];
   // Custom image personalization
-  headerImage?: string;    // URL for header/banner image
+  headerImage?: string; // URL for header/banner image
   backgroundColor?: string; // Custom background color or gradient
-  accentColor?: string;     // Custom accent color for this workspace
+  accentColor?: string; // Custom accent color for this workspace
+  // Workspace-specific settings
+  settings?: WorkspaceSettings;
 }
 
 export interface UserPreferences {
@@ -67,7 +75,14 @@ interface WorkspaceContextValue {
 
   // Workspace customization
   updateWorkspaceImage: (workspaceId: string, imageUrl: string | null) => Promise<void>;
-  updateWorkspaceColors: (workspaceId: string, colors: { backgroundColor?: string; accentColor?: string }) => Promise<void>;
+  updateWorkspaceColors: (
+    workspaceId: string,
+    colors: { backgroundColor?: string; accentColor?: string }
+  ) => Promise<void>;
+  updateWorkspaceSettings: (
+    workspaceId: string,
+    settings: Partial<WorkspaceSettings>
+  ) => Promise<void>;
 
   // Preferences
   updatePreferences: (updates: Partial<UserPreferences>) => Promise<void>;
@@ -448,7 +463,9 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const updateWorkspaceImage = useCallback(
     async (workspaceId: string, imageUrl: string | null) => {
       setWorkspaces((prev) =>
-        prev.map((ws) => (ws.id === workspaceId ? { ...ws, headerImage: imageUrl || undefined } : ws))
+        prev.map((ws) =>
+          ws.id === workspaceId ? { ...ws, headerImage: imageUrl || undefined } : ws
+        )
       );
       setHasUnsavedChanges(true);
 
@@ -487,6 +504,30 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           });
         } catch (error) {
           console.error('Failed to update workspace colors:', error);
+        }
+      }
+    },
+    [userId]
+  );
+
+  const updateWorkspaceSettings = useCallback(
+    async (workspaceId: string, settings: Partial<WorkspaceSettings>) => {
+      setWorkspaces((prev) =>
+        prev.map((ws) =>
+          ws.id === workspaceId ? { ...ws, settings: { ...ws.settings, ...settings } } : ws
+        )
+      );
+      setHasUnsavedChanges(true);
+
+      if (userId) {
+        try {
+          await fetch(`/api/workspaces/${workspaceId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ settings }),
+          });
+        } catch (error) {
+          console.error('Failed to update workspace settings:', error);
         }
       }
     },
@@ -559,6 +600,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     updateToolSize,
     updateWorkspaceImage,
     updateWorkspaceColors,
+    updateWorkspaceSettings,
     updatePreferences,
     resetToDefaults,
     getToolDefinitions,

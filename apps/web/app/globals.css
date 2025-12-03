@@ -3584,4 +3584,55 @@ html.light .force-white-text * {
     0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
+/* NUCLEAR FIX: AI Floating Buttons - maximum specificity override */
+/* These buttons MUST have white text on their gradient backgrounds */
+html.light main button.ai-floating-btn span.ai-floating-btn-text,
+html.light main button.ai-floating-btn span.force-white-text,
+html.light main .ai-floating-btn span,
+html.light button[data-ai-floating-btn='true'] span,
+html.light [data-ai-floating-btn='true'] span,
+html.light span.ai-floating-btn-text,
+html.light .ai-floating-btn-text {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Also target the buttons themselves for any direct text */
+html.light button.ai-floating-btn,
+html.light [data-ai-floating-btn='true'] {
+  color: #ffffff !important;
+}
+
+/* 🚨 CRITICAL FIX: LAST-RESORT NUCLEAR OVERRIDE FOR AI BUTTON TEXT 🚨 */
+/* This rule MUST be at the very end to win all specificity battles */
+/* Using every possible selector combination to ensure white text */
+html.light [data-ai-floating-btn='true'] > span,
+html.light [data-ai-floating-btn='true'] span.ai-floating-btn-text,
+html.light [data-ai-floating-btn='true'] span.force-white-text,
+html.light button[data-ai-floating-btn='true'] > span,
+html.light button[data-ai-floating-btn='true'] span,
+html.light .ai-floating-btn > span,
+html.light .ai-floating-btn span {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  fill: #ffffff !important;
+  opacity: 1 !important;
+}
+
+/* Also reset any inherited color on the button itself */
+html.light [data-ai-floating-btn='true'],
+html.light button.ai-floating-btn,
+html.light button[data-ai-floating-btn='true'] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Make sure nested divs and SVGs are also white */
+html.light [data-ai-floating-btn='true'] div,
+html.light [data-ai-floating-btn='true'] svg {
+  color: #ffffff !important;
+  fill: currentColor;
+}
+
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */

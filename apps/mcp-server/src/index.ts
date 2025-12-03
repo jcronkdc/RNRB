@@ -1,15 +1,17 @@
 /**
- * RNRB Remote MCP Server
+ * RNRB Remote MCP Server - FULL PLATFORM EDITION
  *
- * Exposes Rock N' Roll Basement AI assistant tools via the Model Context Protocol.
+ * Exposes 43 Rock N' Roll Basement AI assistant tools via the Model Context Protocol.
  * Deploy to Cloudflare Workers for remote access from any MCP-compatible client.
  *
- * Features:
- * - Support ticket creation and management
- * - Newsletter subscription
- * - IT troubleshooting assistance
- * - System status checks
- * - Feedback submission
+ * TOOL CATEGORIES:
+ * - Support & Feedback (9 tools)
+ * - Workspace Management (6 tools)
+ * - Songwriting & Creative (8 tools)
+ * - Collaboration (5 tools)
+ * - Tour & Performance (6 tools)
+ * - Business & Monetization (5 tools)
+ * - Account & Settings (4 tools)
  *
  * @see https://developers.cloudflare.com/agents/guides/remote-mcp-server/
  */
@@ -18,6 +20,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { RNRB_TOOLS } from './tools';
 import {
+  // Support & Feedback
   handleCreateSupportTicket,
   handleViewTickets,
   handleViewTicketDetails,
@@ -27,12 +30,52 @@ import {
   handleTroubleshootIssue,
   handleCheckSystemStatus,
   handleSendFeedback,
+  // Workspace
+  handleCreateWorkspace,
+  handleListWorkspaces,
+  handleUpdateWorkspace,
+  handleDeleteWorkspace,
+  handleConfigureWorkspaceBanners,
+  handleGetAvailableTools,
+  // Songwriting
+  handleCreateSong,
+  handleListSongs,
+  handleUpdateSong,
+  handleGenerateLyricIdeas,
+  handleAnalyzeSongStructure,
+  handleFindRhymes,
+  handleGetChordProgressions,
+  handleCreateProject,
+  // Collaboration
+  handleFindCollaborators,
+  handleSendCollabRequest,
+  handleListCollaborations,
+  handleSendMessage,
+  handleScheduleMeeting,
+  // Tour
+  handleCreateShow,
+  handleListShows,
+  handleCreateSetlist,
+  handleCreateTour,
+  handleGetTourStats,
+  handleFindVenues,
+  // Business
+  handleGetRevenueStats,
+  handleListOpportunities,
+  handleApplyToOpportunity,
+  handleCreateMerchProduct,
+  handleGetMerchStats,
+  // Account
+  handleGetProfile,
+  handleUpdateProfile,
+  handleGetUsageStats,
+  handleGetNotifications,
 } from './handlers';
 
 interface Env {
   RNRB_API_URL: string;
   RNRB_API_KEY: string;
-  OAUTH_KV?: KVNamespace; // Optional - for OAuth state storage
+  OAUTH_KV?: KVNamespace;
   COOKIE_ENCRYPTION_KEY?: string;
 }
 
@@ -41,6 +84,67 @@ interface UserContext {
   email: string;
   accessToken: string;
 }
+
+// Tool handler mapping for cleaner dispatch
+const TOOL_HANDLERS: Record<
+  string,
+  (
+    env: Env,
+    userContext: UserContext,
+    args: unknown
+  ) => Promise<{ content: Array<{ type: string; text: string }> }>
+> = {
+  // Support & Feedback
+  create_support_ticket: handleCreateSupportTicket,
+  view_my_tickets: handleViewTickets,
+  view_ticket_details: handleViewTicketDetails,
+  reply_to_ticket: handleReplyToTicket,
+  subscribe_newsletter: handleSubscribeNewsletter,
+  unsubscribe_newsletter: handleUnsubscribeNewsletter,
+  troubleshoot_issue: handleTroubleshootIssue,
+  check_system_status: handleCheckSystemStatus,
+  send_feedback: handleSendFeedback,
+  // Workspace
+  create_workspace: handleCreateWorkspace,
+  list_workspaces: handleListWorkspaces,
+  update_workspace: handleUpdateWorkspace,
+  delete_workspace: handleDeleteWorkspace,
+  configure_workspace_banners: handleConfigureWorkspaceBanners,
+  get_available_tools: handleGetAvailableTools,
+  // Songwriting
+  create_song: handleCreateSong,
+  list_songs: handleListSongs,
+  update_song: handleUpdateSong,
+  generate_lyric_ideas: handleGenerateLyricIdeas,
+  analyze_song_structure: handleAnalyzeSongStructure,
+  find_rhymes: handleFindRhymes,
+  get_chord_progressions: handleGetChordProgressions,
+  create_project: handleCreateProject,
+  // Collaboration
+  find_collaborators: handleFindCollaborators,
+  send_collab_request: handleSendCollabRequest,
+  list_collaborations: handleListCollaborations,
+  send_message: handleSendMessage,
+  schedule_meeting: handleScheduleMeeting,
+  // Tour
+  create_show: handleCreateShow,
+  list_shows: handleListShows,
+  create_setlist: handleCreateSetlist,
+  create_tour: handleCreateTour,
+  get_tour_stats: handleGetTourStats,
+  find_venues: handleFindVenues,
+  // Business
+  get_revenue_stats: handleGetRevenueStats,
+  list_opportunities: handleListOpportunities,
+  apply_to_opportunity: handleApplyToOpportunity,
+  create_merch_product: handleCreateMerchProduct,
+  get_merch_stats: handleGetMerchStats,
+  // Account
+  get_profile: handleGetProfile,
+  update_profile: handleUpdateProfile,
+  get_usage_stats: handleGetUsageStats,
+  get_notifications: handleGetNotifications,
+};
 
 // Create Hono app
 const app = new Hono<{ Bindings: Env }>();
@@ -55,27 +159,48 @@ app.use(
   })
 );
 
-// Health check
+// Health check with stats
 app.get('/', (c) => {
   return c.json({
     name: 'RNRB MCP Server',
-    version: '1.0.0',
-    description: "Rock N' Roll Basement AI Assistant Tools",
+    version: '2.0.0',
+    description: "Rock N' Roll Basement AI Assistant Tools - Full Platform Edition",
+    toolCount: RNRB_TOOLS.length,
+    categories: {
+      'Support & Feedback': 9,
+      'Workspace Management': 6,
+      'Songwriting & Creative': 8,
+      Collaboration: 5,
+      'Tour & Performance': 6,
+      'Business & Monetization': 5,
+      'Account & Settings': 4,
+    },
     endpoints: {
       sse: '/sse',
       tools: '/tools',
+      call: '/tools/call',
+      mcp: '/mcp',
       health: '/health',
     },
   });
 });
 
 app.get('/health', (c) => {
-  return c.json({ status: 'ok', timestamp: new Date().toISOString() });
+  return c.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    version: '2.0.0',
+    toolCount: RNRB_TOOLS.length,
+  });
 });
 
 // List available tools
 app.get('/tools', (c) => {
-  return c.json({ tools: RNRB_TOOLS });
+  return c.json({
+    tools: RNRB_TOOLS,
+    count: RNRB_TOOLS.length,
+    version: '2.0.0',
+  });
 });
 
 // SSE endpoint for MCP protocol
@@ -84,27 +209,21 @@ app.get('/sse', async (c) => {
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
 
-  // Helper to send SSE messages
   const sendEvent = async (event: string, data: unknown) => {
     await writer.write(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
   };
 
-  // Handle the SSE connection
   (async () => {
     try {
-      // Send server info
       await sendEvent('server_info', {
         name: 'rnrb-mcp-server',
-        version: '1.0.0',
-        capabilities: {
-          tools: {},
-        },
+        version: '2.0.0',
+        capabilities: { tools: {} },
+        toolCount: RNRB_TOOLS.length,
       });
 
-      // Send available tools
       await sendEvent('tools/list', { tools: RNRB_TOOLS });
 
-      // Keep connection alive with heartbeat
       const heartbeat = setInterval(async () => {
         try {
           await sendEvent('ping', { timestamp: Date.now() });
@@ -112,9 +231,6 @@ app.get('/sse', async (c) => {
           clearInterval(heartbeat);
         }
       }, 30000);
-
-      // Note: In production, you'd handle incoming messages via a separate POST endpoint
-      // or use WebSocket upgrade for bidirectional communication
     } catch (error) {
       console.error('[MCP] SSE error:', error);
     }
@@ -129,34 +245,23 @@ app.get('/sse', async (c) => {
   });
 });
 
-// Tool execution endpoint (called by MCP clients)
+// Tool execution endpoint
 app.post('/tools/call', async (c) => {
   const env = c.env;
 
-  // Get authorization
   const authHeader = c.req.header('Authorization');
   if (!authHeader?.startsWith('Bearer ')) {
     return c.json({ error: 'Unauthorized - Bearer token required' }, 401);
   }
   const accessToken = authHeader.replace('Bearer ', '');
 
-  // In production, validate the token and get user info
-  // For now, we'll decode it or use a test user
-  let userContext: UserContext;
+  // In production, validate JWT and extract user info
+  const userContext: UserContext = {
+    userId: 'mcp-user',
+    email: 'user@example.com',
+    accessToken,
+  };
 
-  try {
-    // You could validate JWT here, or call your auth API
-    // For demo, we'll use a placeholder
-    userContext = {
-      userId: 'mcp-user',
-      email: 'user@example.com', // Would come from token
-      accessToken,
-    };
-  } catch {
-    return c.json({ error: 'Invalid token' }, 401);
-  }
-
-  // Parse request body
   let body: { name: string; arguments?: Record<string, unknown> };
   try {
     body = await c.req.json();
@@ -165,47 +270,17 @@ app.post('/tools/call', async (c) => {
   }
 
   const { name, arguments: args } = body;
-
   if (!name) {
     return c.json({ error: 'Tool name is required' }, 400);
   }
 
-  // Route to appropriate handler
-  let result: { content: Array<{ type: string; text: string }> };
+  const handler = TOOL_HANDLERS[name];
+  if (!handler) {
+    return c.json({ error: `Unknown tool: ${name}` }, 404);
+  }
 
   try {
-    switch (name) {
-      case 'create_support_ticket':
-        result = await handleCreateSupportTicket(env, userContext, args);
-        break;
-      case 'view_my_tickets':
-        result = await handleViewTickets(env, userContext, args);
-        break;
-      case 'view_ticket_details':
-        result = await handleViewTicketDetails(env, userContext, args);
-        break;
-      case 'reply_to_ticket':
-        result = await handleReplyToTicket(env, userContext, args);
-        break;
-      case 'subscribe_newsletter':
-        result = await handleSubscribeNewsletter(env, userContext, args);
-        break;
-      case 'unsubscribe_newsletter':
-        result = await handleUnsubscribeNewsletter(env, userContext, args);
-        break;
-      case 'troubleshoot_issue':
-        result = await handleTroubleshootIssue(env, userContext, args);
-        break;
-      case 'check_system_status':
-        result = await handleCheckSystemStatus(env, userContext, args);
-        break;
-      case 'send_feedback':
-        result = await handleSendFeedback(env, userContext, args);
-        break;
-      default:
-        return c.json({ error: `Unknown tool: ${name}` }, 404);
-    }
-
+    const result = await handler(env, userContext, args);
     return c.json(result);
   } catch (error) {
     console.error(`[MCP] Tool error for ${name}:`, error);
@@ -219,7 +294,7 @@ app.post('/tools/call', async (c) => {
   }
 });
 
-// MCP JSON-RPC endpoint (alternative to SSE for some clients)
+// MCP JSON-RPC endpoint
 app.post('/mcp', async (c) => {
   const env = c.env;
 
@@ -228,11 +303,7 @@ app.post('/mcp', async (c) => {
     body = await c.req.json();
   } catch {
     return c.json(
-      {
-        jsonrpc: '2.0',
-        error: { code: -32700, message: 'Parse error' },
-        id: null,
-      },
+      { jsonrpc: '2.0', error: { code: -32700, message: 'Parse error' }, id: null },
       400
     );
   }
@@ -240,17 +311,9 @@ app.post('/mcp', async (c) => {
   const { jsonrpc, id, method, params } = body;
 
   if (jsonrpc !== '2.0') {
-    return c.json(
-      {
-        jsonrpc: '2.0',
-        error: { code: -32600, message: 'Invalid Request' },
-        id,
-      },
-      400
-    );
+    return c.json({ jsonrpc: '2.0', error: { code: -32600, message: 'Invalid Request' }, id }, 400);
   }
 
-  // Handle MCP methods
   switch (method) {
     case 'initialize':
       return c.json({
@@ -261,7 +324,8 @@ app.post('/mcp', async (c) => {
           capabilities: { tools: {} },
           serverInfo: {
             name: 'rnrb-mcp-server',
-            version: '1.0.0',
+            version: '2.0.0',
+            toolCount: RNRB_TOOLS.length,
           },
         },
       });
@@ -287,67 +351,30 @@ app.post('/mcp', async (c) => {
 
       if (!toolParams?.name) {
         return c.json(
-          {
-            jsonrpc: '2.0',
-            id,
-            error: { code: -32602, message: 'Invalid params: name required' },
-          },
+          { jsonrpc: '2.0', id, error: { code: -32602, message: 'Invalid params: name required' } },
           400
         );
       }
 
-      // Route to handler (same as /tools/call)
-      let result: { content: Array<{ type: string; text: string }> };
-
-      try {
-        switch (toolParams.name) {
-          case 'create_support_ticket':
-            result = await handleCreateSupportTicket(env, userContext, toolParams.arguments);
-            break;
-          case 'view_my_tickets':
-            result = await handleViewTickets(env, userContext, toolParams.arguments);
-            break;
-          case 'view_ticket_details':
-            result = await handleViewTicketDetails(env, userContext, toolParams.arguments);
-            break;
-          case 'reply_to_ticket':
-            result = await handleReplyToTicket(env, userContext, toolParams.arguments);
-            break;
-          case 'subscribe_newsletter':
-            result = await handleSubscribeNewsletter(env, userContext, toolParams.arguments);
-            break;
-          case 'unsubscribe_newsletter':
-            result = await handleUnsubscribeNewsletter(env, userContext, toolParams.arguments);
-            break;
-          case 'troubleshoot_issue':
-            result = await handleTroubleshootIssue(env, userContext, toolParams.arguments);
-            break;
-          case 'check_system_status':
-            result = await handleCheckSystemStatus(env, userContext, toolParams.arguments);
-            break;
-          case 'send_feedback':
-            result = await handleSendFeedback(env, userContext, toolParams.arguments);
-            break;
-          default:
-            return c.json(
-              {
-                jsonrpc: '2.0',
-                id,
-                error: { code: -32601, message: `Unknown tool: ${toolParams.name}` },
-              },
-              404
-            );
-        }
-
-        return c.json({ jsonrpc: '2.0', id, result });
-      } catch (error) {
-        console.error(`[MCP] Tool error:`, error);
+      const handler = TOOL_HANDLERS[toolParams.name];
+      if (!handler) {
         return c.json(
           {
             jsonrpc: '2.0',
             id,
-            error: { code: -32000, message: 'Tool execution failed' },
+            error: { code: -32601, message: `Unknown tool: ${toolParams.name}` },
           },
+          404
+        );
+      }
+
+      try {
+        const result = await handler(env, userContext, toolParams.arguments);
+        return c.json({ jsonrpc: '2.0', id, result });
+      } catch (error) {
+        console.error(`[MCP] Tool error:`, error);
+        return c.json(
+          { jsonrpc: '2.0', id, error: { code: -32000, message: 'Tool execution failed' } },
           500
         );
       }
@@ -355,11 +382,7 @@ app.post('/mcp', async (c) => {
 
     default:
       return c.json(
-        {
-          jsonrpc: '2.0',
-          id,
-          error: { code: -32601, message: 'Method not found' },
-        },
+        { jsonrpc: '2.0', id, error: { code: -32601, message: 'Method not found' } },
         404
       );
   }

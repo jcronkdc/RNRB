@@ -84,12 +84,12 @@ export function CustomizableDashboard() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 relative h-32 rounded-2xl overflow-hidden"
+            className="relative mb-6 h-32 overflow-hidden rounded-2xl"
           >
             <img
               src={activeWorkspace.headerImage}
               alt={`${activeWorkspace.name} header`}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-4 left-4">
@@ -103,7 +103,7 @@ export function CustomizableDashboard() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 relative h-24 rounded-2xl overflow-hidden flex items-center px-6"
+            className="relative mb-6 flex h-24 items-center overflow-hidden rounded-2xl px-6"
             style={{ background: activeWorkspace.backgroundColor }}
           >
             <h2 className="text-xl font-bold text-white drop-shadow-lg">{activeWorkspace.name}</h2>
@@ -143,11 +143,11 @@ export function CustomizableDashboard() {
               {/* Customize workspace button */}
               <button
                 onClick={() => setIsCustomizerOpen(true)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:scale-[1.02]"
-                style={{ 
+                className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all hover:scale-[1.02]"
+                style={{
                   background: 'var(--surface)',
                   color: 'var(--text)',
-                  border: '1px solid var(--border)'
+                  border: '1px solid var(--border)',
                 }}
               >
                 <Image className="h-4 w-4" />
@@ -157,118 +157,122 @@ export function CustomizableDashboard() {
           </motion.div>
         )}
 
-        {/* Promotional Banners (hidden in edit mode) */}
+        {/* Promotional Banners (hidden in edit mode and controllable per workspace) */}
         {!isEditMode && (
           <>
-            {/* Merch Store Banner */}
-            <motion.section
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              className="mb-6"
-            >
-              <Link href="/my-merch">
-                <div
-                  className="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%)',
-                    borderColor: 'rgba(245, 158, 11, 0.2)',
-                  }}
-                >
-                  <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
-                        style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
-                      >
-                        <ShoppingBag className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold" style={{ color: 'var(--text)' }}>
-                            Sell Your Own Merch
-                          </h3>
-                          <span
-                            className="rounded-full px-2 py-0.5 text-xs font-bold"
-                            style={{ background: 'var(--gold)', color: '#000' }}
-                          >
-                            FREE
-                          </span>
+            {/* Merch Store Banner - controllable via workspace settings */}
+            {activeWorkspace?.settings?.showMerchBanner !== false && (
+              <motion.section
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 }}
+                className="mb-6"
+              >
+                <Link href="/my-merch">
+                  <div
+                    className="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%)',
+                      borderColor: 'rgba(245, 158, 11, 0.2)',
+                    }}
+                  >
+                    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+                          style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
+                        >
+                          <ShoppingBag className="h-6 w-6 text-white" />
                         </div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                          Design custom T-shirts, hoodies & more. Keep 85% of profits.
-                        </p>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                              Sell Your Own Merch
+                            </h3>
+                            <span
+                              className="rounded-full px-2 py-0.5 text-xs font-bold"
+                              style={{ background: 'var(--gold)', color: '#000' }}
+                            >
+                              FREE
+                            </span>
+                          </div>
+                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            Design custom T-shirts, hoodies & more. Keep 85% of profits.
+                          </p>
+                        </div>
                       </div>
+                      <span
+                        className="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold"
+                        style={{
+                          background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                          color: '#000',
+                        }}
+                      >
+                        Start Selling →
+                      </span>
                     </div>
-                    <span
-                      className="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold"
-                      style={{
-                        background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                        color: '#000',
-                      }}
-                    >
-                      Start Selling →
-                    </span>
                   </div>
-                </div>
-              </Link>
-            </motion.section>
+                </Link>
+              </motion.section>
+            )}
 
-            {/* Email Banner */}
-            <motion.section
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.08 }}
-              className="mb-6"
-            >
-              <Link href="/settings/email">
-                <div
-                  className="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-sky-500/50 hover:shadow-lg hover:shadow-sky-500/10"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%)',
-                    borderColor: 'rgba(56, 189, 248, 0.2)',
-                  }}
-                >
-                  <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
-                        style={{ background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)' }}
-                      >
-                        <Mail className="h-6 w-6 text-white" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold" style={{ color: 'var(--text)' }}>
-                            Get Your @rnrb.me Email
-                          </h3>
-                          <span
-                            className="rounded-full px-2 py-0.5 text-xs font-bold"
-                            style={{ background: '#38bdf8', color: '#000' }}
-                          >
-                            INCLUDED
-                          </span>
+            {/* Email Banner - controllable via workspace settings */}
+            {activeWorkspace?.settings?.showEmailBanner !== false && (
+              <motion.section
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08 }}
+                className="mb-6"
+              >
+                <Link href="/settings/email">
+                  <div
+                    className="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-sky-500/50 hover:shadow-lg hover:shadow-sky-500/10"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%)',
+                      borderColor: 'rgba(56, 189, 248, 0.2)',
+                    }}
+                  >
+                    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+                          style={{ background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)' }}
+                        >
+                          <Mail className="h-6 w-6 text-white" />
                         </div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                          Professional email for musicians. yourname@rnrb.me
-                        </p>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold" style={{ color: 'var(--text)' }}>
+                              Get Your @rnrb.me Email
+                            </h3>
+                            <span
+                              className="rounded-full px-2 py-0.5 text-xs font-bold"
+                              style={{ background: '#38bdf8', color: '#000' }}
+                            >
+                              INCLUDED
+                            </span>
+                          </div>
+                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                            Professional email for musicians. yourname@rnrb.me
+                          </p>
+                        </div>
                       </div>
+                      <span
+                        className="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold"
+                        style={{
+                          background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
+                          color: '#000',
+                        }}
+                      >
+                        Get Email →
+                      </span>
                     </div>
-                    <span
-                      className="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold"
-                      style={{
-                        background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
-                        color: '#000',
-                      }}
-                    >
-                      Get Email →
-                    </span>
                   </div>
-                </div>
-              </Link>
-            </motion.section>
+                </Link>
+              </motion.section>
+            )}
           </>
         )}
 
@@ -424,10 +428,7 @@ export function CustomizableDashboard() {
       )}
 
       {/* Workspace Customizer Modal */}
-      <WorkspaceCustomizer
-        isOpen={isCustomizerOpen}
-        onClose={() => setIsCustomizerOpen(false)}
-      />
+      <WorkspaceCustomizer isOpen={isCustomizerOpen} onClose={() => setIsCustomizerOpen(false)} />
 
       {/* AI Workspace Builder Chat */}
       <AIWorkspaceChat />
