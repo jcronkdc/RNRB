@@ -7,3 +7,4 @@ ALTER TABLE "EmailAccount" ALTER COLUMN "recoveryEmail" DROP NOT NULL;
 
 
 
+

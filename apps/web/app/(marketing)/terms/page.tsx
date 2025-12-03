@@ -161,10 +161,10 @@ export default function TermsPage() {
             <p>
               For questions about these Terms of Service, please contact us at:{' '}
               <a
-                href="mailto:legal@cronkwaters.com"
+                href="mailto:legal@rnrb.app"
                 className="text-orange-500 underline hover:text-orange-400"
               >
-                legal@cronkwaters.com
+                legal@rnrb.app
               </a>
             </p>
           </section>

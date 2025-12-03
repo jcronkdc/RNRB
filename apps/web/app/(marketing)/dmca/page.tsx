@@ -36,20 +36,20 @@ export default function DMCAPage() {
               <p className="mt-2">
                 <strong>Email:</strong>{' '}
                 <a
-                  href="mailto:dmca@cronkwaters.com"
+                  href="mailto:dmca@rnrb.app"
                   className="text-orange-500 underline hover:text-orange-400"
                 >
-                  dmca@cronkwaters.com
+                  dmca@rnrb.app
                 </a>
               </p>
               <p className="mt-4 text-sm text-gray-400">
                 Please use this contact information only for DMCA-related matters. For general
                 inquiries, please contact{' '}
                 <a
-                  href="mailto:support@cronkwaters.com"
+                  href="mailto:support@rnrb.app"
                   className="text-orange-500 underline hover:text-orange-400"
                 >
-                  support@cronkwaters.com
+                  support@rnrb.app
                 </a>
               </p>
             </div>
@@ -265,10 +265,10 @@ export default function DMCAPage() {
               <p>
                 <strong>Email:</strong>{' '}
                 <a
-                  href="mailto:dmca@cronkwaters.com"
+                  href="mailto:dmca@rnrb.app"
                   className="text-orange-500 underline hover:text-orange-400"
                 >
-                  dmca@cronkwaters.com
+                  dmca@rnrb.app
                 </a>
               </p>
               <p>
@@ -278,10 +278,10 @@ export default function DMCAPage() {
             <p className="mt-4 text-sm text-gray-400">
               For general legal questions, please contact{' '}
               <a
-                href="mailto:legal@cronkwaters.com"
+                href="mailto:legal@rnrb.app"
                 className="text-orange-500 underline hover:text-orange-400"
               >
-                legal@cronkwaters.com
+                legal@rnrb.app
               </a>
             </p>
           </section>

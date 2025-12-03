@@ -14,9 +14,9 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Email addresses
 const SUPPORT_EMAIL =
-  process.env.SUPPORT_EMAIL || "Rock N' Roll Basement Support <support@rnrb.me>";
-const SUPPORT_REPLY_TO = process.env.SUPPORT_REPLY_TO || 'support@rnrb.me';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://cronkwaters.com';
+  process.env.SUPPORT_EMAIL || "Rock N' Roll Basement Support <support@rnrb.app>";
+const SUPPORT_REPLY_TO = process.env.SUPPORT_REPLY_TO || 'support@rnrb.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rnrb.app';
 
 // Types
 export interface CreateTicketParams {

@@ -76,7 +76,7 @@ async function testEmailService() {
       inviteEmail: TEST_EMAIL,
       projectName: 'Test Project - Automated Testing',
       inviterName: 'Test User',
-      inviterEmail: 'test@cronkwaters.com',
+      inviterEmail: 'test@rnrb.app',
       inviteLink: `${BASE_URL}/invites/test-project?email=${encodeURIComponent(TEST_EMAIL)}`,
     });
     const result = await sendEmail(emailOptions);

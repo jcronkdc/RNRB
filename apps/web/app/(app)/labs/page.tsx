@@ -735,11 +735,11 @@ export default function LabsPage() {
         >
           <p className="mb-4 text-gray-400">Questions? Want to contribute in other ways?</p>
           <a
-            href="mailto:labs@cronkwaters.com"
+            href="mailto:labs@rnrb.app"
             className="inline-flex items-center gap-2 text-purple-400 transition-colors hover:text-purple-300"
           >
             <Mail className="h-5 w-5" />
-            labs@cronkwaters.com
+            labs@rnrb.app
             <ExternalLink className="h-4 w-4" />
           </a>
         </motion.div>

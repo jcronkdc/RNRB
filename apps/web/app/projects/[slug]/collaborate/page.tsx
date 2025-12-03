@@ -628,7 +628,7 @@ export default function ProjectCollaboratePage() {
                     className="rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-600 hover:shadow-xl sm:px-8 sm:py-4 sm:text-base"
                     onClick={() =>
                       window.open(
-                        'mailto:labs@cronkwaters.com?subject=Volunteer for R&R Labs AI Music',
+                        'mailto:labs@rnrb.app?subject=Volunteer for R&R Labs AI Music',
                         '_blank'
                       )
                     }

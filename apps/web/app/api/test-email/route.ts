@@ -33,7 +33,7 @@ export async function GET(request: Request) {
       inviteEmail: testEmail,
       projectName: 'Test Project - Email Integration',
       inviterName: 'CronkWaters Team',
-      inviterEmail: 'noreply@cronkwaters.com',
+      inviterEmail: 'noreply@rnrb.app',
       inviteLink:
         'https://www.cronkwaters.com/invites/test-project?email=' + encodeURIComponent(testEmail),
     });
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 
       if (result.error?.includes('testing emails') || result.error?.includes('verified email')) {
         helpfulNote =
-          'Resend test mode: You can only send to verified email addresses. To send to any address, verify a domain at https://resend.com/domains and update EMAIL_FROM to use your domain (e.g., noreply@cronkwaters.com)';
+          'Resend test mode: You can only send to verified email addresses. To send to any address, verify a domain at https://resend.com/domains and update EMAIL_FROM to use your domain (e.g., noreply@rnrb.app)';
       }
 
       return NextResponse.json(

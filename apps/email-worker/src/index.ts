@@ -242,8 +242,8 @@ Your request has been received and assigned ticket number: #${data.ticketNumber}
 We'll review your message and get back to you as soon as possible. You can expect a response within 24-48 hours.
 
 In the meantime, you can:
-- Check our help center at https://rnrb.me/help
-- View your ticket status by logging in at https://rnrb.me/settings/support
+- Check our help center at https://rnrb.app/help
+- View your ticket status by logging in at https://rnrb.app/settings/support
 
 Original Subject: ${data.subject}
 
@@ -260,20 +260,23 @@ For updates on your ticket, log in to your RNRB account.`;
 <head>
   <meta charset="utf-8">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #e9e9ec; background: #0b0b0c; margin: 0; padding: 0; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
-    .header h1 { color: #fff; margin: 0; font-size: 24px; }
-    .ticket-badge { display: inline-block; background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-top: 15px; }
-    .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 12px 12px; }
-    .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-    a { color: #10b981; }
+    .header { background: linear-gradient(135deg, rgba(255, 99, 71, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center; border: 1px solid #2f2f34; border-bottom: none; }
+    .header h1 { color: #ff6347; margin: 0; font-size: 24px; font-weight: 800; }
+    .ticket-badge { display: inline-block; background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%); color: white; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin-top: 15px; }
+    .content { background: linear-gradient(180deg, #1e1e1e 0%, #161616 100%); padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #2f2f34; border-top: none; }
+    .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #6b6b75; }
+    a { color: #ff6347; }
+    p { color: #b5b5c2; }
+    strong { color: #ffffff; }
+    ul { color: #b5b5c2; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Rock N' Roll Basement</h1>
+      <img src="https://rnrb.app/logo-dark.png" alt="Rock N' Roll Basement" style="height: 50px; width: auto; margin-bottom: 12px;">
       <div class="ticket-badge">Ticket #${data.ticketNumber}</div>
     </div>
     <div class="content">
@@ -283,15 +286,15 @@ For updates on your ticket, log in to your RNRB account.`;
       <p>We'll review your message and get back to you as soon as possible. You can expect a response within 24-48 hours.</p>
       <p><strong>In the meantime, you can:</strong></p>
       <ul>
-        <li>Check our <a href="https://rnrb.me/help">help center</a></li>
-        <li><a href="https://rnrb.me/settings/support">View your ticket status</a> by logging in</li>
+        <li>Check our <a href="https://rnrb.app/help">help center</a></li>
+        <li><a href="https://rnrb.app/settings/support">View your ticket status</a> by logging in</li>
       </ul>
-      <p style="color: #666; font-size: 14px;"><strong>Original Subject:</strong> ${data.subject}</p>
+      <p style="color: #6b6b75; font-size: 14px;"><strong>Original Subject:</strong> ${data.subject}</p>
       <p>Rock on! 🎸<br>The RNRB Team</p>
     </div>
     <div class="footer">
       <p>This is an automated message. Please do not reply directly to this email.</p>
-      <p>For updates on your ticket, <a href="https://rnrb.me/settings/support">log in to your RNRB account</a>.</p>
+      <p>For updates on your ticket, <a href="https://rnrb.app/settings/support">log in to your RNRB account</a>.</p>
     </div>
   </div>
 </body>

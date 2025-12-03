@@ -45,7 +45,7 @@ export function FileSharedEmail({
           {/* Logo */}
           <Section style={logoSection}>
             <Img
-              src="https://cronkwaters.com/logo-dark.png"
+              src="https://rnrb.app/logo-dark.png"
               width="150"
               height="60"
               alt="Rock N' Roll Basement"
@@ -107,7 +107,7 @@ export function FileSharedEmail({
 
           <Text style={footer}>
             This email was sent from{' '}
-            <Link href="https://cronkwaters.com" style={link}>
+            <Link href="https://rnrb.app" style={link}>
               Rock N' Roll Basement
             </Link>
             . If you didn't expect this email, you can safely ignore it.

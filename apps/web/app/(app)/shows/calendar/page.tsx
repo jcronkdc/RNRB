@@ -874,7 +874,7 @@ function generateICalData(shows: Show[]): string {
 
     lines.push(
       'BEGIN:VEVENT',
-      `UID:${show.id}@cronkwaters.com`,
+      `UID:${show.id}@rnrb.app`,
       `DTSTAMP:${formatICalDate(new Date())}`,
       `DTSTART:${formatICalDate(startDate)}`,
       `DTEND:${formatICalDate(endDate)}`,

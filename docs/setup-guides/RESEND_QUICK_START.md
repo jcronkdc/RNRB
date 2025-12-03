@@ -72,7 +72,7 @@ Password:        [Paste your Resend API key from Step 2]
 
 ## 🎨 **OPTIONAL: Add Custom Domain (15 minutes)**
 
-Want emails from `noreply@cronkwaters.com` instead of `onboarding@resend.dev`?
+Want emails from `noreply@rnrb.app` instead of `onboarding@resend.dev`?
 
 ### **[ ] Step 1: Add Domain in Resend**
 
@@ -120,7 +120,7 @@ Value: v=DMARC1; p=none;
 Once verified, go back to Supabase SMTP settings and change:
 
 ```
-Sender Email: noreply@cronkwaters.com  (instead of onboarding@resend.dev)
+Sender Email: noreply@rnrb.app  (instead of onboarding@resend.dev)
 ```
 
 ---

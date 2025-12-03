@@ -291,7 +291,7 @@ If you discover a security issue:
 
 ## 📞 Security Contacts
 
-- **Report vulnerabilities:** security@cronkwaters.com
+- **Report vulnerabilities:** security@rnrb.app
 - **Emergency:** [Your emergency contact]
 
 ---

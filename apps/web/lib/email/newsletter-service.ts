@@ -15,11 +15,11 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 // Email addresses
 const NEWSLETTER_FROM =
-  process.env.NEWSLETTER_FROM_EMAIL || "Rock N' Roll Basement <newsletter@rnrb.me>";
-const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'support@rnrb.me';
-const INFO_EMAIL = process.env.INFO_EMAIL || 'info@rnrb.me';
-const NOREPLY_EMAIL = process.env.NOREPLY_EMAIL || 'noreply@rnrb.me';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://cronkwaters.com';
+  process.env.NEWSLETTER_FROM_EMAIL || "Rock N' Roll Basement <newsletter@rnrb.app>";
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'support@rnrb.app';
+const INFO_EMAIL = process.env.INFO_EMAIL || 'info@rnrb.app';
+const NOREPLY_EMAIL = process.env.NOREPLY_EMAIL || 'noreply@rnrb.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://rnrb.app';
 
 // Types
 export interface NewsletterSubscribeParams {

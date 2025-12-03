@@ -204,7 +204,7 @@ export function generateOrganizationSchema() {
     description: SITE_CONFIG.description,
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'hello@cronkwaters.com',
+      email: 'hello@rnrb.app',
       contactType: 'Customer Service',
       areaServed: 'Worldwide',
       availableLanguage: ['English'],

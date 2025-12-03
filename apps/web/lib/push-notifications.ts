@@ -13,7 +13,7 @@ import { db } from '@/lib/db';
 // Initialize web-push with VAPID keys
 if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
   webpush.setVapidDetails(
-    'mailto:support@cronkwaters.com',
+    'mailto:support@rnrb.app',
     process.env.VAPID_PUBLIC_KEY,
     process.env.VAPID_PRIVATE_KEY
   );

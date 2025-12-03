@@ -41,7 +41,7 @@ Your magic links currently use **Supabase's default SMTP** which has limitations
 
 **Without domain:** Emails sent from `onboarding@resend.dev` (works but looks less professional)
 
-**With domain:** Emails sent from `noreply@cronkwaters.com` (better!)
+**With domain:** Emails sent from `noreply@rnrb.app` (better!)
 
 #### To Add Domain:
 
@@ -63,7 +63,7 @@ Your magic links currently use **Supabase's default SMTP** which has limitations
 5. Enter these settings:
 
 ```
-Sender Email: noreply@cronkwaters.com
+Sender Email: noreply@rnrb.app
               (or onboarding@resend.dev if no domain)
 
 Sender Name: Rock N' Roll Basement

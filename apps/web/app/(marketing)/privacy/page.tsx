@@ -141,10 +141,10 @@ export default function PrivacyPage() {
             <p className="mt-4">
               To exercise these rights, contact us at{' '}
               <a
-                href="mailto:privacy@cronkwaters.com"
+                href="mailto:privacy@rnrb.app"
                 className="text-orange-500 underline hover:text-orange-400"
               >
-                privacy@cronkwaters.com
+                privacy@rnrb.app
               </a>
             </p>
           </section>
@@ -230,10 +230,10 @@ export default function PrivacyPage() {
               <p>
                 <strong>Email:</strong>{' '}
                 <a
-                  href="mailto:privacy@cronkwaters.com"
+                  href="mailto:privacy@rnrb.app"
                   className="text-orange-500 underline hover:text-orange-400"
                 >
-                  privacy@cronkwaters.com
+                  privacy@rnrb.app
                 </a>
               </p>
               <p>

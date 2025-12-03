@@ -117,7 +117,7 @@ All paid plans include 7-day free trial. No credit card required to start.
 Thousands of musicians have already simplified their creative workflow. Your music is worth it—start making it happen today.
 
 Website: cronkwaters.com
-Support: support@cronkwaters.com
+Support: support@rnrb.app
 ```
 
 ---
@@ -224,7 +224,7 @@ https://cronkwaters.com/privacy
 ## Support Email
 
 ```
-support@cronkwaters.com
+support@rnrb.app
 ```
 
 ---

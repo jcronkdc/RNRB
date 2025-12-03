@@ -291,6 +291,6 @@ Create high-value content targeting these topics:
 
 For SEO questions or assistance:
 
-- Email: seo@cronkwaters.com
+- Email: seo@rnrb.app
 - Slack: #seo channel
 - Documentation: /docs/seo

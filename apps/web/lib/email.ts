@@ -184,6 +184,12 @@ const emailStyles = `
   
   .logo-container {
     margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .logo-image {
+    height: 60px;
+    width: auto;
   }
   
   .logo-text {
@@ -485,7 +491,7 @@ export const emailTemplates = {
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Collaborative Music Creation</p>
       </div>
@@ -567,7 +573,7 @@ If you didn't expect this invitation, you can safely ignore this email.
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Split Sheet Document</p>
       </div>
@@ -650,7 +656,7 @@ Rock N' Roll Basement Team
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">You're Invited</p>
       </div>
@@ -714,7 +720,7 @@ Accept the invitation here: ${params.inviteUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">New Booking Request</p>
       </div>
@@ -804,7 +810,7 @@ View booking details: ${params.siteUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Payment Confirmed</p>
       </div>
@@ -869,7 +875,7 @@ Thank you for your subscription to Rock N' Roll Basement!
       `
       <div class="email-header" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%);">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Payment Issue</p>
       </div>
@@ -939,7 +945,7 @@ Update payment method: ${APP_URL}/settings/billing
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Trial Reminder</p>
       </div>
@@ -1020,7 +1026,7 @@ Thank you for trying Rock N' Roll Basement!
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Masterclass Enrollment</p>
       </div>
@@ -1111,7 +1117,7 @@ Start learning now: ${params.courseUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">New Enrollment</p>
       </div>
@@ -1188,7 +1194,7 @@ View your dashboard: ${params.dashboardUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Live Session Reminder</p>
       </div>
@@ -1273,7 +1279,7 @@ Join now: ${params.joinUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Gear Marketplace</p>
       </div>
@@ -1333,7 +1339,7 @@ Reply here: ${params.messageUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Gear Marketplace</p>
       </div>
@@ -1400,7 +1406,7 @@ View the offer: ${params.listingUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Gear Marketplace</p>
       </div>
@@ -1457,7 +1463,7 @@ Renew here: ${params.renewUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Gear Marketplace</p>
       </div>
@@ -1517,7 +1523,7 @@ View your profile: ${params.profileUrl}
       `
       <div class="email-header">
         <div class="logo-container">
-          <h1 class="logo-text">Rock N' Roll Basement</h1>
+          <img src="${APP_URL}/logo-dark.png" alt="Rock N' Roll Basement" class="logo-image" style="height: 60px; width: auto;">
         </div>
         <p class="tagline">Certificate of Completion</p>
       </div>

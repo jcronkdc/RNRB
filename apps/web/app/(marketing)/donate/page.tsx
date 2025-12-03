@@ -240,10 +240,10 @@ export default function DonatePage() {
               <p className="mt-6 text-center text-sm" style={{ color: 'var(--muted)' }}>
                 Want to donate a custom amount? Contact us at{' '}
                 <a
-                  href="mailto:donate@cronkwaters.com"
+                  href="mailto:donate@rnrb.app"
                   className="underline transition-colors hover:text-white"
                 >
-                  donate@cronkwaters.com
+                  donate@rnrb.app
                 </a>
               </p>
             </div>

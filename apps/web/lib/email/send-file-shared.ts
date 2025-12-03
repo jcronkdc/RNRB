@@ -34,7 +34,7 @@ export async function sendFileSharedEmail({
 
   try {
     const result = await resend.emails.send({
-      from: "Rock N' Roll Basement <notifications@cronkwaters.com>",
+      from: "Rock N' Roll Basement <notifications@rnrb.app>",
       to,
       subject: `${senderName} shared ${fileNames.length === 1 ? 'a file' : `${fileNames.length} files`} with you`,
       react: FileSharedEmail({
@@ -45,7 +45,7 @@ export async function sendFileSharedEmail({
         message,
         canDownload,
         expiresAt: expiresAt?.toISOString(),
-        viewUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://cronkwaters.com'}/library?tab=shared`,
+        viewUrl: `${process.env.NEXT_PUBLIC_APP_URL || 'https://rnrb.app'}/library?tab=shared`,
       }),
     });
 

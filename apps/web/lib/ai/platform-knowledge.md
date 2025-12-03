@@ -1330,7 +1330,7 @@ Your usage quotas reset and expand:
    - Video tutorials: YouTube channel
 
 3. **Email Support**
-   - support@cronkwaters.com
+   - support@rnrb.app
    - Response time: <24 hours (free/creator), <4 hours (studio)
 
 4. **Community Forum**

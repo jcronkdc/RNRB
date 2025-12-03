@@ -143,14 +143,14 @@ async function sendLiveEmails(
         to: subscriber.email,
         subject: `🔴 ${streamerName} is now LIVE!`,
         html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
-            <div style="background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); padding: 40px 20px; text-align: center; border-radius: 12px 12px 0 0;">
-              <h1 style="color: white; margin: 0; font-size: 28px;">
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0b0b0c; padding: 20px;">
+            <div style="background: linear-gradient(135deg, rgba(255, 99, 71, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%); padding: 40px 20px; text-align: center; border-radius: 12px 12px 0 0; border: 1px solid #2f2f34; border-bottom: none;">
+              <h1 style="color: #ff6347; margin: 0; font-size: 28px; font-weight: 800;">
                 🔴 ${streamerName} is LIVE!
               </h1>
             </div>
             
-            <div style="background: #1a1a1a; padding: 30px; color: white;">
+            <div style="background: linear-gradient(180deg, #1e1e1e 0%, #161616 100%); padding: 30px; color: #e9e9ec; border: 1px solid #2f2f34; border-top: none; border-bottom: none;">
               ${
                 thumbnailUrl
                   ? `
@@ -159,21 +159,21 @@ async function sendLiveEmails(
                   : ''
               }
               
-              <h2 style="margin: 0 0 10px; font-size: 22px;">${streamTitle}</h2>
-              <p style="color: #888; margin: 0 0 20px; font-size: 14px;">
+              <h2 style="margin: 0 0 10px; font-size: 22px; color: #ffffff;">${streamTitle}</h2>
+              <p style="color: #6b6b75; margin: 0 0 20px; font-size: 14px;">
                 Category: ${streamCategory}
               </p>
               
-              <a href="${streamUrl}" style="display: inline-block; background: linear-gradient(135deg, #ef4444 0%, #db2777 100%); color: white; padding: 16px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 16px;">
+              <a href="${streamUrl}" style="display: inline-block; background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%); color: white; padding: 16px 32px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 14px rgba(255, 99, 71, 0.4);">
                 Watch Now →
               </a>
             </div>
             
-            <div style="background: #0a0a0a; padding: 20px; text-align: center; border-radius: 0 0 12px 12px;">
-              <p style="color: #666; margin: 0; font-size: 12px;">
+            <div style="background: #141414; padding: 20px; text-align: center; border-radius: 0 0 12px 12px; border: 1px solid #2f2f34; border-top: none;">
+              <p style="color: #6b6b75; margin: 0; font-size: 12px;">
                 You're receiving this because you subscribed to live notifications from ${streamerName}.
                 <br />
-                <a href="${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications" style="color: #888;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL}/settings/notifications" style="color: #ff6347;">
                   Manage preferences
                 </a>
               </p>

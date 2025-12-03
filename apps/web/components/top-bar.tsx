@@ -22,12 +22,18 @@ import {
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
 import { GlobalUserSearch } from './global-user-search';
 import { MobileMenuButton } from './sidebar-nav';
 
-// Import NotificationBell directly - using dynamic caused webpack issues
-import { NotificationBell } from './notification-bell';
+// Dynamic import with ssr: false to prevent hydration mismatch
+// NotificationBell uses useSession() and returns null when no user exists,
+// causing server/client render mismatch without this
+const NotificationBell = dynamic(
+  () => import('./notification-bell').then((mod) => mod.NotificationBell),
+  { ssr: false }
+);
 
 export function TopBar() {
   const router = useRouter();

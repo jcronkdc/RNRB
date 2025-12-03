@@ -118,7 +118,7 @@ function buildEmailHtml(name: string | null, resetUrl: string): string {
           <p class="footer-text" style="margin-top: 12px;">
             <a href="${getBaseUrl()}" style="color: #ff6347; text-decoration: none;">Visit Website</a>
             &nbsp;•&nbsp;
-            <a href="mailto:support@cronkwaters.com" style="color: #6b6b75; text-decoration: none;">Contact Support</a>
+            <a href="mailto:support@rnrb.app" style="color: #6b6b75; text-decoration: none;">Contact Support</a>
           </p>
         </div>
       </div>

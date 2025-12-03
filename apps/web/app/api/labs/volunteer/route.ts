@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
             
             <p>We'll keep you updated on our progress and reach out when we need your input.</p>
             
-            <p style="color: #666;">Questions? Reply to this email or reach out at labs@cronkwaters.com</p>
+            <p style="color: #666;">Questions? Reply to this email or reach out at labs@rnrb.app</p>
             
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
             <p style="color: #999; font-size: 12px;">R&R Labs - Rock N' Roll Basement Research Division</p>
