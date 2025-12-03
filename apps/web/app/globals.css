@@ -2504,10 +2504,13 @@ html.light {
 
   /* Direct white text - using multiple selector patterns for max compatibility */
   /* EXCLUDE: gradient backgrounds, buttons, brand elements where white is intentional */
+  /* Also exclude children of .ai-floating-btn and .topbar-btn */
   [class*='text-white']:not([class*='text-white\/']):not([class*='brand']):not(
       [class*='button']
     ):not([class*='btn']):not([class*='bg-gradient']):not([class*='from-']):not(button):not(
       [role='button']
+    ):not(.ai-floating-btn):not(.ai-floating-btn *):not(.ai-floating-btn-text):not(.topbar-btn):not(
+      .topbar-btn *
     ) {
     color: var(--text) !important;
   }
@@ -2515,7 +2518,7 @@ html.light {
   /* White with opacity - same exclusions */
   [class*='text-white/']:not([class*='bg-gradient']):not([class*='from-']):not(button):not(
       [role='button']
-    ) {
+    ):not(.ai-floating-btn):not(.ai-floating-btn *):not(.topbar-btn):not(.topbar-btn *) {
     color: var(--muted) !important;
   }
 
@@ -2703,9 +2706,13 @@ html.light {
     color: white !important;
   }
 
-  /* Fix buttons in top bar and common UI */
-  header button span,
-  nav button span {
+  /* Fix buttons in top bar and common UI - EXCLUDE gradient and floating buttons */
+  header
+    button:not(.gradient-btn):not(.topbar-btn):not(.ai-floating-btn)
+    span:not(.ai-floating-btn-text),
+  nav
+    button:not(.gradient-btn):not(.topbar-btn):not(.ai-floating-btn)
+    span:not(.ai-floating-btn-text) {
     color: var(--text) !important;
   }
 
@@ -3526,6 +3533,22 @@ html.light .ai-floating-btn svg,
 html.light .ai-floating-btn *,
 .ai-floating-btn * {
   color: #ffffff !important;
+}
+
+/* === ABSOLUTE FINAL OVERRIDE - AI BUTTONS === */
+/* These rules MUST win over everything else */
+html.light button.ai-floating-btn,
+html.light button.ai-floating-btn span,
+html.light button.ai-floating-btn svg,
+html.light button.ai-floating-btn div,
+html.light .ai-floating-btn,
+html.light .ai-floating-btn span,
+html.light .ai-floating-btn svg,
+html.light .ai-floating-btn div,
+html.light .ai-floating-btn-text,
+html.light span.ai-floating-btn-text {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */
