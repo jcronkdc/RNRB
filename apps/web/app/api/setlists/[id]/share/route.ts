@@ -57,7 +57,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rocknrollbasement.com';
     const shareUrl = setlist.publicShareToken
-      ? `${baseUrl}/live/${setlist.publicShareToken}`
+      ? `${baseUrl}/setlist/${setlist.publicShareToken}`
       : null;
 
     return NextResponse.json({
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     // Generate QR code URL (using Google Charts API - free and reliable)
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://rocknrollbasement.com';
-    const shareUrl = `${baseUrl}/live/${shareToken}`;
+    const shareUrl = `${baseUrl}/setlist/${shareToken}`;
     const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(shareUrl)}`;
 
     // Default public title from show/venue info

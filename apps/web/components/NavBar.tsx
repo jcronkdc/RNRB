@@ -891,7 +891,8 @@ export function NavBar() {
     pathname?.startsWith('/share') ||
     pathname?.startsWith('/revenue') ||
     pathname?.startsWith('/admin') || // Admin dashboard has its own layout
-    pathname?.startsWith('/u/'); // Public profile pages have their own layout
+    pathname?.startsWith('/u/') || // Public profile pages have their own layout
+    pathname?.startsWith('/setlist/'); // Public setlist pages (viral loop)
 
   // Track scroll position for styling
   // NOTE: All hooks must be called before any conditional returns (React rules of hooks)

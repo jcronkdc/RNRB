@@ -491,6 +491,9 @@ export default function ContactPage() {
             <Link href="/terms" className="hover:text-white">
               Terms
             </Link>
+            <Link href="/dmca" className="hover:text-white">
+              DMCA
+            </Link>
           </div>
           <p className="mt-4 text-center text-xs" style={{ color: 'var(--muted)' }}>
             © {new Date().getFullYear()} Rock N' Roll Basement. All rights reserved.

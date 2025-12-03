@@ -5,14 +5,21 @@
  * Provides a friendly UX with retry functionality.
  */
 
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: "Offline | Rock N' Roll Basement",
-  description: 'You appear to be offline. Check your connection and try again.',
-};
+import { useEffect } from 'react';
 
 export default function OfflinePage() {
+  // Auto-retry when connection is restored
+  useEffect(() => {
+    const handleOnline = () => {
+      window.location.reload();
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, []);
+
   return (
     <div
       className="flex min-h-screen flex-col items-center justify-center px-4"
@@ -144,18 +151,6 @@ export default function OfflinePage() {
         <span className="h-2 w-2 animate-pulse rounded-full" style={{ background: '#ef4444' }} />
         Waiting for connection...
       </div>
-
-      {/* Auto-retry script */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            // Auto-retry when connection is restored
-            window.addEventListener('online', function() {
-              window.location.reload();
-            });
-          `,
-        }}
-      />
     </div>
   );
 }

@@ -1,25 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import {
+  ArrowRight,
   Check,
-  Zap,
   Crown,
-  Video,
-  Users,
   DollarSign,
-  TrendingUp,
   Gift,
   Mic,
-  Star,
-  ArrowRight,
   Play,
   Shield,
-  Clock,
+  Star,
   Target,
+  TrendingUp,
+  Users,
+  Video,
+  Zap,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 
 // Tier data
 const tiers = [
@@ -761,6 +759,9 @@ export default function StreamersPage() {
               </Link>
               <Link href="/privacy" className="nav-link">
                 Privacy
+              </Link>
+              <Link href="/dmca" className="nav-link">
+                DMCA
               </Link>
             </nav>
           </div>

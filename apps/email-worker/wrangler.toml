@@ -18,3 +18,4 @@ SUPPORT_EMAIL = "support@rnrb.me"
 # - RNRB_API_KEY: API key for creating tickets
 # - MAILCHANNELS_API_KEY: For sending auto-reply emails (optional, MailChannels is free on Workers)
 
+

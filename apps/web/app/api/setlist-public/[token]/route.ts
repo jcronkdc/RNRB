@@ -37,7 +37,7 @@ export async function GET(
               select: {
                 name: true,
                 slug: true,
-                image: true,
+                images: true,
               },
             },
           },
@@ -51,8 +51,7 @@ export async function GET(
                 title: true,
                 key: true,
                 tempo: true,
-                duration: true,
-                // Don't expose lyrics/chords publicly
+                // Note: Song model doesn't have duration - would need to calculate from tracks
               },
             },
           },
@@ -96,18 +95,17 @@ export async function GET(
       artist: {
         name: setlist.show.org.name,
         slug: setlist.show.org.slug,
-        image: setlist.show.org.image,
+        image: (setlist.show.org.images as { logo?: string } | null)?.logo || null,
       },
       songs: setlist.items.map((item) => ({
         position: item.position + 1,
         title: item.customTitle || item.song?.title || 'Unknown',
         key: item.song?.key,
         tempo: item.song?.tempo,
-        duration: item.song?.duration,
         isEncore: item.isEncore,
         notes: item.notes,
       })),
-      totalDuration: setlist.items.reduce((sum, item) => sum + (item.song?.duration || 0), 0),
+      totalDuration: 0, // Duration data not available at Song level
       viewCount: setlist.viewCount + 1,
     });
   } catch (error) {

@@ -48,51 +48,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid subscription' }, { status: 400 });
     }
 
-    // Store subscription in database (using a JSON field or separate table)
-    // For now, we'll store it in user preferences
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-    });
-
-    // Get existing subscriptions or initialize empty array
-    const existingPrefs = (user as any)?.preferences || {};
-    const existingSubscriptions = existingPrefs.pushSubscriptions || [];
-
-    // Check if this endpoint already exists
-    const existingIndex = existingSubscriptions.findIndex(
-      (sub: any) => sub.endpoint === subscription.endpoint
-    );
-
-    const subscriptionData = {
-      endpoint: subscription.endpoint,
-      keys: subscription.keys,
-      deviceName: deviceName || 'Unknown Device',
-      createdAt: new Date().toISOString(),
-    };
-
-    if (existingIndex >= 0) {
-      // Update existing subscription
-      existingSubscriptions[existingIndex] = subscriptionData;
-    } else {
-      // Add new subscription
-      existingSubscriptions.push(subscriptionData);
+    // Validate required keys from the subscription
+    const { p256dh, auth: authKey } = subscription.keys;
+    if (!p256dh || !authKey) {
+      return NextResponse.json({ error: 'Invalid subscription keys' }, { status: 400 });
     }
 
-    // Note: This assumes you have a 'preferences' JSON field on User
-    // If not, you'll need to add it or create a PushSubscription table
-    // await prisma.user.update({
-    //   where: { id: session.user.id },
-    //   data: {
-    //     preferences: {
-    //       ...existingPrefs,
-    //       pushSubscriptions: existingSubscriptions,
-    //     },
-    //   },
-    // });
+    // Use upsert to create or update the subscription
+    // This handles the case where a user re-subscribes from the same device
+    const pushSubscription = await prisma.pushSubscription.upsert({
+      where: {
+        userId_endpoint: {
+          userId: session.user.id,
+          endpoint: subscription.endpoint,
+        },
+      },
+      update: {
+        p256dh,
+        auth: authKey,
+        deviceName: deviceName || 'Unknown Device',
+        updatedAt: new Date(),
+      },
+      create: {
+        userId: session.user.id,
+        endpoint: subscription.endpoint,
+        p256dh,
+        auth: authKey,
+        deviceName: deviceName || 'Unknown Device',
+      },
+    });
 
     return NextResponse.json({
       success: true,
       message: 'Push subscription saved',
+      subscriptionId: pushSubscription.id,
     });
   } catch (error) {
     console.error('[PUSH_SUBSCRIBE] Error:', error);
@@ -117,12 +106,28 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Endpoint required' }, { status: 400 });
     }
 
-    // Remove subscription from database
-    // Implementation depends on your storage approach
+    // Remove subscription from database using the compound unique key
+    const deleted = await prisma.pushSubscription.deleteMany({
+      where: {
+        userId: session.user.id,
+        endpoint: endpoint,
+      },
+    });
+
+    if (deleted.count === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Subscription not found',
+        },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
       message: 'Push subscription removed',
+      deletedCount: deleted.count,
     });
   } catch (error) {
     console.error('[PUSH_UNSUBSCRIBE] Error:', error);

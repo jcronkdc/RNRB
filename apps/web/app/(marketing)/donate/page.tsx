@@ -418,6 +418,9 @@ export default function DonatePage() {
                 <Link href="/privacy" className="nav-link">
                   Privacy
                 </Link>
+                <Link href="/dmca" className="nav-link">
+                  DMCA
+                </Link>
               </nav>
             </div>
           </div>

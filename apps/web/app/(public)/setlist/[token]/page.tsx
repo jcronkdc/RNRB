@@ -72,7 +72,7 @@ export default function PublicSetlistPage() {
 
   const loadSetlist = async () => {
     try {
-      const response = await fetch(`/api/live/${token}`);
+      const response = await fetch(`/api/setlist-public/${token}`);
       if (!response.ok) {
         throw new Error('Setlist not found');
       }

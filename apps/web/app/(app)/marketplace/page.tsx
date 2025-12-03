@@ -29,7 +29,7 @@ import {
   Music,
   Users,
   Mic,
-  PenTool,
+  Edit,
   Speaker,
   Video,
   ChevronRight,
@@ -45,7 +45,7 @@ const CATEGORIES = [
   { id: 'production', name: 'Production', icon: Music, color: '#06b6d4' },
   { id: 'session-musicians', name: 'Session Musicians', icon: Users, color: '#10b981' },
   { id: 'vocal-services', name: 'Vocal Services', icon: Mic, color: '#ec4899' },
-  { id: 'songwriting', name: 'Songwriting', icon: PenTool, color: '#f59e0b' },
+  { id: 'songwriting', name: 'Songwriting', icon: Edit, color: '#f59e0b' },
   { id: 'live-sound', name: 'Live Sound', icon: Speaker, color: '#ef4444' },
   { id: 'video-production', name: 'Video Production', icon: Video, color: '#3b82f6' },
 ];

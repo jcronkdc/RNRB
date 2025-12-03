@@ -3756,6 +3756,9 @@ export default function HomePage() {
                 <Link href="/privacy" className="nav-link">
                   Privacy
                 </Link>
+                <Link href="/dmca" className="nav-link">
+                  DMCA
+                </Link>
                 <Link href="/contact" className="nav-link">
                   Contact
                 </Link>
