@@ -142,7 +142,7 @@ export function TopBar() {
             </div>
           </button>
 
-          {/* Quick Create Button - Condensed on mobile */}
+          {/* Quick Create Button - Primary action, keeps brand color */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -158,61 +158,71 @@ export function TopBar() {
             <Sparkles className="hidden h-3 w-3 lg:block" />
           </motion.button>
 
-          {/* Go Live Button */}
+          {/* Go Live Button - Subdued charcoal */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/live/go')}
-            className="gradient-btn gradient-btn-red flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
-              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-              boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+              background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
+              boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
+              color: '#ffffff',
             }}
           >
-            <Radio className="h-4 w-4" />
-            <span className="hidden text-sm sm:inline">Live</span>
+            <Radio className="h-4 w-4" style={{ color: '#ffffff' }} />
+            <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
+              Live
+            </span>
           </motion.button>
 
-          {/* Meet Button */}
+          {/* Meet Button - Subdued charcoal */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/meet')}
-            className="gradient-btn gradient-btn-purple flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
-              background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-              boxShadow: '0 4px 12px rgba(139, 92, 246, 0.3)',
+              background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
+              boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
+              color: '#ffffff',
             }}
           >
-            <Video className="h-4 w-4" />
-            <span className="hidden text-sm sm:inline">Meet</span>
+            <Video className="h-4 w-4" style={{ color: '#ffffff' }} />
+            <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
+              Meet
+            </span>
           </motion.button>
 
-          {/* Sell Merch Button - NEW prominent feature */}
+          {/* Sell Merch Button - Subdued charcoal */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/my-merch')}
-            className="gradient-btn gradient-btn-amber flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
-              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
-              boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+              background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
+              boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
+              color: '#ffffff',
             }}
             title="Design and sell your own merchandise"
           >
-            <ShoppingBag className="h-4 w-4" />
-            <span className="hidden text-sm sm:inline">Merch</span>
+            <ShoppingBag className="h-4 w-4" style={{ color: '#ffffff' }} />
+            <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
+              Merch
+            </span>
           </motion.button>
 
-          {/* Email Button */}
+          {/* Email Button - Subdued charcoal */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/mail')}
-            className="gradient-btn gradient-btn-sky flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
             style={{
-              background: 'linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%)',
-              boxShadow: '0 4px 12px rgba(56, 189, 248, 0.3)',
+              background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
+              boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
+              color: '#ffffff',
             }}
             title="Your professional @rnrb.me email"
           >

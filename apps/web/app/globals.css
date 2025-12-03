@@ -3484,6 +3484,26 @@ html.light [class*='bottom-'][class*='right-'][class*='from-'] * {
   color: #ffffff !important;
 }
 
+/* === TOPBAR BUTTON CLASS - Charcoal subdued buttons === */
+.topbar-btn,
+html.light .topbar-btn,
+html.light button.topbar-btn {
+  background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%) !important;
+  background-color: transparent !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.topbar-btn *,
+html.light .topbar-btn * {
+  color: #ffffff !important;
+}
+
+.topbar-btn svg,
+html.light .topbar-btn svg {
+  color: #ffffff !important;
+}
+
 /* === AI FLOATING BUTTON OVERRIDES - HIGHEST SPECIFICITY === */
 /* These use a unique class name to avoid conflicts with other rules */
 html.light .ai-floating-btn,
