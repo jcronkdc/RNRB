@@ -28,7 +28,7 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
   {
     id: 'welcome',
-    title: 'Welcome to Your Website Builder! 🎉',
+    title: 'Welcome to Your Website Builder!',
     description:
       "Let's take a quick tour to help you build an amazing website for your music. This will only take 2 minutes.",
     position: 'center',
@@ -83,7 +83,7 @@ const TOUR_STEPS: TourStep[] = [
   },
   {
     id: 'complete',
-    title: "You're All Set! 🚀",
+    title: "You're All Set!",
     description:
       'You now know the basics. Start by choosing a theme, then add your content. Need help? Click the AI Assistant button or visit Help Center anytime.',
     position: 'center',

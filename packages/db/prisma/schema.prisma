@@ -255,6 +255,13 @@ model User {
   workspaces      UserWorkspace[]
   userPreferences UserPreferences?
 
+  // Social Safety - Blocking & Reporting
+  blockedUsers              UserBlock[]            @relation("UserBlocker")
+  blockedByUsers            UserBlock[]            @relation("UserBlocked")
+  conversationSettings      ConversationSettings[] @relation("UserConversationSettings")
+  submittedReports          MessageReport[]        @relation("MessageReporter")
+  receivedReports           MessageReport[]        @relation("ReportedUser")
+
   @@index([email])
   @@index([stripeCustomerId])
   @@index([stripeSubscriptionId])
@@ -1759,6 +1766,74 @@ model UserFollow {
   @@unique([followerId, followingId])
   @@index([followerId])
   @@index([followingId])
+}
+
+// ====================================
+// USER BLOCKING SYSTEM
+// ====================================
+
+model UserBlock {
+  id        String   @id @default(cuid())
+  blockerId String   // User who blocked
+  blockedId String   // User who is blocked
+  createdAt DateTime @default(now())
+
+  blocker User @relation("UserBlocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("UserBlocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+}
+
+// ====================================
+// CONVERSATION SETTINGS
+// ====================================
+
+model ConversationSettings {
+  id             String   @id @default(cuid())
+  conversationId String   // The conversation/channel ID (e.g., "dm:user1:user2")
+  userId         String   // User these settings belong to
+  isArchived     Boolean  @default(false)
+  isDeleted      Boolean  @default(false) // Soft delete (trash)
+  isMuted        Boolean  @default(false)
+  isPinned       Boolean  @default(false)
+  lastReadAt     DateTime? // For read receipts
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation("UserConversationSettings", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+// ====================================
+// MESSAGE REPORTING
+// ====================================
+
+model MessageReport {
+  id             String   @id @default(cuid())
+  reporterId     String   // User who reported
+  conversationId String?  // Conversation being reported
+  messageId      String?  // Specific message being reported
+  reportedUserId String?  // User being reported
+  reason         String   // spam, harassment, inappropriate, scam, impersonation, other
+  details        String?  // Additional details from reporter
+  status         String   @default("pending") // pending, reviewed, resolved, dismissed
+  reviewedAt     DateTime?
+  resolvedAt     DateTime?
+  resolution     String?  // Action taken
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  reporter     User  @relation("MessageReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser User? @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([status])
 }
 
 // ====================================

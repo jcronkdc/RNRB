@@ -85,9 +85,9 @@ export default async function OGImage() {
             color: '#d0d0d0',
           }}
         >
-          <span>🎵 AI Songwriting</span>
-          <span>🎥 Video Collaboration</span>
-          <span>🗺️ Tour Management</span>
+          <span>• AI Songwriting</span>
+          <span>• Video Collaboration</span>
+          <span>• Tour Management</span>
         </div>
       </div>
 

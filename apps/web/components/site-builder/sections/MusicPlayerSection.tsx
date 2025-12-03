@@ -172,7 +172,7 @@ export function MusicPlayerSection({ content, theme, animation }: MusicPlayerSec
                   />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center">
-                    <span className="text-6xl">🎵</span>
+                    <span className="text-6xl text-gray-400">♪</span>
                   </div>
                 )}
               </div>

@@ -496,7 +496,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
               🌍 Public
             </option>
             <option value="friends" className="bg-gray-900">
-              👥 Friends
+              Friends
             </option>
             <option value="private" className="bg-gray-900">
               🔒 Private

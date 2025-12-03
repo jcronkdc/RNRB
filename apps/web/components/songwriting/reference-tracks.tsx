@@ -275,7 +275,7 @@ export function ReferenceTracks({
       {/* Tip */}
       {tracks.length > 0 && (
         <p className="mt-3 text-center text-xs" style={{ color: 'var(--muted)' }}>
-          💡 Reference tracks help communicate your vision to collaborators
+          Reference tracks help communicate your vision to collaborators
         </p>
       )}
     </div>

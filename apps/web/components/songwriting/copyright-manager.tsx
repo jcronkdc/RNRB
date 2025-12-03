@@ -531,8 +531,8 @@ export function CopyrightManager({
               }`}
             >
               {totalSplitPercentage > 100
-                ? `⚠️ Total exceeds 100% by ${totalSplitPercentage - 100}%. Please adjust splits.`
-                : `ℹ️ ${remainingPercentage}% remaining to allocate`}
+                ? `Total exceeds 100% by ${totalSplitPercentage - 100}%. Please adjust splits.`
+                : `${remainingPercentage}% remaining to allocate`}
             </p>
           </div>
         )}
@@ -696,7 +696,7 @@ export function CopyrightManager({
 
         <div className="mb-4 rounded-lg border border-blue-500/30 bg-blue-500/5 p-4">
           <p className="text-sm text-gray-300">
-            <strong className="text-white">💡 What does "registered" mean?</strong>
+            <strong className="text-white">What does "registered" mean?</strong>
             <br />
             Check this box when you've registered this song with your PRO (ASCAP, BMI, etc.). This
             is different from U.S. Copyright registration.

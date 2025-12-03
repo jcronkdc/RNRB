@@ -189,16 +189,16 @@ export function HeaderSection({ content, theme, socialLinks }: HeaderSectionProp
 // Simple social icon component
 function SocialIcon({ platform, size = 20 }: { platform: string; size?: number }) {
   const icons: Record<string, string> = {
-    spotify: '🎵',
-    apple: '🍎',
+    spotify: '♪',
+    apple: '',
     youtube: '▶️',
     instagram: '📷',
     twitter: '🐦',
     facebook: 'f',
     tiktok: '♪',
-    bandcamp: '🎸',
-    soundcloud: '☁️',
+    bandcamp: '',
+    soundcloud: '',
   };
 
-  return <span style={{ fontSize: size * 0.8 }}>{icons[platform.toLowerCase()] || '🔗'}</span>;
+  return <span style={{ fontSize: size * 0.8 }}>{icons[platform.toLowerCase()] ?? '🔗'}</span>;
 }

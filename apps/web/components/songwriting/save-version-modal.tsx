@@ -249,7 +249,7 @@ export function SaveVersionModal({
               }}
             >
               <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                💡 <strong style={{ color: 'var(--text)' }}>Pro tip:</strong> Save versions before
+                <strong style={{ color: 'var(--text)' }}>Pro tip:</strong> Save versions before
                 making major changes. You can always restore any previous version from the Version
                 History panel.
               </p>

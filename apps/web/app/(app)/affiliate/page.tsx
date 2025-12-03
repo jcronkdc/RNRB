@@ -494,10 +494,10 @@ export default function AffiliateDashboard() {
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[
-            { name: 'Stream Overlays', count: 5, icon: '🎬' },
-            { name: 'Social Banners', count: 12, icon: '📱' },
-            { name: 'Video Clips', count: 3, icon: '🎥' },
-            { name: 'Email Templates', count: 4, icon: '📧' },
+            { name: 'Stream Overlays', count: 5, icon: 'SO' },
+            { name: 'Social Banners', count: 12, icon: 'SB' },
+            { name: 'Video Clips', count: 3, icon: 'VC' },
+            { name: 'Email Templates', count: 4, icon: 'ET' },
           ].map((material, index) => (
             <Link
               key={index}

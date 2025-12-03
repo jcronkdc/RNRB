@@ -138,7 +138,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
 
           <div className="mt-3 border-t border-border pt-3">
             <p className="text-xs text-muted-foreground">
-              ✨ <span className="text-purple-400">Ethical AI</span> - Suggestions only, you create
+              <span className="text-purple-400">Ethical AI</span> - Suggestions only, you create
             </p>
           </div>
         </div>

@@ -376,14 +376,14 @@ export async function POST(request: NextRequest) {
               result = await initiateUpgrade(user.id, functionArgs.targetTier);
               // If successful, format the result to be user-friendly
               if (result.success && result.checkoutUrl) {
-                result.displayMessage = `🎉 **Ready to upgrade to ${result.tier?.toUpperCase()}!**\n\n${result.message}\n\n**[👉 Click here to complete your upgrade →](${result.checkoutUrl})**\n\n_You'll be redirected to our secure checkout powered by Stripe._`;
+                result.displayMessage = `**Ready to upgrade to ${result.tier?.toUpperCase()}!**\n\n${result.message}\n\n**[Click here to complete your upgrade →](${result.checkoutUrl})**\n\n_You'll be redirected to our secure checkout powered by Stripe._`;
               }
               break;
             case 'openBillingPortal':
               result = await openBillingPortal(user.id);
               // If successful, format with clickable link
               if (result.success && result.portalUrl) {
-                result.displayMessage = `💳 **Billing Portal Ready**\n\n${result.message}\n\n**[👉 Open Billing Portal →](${result.portalUrl})**\n\n_Manage your payment methods, view invoices, or update your subscription._`;
+                result.displayMessage = `**Billing Portal Ready**\n\n${result.message}\n\n**[Open Billing Portal →](${result.portalUrl})**\n\n_Manage your payment methods, view invoices, or update your subscription._`;
               }
               break;
             // Email & Support Tools - IT genius capabilities

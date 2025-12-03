@@ -137,7 +137,7 @@ export function WebsiteAIAssistant({
     {
       id: '1',
       role: 'assistant',
-      content: `Hey there! 👋 I'm your AI website assistant. I'm here to help you build an amazing website for ${siteName || 'your music'}.\n\nI can help you with:\n- 🎨 Choosing colors and themes\n- 📝 Writing compelling content\n- 🎵 Showcasing your music\n- 📈 Growing your audience\n\nWhat would you like to work on?`,
+      content: `Hey there! I'm your AI website assistant. I'm here to help you build an amazing website for ${siteName || 'your music'}.\n\nI can help you with:\n- Choosing colors and themes\n- Writing compelling content\n- Showcasing your music\n- Growing your audience\n\nWhat would you like to work on?`,
       timestamp: new Date(),
       suggestions: ['Help me choose a theme', 'What sections should I add?', 'Write my artist bio'],
     },

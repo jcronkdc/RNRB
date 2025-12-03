@@ -294,7 +294,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
             <div ref={loadMoreRef} className="flex justify-center py-4">
               {loadingMore && <Loader2 className="h-6 w-6 animate-spin text-purple-500" />}
               {!nextCursor && posts.length > 0 && (
-                <p className="text-sm text-white/40">You've reached the end 🎸</p>
+                <p className="text-sm text-white/40">You've reached the end</p>
               )}
             </div>
           </div>

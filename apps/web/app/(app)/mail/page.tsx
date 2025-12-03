@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -39,6 +39,15 @@ import {
   Ticket,
   Radio,
   Zap,
+  Upload,
+  FolderOpen,
+  FileAudio,
+  FileText,
+  Download,
+  Check,
+  Image as ImageIcon,
+  FileMusic,
+  Disc,
 } from '@/components/ui/custom-icons';
 
 // Types
@@ -79,7 +88,30 @@ interface FullEmail {
     name: string;
     type: string;
     size: number;
+    content?: string; // Base64 content for saving
   }[];
+}
+
+// Attachment for composing
+interface ComposeAttachment {
+  id: string;
+  name: string;
+  size: number;
+  mimeType: string;
+  content?: string; // Base64 encoded content
+  libraryFileId?: string;
+  libraryFileUrl?: string;
+  isFromLibrary: boolean;
+}
+
+// Library file for picker
+interface LibraryFile {
+  id: string;
+  name: string;
+  type: string;
+  mimeType: string;
+  size: string;
+  url: string;
 }
 
 // Default mailboxes with musician-specific folders
@@ -176,9 +208,24 @@ export default function WebmailPage() {
 
   // Compose state
   const [composeTo, setComposeTo] = useState('');
+  const [composeCc, setComposeCc] = useState('');
   const [composeSubject, setComposeSubject] = useState('');
   const [composeBody, setComposeBody] = useState('');
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [sendSuccess, setSendSuccess] = useState(false);
+
+  // Attachment state
+  const [composeAttachments, setComposeAttachments] = useState<ComposeAttachment[]>([]);
+  const [attachmentDragging, setAttachmentDragging] = useState(false);
+  const [showLibraryPicker, setShowLibraryPicker] = useState(false);
+  const [libraryFiles, setLibraryFiles] = useState<LibraryFile[]>([]);
+  const [libraryLoading, setLibraryLoading] = useState(false);
+  const [librarySearch, setLibrarySearch] = useState('');
+  const [savingAttachment, setSavingAttachment] = useState<string | null>(null);
+
+  // Refs
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Check if user has email account
   useEffect(() => {
@@ -302,16 +349,43 @@ export default function WebmailPage() {
 
         const message = messages.find((m) => m.id === messageId);
         if (message) {
+          // Generate demo attachments for messages that have them
+          const demoAttachments = message.hasAttachment
+            ? [
+                {
+                  id: `att-${messageId}-1`,
+                  name: messageId === '1' ? 'Summer_Festival_Contract.pdf' : 'Demo_Track_v2.mp3',
+                  type: messageId === '1' ? 'application/pdf' : 'audio/mpeg',
+                  size: messageId === '1' ? 245678 : 4523456,
+                  // In production, this would be actual base64 content from the mail server
+                  content: 'SGVsbG8gV29ybGQh', // Placeholder
+                },
+                ...(messageId === '4'
+                  ? [
+                      {
+                        id: `att-${messageId}-2`,
+                        name: 'Hip_Hop_Beat_120BPM.wav',
+                        type: 'audio/wav',
+                        size: 12456789,
+                        content: 'SGVsbG8gV29ybGQh',
+                      },
+                    ]
+                  : []),
+              ]
+            : undefined;
+
           setSelectedMessage({
             id: message.id,
             subject: message.subject,
             from: message.from,
             to: message.to,
             receivedAt: message.receivedAt,
+            attachments: demoAttachments,
             htmlBody: `
             <div style="font-family: sans-serif; line-height: 1.6;">
               <p>Hi there,</p>
               <p>${message.preview}</p>
+              ${message.hasAttachment ? '<p style="color: #ff6347; font-size: 14px;">📎 See attached file(s) below - save them to your library with one click!</p>' : ''}
               <p>Looking forward to hearing from you!</p>
               <p>Best regards,<br>${message.from[0]?.name || message.from[0]?.email}</p>
             </div>
@@ -327,22 +401,241 @@ export default function WebmailPage() {
     [messages]
   );
 
+  // Handle file attachment from local device
+  const handleFileAttachment = useCallback(async (files: FileList | File[]) => {
+    const fileArray = Array.from(files);
+
+    // Process each file with explicit closure to avoid any closure issues
+    const processFile = (file: File): Promise<ComposeAttachment | null> => {
+      return new Promise((resolve) => {
+        // Check size limit (10MB per file)
+        if (file.size > 10 * 1024 * 1024) {
+          alert(`File "${file.name}" is too large. Maximum size is 10MB per file.`);
+          resolve(null);
+          return;
+        }
+
+        // Capture file properties immediately to avoid any closure issues
+        const fileName = file.name;
+        const fileSize = file.size;
+        const fileMimeType = file.type || 'application/octet-stream';
+
+        // Convert to base64
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = (reader.result as string).split(',')[1];
+          const newAttachment: ComposeAttachment = {
+            id: `local-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            name: fileName,
+            size: fileSize,
+            mimeType: fileMimeType,
+            content: base64,
+            isFromLibrary: false,
+          };
+          resolve(newAttachment);
+        };
+        reader.onerror = () => {
+          console.error(`Failed to read file: ${fileName}`);
+          resolve(null);
+        };
+        reader.readAsDataURL(file);
+      });
+    };
+
+    // Process all files in parallel and filter out nulls (failed/skipped files)
+    const attachments = await Promise.all(fileArray.map(processFile));
+    const validAttachments = attachments.filter((a): a is ComposeAttachment => a !== null);
+
+    if (validAttachments.length > 0) {
+      setComposeAttachments((prev) => [...prev, ...validAttachments]);
+    }
+  }, []);
+
+  // Handle drag and drop for attachments
+  const handleAttachmentDragEnter = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAttachmentDragging(true);
+  }, []);
+
+  const handleAttachmentDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAttachmentDragging(false);
+  }, []);
+
+  const handleAttachmentDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setAttachmentDragging(false);
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileAttachment(files);
+      }
+    },
+    [handleFileAttachment]
+  );
+
+  // Remove attachment
+  const removeAttachment = useCallback((attachmentId: string) => {
+    setComposeAttachments((prev) => prev.filter((a) => a.id !== attachmentId));
+  }, []);
+
+  // Fetch library files for picker
+  const fetchLibraryFiles = useCallback(async () => {
+    setLibraryLoading(true);
+    try {
+      const response = await fetch(
+        `/api/library?limit=50&search=${encodeURIComponent(librarySearch)}`
+      );
+      const data = await response.json();
+      setLibraryFiles(data.files || []);
+    } catch (error) {
+      console.error('Error fetching library files:', error);
+    } finally {
+      setLibraryLoading(false);
+    }
+  }, [librarySearch]);
+
+  // Add library file as attachment
+  const addLibraryAttachment = useCallback(
+    (file: LibraryFile) => {
+      // Check if already attached
+      if (composeAttachments.find((a) => a.libraryFileId === file.id)) {
+        return;
+      }
+
+      const newAttachment: ComposeAttachment = {
+        id: `lib-${file.id}`,
+        name: file.name,
+        size: parseInt(file.size),
+        mimeType: file.mimeType,
+        libraryFileId: file.id,
+        libraryFileUrl: file.url,
+        isFromLibrary: true,
+      };
+      setComposeAttachments((prev) => [...prev, newAttachment]);
+      setShowLibraryPicker(false);
+    },
+    [composeAttachments]
+  );
+
+  // Save email attachment to library
+  const saveAttachmentToLibrary = useCallback(
+    async (
+      attachment: { id: string; name: string; type: string; size: number; content?: string },
+      messageId: string
+    ) => {
+      if (!attachment.content) {
+        alert('Attachment content not available for saving.');
+        return;
+      }
+
+      setSavingAttachment(attachment.id);
+      try {
+        const response = await fetch('/api/email/attachments/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            attachmentId: attachment.id,
+            messageId,
+            name: attachment.name,
+            content: attachment.content,
+            mimeType: attachment.type,
+            size: attachment.size,
+            tags: ['email-attachment'],
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          alert(`"${attachment.name}" saved to your library!`);
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (error) {
+        console.error('Error saving attachment:', error);
+        alert('Failed to save attachment to library.');
+      } finally {
+        setSavingAttachment(null);
+      }
+    },
+    []
+  );
+
+  // Fetch library files when picker opens
+  useEffect(() => {
+    if (showLibraryPicker) {
+      fetchLibraryFiles();
+    }
+  }, [showLibraryPicker, fetchLibraryFiles]);
+
+  // Calculate total attachment size
+  const totalAttachmentSize = composeAttachments.reduce((sum, a) => sum + a.size, 0);
+  const attachmentSizeLimitMB = 25;
+  const isOverLimit = totalAttachmentSize > attachmentSizeLimitMB * 1024 * 1024;
+
   // Send email
   const handleSend = async () => {
     if (!composeTo || !composeSubject) return;
+    if (isOverLimit) {
+      setSendError('Total attachment size exceeds 25MB limit');
+      return;
+    }
 
     setSending(true);
-    try {
-      // In production, call /api/email/send
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    setSendError(null);
+    setSendSuccess(false);
 
-      // Reset compose
-      setShowCompose(false);
-      setComposeTo('');
-      setComposeSubject('');
-      setComposeBody('');
+    try {
+      const response = await fetch('/api/email/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: composeTo
+            .split(',')
+            .map((e) => e.trim())
+            .filter(Boolean),
+          cc: composeCc
+            ? composeCc
+                .split(',')
+                .map((e) => e.trim())
+                .filter(Boolean)
+            : [],
+          subject: composeSubject,
+          body: composeBody,
+          attachments: composeAttachments.map((a) => ({
+            name: a.name,
+            content: a.content || '',
+            mimeType: a.mimeType,
+            size: a.size,
+            libraryFileId: a.libraryFileId,
+            libraryFileUrl: a.libraryFileUrl,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send email');
+      }
+
+      // Success! Show confirmation and reset
+      setSendSuccess(true);
+      setTimeout(() => {
+        setShowCompose(false);
+        setComposeTo('');
+        setComposeCc('');
+        setComposeSubject('');
+        setComposeBody('');
+        setComposeAttachments([]);
+        setSendSuccess(false);
+      }, 1500);
     } catch (error) {
       console.error('Error sending email:', error);
+      setSendError(error instanceof Error ? error.message : 'Failed to send email');
     } finally {
       setSending(false);
     }
@@ -987,28 +1280,107 @@ export default function WebmailPage() {
                   )}
                 </div>
 
-                {/* Attachments */}
+                {/* Attachments - Enhanced with Save to Library */}
                 {selectedMessage.attachments && selectedMessage.attachments.length > 0 && (
                   <div className="mt-6">
-                    <h3 className="mb-3 text-sm font-semibold text-white/90">
-                      Attachments ({selectedMessage.attachments.length})
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="mb-3 flex items-center justify-between">
+                      <h3 className="text-sm font-semibold text-white/90">
+                        Attachments ({selectedMessage.attachments.length})
+                      </h3>
+                      <span className="text-xs text-white/50">
+                        Click to save any attachment to your library
+                      </span>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
                       {selectedMessage.attachments.map((att) => (
                         <div
                           key={att.id}
-                          className="flex items-center gap-2 rounded-lg px-3 py-2"
+                          className="group flex items-center gap-3 rounded-xl p-3 transition-all hover:scale-[1.01]"
                           style={{
                             background: 'rgba(255, 255, 255, 0.05)',
                             border: '1px solid rgba(255, 255, 255, 0.1)',
                           }}
                         >
-                          <Paperclip className="h-4 w-4 text-orange-400/70" />
-                          <span className="text-sm text-white/90">{att.name}</span>
-                          <span className="text-xs text-white/50">({formatBytes(att.size)})</span>
+                          {/* File type icon */}
+                          <div
+                            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                            style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+                          >
+                            {att.type.startsWith('audio/') ? (
+                              <FileAudio className="h-5 w-5 text-orange-400" />
+                            ) : att.type.startsWith('image/') ? (
+                              <ImageIcon className="h-5 w-5 text-pink-400" />
+                            ) : att.type.includes('pdf') || att.type.includes('document') ? (
+                              <FileText className="h-5 w-5 text-blue-400" />
+                            ) : (
+                              <Paperclip className="h-5 w-5 text-orange-400/70" />
+                            )}
+                          </div>
+
+                          {/* File info */}
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-white/90">{att.name}</p>
+                            <p className="text-xs text-white/50">{formatBytes(att.size)}</p>
+                          </div>
+
+                          {/* Action buttons */}
+                          <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                            {/* Download */}
+                            <button
+                              className="rounded-lg p-2 text-white/50 transition-all hover:bg-white/10 hover:text-white"
+                              title="Download"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
+
+                            {/* Save to Library */}
+                            <button
+                              onClick={() => saveAttachmentToLibrary(att, selectedMessage.id)}
+                              disabled={savingAttachment === att.id}
+                              className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all hover:scale-105"
+                              style={{
+                                background:
+                                  'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1))',
+                                border: '1px solid rgba(34, 197, 94, 0.3)',
+                                color: '#22c55e',
+                              }}
+                              title="Save to Library"
+                            >
+                              {savingAttachment === att.id ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <>
+                                  <FolderOpen className="h-3 w-3" />
+                                  <span>Save</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
+
+                    {/* Quick action to save all */}
+                    {selectedMessage.attachments.length > 1 && (
+                      <button
+                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium transition-all hover:scale-[1.01]"
+                        style={{
+                          background: 'rgba(34, 197, 94, 0.1)',
+                          border: '1px solid rgba(34, 197, 94, 0.2)',
+                          color: '#22c55e',
+                        }}
+                        onClick={async () => {
+                          for (const att of selectedMessage.attachments || []) {
+                            if (att.content) {
+                              await saveAttachmentToLibrary(att, selectedMessage.id);
+                            }
+                          }
+                        }}
+                      >
+                        <FolderOpen className="h-4 w-4" />
+                        Save All to Library
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -1066,7 +1438,7 @@ export default function WebmailPage() {
         </div>
       </div>
 
-      {/* Compose Modal - Premium Design */}
+      {/* Enhanced Compose Modal with Attachments */}
       <AnimatePresence>
         {showCompose && (
           <motion.div
@@ -1080,13 +1452,17 @@ export default function WebmailPage() {
               initial={{ y: 50, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 50, opacity: 0, scale: 0.95 }}
-              className="w-full max-w-2xl overflow-hidden rounded-2xl shadow-2xl"
+              className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl shadow-2xl"
               style={{
                 background: 'linear-gradient(180deg, #1a1015 0%, #0f0a0d 100%)',
                 border: '1px solid rgba(255, 99, 71, 0.2)',
                 boxShadow: '0 25px 80px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 99, 71, 0.1)',
               }}
               onClick={(e) => e.stopPropagation()}
+              onDragEnter={handleAttachmentDragEnter}
+              onDragOver={(e) => e.preventDefault()}
+              onDragLeave={handleAttachmentDragLeave}
+              onDrop={handleAttachmentDrop}
             >
               {/* Header - Gradient */}
               <div
@@ -1105,6 +1481,15 @@ export default function WebmailPage() {
                     <Edit3 className="h-4 w-4 text-white" />
                   </div>
                   <span className="text-lg font-bold text-white">New Message</span>
+                  {composeAttachments.length > 0 && (
+                    <span
+                      className="flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+                      style={{ background: 'rgba(255, 99, 71, 0.2)', color: '#ff6347' }}
+                    >
+                      <Paperclip className="h-3 w-3" />
+                      {composeAttachments.length}
+                    </span>
+                  )}
                 </div>
                 <button
                   onClick={() => setShowCompose(false)}
@@ -1114,8 +1499,65 @@ export default function WebmailPage() {
                 </button>
               </div>
 
+              {/* Drag overlay */}
+              <AnimatePresence>
+                {attachmentDragging && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl"
+                    style={{ background: 'rgba(255, 99, 71, 0.1)', backdropFilter: 'blur(4px)' }}
+                  >
+                    <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-orange-500 p-8">
+                      <Upload className="h-12 w-12 text-orange-500" />
+                      <p className="text-lg font-semibold text-white">Drop files to attach</p>
+                      <p className="text-sm text-white/60">Max 10MB per file, 25MB total</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Form */}
-              <div className="p-5">
+              <div className="flex-1 overflow-y-auto p-5">
+                {/* Success message */}
+                {sendSuccess && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-4 flex items-center gap-3 rounded-xl p-4"
+                    style={{
+                      background: 'rgba(34, 197, 94, 0.15)',
+                      border: '1px solid rgba(34, 197, 94, 0.3)',
+                    }}
+                  >
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <span className="font-medium text-green-400">Email sent successfully!</span>
+                  </motion.div>
+                )}
+
+                {/* Error message */}
+                {sendError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-4 flex items-center gap-3 rounded-xl p-4"
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.15)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                    }}
+                  >
+                    <AlertCircle className="h-5 w-5 text-red-400" />
+                    <span className="font-medium text-red-400">{sendError}</span>
+                    <button
+                      onClick={() => setSendError(null)}
+                      className="ml-auto text-red-400 hover:text-red-300"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </motion.div>
+                )}
+
                 {/* From indicator */}
                 <div
                   className="mb-4 flex items-center gap-3 rounded-xl px-4 py-2"
@@ -1134,11 +1576,25 @@ export default function WebmailPage() {
                 >
                   <span className="w-20 text-sm font-medium text-white/40">To:</span>
                   <input
-                    type="email"
+                    type="text"
                     value={composeTo}
                     onChange={(e) => setComposeTo(e.target.value)}
                     className="flex-1 bg-transparent text-white outline-none placeholder:text-white/30"
-                    placeholder="recipient@email.com"
+                    placeholder="recipient@email.com (comma-separated for multiple)"
+                  />
+                </div>
+
+                <div
+                  className="mb-3 flex items-center border-b pb-3"
+                  style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                >
+                  <span className="w-20 text-sm font-medium text-white/40">Cc:</span>
+                  <input
+                    type="text"
+                    value={composeCc}
+                    onChange={(e) => setComposeCc(e.target.value)}
+                    className="flex-1 bg-transparent text-white outline-none placeholder:text-white/30"
+                    placeholder="cc@email.com (optional)"
                   />
                 </div>
 
@@ -1159,46 +1615,323 @@ export default function WebmailPage() {
                 <textarea
                   value={composeBody}
                   onChange={(e) => setComposeBody(e.target.value)}
-                  className="h-64 w-full resize-none bg-transparent text-white outline-none placeholder:text-white/30"
+                  className="min-h-[200px] w-full resize-none bg-transparent text-white outline-none placeholder:text-white/30"
                   placeholder="Write your message..."
                 />
 
-                {/* Actions */}
-                <div
-                  className="flex items-center justify-between border-t pt-4"
-                  style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
-                >
-                  <div className="flex gap-2">
-                    <button
-                      className="rounded-xl p-2.5 transition-colors hover:bg-white/5"
-                      title="Attach file"
-                    >
-                      <Paperclip className="h-5 w-5 text-white/40" />
-                    </button>
-                    {/* Quick template dropdown could go here */}
-                  </div>
-
-                  <button
-                    onClick={handleSend}
-                    disabled={!composeTo || !composeSubject || sending}
-                    className="flex items-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50"
+                {/* Attachments Section */}
+                {composeAttachments.length > 0 && (
+                  <div
+                    className="mt-4 rounded-xl p-4"
                     style={{
-                      background: 'linear-gradient(135deg, #ff6347, #ffd700)',
-                      color: 'white',
-                      boxShadow: '0 4px 20px rgba(255, 99, 71, 0.4)',
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
                     }}
                   >
-                    {sending ? (
-                      <>
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-5 w-5" />
-                        Send
-                      </>
+                    <div className="mb-3 flex items-center justify-between">
+                      <h4 className="flex items-center gap-2 text-sm font-semibold text-white/90">
+                        <Paperclip className="h-4 w-4 text-orange-400" />
+                        Attachments ({composeAttachments.length})
+                      </h4>
+                      <span className={`text-xs ${isOverLimit ? 'text-red-400' : 'text-white/50'}`}>
+                        {formatBytes(totalAttachmentSize)} / {attachmentSizeLimitMB}MB
+                      </span>
+                    </div>
+
+                    <div className="space-y-2">
+                      {composeAttachments.map((attachment) => (
+                        <div
+                          key={attachment.id}
+                          className="group flex items-center gap-3 rounded-lg p-2 transition-all hover:bg-white/5"
+                        >
+                          {/* Icon based on type */}
+                          <div
+                            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg"
+                            style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+                          >
+                            {attachment.mimeType.startsWith('audio/') ? (
+                              <FileAudio className="h-4 w-4 text-orange-400" />
+                            ) : attachment.mimeType.startsWith('image/') ? (
+                              <ImageIcon className="h-4 w-4 text-pink-400" />
+                            ) : attachment.mimeType.includes('pdf') ? (
+                              <FileText className="h-4 w-4 text-blue-400" />
+                            ) : (
+                              <File className="h-4 w-4 text-gray-400" />
+                            )}
+                          </div>
+
+                          {/* File info */}
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-white/90">
+                              {attachment.name}
+                            </p>
+                            <div className="flex items-center gap-2 text-xs text-white/50">
+                              <span>{formatBytes(attachment.size)}</span>
+                              {attachment.isFromLibrary && (
+                                <span className="flex items-center gap-1 rounded bg-emerald-500/20 px-1.5 py-0.5 text-emerald-400">
+                                  <FolderOpen className="h-3 w-3" />
+                                  Library
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Remove button */}
+                          <button
+                            onClick={() => removeAttachment(attachment.id)}
+                            className="rounded-lg p-1.5 text-white/40 opacity-0 transition-all hover:bg-red-500/20 hover:text-red-400 group-hover:opacity-100"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {isOverLimit && (
+                      <p className="mt-2 text-xs text-red-400">
+                        Total size exceeds {attachmentSizeLimitMB}MB limit. Please remove some
+                        attachments.
+                      </p>
                     )}
+                  </div>
+                )}
+              </div>
+
+              {/* Actions */}
+              <div
+                className="flex items-center justify-between border-t px-5 py-4"
+                style={{
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(0, 0, 0, 0.2)',
+                }}
+              >
+                <div className="flex gap-2">
+                  {/* Hidden file input */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => e.target.files && handleFileAttachment(e.target.files)}
+                  />
+
+                  {/* Attach from device */}
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                    }}
+                    title="Attach files from your device"
+                  >
+                    <Paperclip className="h-4 w-4 text-white/60" />
+                    <span className="hidden text-white/80 sm:inline">Attach</span>
+                  </button>
+
+                  {/* Attach from library */}
+                  <button
+                    onClick={() => setShowLibraryPicker(true)}
+                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium transition-all hover:scale-[1.02]"
+                    style={{
+                      background: 'rgba(34, 197, 94, 0.1)',
+                      border: '1px solid rgba(34, 197, 94, 0.2)',
+                    }}
+                    title="Attach from your library"
+                  >
+                    <FolderOpen className="h-4 w-4 text-emerald-400" />
+                    <span className="hidden text-emerald-400 sm:inline">From Library</span>
+                  </button>
+                </div>
+
+                <button
+                  onClick={handleSend}
+                  disabled={!composeTo || !composeSubject || sending || isOverLimit}
+                  className="flex items-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50"
+                  style={{
+                    background: 'linear-gradient(135deg, #ff6347, #ffd700)',
+                    color: 'white',
+                    boxShadow: '0 4px 20px rgba(255, 99, 71, 0.4)',
+                  }}
+                >
+                  {sending ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-5 w-5" />
+                      Send
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Library File Picker Modal */}
+      <AnimatePresence>
+        {showLibraryPicker && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            onClick={() => setShowLibraryPicker(false)}
+          >
+            <motion.div
+              initial={{ y: 50, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 50, opacity: 0, scale: 0.95 }}
+              className="flex max-h-[80vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl shadow-2xl"
+              style={{
+                background: 'linear-gradient(180deg, #1a1015 0%, #0f0a0d 100%)',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div
+                className="flex items-center justify-between px-5 py-4"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1))',
+                  borderBottom: '1px solid rgba(34, 197, 94, 0.2)',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+                    style={{ background: 'linear-gradient(135deg, #22c55e, #10b981)' }}
+                  >
+                    <FolderOpen className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="text-lg font-bold text-white">Attach from Library</span>
+                </div>
+                <button
+                  onClick={() => setShowLibraryPicker(false)}
+                  className="rounded-lg p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+
+              {/* Search */}
+              <div
+                className="border-b px-5 py-3"
+                style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+              >
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
+                  <input
+                    type="text"
+                    value={librarySearch}
+                    onChange={(e) => setLibrarySearch(e.target.value)}
+                    placeholder="Search your library..."
+                    className="w-full rounded-lg bg-white/5 py-2 pl-10 pr-4 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                  />
+                </div>
+              </div>
+
+              {/* File List */}
+              <div className="flex-1 overflow-y-auto p-4">
+                {libraryLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
+                  </div>
+                ) : libraryFiles.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <FolderOpen className="mb-3 h-12 w-12 text-white/20" />
+                    <p className="text-white/60">No files found</p>
+                    <p className="mt-1 text-sm text-white/40">Upload files to your library first</p>
+                    <Link
+                      href="/library"
+                      className="mt-4 rounded-lg px-4 py-2 text-sm font-medium text-emerald-400 transition-all hover:bg-emerald-500/20"
+                    >
+                      Go to Library
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {libraryFiles.map((file) => {
+                      const isAttached = composeAttachments.some(
+                        (a) => a.libraryFileId === file.id
+                      );
+                      return (
+                        <button
+                          key={file.id}
+                          onClick={() => !isAttached && addLibraryAttachment(file)}
+                          disabled={isAttached}
+                          className={`flex w-full items-center gap-3 rounded-xl p-3 text-left transition-all ${
+                            isAttached ? 'cursor-not-allowed opacity-50' : 'hover:bg-white/5'
+                          }`}
+                          style={{ border: '1px solid rgba(255, 255, 255, 0.08)' }}
+                        >
+                          {/* Icon */}
+                          <div
+                            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                            style={{ background: 'rgba(255, 99, 71, 0.15)' }}
+                          >
+                            {file.mimeType.startsWith('audio/') ? (
+                              <FileAudio className="h-5 w-5 text-orange-400" />
+                            ) : file.mimeType.startsWith('image/') ? (
+                              <ImageIcon className="h-5 w-5 text-pink-400" />
+                            ) : file.type === 'lyrics' ? (
+                              <FileText className="h-5 w-5 text-purple-400" />
+                            ) : file.type === 'sheet_music' || file.type === 'chords' ? (
+                              <FileMusic className="h-5 w-5 text-blue-400" />
+                            ) : file.type === 'stem' ? (
+                              <Disc className="h-5 w-5 text-orange-400" />
+                            ) : (
+                              <File className="h-5 w-5 text-gray-400" />
+                            )}
+                          </div>
+
+                          {/* Info */}
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-medium text-white/90">
+                              {file.name}
+                            </p>
+                            <div className="flex items-center gap-2 text-xs text-white/50">
+                              <span className="capitalize">{file.type.replace('_', ' ')}</span>
+                              <span>•</span>
+                              <span>{formatBytes(parseInt(file.size))}</span>
+                            </div>
+                          </div>
+
+                          {/* Status */}
+                          {isAttached ? (
+                            <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2 py-1 text-xs text-emerald-400">
+                              <Check className="h-3 w-3" />
+                              Attached
+                            </span>
+                          ) : (
+                            <span className="text-xs text-emerald-400">Click to attach</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div
+                className="border-t px-5 py-3"
+                style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-white/50">
+                    {libraryFiles.length} file{libraryFiles.length !== 1 ? 's' : ''} available
+                  </p>
+                  <button
+                    onClick={() => setShowLibraryPicker(false)}
+                    className="rounded-lg px-4 py-2 text-sm font-medium text-white/80 transition-all hover:bg-white/10"
+                  >
+                    Done
                   </button>
                 </div>
               </div>

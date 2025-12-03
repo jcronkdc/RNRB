@@ -32,17 +32,17 @@ export function PasteLyricsModal({ isOpen, onClose, onImport }: PasteLyricsModal
 
   // Debug: Log on mount
   useEffect(() => {
-    console.log('🎵 [PasteLyrics] Component mounted, isOpen:', isOpen);
+    console.log('[PasteLyrics] Component mounted, isOpen:', isOpen);
   }, [isOpen]);
 
   // Live preview parsing with aggressive logging
   useEffect(() => {
-    console.log('🎵 [PasteLyrics] Lyrics changed, length:', lyrics.length);
+    console.log('[PasteLyrics] Lyrics changed, length:', lyrics.length);
     if (lyrics.trim()) {
-      console.log('🎵 [PasteLyrics] Parsing lyrics:', lyrics.substring(0, 100));
+      console.log('[PasteLyrics] Parsing lyrics:', lyrics.substring(0, 100));
       const sections = smartParseLyrics(lyrics);
       console.log(
-        '🎵 [PasteLyrics] Parsed sections:',
+        '[PasteLyrics] Parsed sections:',
         sections.length,
         sections.map((s) => s.type)
       );
@@ -57,7 +57,7 @@ export function PasteLyricsModal({ isOpen, onClose, onImport }: PasteLyricsModal
   // Handler for textarea changes
   const handleLyricsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value;
-    console.log('🎵 [PasteLyrics] onChange fired, value length:', value.length);
+    console.log('[PasteLyrics] onChange fired, value length:', value.length);
     setLyrics(value);
   };
 

@@ -446,7 +446,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
             </div>
 
             <p className="mt-3 text-center text-[10px] text-muted-foreground opacity-60">
-              💡 Hover over alternatives to see why they work
+              Hover over alternatives to see why they work
             </p>
           </motion.div>
         )}

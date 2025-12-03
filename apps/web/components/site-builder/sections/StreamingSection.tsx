@@ -35,7 +35,7 @@ const platformConfig: Record<
   spotify: {
     name: 'Spotify',
     color: '#1DB954',
-    icon: '🎵',
+    icon: '♪',
     embedHeight: { track: 152, album: 352, playlist: 380, artist: 352 },
   },
   apple: {
@@ -53,7 +53,7 @@ const platformConfig: Record<
   bandcamp: {
     name: 'Bandcamp',
     color: '#629AA9',
-    icon: '🎸',
+    icon: '♪',
     embedHeight: { track: 120, album: 470, playlist: 470, artist: 470 },
   },
   youtube: {
@@ -205,7 +205,7 @@ export function StreamingSection({ content, styles }: StreamingSectionProps) {
               const platform = platformConfig[link.platform] || {
                 name: link.platform,
                 color: accentColor,
-                icon: '🎵',
+                icon: '♪',
               };
 
               return (
@@ -452,7 +452,7 @@ export function StreamingSectionEditor({
                   className="flex items-center gap-3 rounded-lg p-3"
                   style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                 >
-                  <span className="text-xl">{platform?.icon || '🎵'}</span>
+                  <span className="text-xl">{platform?.icon ?? '♪'}</span>
                   <span className="flex-1 truncate text-sm" style={{ color: 'var(--text)' }}>
                     {link.url}
                   </span>

@@ -396,10 +396,10 @@ export function CopyrightGuide({ onClose }: { onClose?: () => void }) {
       {/* Footer Help */}
       <Card className="border-blue-500/30 bg-blue-500/5 p-4">
         <p className="text-sm text-gray-300">
-          <strong className="text-white">💡 Pro Tip:</strong> You don't need all of these
-          immediately! Start with PRO membership (free) and register your songs. Get ISRCs when
-          you're ready to distribute your music. Copyright registration is optional but recommended
-          for commercial releases.
+          <strong className="text-white">Pro Tip:</strong> You don't need all of these immediately!
+          Start with PRO membership (free) and register your songs. Get ISRCs when you're ready to
+          distribute your music. Copyright registration is optional but recommended for commercial
+          releases.
         </p>
       </Card>
     </div>

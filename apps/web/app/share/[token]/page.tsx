@@ -210,7 +210,7 @@ export default function SharePage() {
 
         {/* Logo */}
         <Link href="/" className="mt-8">
-          <Image src="/logo-light.png" alt="Rock N' Roll Basement" width={120} height={48} />
+          <Image src="/logo-dark.png" alt="Rock N' Roll Basement" width={120} height={48} />
         </Link>
       </div>
     );
@@ -314,7 +314,7 @@ export default function SharePage() {
 
         {/* Logo */}
         <Link href="/" className="mt-8">
-          <Image src="/logo-light.png" alt="Rock N' Roll Basement" width={120} height={48} />
+          <Image src="/logo-dark.png" alt="Rock N' Roll Basement" width={120} height={48} />
         </Link>
 
         {/* Footer */}

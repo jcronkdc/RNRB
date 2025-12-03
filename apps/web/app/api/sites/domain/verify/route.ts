@@ -154,7 +154,7 @@ export async function POST() {
       vercelConfigured: addResult.success,
       vercelVerified: vercelResult.verified,
       message: fullyConfigured
-        ? '🎉 Domain fully verified and configured! SSL certificate will be issued automatically.'
+        ? 'Domain fully verified and configured! SSL certificate will be issued automatically.'
         : 'Domain ownership verified! Complete the DNS configuration below.',
       nextSteps: fullyConfigured
         ? null

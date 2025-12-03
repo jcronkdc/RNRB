@@ -302,20 +302,20 @@ export default function StreamersPage() {
                   step: 1,
                   title: 'Apply',
                   desc: 'Fill out the application form below',
-                  icon: '📝',
+                  icon: '1',
                 },
                 {
                   step: 2,
                   title: 'Get Approved',
                   desc: 'We review applications within 48 hours',
-                  icon: '✅',
+                  icon: '2',
                 },
-                { step: 3, title: 'Share', desc: 'Use your unique code and materials', icon: '📢' },
+                { step: 3, title: 'Share', desc: 'Use your unique code and materials', icon: '3' },
                 {
                   step: 4,
                   title: 'Earn',
                   desc: 'Get paid monthly for every conversion',
-                  icon: '💰',
+                  icon: '4',
                 },
               ].map((item, index) => (
                 <div key={index} className="relative text-center">

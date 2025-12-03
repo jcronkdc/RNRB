@@ -280,7 +280,7 @@ export default function SongwritingFeaturePage() {
             </Card>
 
             <Card className="rnrb-card p-6">
-              <h3 className="mb-3 text-xl font-semibold">✍️ Lyrical Intelligence</h3>
+              <h3 className="mb-3 text-xl font-semibold">Lyrical Intelligence</h3>
               <ul className="space-y-2 text-muted-foreground">
                 <li>• Natural language flow</li>
                 <li>• Rhyme scheme awareness (AABB, ABAB, etc.)</li>

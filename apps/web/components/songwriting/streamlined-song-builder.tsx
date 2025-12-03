@@ -840,7 +840,7 @@ export function StreamlinedSongBuilder({
 
               {/* Tip about switching modes */}
               <p className="mt-3 text-[10px]" style={{ color: 'var(--muted)' }}>
-                💡 <strong>Tip:</strong> Switch to{' '}
+                <strong>Tip:</strong> Switch to{' '}
                 <span style={{ color: 'var(--accent)' }}>Blocks mode</span> anytime to drag and
                 reorder sections, add chords to specific words, or duplicate sections. Your work
                 syncs automatically!

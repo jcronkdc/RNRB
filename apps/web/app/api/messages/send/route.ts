@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Recipient not found' }, { status: 404 });
     }
 
-    // 🔒 COMPREHENSIVE SPAM PROTECTION
+    // 🔒 COMPREHENSIVE SPAM PROTECTION (with atomic rate limit reservation)
     const validation = await validateMessage(senderId, recipientId, trimmedContent);
 
     if (!validation.valid) {
@@ -82,21 +82,28 @@ export async function POST(request: NextRequest) {
     const resolvedChannelId = channelId || `dm:${[senderId, recipientId].sort().join(':')}`;
 
     // Save message to database
-    const message = await prisma.chatMessage.create({
-      data: {
-        channelId: resolvedChannelId,
-        channelType: 'dm',
-        senderId,
-        senderName: sender?.name || sender?.email || 'Unknown',
-        senderEmail: sender?.email || '',
-        senderAvatar: sender?.image,
-        messageType: 'text',
-        content: trimmedContent,
-      },
-    });
+    // If this fails, we release the rate limit reservation
+    let message;
+    try {
+      message = await prisma.chatMessage.create({
+        data: {
+          channelId: resolvedChannelId,
+          channelType: 'dm',
+          senderId,
+          senderName: sender?.name || sender?.email || 'Unknown',
+          senderEmail: sender?.email || '',
+          senderAvatar: sender?.image,
+          messageType: 'text',
+          content: trimmedContent,
+        },
+      });
+    } catch (dbError) {
+      // Release the rate limit reservation since the message wasn't actually sent
+      validation.releaseRateLimit();
+      throw dbError;
+    }
 
-    // Record message for rate limiting AFTER successful database write
-    // This prevents state inconsistency if the DB save fails
+    // Record message content for duplicate detection (rate limit already handled by reservation)
     recordMessage(senderId, recipientId, trimmedContent);
 
     // Broadcast via Ably if available

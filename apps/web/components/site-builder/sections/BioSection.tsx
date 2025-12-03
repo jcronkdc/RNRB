@@ -128,7 +128,7 @@ export function BioSection({ content, theme, animation }: BioSectionProps) {
                   borderRadius: (theme.borderRadius as string) || '16px',
                 }}
               >
-                <span className="text-8xl">🎵</span>
+                <span className="text-8xl text-gray-400">♪</span>
               </div>
             )}
 

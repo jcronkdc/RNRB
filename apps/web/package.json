@@ -46,6 +46,7 @@
     "@types/node": "^22.15.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "@vercel/blob": "^2.0.0",
     "@vercel/sdk": "^1.17.7",
     "ably": "^2.0.0",
     "autoprefixer": "^10.4.20",

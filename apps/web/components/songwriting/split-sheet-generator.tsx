@@ -391,7 +391,7 @@ export function SplitSheetGenerator({
       {!isValid && (
         <div className="rounded-lg border-2 border-yellow-500/30 bg-yellow-500/10 p-4">
           <p className="text-sm font-medium text-yellow-400">
-            ⚠️ Split sheet cannot be generated until splits total exactly 100%
+            Split sheet cannot be generated until splits total exactly 100%
             {totalPercentage !== 100 && ` (currently ${totalPercentage}%)`}
           </p>
         </div>
@@ -468,7 +468,7 @@ export function SplitSheetGenerator({
 
       {/* Help Text */}
       <p className="text-xs text-gray-500">
-        💡 Tip: Add email addresses to contributors to enable the "Email to All" feature. The PDF
+        Tip: Add email addresses to contributors to enable the "Email to All" feature. The PDF
         includes signature lines for all contributors.
       </p>
     </div>

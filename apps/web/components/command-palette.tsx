@@ -69,13 +69,13 @@ export function CommandPalette() {
       case 'navigation':
         return '🗺️ Navigate';
       case 'actions':
-        return '⚡ Actions';
+        return 'Actions';
       case 'recent':
         return '🕐 Recent';
       case 'projects':
         return '📁 Projects';
       case 'songs':
-        return '🎵 Songs';
+        return 'Songs';
       default:
         return category;
     }

@@ -59,6 +59,8 @@ import {
   FileArchive,
   Send,
   Layers,
+  Link2,
+  Check as CheckIcon,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -223,6 +225,10 @@ export default function LibraryPage() {
   // View tab state
   const [activeTab, setActiveTab] = useState<'my-files' | 'shared-with-me'>('my-files');
   const [exporting, setExporting] = useState(false);
+
+  // Quick link copy state
+  const [copiedLinkFileId, setCopiedLinkFileId] = useState<string | null>(null);
+  const [generatingLinkForId, setGeneratingLinkForId] = useState<string | null>(null);
 
   // Drag & drop state
   const [isDragging, setIsDragging] = useState(false);
@@ -456,6 +462,43 @@ export default function LibraryPage() {
       selectedFilesList.map((f) => f.name)
     );
   }, [files, selectedFiles, handleShareFiles]);
+
+  // Handle quick link copy (Dropbox-style one-click link)
+  const handleQuickCopyLink = useCallback(async (file: LibraryFile) => {
+    setGeneratingLinkForId(file.id);
+
+    try {
+      // Generate a share link
+      const response = await fetch('/api/library/share-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fileId: file.id,
+          name: file.name,
+          canDownload: true,
+          expiresInDays: 30, // Default 30 day expiration for quick links
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate link');
+      }
+
+      const data = await response.json();
+
+      // Copy to clipboard
+      await navigator.clipboard.writeText(data.shareLink.url);
+
+      // Show success state
+      setCopiedLinkFileId(file.id);
+      setTimeout(() => setCopiedLinkFileId(null), 3000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+      alert('Failed to generate shareable link');
+    } finally {
+      setGeneratingLinkForId(null);
+    }
+  }, []);
 
   // Handle export as ZIP
   const handleExportZip = useCallback(
@@ -1557,11 +1600,31 @@ export default function LibraryPage() {
                               />
                             </button>
 
-                            {/* Share */}
+                            {/* Quick Copy Link - Dropbox style */}
+                            <button
+                              onClick={() => handleQuickCopyLink(file)}
+                              disabled={generatingLinkForId === file.id}
+                              className={`rounded-lg p-2 transition-all ${
+                                copiedLinkFileId === file.id
+                                  ? 'bg-green-500/20 text-green-400'
+                                  : 'bg-gray-800 text-gray-400 hover:bg-cyan-500/20 hover:text-cyan-400'
+                              }`}
+                              title={copiedLinkFileId === file.id ? 'Link copied!' : 'Copy link'}
+                            >
+                              {generatingLinkForId === file.id ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : copiedLinkFileId === file.id ? (
+                                <CheckIcon className="h-4 w-4" />
+                              ) : (
+                                <Link2 className="h-4 w-4" />
+                              )}
+                            </button>
+
+                            {/* Share with options */}
                             <button
                               onClick={() => handleShareFiles([file.id], [file.name])}
                               className="rounded-lg bg-gray-800 p-2 text-gray-400 transition-all hover:bg-blue-500/20 hover:text-blue-500"
-                              title="Share"
+                              title="Share options"
                             >
                               <Share2 className="h-4 w-4" />
                             </button>

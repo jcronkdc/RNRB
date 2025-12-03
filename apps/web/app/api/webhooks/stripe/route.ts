@@ -868,18 +868,18 @@ async function handleEmailProCheckoutCompleted(session: Stripe.Checkout.Session)
     if (user) {
       await sendEmail({
         to: user.email,
-        subject: '🎸 Welcome to Email Pro!',
+        subject: 'Welcome to Email Pro!',
         text: `Hey ${user.name || 'there'}!\n\nYour Email Pro subscription is now active. You now have:\n\n• 10GB storage\n• Unlimited @rnrb.me accounts\n• Priority email delivery\n• Advanced filtering\n\nEnjoy your professional email!\n\n- The RNRB Team`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #8b5cf6;">🎸 Welcome to Email Pro!</h1>
+            <h1 style="color: #8b5cf6;">Welcome to Email Pro!</h1>
             <p>Hey ${user.name || 'there'}!</p>
             <p>Your Email Pro subscription is now active. You now have:</p>
             <ul>
-              <li>📦 <strong>10GB storage</strong></li>
-              <li>📧 <strong>Unlimited @rnrb.me accounts</strong></li>
-              <li>🚀 <strong>Priority email delivery</strong></li>
-              <li>🔧 <strong>Advanced filtering</strong></li>
+              <li><strong>10GB storage</strong></li>
+              <li><strong>Unlimited @rnrb.me accounts</strong></li>
+              <li><strong>Priority email delivery</strong></li>
+              <li><strong>Advanced filtering</strong></li>
             </ul>
             <p>Enjoy your professional email!</p>
             <p>- The RNRB Team</p>

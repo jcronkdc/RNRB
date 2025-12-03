@@ -136,7 +136,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
         ];
 
         if (data.meterWarning) {
-          summary.push(`⚠️ ${data.meterWarning}`);
+          summary.push(`Warning: ${data.meterWarning}`);
         } else {
           summary.push('✓ Meter is consistent');
         }

@@ -42,14 +42,14 @@ interface PreSaveSectionProps {
 }
 
 const PLATFORMS = [
-  { id: 'spotify', label: 'Spotify', color: '#1DB954', icon: '🎵' },
-  { id: 'appleMusic', label: 'Apple Music', color: '#FA243C', icon: '🍎' },
-  { id: 'amazon', label: 'Amazon Music', color: '#FF9900', icon: '📦' },
-  { id: 'deezer', label: 'Deezer', color: '#FEAA2D', icon: '🎧' },
-  { id: 'tidal', label: 'Tidal', color: '#000000', icon: '🌊' },
+  { id: 'spotify', label: 'Spotify', color: '#1DB954', icon: '' },
+  { id: 'appleMusic', label: 'Apple Music', color: '#FA243C', icon: '' },
+  { id: 'amazon', label: 'Amazon Music', color: '#FF9900', icon: '' },
+  { id: 'deezer', label: 'Deezer', color: '#FEAA2D', icon: '' },
+  { id: 'tidal', label: 'Tidal', color: '#000000', icon: '' },
   { id: 'youtube', label: 'YouTube Music', color: '#FF0000', icon: '▶️' },
-  { id: 'soundcloud', label: 'SoundCloud', color: '#FF5500', icon: '☁️' },
-  { id: 'bandcamp', label: 'Bandcamp', color: '#629AA9', icon: '🎸' },
+  { id: 'soundcloud', label: 'SoundCloud', color: '#FF5500', icon: '' },
+  { id: 'bandcamp', label: 'Bandcamp', color: '#629AA9', icon: '' },
 ];
 
 export function PreSaveSection({ content, theme, siteId }: PreSaveSectionProps) {

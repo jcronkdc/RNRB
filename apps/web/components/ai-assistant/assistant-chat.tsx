@@ -421,7 +421,7 @@ export function AssistantChat() {
             {error && (
               <div className="flex justify-center">
                 <div className="max-w-[90%] rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm">
-                  <p className="mb-1 font-medium text-red-400">⚠️ Error</p>
+                  <p className="mb-1 font-medium text-red-400">Error</p>
                   <p className="text-xs text-red-300">{error}</p>
                   {error.includes('Upgrade') && (
                     <Button
