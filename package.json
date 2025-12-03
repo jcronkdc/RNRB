@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@cronkwaters/config": "workspace:*",
+    "@next/bundle-analyzer": "^15.0.0",
     "@rollup/rollup-darwin-arm64": "4.53.2",
     "@types/node": "^22.15.3",
     "@types/react": "^18.3.12",
