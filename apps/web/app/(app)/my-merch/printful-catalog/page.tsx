@@ -179,6 +179,14 @@ export default function PrintfulCatalogPage() {
     fetchCategories();
   }, []);
 
+  // Helper to check if a product matches our curated selection
+  const isAllowedProduct = useCallback((product: PrintfulProduct) => {
+    const productText = `${product.model} ${product.type_name}`.toLowerCase();
+    return ALLOWED_PRODUCT_KEYWORDS.some(keyword => 
+      productText.includes(keyword.toLowerCase())
+    );
+  }, []);
+
   // Fetch Printful catalog (once - we filter client-side)
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -188,9 +196,11 @@ export default function PrintfulCatalogPage() {
         const data = await response.json();
 
         if (data.success && data.catalog) {
-          // Filter out discontinued products
-          const activeProducts = data.catalog.filter((p: PrintfulProduct) => !p.is_discontinued);
-          setProducts(activeProducts);
+          // Filter out discontinued products AND only keep curated products
+          const curatedProducts = data.catalog.filter((p: PrintfulProduct) => 
+            !p.is_discontinued && isAllowedProduct(p)
+          );
+          setProducts(curatedProducts);
         }
       } catch (error) {
         console.error('Failed to fetch catalog:', error);
@@ -199,7 +209,7 @@ export default function PrintfulCatalogPage() {
       }
     };
     fetchCatalog();
-  }, []);
+  }, [isAllowedProduct]);
 
   // Filter products by category and search
   const filteredProducts = products.filter((product) => {
@@ -286,10 +296,10 @@ export default function PrintfulCatalogPage() {
               </div>
             </div>
             <h1 className="mb-3 text-3xl font-bold text-white md:text-4xl">
-              Printful Product Catalog
+              Band Merch Catalog
             </h1>
             <p className="text-lg text-white/60">
-              Browse {products.length}+ products from Printful's catalog
+              {products.length} curated products for artist merchandise
             </p>
           </motion.div>
 
@@ -379,7 +389,7 @@ export default function PrintfulCatalogPage() {
             <div className="flex items-center justify-center py-20">
               <div className="text-center">
                 <Loader2 className="mx-auto h-12 w-12 animate-spin text-purple-400" />
-                <p className="mt-4 text-white/60">Loading Printful catalog...</p>
+                <p className="mt-4 text-white/60">Loading merch catalog...</p>
               </div>
             </div>
           ) : sortedProducts.length === 0 ? (
