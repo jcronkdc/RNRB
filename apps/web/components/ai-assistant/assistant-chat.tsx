@@ -15,23 +15,10 @@ import {
   Loader2,
 } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { usePathname } from 'next/navigation';
 
 import { useAssistant } from '@/hooks/use-assistant';
-
-// Force white text on AI button span using ref (to bypass CSS !important rules)
-function useForceWhiteText() {
-  const spanRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    if (spanRef.current) {
-      spanRef.current.style.cssText =
-        'color: #ffffff !important; -webkit-text-fill-color: #ffffff !important;';
-    }
-  }, []);
-
-  return spanRef;
-}
 
 // Quick action buttons based on context
 const QUICK_ACTIONS = {
@@ -239,9 +226,12 @@ export function AssistantChat() {
   };
 
   // Minimized state - show only icon button (cannot close completely)
-  // CRITICAL: force-white-text class ensures white text in all modes
+  // CRITICAL: Using Portal to render outside <main> to avoid CSS specificity issues
   if (!isOpen || isMinimized) {
-    return (
+    // Only render portal on client side
+    if (typeof window === 'undefined') return null;
+
+    return createPortal(
       <button
         onClick={() => {
           setIsOpen(true);
@@ -275,20 +265,9 @@ export function AssistantChat() {
             <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
           )}
         </div>
-        {!isMinimized && (
-          <span
-            className="ai-floating-btn-text force-white-text font-semibold"
-            ref={(el) => {
-              if (el) {
-                el.style.setProperty('color', '#ffffff', 'important');
-                el.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
-              }
-            }}
-          >
-            AI Assistant
-          </span>
-        )}
-      </button>
+        {!isMinimized && <span style={{ color: 'white', fontWeight: 600 }}>AI Assistant</span>}
+      </button>,
+      document.body
     );
   }
 
