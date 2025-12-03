@@ -2503,15 +2503,66 @@ html.light {
    */
 
   /* Direct white text - using multiple selector patterns for max compatibility */
+  /* EXCLUDE: gradient backgrounds, buttons, brand elements where white is intentional */
   [class*='text-white']:not([class*='text-white\/']):not([class*='brand']):not(
       [class*='button']
-    ):not([class*='btn']) {
+    ):not([class*='btn']):not([class*='bg-gradient']):not([class*='from-']):not(button):not(
+      [role='button']
+    ) {
     color: var(--text) !important;
   }
 
-  /* White with opacity */
-  [class*='text-white/'] {
+  /* White with opacity - same exclusions */
+  [class*='text-white/']:not([class*='bg-gradient']):not([class*='from-']):not(button):not(
+      [role='button']
+    ) {
     color: var(--muted) !important;
+  }
+
+  /* ============================================
+     CRITICAL: Preserve white text on gradient elements
+     These MUST come after text-white overrides to win specificity
+     ============================================ */
+
+  /* Any element with gradient background should have white text */
+  html.light [class*='bg-gradient-to-r'],
+  html.light [class*='bg-gradient-to-l'],
+  html.light [class*='bg-gradient-to-t'],
+  html.light [class*='bg-gradient-to-b'],
+  html.light [class*='bg-gradient-to-br'],
+  html.light [class*='bg-gradient-to-bl'],
+  html.light [class*='bg-gradient-to-tr'],
+  html.light [class*='bg-gradient-to-tl'],
+  html.light [class*='from-brand'],
+  html.light [class*='from-purple'],
+  html.light [class*='from-violet'],
+  html.light [class*='from-orange'],
+  html.light [class*='from-red'],
+  html.light [class*='from-blue'],
+  html.light [class*='from-green'],
+  html.light [class*='from-amber'] {
+    color: #ffffff !important;
+  }
+
+  /* All children inside gradient containers */
+  html.light [class*='bg-gradient-to-r'] *,
+  html.light [class*='bg-gradient-to-l'] *,
+  html.light [class*='bg-gradient-to-br'] *,
+  html.light [class*='from-brand'] *,
+  html.light [class*='from-purple'] *,
+  html.light [class*='from-violet'] *,
+  html.light [class*='from-orange'] *,
+  html.light [class*='from-red'] *,
+  html.light [class*='from-blue'] *,
+  html.light [class*='from-green'] *,
+  html.light [class*='from-amber'] * {
+    color: #ffffff !important;
+  }
+
+  /* SVG icons inside gradient elements */
+  html.light [class*='bg-gradient'] svg,
+  html.light [class*='from-'] svg {
+    color: #ffffff !important;
   }
 
   /* Specific opacity overrides */
@@ -3203,6 +3254,92 @@ html.light {
   [class*='bg-pink-500/20'] {
     background-color: rgba(236, 72, 153, 0.1) !important;
   }
+
+  /* === BUTTON VISIBILITY ENHANCEMENTS === */
+  /* Gunmetal gray: #4A5568 (slate-600) - professional, industrial feel */
+
+  /* Make buttons more distinct in light mode with gunmetal borders */
+  button:not([class*='bg-gradient']):not([class*='from-']) {
+    border: 1px solid #6b7280 !important; /* gunmetal gray */
+  }
+
+  /* Header/toolbar buttons need more definition - gunmetal style */
+  header button,
+  [class*='top-bar'] button,
+  nav button {
+    border: 1px solid #9ca3af !important; /* lighter gunmetal */
+    background-color: rgba(255, 255, 255, 0.85) !important;
+  }
+
+  /* Don't add borders to gradient buttons (they look good as-is) */
+  button[class*='bg-gradient'],
+  button[class*='from-'] {
+    border: none !important;
+  }
+
+  /* Icon buttons in toolbars - gunmetal accent */
+  button[class*='rounded-xl']:not([class*='bg-gradient']):not([class*='from-']) {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid #9ca3af !important; /* gunmetal gray */
+    box-shadow: 0 1px 3px rgba(75, 85, 99, 0.15) !important; /* subtle gunmetal shadow */
+  }
+
+  button[class*='rounded-xl']:hover:not([class*='bg-gradient']):not([class*='from-']) {
+    background-color: #ffffff !important;
+    border-color: #6b7280 !important; /* darker gunmetal on hover */
+    box-shadow: 0 2px 6px rgba(75, 85, 99, 0.25) !important;
+  }
+}
+
+/* ============================================
+   🚨 FINAL OVERRIDES - HIGHEST PRIORITY
+   These rules MUST come last to win specificity battles
+   ============================================ */
+
+/* Force white text on ALL gradient buttons in light mode */
+html.light button[class*='bg-gradient'],
+html.light button[class*='from-brand-primary'],
+html.light button[class*='from-brand'],
+html.light button[class*='from-purple'],
+html.light button[class*='from-violet'],
+html.light button[class*='from-orange'],
+html.light button[class*='from-red'],
+html.light button[class*='from-blue'],
+html.light button[class*='from-amber'],
+html.light button[class*='from-green'],
+html.light button[class*='from-emerald'] {
+  color: #ffffff !important;
+}
+
+html.light button[class*='bg-gradient'] span,
+html.light button[class*='from-brand-primary'] span,
+html.light button[class*='from-brand'] span,
+html.light button[class*='from-purple'] span,
+html.light button[class*='from-violet'] span,
+html.light button[class*='from-orange'] span,
+html.light button[class*='from-amber'] span {
+  color: #ffffff !important;
+}
+
+html.light button[class*='bg-gradient'] svg,
+html.light button[class*='from-brand-primary'] svg,
+html.light button[class*='from-brand'] svg,
+html.light button[class*='from-purple'] svg,
+html.light button[class*='from-violet'] svg {
+  color: #ffffff !important;
+}
+
+/* AI Assistant and Workspace Builder specific fixes */
+html.light button[aria-label*='AI'],
+html.light button[name*='AI'],
+html.light button[title*='AI'] {
+  color: #ffffff !important;
+}
+
+html.light button[aria-label*='AI'] *,
+html.light button[name*='AI'] *,
+html.light button[title*='AI'] * {
+  color: #ffffff !important;
 }
 
 /* 🔒 NO MODIFICATIONS ALLOWED BEYOND THIS POINT */
