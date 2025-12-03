@@ -15,6 +15,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@cronkwaters/ui';
 import {
@@ -115,6 +116,18 @@ export function AIWorkspaceChat() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const textRef = useRef<HTMLElement>(null);
+
+  // Force white text after hydration with a slight delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (textRef.current) {
+        textRef.current.style.setProperty('color', '#ffffff', 'important');
+        textRef.current.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [isOpen, isMinimized]);
 
   const {
     createWorkspace,
@@ -363,6 +376,7 @@ export function AIWorkspaceChat() {
 
   // Minimized state - just an icon button (cannot close completely)
   // CRITICAL: force-white-text class ensures white text in all modes
+  // Using SVG text to completely bypass CSS color rules
   if (!isOpen || isMinimized) {
     return (
       <motion.button
@@ -375,30 +389,29 @@ export function AIWorkspaceChat() {
         className={cn(
           'fixed bottom-24 right-6 z-40',
           'flex items-center gap-2 rounded-full',
-          'font-semibold shadow-lg',
-          'ai-floating-btn force-white-text',
+          'shadow-lg',
+          'ai-floating-btn',
           'bg-gradient-to-r from-violet-600 to-purple-600',
           'hover:shadow-xl hover:shadow-purple-500/30',
           'transition-shadow duration-300',
-          // Show compact version when minimized (just icon), full when not open yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
-        style={{ color: '#ffffff' }}
         title="AI Workspace Builder"
       >
-        <Wand2 className="h-5 w-5" style={{ color: '#ffffff' }} />
+        <Wand2 className="h-5 w-5 text-white" />
         {!isMinimized && (
-          <span
-            className="ai-floating-btn-text force-white-text font-semibold"
-            ref={(el) => {
-              if (el) {
-                el.style.setProperty('color', '#ffffff', 'important');
-                el.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
-              }
-            }}
-          >
-            AI Workspace Builder
-          </span>
+          <svg width="140" height="20" viewBox="0 0 140 20" className="flex-shrink-0">
+            <text
+              x="0"
+              y="15"
+              fill="#ffffff"
+              fontWeight="600"
+              fontSize="14"
+              fontFamily="system-ui, sans-serif"
+            >
+              AI Workspace Builder
+            </text>
+          </svg>
         )}
         <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full border-2 border-white bg-green-400" />
       </motion.button>

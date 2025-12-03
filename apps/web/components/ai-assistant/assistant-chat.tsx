@@ -179,6 +179,19 @@ export function AssistantChat() {
   const quickActions = getQuickActionsForPath(pathname);
   const proactiveSuggestion = getProactiveSuggestion(pathname);
 
+  // Ref for forcing white text after hydration
+  const textRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    // Force white text after hydration with a slight delay
+    const timer = setTimeout(() => {
+      if (textRef.current) {
+        textRef.current.style.setProperty('color', '#ffffff', 'important');
+        textRef.current.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [isOpen, isMinimized]);
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if ((messages.length > 0 || isStreaming) && !isMinimized) {
@@ -226,12 +239,9 @@ export function AssistantChat() {
   };
 
   // Minimized state - show only icon button (cannot close completely)
-  // CRITICAL: Using Portal to render outside <main> to avoid CSS specificity issues
+  // Using SVG text to completely bypass CSS color rules
   if (!isOpen || isMinimized) {
-    // Only render portal on client side
-    if (typeof window === 'undefined') return null;
-
-    return createPortal(
+    return (
       <button
         onClick={() => {
           setIsOpen(true);
@@ -242,32 +252,38 @@ export function AssistantChat() {
           'fixed bottom-6 right-6 z-50',
           'flex items-center gap-2',
           'rounded-full',
-          'ai-floating-btn force-white-text',
+          'ai-floating-btn',
           'bg-gradient-to-r from-brand-primary to-purple-600',
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
           'group',
-          // Compact when minimized, full when not opened yet
           isMinimized ? 'p-3' : 'px-4 py-3'
         )}
-        style={{ color: '#ffffff' }}
         aria-label="Open AI Assistant"
         title="AI Assistant"
       >
-        <div className="relative" style={{ color: '#ffffff' }}>
-          <Sparkles
-            className="h-5 w-5 transition-transform group-hover:rotate-12"
-            style={{ color: '#ffffff' }}
-          />
-          {/* Green dot to show it's active when minimized */}
+        <div className="relative">
+          <Sparkles className="h-5 w-5 text-white transition-transform group-hover:rotate-12" />
           {isMinimized && (
             <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
           )}
         </div>
-        {!isMinimized && <span style={{ color: 'white', fontWeight: 600 }}>AI Assistant</span>}
-      </button>,
-      document.body
+        {!isMinimized && (
+          <svg width="90" height="20" viewBox="0 0 90 20" className="flex-shrink-0">
+            <text
+              x="0"
+              y="15"
+              fill="#ffffff"
+              fontWeight="600"
+              fontSize="14"
+              fontFamily="system-ui, sans-serif"
+            >
+              AI Assistant
+            </text>
+          </svg>
+        )}
+      </button>
     );
   }
 
