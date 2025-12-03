@@ -59,53 +59,38 @@ interface EPKData {
 }
 
 const DEFAULT_EPK: EPKData = {
-  artistName: 'Your Band Name',
-  tagline: 'Genre-bending rock with soul',
+  artistName: '',
+  tagline: '',
   bio: {
-    short: 'A brief 2-3 sentence bio perfect for social media and quick introductions.',
-    long: 'A longer biography (2-3 paragraphs) that tells your story, your sound, your journey, and what makes you unique. Include your origins, influences, and vision.',
+    short: '',
+    long: '',
   },
-  genre: 'Rock / Alternative',
-  location: 'Los Angeles, CA',
-  formed: '2020',
-  members: [
-    { name: 'John Doe', role: 'Lead Vocals, Guitar' },
-    { name: 'Jane Smith', role: 'Bass, Backing Vocals' },
-    { name: 'Mike Johnson', role: 'Drums' },
-  ],
+  genre: '',
+  location: '',
+  formed: '',
+  members: [],
   contact: {
-    email: 'booking@yourband.com',
-    phone: '(555) 123-4567',
-    booking: 'Agent Name - agent@agency.com',
-    management: 'Manager Name - manager@mgmt.com',
+    email: '',
+    phone: '',
+    booking: '',
+    management: '',
   },
   social: {
-    website: 'https://yourband.com',
-    instagram: '@yourband',
-    youtube: 'YourBandOfficial',
-    twitter: '@yourband',
-    spotify: 'spotify:artist:xxxxx',
-    appleMusic: 'https://music.apple.com/artist/yourband',
+    website: '',
+    instagram: '',
+    youtube: '',
+    twitter: '',
+    spotify: '',
+    appleMusic: '',
   },
   stats: {
-    monthlyListeners: '50,000+',
-    followers: '25,000+',
-    streamsTotal: '5 Million+',
+    monthlyListeners: '',
+    followers: '',
+    streamsTotal: '',
   },
-  achievements: [
-    'Opened for [Major Artist] at [Venue] (2024)',
-    'Featured on [Playlist/Blog/Magazine]',
-    'Song featured in [TV Show/Film]',
-    '[Award/Recognition]',
-  ],
-  quotes: [
-    { text: '"[Band] delivers an electrifying live performance..."', source: 'Rolling Stone' },
-    { text: '"A fresh sound that commands attention..."', source: 'Pitchfork' },
-  ],
-  upcomingShows: [
-    { date: '2025-01-15', venue: 'The Troubadour', city: 'Los Angeles, CA' },
-    { date: '2025-01-22', venue: 'The Roxy', city: 'Los Angeles, CA' },
-  ],
+  achievements: [],
+  quotes: [],
+  upcomingShows: [],
 };
 
 export function EPKGenerator() {

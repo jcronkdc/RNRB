@@ -255,82 +255,19 @@ export default function WebmailPage() {
     async function fetchMessages() {
       setLoadingMessages(true);
       try {
-        // In production, this would call /api/email/messages
-        // For now, show demo data
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Demo messages
-        const demoMessages: EmailMessage[] = [
-          {
-            id: '1',
-            threadId: '1',
-            from: [{ name: 'Blue Note Records', email: 'booking@bluenote.com' }],
-            to: [{ email: emailAddress }],
-            subject: 'RE: Booking Inquiry - Summer Jazz Festival 2025',
-            preview:
-              "Thank you for your interest in performing at our festival. We'd love to discuss the details further...",
-            receivedAt: new Date(Date.now() - 3600000).toISOString(),
-            hasAttachment: true,
-            isUnread: true,
-            isFlagged: true,
-          },
-          {
-            id: '2',
-            threadId: '2',
-            from: [{ name: 'Sarah (Fan)', email: 'sarah.music.lover@gmail.com' }],
-            to: [{ email: emailAddress }],
-            subject: 'Your music changed my life!',
-            preview:
-              'I just had to reach out and tell you how much your latest album has meant to me during a difficult time...',
-            receivedAt: new Date(Date.now() - 7200000).toISOString(),
-            hasAttachment: false,
-            isUnread: true,
-            isFlagged: false,
-          },
-          {
-            id: '3',
-            threadId: '3',
-            from: [{ name: 'Rolling Stone Magazine', email: 'press@rollingstone.com' }],
-            to: [{ email: emailAddress }],
-            subject: 'Interview Request - Emerging Artists Feature',
-            preview:
-              "We're working on a feature about emerging artists in the indie scene and would love to include you...",
-            receivedAt: new Date(Date.now() - 86400000).toISOString(),
-            hasAttachment: false,
-            isUnread: false,
-            isFlagged: true,
-          },
-          {
-            id: '4',
-            threadId: '4',
-            from: [{ name: 'Jake Williams', email: 'jake.w.music@outlook.com' }],
-            to: [{ email: emailAddress }],
-            subject: 'Collab idea - got some beats you might like',
-            preview:
-              'Hey! Been following your work for a while. I produce hip-hop beats and I think we could make something amazing...',
-            receivedAt: new Date(Date.now() - 172800000).toISOString(),
-            hasAttachment: true,
-            isUnread: false,
-            isFlagged: false,
-          },
-          {
-            id: '5',
-            threadId: '5',
-            from: [{ name: 'Spotify for Artists', email: 'artists@spotify.com' }],
-            to: [{ email: emailAddress }],
-            subject: 'Your Weekly Stats - 50K+ streams this week!',
-            preview:
-              "Congratulations! Your music reached over 50,000 streams this week. Here's your breakdown...",
-            receivedAt: new Date(Date.now() - 259200000).toISOString(),
-            hasAttachment: false,
-            isUnread: false,
-            isFlagged: false,
-          },
-        ];
-
-        setMessages(demoMessages);
+        // Fetch real messages from the email API
+        const response = await fetch(`/api/email/messages?mailbox=${selectedMailbox}`);
+        if (response.ok) {
+          const data = await response.json();
+          setMessages(data.messages || []);
+        } else {
+          // No messages or API not configured - show empty inbox
+          setMessages([]);
+        }
       } catch (error) {
         console.error('Error fetching messages:', error);
+        // Show empty inbox on error
+        setMessages([]);
       } finally {
         setLoadingMessages(false);
       }
@@ -344,56 +281,41 @@ export default function WebmailPage() {
     async (messageId: string) => {
       setLoadingMessage(true);
       try {
-        // In production, call /api/email/messages/[id]
-        await new Promise((resolve) => setTimeout(resolve, 300));
-
+        // Fetch full message content from API
+        const response = await fetch(`/api/email/messages/${messageId}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.message) {
+            setSelectedMessage(data.message);
+          }
+        } else {
+          // Fallback to preview data from list
+          const message = messages.find((m) => m.id === messageId);
+          if (message) {
+            setSelectedMessage({
+              id: message.id,
+              subject: message.subject,
+              from: message.from,
+              to: message.to,
+              receivedAt: message.receivedAt,
+              htmlBody: `<div style="font-family: sans-serif; line-height: 1.6;"><p>${message.preview}</p></div>`,
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error loading message:', error);
+        // Fallback to preview data
         const message = messages.find((m) => m.id === messageId);
         if (message) {
-          // Generate demo attachments for messages that have them
-          const demoAttachments = message.hasAttachment
-            ? [
-                {
-                  id: `att-${messageId}-1`,
-                  name: messageId === '1' ? 'Summer_Festival_Contract.pdf' : 'Demo_Track_v2.mp3',
-                  type: messageId === '1' ? 'application/pdf' : 'audio/mpeg',
-                  size: messageId === '1' ? 245678 : 4523456,
-                  // In production, this would be actual base64 content from the mail server
-                  content: 'SGVsbG8gV29ybGQh', // Placeholder
-                },
-                ...(messageId === '4'
-                  ? [
-                      {
-                        id: `att-${messageId}-2`,
-                        name: 'Hip_Hop_Beat_120BPM.wav',
-                        type: 'audio/wav',
-                        size: 12456789,
-                        content: 'SGVsbG8gV29ybGQh',
-                      },
-                    ]
-                  : []),
-              ]
-            : undefined;
-
           setSelectedMessage({
             id: message.id,
             subject: message.subject,
             from: message.from,
             to: message.to,
             receivedAt: message.receivedAt,
-            attachments: demoAttachments,
-            htmlBody: `
-            <div style="font-family: sans-serif; line-height: 1.6;">
-              <p>Hi there,</p>
-              <p>${message.preview}</p>
-              ${message.hasAttachment ? '<p style="color: #ff6347; font-size: 14px;">📎 See attached file(s) below - save them to your library with one click!</p>' : ''}
-              <p>Looking forward to hearing from you!</p>
-              <p>Best regards,<br>${message.from[0]?.name || message.from[0]?.email}</p>
-            </div>
-          `,
+            htmlBody: `<div style="font-family: sans-serif; line-height: 1.6;"><p>${message.preview}</p></div>`,
           });
         }
-      } catch (error) {
-        console.error('Error loading message:', error);
       } finally {
         setLoadingMessage(false);
       }
@@ -489,10 +411,17 @@ export default function WebmailPage() {
       const response = await fetch(
         `/api/library?limit=50&search=${encodeURIComponent(librarySearch)}`
       );
-      const data = await response.json();
-      setLibraryFiles(data.files || []);
+      if (response.ok) {
+        const data = await response.json();
+        setLibraryFiles(data.files || []);
+      } else {
+        // API error - show empty library
+        console.error('Library fetch failed:', response.status, response.statusText);
+        setLibraryFiles([]);
+      }
     } catch (error) {
       console.error('Error fetching library files:', error);
+      setLibraryFiles([]);
     } finally {
       setLibraryLoading(false);
     }
@@ -1083,8 +1012,12 @@ export default function WebmailPage() {
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <Inbox className="mb-4 h-12 w-12 text-orange-400/30" />
-                <p className="font-medium text-white/90">No messages</p>
-                <p className="text-sm text-white/50">Your inbox is empty</p>
+                <p className="font-medium" style={{ color: 'var(--text)' }}>
+                  No messages
+                </p>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  Your inbox is empty
+                </p>
               </div>
             ) : (
               <div>
@@ -1112,7 +1045,10 @@ export default function WebmailPage() {
                       <div className="min-w-0 flex-1">
                         <div className="mb-1 flex items-center justify-between gap-2">
                           <span
-                            className={`truncate text-sm ${message.isUnread ? 'font-bold text-white' : 'font-medium text-white/80'}`}
+                            className={`truncate text-sm ${message.isUnread ? 'font-bold' : 'font-medium'}`}
+                            style={{
+                              color: message.isUnread ? 'var(--text)' : 'var(--text-secondary)',
+                            }}
                           >
                             {message.from[0]?.name || message.from[0]?.email}
                           </span>
@@ -1122,12 +1058,17 @@ export default function WebmailPage() {
                         </div>
 
                         <p
-                          className={`mb-1.5 truncate text-sm ${message.isUnread ? 'font-semibold text-white/95' : 'text-white/70'}`}
+                          className={`mb-1.5 truncate text-sm ${message.isUnread ? 'font-semibold' : ''}`}
+                          style={{
+                            color: message.isUnread ? 'var(--text)' : 'var(--text-secondary)',
+                          }}
                         >
                           {message.subject}
                         </p>
 
-                        <p className="truncate text-xs text-white/50">{message.preview}</p>
+                        <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>
+                          {message.preview}
+                        </p>
 
                         {/* Indicators */}
                         <div className="mt-2 flex items-center gap-2">
@@ -1147,10 +1088,7 @@ export default function WebmailPage() {
           </div>
 
           {/* Message Detail - Premium View */}
-          <div
-            className="flex-1 overflow-y-auto"
-            style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #0f0a0d 100%)' }}
-          >
+          <div className="flex-1 overflow-y-auto" style={{ background: 'var(--bg)' }}>
             {loadingMessage ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
@@ -1159,7 +1097,9 @@ export default function WebmailPage() {
               <div className="p-6">
                 {/* Message Header - Enhanced */}
                 <div className="mb-6">
-                  <h1 className="mb-4 text-2xl font-bold text-white">{selectedMessage.subject}</h1>
+                  <h1 className="mb-4 text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                    {selectedMessage.subject}
+                  </h1>
 
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -1175,10 +1115,10 @@ export default function WebmailPage() {
                           selectedMessage.from[0]?.email)[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-semibold text-white/95">
+                        <p className="text-lg font-semibold" style={{ color: 'var(--text)' }}>
                           {selectedMessage.from[0]?.name || selectedMessage.from[0]?.email}
                         </p>
-                        <p className="text-sm text-white/60">
+                        <p className="text-sm" style={{ color: 'var(--muted)' }}>
                           to{' '}
                           <span className="text-orange-400">
                             {selectedMessage.to.map((t) => t.email).join(', ')}
@@ -1188,11 +1128,17 @@ export default function WebmailPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="rounded-lg bg-white/5 px-3 py-1.5 text-sm text-white/70">
+                      <span
+                        className="rounded-lg px-3 py-1.5 text-sm"
+                        style={{ background: 'var(--panel)', color: 'var(--muted)' }}
+                      >
                         {new Date(selectedMessage.receivedAt).toLocaleString()}
                       </span>
                       <button className="rounded-lg p-2 transition-colors hover:bg-orange-400/10">
-                        <MoreVertical className="h-5 w-5 text-white/70 hover:text-orange-400" />
+                        <MoreVertical
+                          className="h-5 w-5 hover:text-orange-400"
+                          style={{ color: 'var(--muted)' }}
+                        />
                       </button>
                     </div>
                   </div>
@@ -1201,44 +1147,48 @@ export default function WebmailPage() {
                 {/* Action Buttons - Styled */}
                 <div className="mb-6 flex flex-wrap gap-2">
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
                     style={{
                       background:
                         'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 99, 71, 0.1))',
                       border: '1px solid rgba(255, 99, 71, 0.3)',
+                      color: 'var(--text)',
                     }}
                   >
                     <Reply className="h-4 w-4 text-orange-400" />
                     Reply
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-secondary)',
                     }}
                   >
-                    <ReplyAll className="h-4 w-4 text-white/70" />
+                    <ReplyAll className="h-4 w-4" style={{ color: 'var(--muted)' }} />
                     Reply All
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-secondary)',
                     }}
                   >
-                    <Forward className="h-4 w-4 text-white/70" />
+                    <Forward className="h-4 w-4" style={{ color: 'var(--muted)' }} />
                     Forward
                   </button>
                   <button
-                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white/90 transition-all hover:scale-[1.02]"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all hover:scale-[1.02]"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      background: 'var(--panel)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-secondary)',
                     }}
                   >
-                    <Archive className="h-4 w-4 text-white/70" />
+                    <Archive className="h-4 w-4" style={{ color: 'var(--muted)' }} />
                     Archive
                   </button>
                   <button

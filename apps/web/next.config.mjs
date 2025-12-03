@@ -66,12 +66,8 @@ const __dirname = dirname(__filename);
 
 const nextConfig = {
   reactStrictMode: true,
-  // output: 'standalone', // Temporarily disabled - causing /_document error in Next.js 15.5.6
   // Fix for monorepo: explicitly set the workspace root for file tracing
   outputFileTracingRoot: join(__dirname, '../../'),
-  eslint: {
-    ignoreDuringBuilds: true
-  },
   typescript: {
     ignoreBuildErrors: true
   },
@@ -90,8 +86,6 @@ const nextConfig = {
       'lodash',
       'posthog-js',
     ],
-    // CSS optimization disabled - requires 'critters' module which has SSR compatibility issues
-    // optimizeCss: true,
   },
   images: {
     // Enable AVIF and WebP for modern formats (Lighthouse recommendation)
@@ -137,93 +131,25 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer, webpack }) => {
+  // Webpack config only used when explicitly running with --webpack flag
+  // By default, Next.js 16 uses Turbopack which is faster and more stable
+  webpack: (config, { isServer }) => {
     // Ensure proper handling of lucide-react icons
     config.module.rules.push({
       test: /lucide-react/,
       sideEffects: false,
     });
 
-    // Split large chunks for better caching
-    if (!isServer) {
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            // Vendor chunk for node_modules
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              priority: -10,
-              reuseExistingChunk: true,
-            },
-            // Ably realtime chunk (large library)
-            ably: {
-              test: /[\\/]node_modules[\\/]ably[\\/]/,
-              name: 'ably',
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-            // Daily.co video chunk (large library)
-            daily: {
-              test: /[\\/]node_modules[\\/]@daily-co[\\/]/,
-              name: 'daily',
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-            // Framer Motion animations
-            framer: {
-              test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
-              name: 'framer',
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-            // React PDF rendering
-            reactPdf: {
-              test: /[\\/]node_modules[\\/]@react-pdf[\\/]/,
-              name: 'react-pdf',
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-            // UI components
-            ui: {
-              test: /[\\/]packages[\\/]ui[\\/]/,
-              name: 'ui',
-              priority: 5,
-              reuseExistingChunk: true,
-            },
-            // Common shared code
-            common: {
-              minChunks: 2,
-              priority: -20,
-              reuseExistingChunk: true,
-              name: 'common',
-            },
-          },
-          maxInitialRequests: 25,
-          maxAsyncRequests: 25,
-          minSize: 20000,
-          minRemainingSize: 0,
-        },
-      };
-
-      // Add bundle analyzer in development
-      if (process.env.ANALYZE === 'true') {
-        const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-        config.plugins.push(
-          new BundleAnalyzerPlugin({
-            analyzerMode: 'static',
-            reportFilename: '../bundle-report.html',
-            openAnalyzer: false,
-          })
-        );
-      }
-    }
-
-    // Module concatenation for smaller bundles (only in production)
-    if (!isServer && process.env.NODE_ENV === 'production') {
-      config.optimization.concatenateModules = true;
+    // Bundle analyzer support (only with webpack)
+    if (!isServer && process.env.ANALYZE === 'true') {
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+      config.plugins.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          reportFilename: '../bundle-report.html',
+          openAnalyzer: false,
+        })
+      );
     }
 
     return config;

@@ -66,3 +66,4 @@ ALTER TABLE "WorkspaceTool" ADD CONSTRAINT "WorkspaceTool_workspaceId_fkey" FORE
 -- AddForeignKey: UserPreferences -> User
 ALTER TABLE "UserPreferences" ADD CONSTRAINT "UserPreferences_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+

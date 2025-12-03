@@ -1,9 +1,9 @@
 /**
  * User Blocking API
- * 
+ *
  * POST - Block a user
  * DELETE - Unblock a user
- * 
+ *
  * Blocking prevents:
  * - The blocked user from sending you messages
  * - The blocked user from viewing your profile
@@ -73,4 +73,3 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to unblock user' }, { status: 500 });
   }
 }
-

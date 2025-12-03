@@ -200,5 +200,5 @@ function SocialIcon({ platform, size = 20 }: { platform: string; size?: number }
     soundcloud: '',
   };
 
-  return <span style={{ fontSize: size * 0.8 }}>{icons[platform.toLowerCase()] ?? '🔗'}</span>;
+  return <span style={{ fontSize: size * 0.8 }}>{icons[platform.toLowerCase()] ?? '→'}</span>;
 }

@@ -6,13 +6,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 
-import {
-  useWorkspace,
-  WorkspaceTabs,
-  WorkspaceGrid,
-  WorkspaceCreatorModal,
-  ToolCatalogModal,
-} from './index';
+import { useWorkspace } from './workspace-context';
+import { WorkspaceTabs } from './workspace-tabs';
+import { WorkspaceGrid } from './workspace-grid';
+import { WorkspaceCreatorModal } from './workspace-creator-modal';
+import { ToolCatalogModal } from './tool-catalog-modal';
 import { WorkshopWelcome, DailySpark } from '@/components/workshop';
 import { InstallAppButton } from '@/components/install-app-button';
 import {

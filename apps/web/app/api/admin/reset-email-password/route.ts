@@ -178,4 +178,3 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Check failed' }, { status: 500 });
   }
 }
-
