@@ -4,6 +4,7 @@ import { DM_Sans, JetBrains_Mono } from 'next/font/google';
 import { auth } from '@/auth';
 import { AblyProvider } from '@/components/ably/ably-provider';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { ErrorMonitoringProvider } from '@/components/error-monitoring-provider';
 import { InstallAppBanner } from '@/components/install-app-button';
 import { NavBar } from '@/components/NavBar';
 import { OfflineIndicator } from '@/components/offline-indicator';
@@ -189,21 +190,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="font-sans antialiased">
         <ErrorBoundary>
           <SessionProvider session={session}>
-            <TRPCReactProvider>
-              <PostHogProvider>
-                <AblyProvider>
-                  <KeyboardShortcutsProvider>
-                    <ToastProvider>
-                      <OfflineIndicator />
-                      <PWAUpdatePrompt />
-                      <NavBar />
-                      {children}
-                      <InstallAppBanner />
-                    </ToastProvider>
-                  </KeyboardShortcutsProvider>
-                </AblyProvider>
-              </PostHogProvider>
-            </TRPCReactProvider>
+            <ErrorMonitoringProvider>
+              <TRPCReactProvider>
+                <PostHogProvider>
+                  <AblyProvider>
+                    <KeyboardShortcutsProvider>
+                      <ToastProvider>
+                        <OfflineIndicator />
+                        <PWAUpdatePrompt />
+                        <NavBar />
+                        {children}
+                        <InstallAppBanner />
+                      </ToastProvider>
+                    </KeyboardShortcutsProvider>
+                  </AblyProvider>
+                </PostHogProvider>
+              </TRPCReactProvider>
+            </ErrorMonitoringProvider>
           </SessionProvider>
         </ErrorBoundary>
       </body>

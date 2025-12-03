@@ -2,6 +2,7 @@
 
 import { AlertTriangle, RefreshCw, Home } from '@/components/ui/custom-icons';
 import { Component, type ReactNode } from 'react';
+import { reportReactError } from '@/lib/error-monitoring';
 
 interface Props {
   children: ReactNode;
@@ -28,7 +29,10 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught error:', error, errorInfo);
 
-    // Track error in production
+    // Report to error monitoring system
+    reportReactError(error, errorInfo);
+
+    // Also track in PostHog for analytics continuity
     if (typeof window !== 'undefined' && window.posthog) {
       window.posthog.capture('error_boundary_triggered', {
         error: error.message,
