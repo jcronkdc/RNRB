@@ -3339,25 +3339,6 @@ html.light button[class*='from-violet'] svg {
   color: #ffffff !important;
 }
 
-/* AI Assistant and Workspace Builder specific fixes */
-html.light button[aria-label*='AI'],
-html.light button[name*='AI'],
-html.light button[title*='AI'],
-html.light button[aria-label='Open AI Assistant'],
-html.light button[title='AI Assistant'] {
-  color: #ffffff !important;
-}
-
-html.light button[aria-label*='AI'] *,
-html.light button[name*='AI'] *,
-html.light button[title*='AI'] *,
-html.light button[aria-label='Open AI Assistant'] *,
-html.light button[aria-label='Open AI Assistant'] span,
-html.light button[title='AI Assistant'] *,
-html.light button[title='AI Assistant'] span {
-  color: #ffffff !important;
-}
-
 /* Ultra-specific: Any button with both gradient AND text-white */
 html.light button.text-white[class*='bg-gradient'],
 html.light button.text-white[class*='from-'],
@@ -3430,62 +3411,6 @@ html.light .gradient-btn *,
 
 html.light .gradient-btn svg,
 .gradient-btn svg {
-  color: #ffffff !important;
-}
-
-/* === AI BUTTON SPECIFIC FIXES === */
-/* AI Assistant uses from-brand-primary to-purple-600 */
-html.light button.gradient-btn[class*='from-brand-primary'],
-html.light button[class*='from-brand-primary'][class*='to-purple'] {
-  color: #ffffff !important;
-}
-
-html.light button.gradient-btn[class*='from-brand-primary'] *,
-html.light button[class*='from-brand-primary'][class*='to-purple'] * {
-  color: #ffffff !important;
-}
-
-/* AI Workspace Builder uses from-violet-600 to-purple-600 */
-html.light button.gradient-btn[class*='from-violet'],
-html.light button[class*='from-violet'][class*='to-purple'] {
-  color: #ffffff !important;
-}
-
-html.light button.gradient-btn[class*='from-violet'] *,
-html.light button[class*='from-violet'][class*='to-purple'] * {
-  color: #ffffff !important;
-}
-
-/* === FINAL ABSOLUTE OVERRIDES FOR AI BUTTONS === */
-/* These MUST be at the very end to win all specificity battles */
-
-/* Target fixed position AI buttons specifically */
-html.light button.fixed[class*='from-brand-primary'],
-html.light button.fixed[class*='from-violet'],
-html.light button.fixed.gradient-btn {
-  color: #ffffff !important;
-}
-
-html.light button.fixed[class*='from-brand-primary'] span,
-html.light button.fixed[class*='from-violet'] span,
-html.light button.fixed.gradient-btn span {
-  color: #ffffff !important;
-}
-
-html.light button.fixed[class*='from-brand-primary'] svg,
-html.light button.fixed[class*='from-violet'] svg,
-html.light button.fixed.gradient-btn svg {
-  color: #ffffff !important;
-}
-
-/* Motion buttons (framer-motion uses motion.button) */
-html.light [class*='bottom-'][class*='right-'].gradient-btn,
-html.light [class*='bottom-'][class*='right-'][class*='from-'] {
-  color: #ffffff !important;
-}
-
-html.light [class*='bottom-'][class*='right-'].gradient-btn *,
-html.light [class*='bottom-'][class*='right-'][class*='from-'] * {
   color: #ffffff !important;
 }
 

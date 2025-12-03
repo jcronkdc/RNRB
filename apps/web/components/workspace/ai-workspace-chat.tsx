@@ -15,7 +15,6 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@cronkwaters/ui';
 import {
@@ -116,18 +115,6 @@ export function AIWorkspaceChat() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const textRef = useRef<HTMLElement>(null);
-
-  // Force white text after hydration with a slight delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (textRef.current) {
-        textRef.current.style.setProperty('color', '#ffffff', 'important');
-        textRef.current.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [isOpen, isMinimized]);
 
   const {
     createWorkspace,

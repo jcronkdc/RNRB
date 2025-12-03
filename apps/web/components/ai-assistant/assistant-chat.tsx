@@ -15,7 +15,6 @@ import {
   Loader2,
 } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
 import { usePathname } from 'next/navigation';
 
 import { useAssistant } from '@/hooks/use-assistant';
@@ -178,19 +177,6 @@ export function AssistantChat() {
 
   const quickActions = getQuickActionsForPath(pathname);
   const proactiveSuggestion = getProactiveSuggestion(pathname);
-
-  // Ref for forcing white text after hydration
-  const textRef = useRef<HTMLElement>(null);
-  useEffect(() => {
-    // Force white text after hydration with a slight delay
-    const timer = setTimeout(() => {
-      if (textRef.current) {
-        textRef.current.style.setProperty('color', '#ffffff', 'important');
-        textRef.current.style.setProperty('-webkit-text-fill-color', '#ffffff', 'important');
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [isOpen, isMinimized]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
