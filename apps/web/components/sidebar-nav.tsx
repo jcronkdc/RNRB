@@ -42,6 +42,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { useState, useEffect, createContext, useContext } from 'react';
 
+import { useThemeSafe } from '@/components/theme';
 import { useToast } from '@/hooks/useToast';
 
 // ============================================
@@ -127,6 +128,7 @@ const navSections: NavSection[] = [
     items: [
       { label: 'RNRB Mail', href: '/settings/email', icon: Mail, badge: 'NEW' },
       { label: 'Meet', href: '/meet', icon: Video, badge: 'NEW' },
+      { label: 'My Network', href: '/network', icon: Users, badge: 'NEW' },
       { label: 'Discover', href: '/discover', icon: UserSearch },
       { label: 'Collaborate', href: '/collaboration', icon: Users },
       { label: 'Collab Board', href: '/collaboration-needs', icon: Headphones },
@@ -168,8 +170,78 @@ const navSections: NavSection[] = [
 // Bottom settings items
 const settingsItems: NavItem[] = [
   { label: 'Credits', href: '/credits', icon: CreditCard },
+  { label: 'Theme', href: '/settings/display', icon: Palette },
   { label: 'Settings', href: '/settings', icon: Settings },
 ];
+
+// ============================================
+// Theme-Aware Sidebar Logo Component
+// ============================================
+
+interface SidebarLogoProps {
+  isCollapsed: boolean;
+  isMobile: boolean;
+  isHovered: boolean;
+  onClose: () => void;
+  onToggleCollapse: () => void;
+}
+
+function SidebarLogo({
+  isCollapsed,
+  isMobile,
+  isHovered,
+  onClose,
+  onToggleCollapse,
+}: SidebarLogoProps) {
+  const { resolvedTheme } = useThemeSafe();
+
+  // logo-dark.png = white logo (for dark backgrounds)
+  // logo-light.png = dark logo (for light backgrounds)
+  const logoSrc = resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png';
+
+  return (
+    <div
+      className="flex h-16 items-center justify-between px-4"
+      style={{ borderBottom: '1px solid var(--border)' }}
+    >
+      <Link href="/" className="flex items-center">
+        <motion.img
+          src={logoSrc}
+          alt="Rock N' Roll Basement"
+          animate={{
+            scale: isHovered ? 1.02 : 1,
+          }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="h-10 w-auto"
+          style={{
+            maxWidth: isCollapsed && !isMobile ? '40px' : '180px',
+            transition: 'max-width 0.3s ease',
+          }}
+        />
+      </Link>
+
+      {/* Close button on mobile, collapse toggle on desktop */}
+      {isMobile ? (
+        <button
+          onClick={onClose}
+          className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-white/10"
+          style={{ color: 'var(--muted)' }}
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      ) : (
+        <button
+          onClick={onToggleCollapse}
+          className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-white/10"
+          style={{ color: 'var(--muted)' }}
+        >
+          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </button>
+      )}
+    </div>
+  );
+}
 
 // ============================================
 // Sidebar Navigation Component
@@ -298,51 +370,14 @@ export function SidebarNav() {
           boxShadow: '4px 0 24px rgba(0, 0, 0, 0.3)',
         }}
       >
-        {/* Logo Section */}
-        <div
-          className="flex h-16 items-center justify-between px-4"
-          style={{ borderBottom: '1px solid var(--border)' }}
-        >
-          <Link href="/" className="flex items-center">
-            <motion.img
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              animate={{
-                scale: isHovered ? 1.02 : 1,
-              }}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="h-10 w-auto"
-              style={{
-                maxWidth: isCollapsed && !isMobile ? '40px' : '180px',
-                transition: 'max-width 0.3s ease',
-              }}
-            />
-          </Link>
-
-          {/* Close button on mobile, collapse toggle on desktop */}
-          {isMobile ? (
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-white/10"
-              style={{ color: 'var(--muted)' }}
-              aria-label="Close menu"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-white/10"
-              style={{ color: 'var(--muted)' }}
-            >
-              {isCollapsed ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
-            </button>
-          )}
-        </div>
+        {/* Logo Section - Theme Aware */}
+        <SidebarLogo
+          isCollapsed={isCollapsed}
+          isMobile={isMobile}
+          isHovered={isHovered}
+          onClose={() => setMobileMenuOpen(false)}
+          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+        />
 
         {/* Navigation Sections - Scrollable */}
         <nav

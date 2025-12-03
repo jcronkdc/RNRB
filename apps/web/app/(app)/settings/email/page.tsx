@@ -52,6 +52,7 @@ interface EmailAccount {
   labels: any[];
   appPasswords: any[];
   createdAt: string;
+  recoveryEmail: string | null;
 }
 
 interface ConnectionSettings {
@@ -90,6 +91,8 @@ export default function EmailSettingsPage() {
   const [forwardingAddress, setForwardingAddress] = useState('');
   const [keepCopy, setKeepCopy] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [settingsRecoveryEmail, setSettingsRecoveryEmail] = useState('');
+  const [recoveryEmailError, setRecoveryEmailError] = useState<string | null>(null);
 
   // App passwords
   const [showAppPasswordModal, setShowAppPasswordModal] = useState(false);
@@ -187,6 +190,7 @@ export default function EmailSettingsPage() {
         setForwardingEnabled(data.account.forwardingEnabled);
         setForwardingAddress(data.account.forwardingAddress || '');
         setKeepCopy(data.account.keepCopy);
+        setSettingsRecoveryEmail(data.account.recoveryEmail || '');
       } else {
         setAvailableDomains(data.availableDomains || ['rnrb.me']);
       }
@@ -354,6 +358,21 @@ export default function EmailSettingsPage() {
   // Save settings
   async function handleSaveSettings(e: React.FormEvent) {
     e.preventDefault();
+    setRecoveryEmailError(null);
+    
+    // Validate recovery email if provided
+    if (settingsRecoveryEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(settingsRecoveryEmail)) {
+        setRecoveryEmailError('Please enter a valid email address');
+        return;
+      }
+      if (settingsRecoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
+        setRecoveryEmailError('Recovery email cannot be an @rnrb.me address');
+        return;
+      }
+    }
+    
     setSaving(true);
 
     try {
@@ -369,6 +388,7 @@ export default function EmailSettingsPage() {
           forwardingEnabled,
           forwardingAddress,
           keepCopy,
+          recoveryEmail: settingsRecoveryEmail || null,
         }),
       });
 
@@ -728,11 +748,19 @@ export default function EmailSettingsPage() {
             >
               <Mail className="h-10 w-10 text-white drop-shadow-lg" />
             </motion.div>
-            <h1 className="mb-2 bg-gradient-to-r from-white via-orange-200 to-yellow-200 bg-clip-text text-3xl font-black text-transparent">
+            <h1 
+              className="mb-2 text-3xl font-black"
+              style={{
+                background: 'linear-gradient(135deg, #ffffff 0%, #ffb347 50%, #ffd700 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
               RNRB Mail
             </h1>
-            <p className="text-lg text-white/70">Professional email for musicians</p>
-            <p className="mt-1 text-sm text-white/40">Works with iPhone, Android, Mac & PC</p>
+            <p className="text-lg" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>Professional email for musicians</p>
+            <p className="mt-1 text-sm" style={{ color: 'rgba(255, 255, 255, 0.5)' }}>Works with iPhone, Android, Mac & PC</p>
           </div>
 
           <div className="p-8">
@@ -1304,6 +1332,35 @@ export default function EmailSettingsPage() {
                 color: 'var(--text)',
               }}
             />
+          </div>
+
+          {/* Recovery Email */}
+          <div>
+            <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
+              Recovery Email
+            </label>
+            <input
+              type="email"
+              value={settingsRecoveryEmail}
+              onChange={(e) => {
+                setSettingsRecoveryEmail(e.target.value);
+                setRecoveryEmailError(null);
+              }}
+              placeholder="your@gmail.com"
+              className="w-full rounded-xl px-4 py-3"
+              style={{
+                background: 'var(--bg)',
+                border: recoveryEmailError ? '1px solid #ef4444' : '1px solid var(--border)',
+                color: 'var(--text)',
+              }}
+            />
+            {recoveryEmailError ? (
+              <p className="mt-1 text-sm text-red-500">{recoveryEmailError}</p>
+            ) : (
+              <p className="mt-1 text-xs" style={{ color: 'var(--muted)' }}>
+                Used for password resets. Use a different email address (not @rnrb.me).
+              </p>
+            )}
           </div>
 
           {/* Signature */}

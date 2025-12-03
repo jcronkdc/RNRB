@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { InstallAppButton } from '@/components/install-app-button';
+import { HeroLogo, FooterLogo } from './components/landing-logos';
 import { generateFAQSchema, JsonLd } from '@/lib/seo';
 
 const faqs = [
@@ -75,21 +76,13 @@ export default function HomePage() {
 
           <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center py-16">
             <div className="mx-auto max-w-5xl text-center">
-              {/* SUPER PROMINENT LOGO */}
+              {/* SUPER PROMINENT LOGO - Theme Aware */}
               <div className="logo-mega-wrapper mb-8">
                 <div className="logo-spotlight"></div>
                 <div className="logo-ring logo-ring-1"></div>
                 <div className="logo-ring logo-ring-2"></div>
                 <div className="logo-ring logo-ring-3"></div>
-                <Image
-                  src="/logo-dark.png"
-                  alt="Rock N' Roll Basement - Music Collaboration Platform Logo"
-                  className="logo-mega"
-                  width={320}
-                  height={130}
-                  priority
-                  quality={100}
-                />
+                <HeroLogo />
                 <div className="logo-mega-glow"></div>
                 <div className="logo-particles">
                   {[...Array(8)].map((_, i) => (
@@ -3714,13 +3707,7 @@ export default function HomePage() {
           <div className="container">
             <div className="footer-content flex flex-col items-center justify-between gap-6 md:flex-row">
               <div className="footer-brand flex items-center gap-3">
-                <Image
-                  src="/logo-dark.png"
-                  alt="Rock N' Roll Basement Logo"
-                  width={40}
-                  height={40}
-                  loading="lazy"
-                />
+                <FooterLogo />
                 <span className="text-sm" style={{ color: 'var(--muted)' }}>
                   © 2024 Rock N' Roll Basement. All rights reserved.
                 </span>

@@ -17,8 +17,7 @@
 
 import { motion } from 'framer-motion';
 import { LucideIcon } from '@/components/ui/custom-icons';
-import Image from 'next/image';
-import Link from 'next/link';
+import { ThemeLogo } from '@/components/theme';
 import React from 'react';
 
 interface WorkshopPageHeaderProps {
@@ -63,7 +62,7 @@ export function WorkshopPageHeader({
 
   return (
     <div className={className}>
-      {/* White RR Logo - Centered at top [[memory:11700420]] */}
+      {/* Theme-Aware RR Logo - Centered at top [[memory:11700420]] */}
       {showLogo && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -71,19 +70,11 @@ export function WorkshopPageHeader({
           transition={{ duration: 0.3 }}
           className={`flex flex-col items-center ${isHero ? 'mb-8' : 'mb-6'}`}
         >
-          <Link href="/" className="group inline-block">
-            <Image
-              src="/logo-dark.png"
-              alt="Rock N' Roll Basement"
-              width={size.width}
-              height={size.height}
-              priority
-              className="transition-opacity duration-200 group-hover:opacity-80"
-              style={{
-                filter: 'drop-shadow(0 0 10px var(--accent-glow))',
-              }}
-            />
-          </Link>
+          <ThemeLogo
+            size={logoSize}
+            priority
+            className="transition-opacity duration-200 hover:opacity-80"
+          />
         </motion.div>
       )}
 

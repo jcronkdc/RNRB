@@ -205,6 +205,7 @@ export async function GET() {
         labels: emailAccount.labels,
         appPasswords: emailAccount.appPasswords,
         createdAt: emailAccount.createdAt,
+        recoveryEmail: emailAccount.recoveryEmail,
       },
       // Connection settings for mail apps
       connectionSettings: {
@@ -581,6 +582,7 @@ export async function PATCH(request: Request) {
       forwardingAddress,
       keepCopy,
       spamFilterLevel,
+      recoveryEmail,
     } = body;
 
     // Validate forwarding address if provided
@@ -588,6 +590,21 @@ export async function PATCH(request: Request) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(forwardingAddress)) {
         return NextResponse.json({ error: 'Invalid forwarding email address' }, { status: 400 });
+      }
+    }
+
+    // Validate recovery email if provided
+    if (recoveryEmail !== undefined && recoveryEmail !== null && recoveryEmail !== '') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(recoveryEmail)) {
+        return NextResponse.json({ error: 'Invalid recovery email address' }, { status: 400 });
+      }
+      // Recovery email cannot be an @rnrb.me email
+      if (recoveryEmail.toLowerCase().endsWith('@rnrb.me')) {
+        return NextResponse.json(
+          { error: 'Recovery email cannot be an @rnrb.me address' },
+          { status: 400 }
+        );
       }
     }
 
@@ -604,6 +621,10 @@ export async function PATCH(request: Request) {
         ...(forwardingAddress !== undefined && { forwardingAddress }),
         ...(keepCopy !== undefined && { keepCopy }),
         ...(spamFilterLevel !== undefined && { spamFilterLevel }),
+        ...(recoveryEmail !== undefined && {
+          recoveryEmail: recoveryEmail || null,
+          recoveryEmailVerified: false, // Reset verification when email changes
+        }),
       },
     });
 
@@ -623,6 +644,7 @@ export async function PATCH(request: Request) {
         forwardingAddress: updatedAccount.forwardingAddress,
         keepCopy: updatedAccount.keepCopy,
         spamFilterLevel: updatedAccount.spamFilterLevel,
+        recoveryEmail: updatedAccount.recoveryEmail,
       },
     });
   } catch (error) {

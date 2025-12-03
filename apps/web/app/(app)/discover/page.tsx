@@ -11,6 +11,9 @@ import {
   Sparkles,
   Loader2,
   AlertCircle,
+  UserPlus,
+  UserCheck,
+  ArrowRight,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,8 +22,12 @@ import { useState, useEffect } from 'react';
 import { UserProfileCard, type UserProfileCardProps } from '@/components/user-profile-card';
 import { useDebounce } from '@/hooks/use-debounce';
 
+interface SearchUser extends UserProfileCardProps {
+  isFollowing?: boolean;
+}
+
 interface SearchResponse {
-  users: UserProfileCardProps[];
+  users: SearchUser[];
   total: number;
   page: number;
   limit: number;
@@ -28,16 +35,74 @@ interface SearchResponse {
   message?: string;
 }
 
+interface SuggestedUser {
+  id: string;
+  name: string | null;
+  image: string | null;
+  email: string;
+  profile: {
+    genres: string[];
+    instruments: string[];
+    availableForCollaboration: boolean;
+  } | null;
+  stats: {
+    followers: number;
+    posts: number;
+  };
+  followsYou: boolean;
+}
+
 export default function DiscoverPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState<'username' | 'email' | 'phone'>('username');
   const [isLoading, setIsLoading] = useState(false);
-  const [searchResults, setSearchResults] = useState<UserProfileCardProps[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  
+  // Suggested users
+  const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(true);
+  const [followingIds, setFollowingIds] = useState<Set<string>>(new Set());
+
+  // Fetch suggested users on mount
+  useEffect(() => {
+    async function fetchSuggestions() {
+      try {
+        const response = await fetch('/api/users/suggested');
+        if (response.ok) {
+          const data = await response.json();
+          setSuggestedUsers(data.suggestions);
+        }
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+      } finally {
+        setSuggestionsLoading(false);
+      }
+    }
+    fetchSuggestions();
+  }, []);
+
+  const handleFollowSuggested = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/community/users/${userId}/follow`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.isFollowing) {
+          setFollowingIds(prev => new Set([...prev, userId]));
+        }
+      }
+    } catch (error) {
+      console.error('Error following user:', error);
+    }
+  };
 
   // Debounce search query to avoid excessive API calls
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
@@ -388,7 +453,18 @@ export default function DiscoverPage() {
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {searchResults.map((user) => (
-                <UserProfileCard key={user.id} {...user} />
+                <UserProfileCard 
+                  key={user.id} 
+                  {...user} 
+                  isFollowing={user.isFollowing}
+                  onFollowChange={(userId, isFollowing, newCount) => {
+                    setSearchResults(prev => prev.map(u => 
+                      u.id === userId 
+                        ? { ...u, isFollowing, stats: { ...u.stats, followers: newCount } }
+                        : u
+                    ));
+                  }}
+                />
               ))}
             </div>
 
@@ -461,6 +537,186 @@ export default function DiscoverPage() {
               </div>
             )}
           </>
+        )}
+
+        {/* Suggested Users - Show when not searching */}
+        {!hasSearched && suggestedUsers.length > 0 && (
+          <div
+            style={{
+              marginBottom: '32px',
+              borderRadius: 'var(--radius)',
+              border: '1px solid var(--border)',
+              backgroundColor: 'var(--panel)',
+              padding: '32px',
+            }}
+          >
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2
+                  style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    color: 'var(--text)',
+                    marginBottom: '4px',
+                  }}
+                >
+                  Suggested for You
+                </h2>
+                <p style={{ color: 'var(--muted)', fontSize: '0.875rem' }}>
+                  Musicians you might want to connect with
+                </p>
+              </div>
+              <Link href="/network">
+                <button
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: 'var(--radius-sm)',
+                    backgroundColor: 'var(--bg)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text)',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  My Network
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </Link>
+            </div>
+
+            {suggestionsLoading ? (
+              <div className="flex justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {suggestedUsers.map((user) => (
+                  <div
+                    key={user.id}
+                    style={{
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid var(--border)',
+                      backgroundColor: 'var(--bg)',
+                      padding: '16px',
+                    }}
+                  >
+                    <Link href={`/community/users/${user.id}`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div
+                          style={{
+                            height: '48px',
+                            width: '48px',
+                            borderRadius: '50%',
+                            overflow: 'hidden',
+                            backgroundColor: 'var(--accent-dim)',
+                            flexShrink: 0,
+                          }}
+                        >
+                          {user.image ? (
+                            <img
+                              src={user.image}
+                              alt={user.name || 'User'}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center">
+                              <Users style={{ height: '20px', width: '20px', color: 'var(--accent)' }} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3
+                              style={{
+                                fontWeight: '600',
+                                color: 'var(--text)',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {user.name || 'Anonymous'}
+                            </h3>
+                            {user.followsYou && (
+                              <span
+                                style={{
+                                  fontSize: '0.65rem',
+                                  padding: '2px 6px',
+                                  borderRadius: '9999px',
+                                  backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                                  color: '#22c55e',
+                                  fontWeight: '500',
+                                  whiteSpace: 'nowrap',
+                                }}
+                              >
+                                Follows you
+                              </span>
+                            )}
+                          </div>
+                          <p style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+                            {user.stats.followers} followers
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                    
+                    {user.profile?.genres && user.profile.genres.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {user.profile.genres.slice(0, 2).map((genre) => (
+                          <span
+                            key={genre}
+                            style={{
+                              fontSize: '0.7rem',
+                              padding: '2px 8px',
+                              borderRadius: '9999px',
+                              backgroundColor: 'var(--panel)',
+                              color: 'var(--muted)',
+                            }}
+                          >
+                            {genre}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <button
+                      onClick={() => handleFollowSuggested(user.id)}
+                      disabled={followingIds.has(user.id)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 16px',
+                        borderRadius: 'var(--radius-sm)',
+                        fontWeight: '500',
+                        fontSize: '0.875rem',
+                        backgroundColor: followingIds.has(user.id) ? 'var(--bg)' : 'var(--accent)',
+                        color: 'var(--text)',
+                        border: followingIds.has(user.id) ? '1px solid var(--border)' : 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '6px',
+                      }}
+                    >
+                      {followingIds.has(user.id) ? (
+                        <>
+                          <UserCheck className="h-4 w-4" />
+                          Following
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="h-4 w-4" />
+                          Follow
+                        </>
+                      )}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         {/* Coming Soon Features - Only show when not searching */}

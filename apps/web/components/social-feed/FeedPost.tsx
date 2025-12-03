@@ -15,6 +15,9 @@ import {
   Flag,
   X,
   AlertTriangle,
+  UserPlus,
+  UserCheck,
+  Loader2,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
@@ -43,10 +46,34 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(localPost.content || '');
+  const [isFollowing, setIsFollowing] = useState(localPost.author.isFollowing || false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isOwnPost = session?.user?.id === localPost.userId;
   const isRepost = localPost.originalPostId !== null;
+
+  // Handle follow/unfollow
+  const handleFollowToggle = async () => {
+    if (isFollowLoading || isOwnPost) return;
+    
+    setIsFollowLoading(true);
+    try {
+      const response = await fetch(`/api/community/users/${localPost.author.id}/follow`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setIsFollowing(data.isFollowing);
+      }
+    } catch (error) {
+      console.error('Error toggling follow:', error);
+    } finally {
+      setIsFollowLoading(false);
+    }
+  };
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -260,7 +287,35 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
             )}
           </div>
           <div>
-            <h3 className="font-semibold text-white">{localPost.author.name || 'Anonymous'}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="font-semibold text-white">{localPost.author.name || 'Anonymous'}</h3>
+              {/* Follow Button - Only show for other users' posts */}
+              {!isOwnPost && (
+                <button
+                  onClick={handleFollowToggle}
+                  disabled={isFollowLoading}
+                  className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-all ${
+                    isFollowing
+                      ? 'bg-white/10 text-white/70 hover:bg-white/20'
+                      : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90'
+                  }`}
+                >
+                  {isFollowLoading ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : isFollowing ? (
+                    <>
+                      <UserCheck className="h-3 w-3" />
+                      Following
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="h-3 w-3" />
+                      Follow
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
             <p className="text-sm text-white/60">
               {format(new Date(localPost.createdAt), "MMM d, yyyy 'at' h:mm a")}
             </p>

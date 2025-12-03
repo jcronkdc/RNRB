@@ -87,13 +87,11 @@ function ReportCard({
   return (
     <button
       onClick={onSelect}
-      className={`group relative overflow-hidden rounded-2xl border p-5 text-left transition-all ${
+      className={`group relative overflow-hidden rounded-2xl border p-5 text-left transition-all hover:scale-[1.02] active:scale-[0.98] ${
         isSelected
           ? 'border-orange-500/50 bg-orange-500/10'
           : 'border-white/10 hover:border-white/20 hover:bg-white/5'
       }`}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
     >
       <div className="flex items-start justify-between">
         <div

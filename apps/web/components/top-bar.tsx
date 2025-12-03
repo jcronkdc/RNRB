@@ -19,6 +19,7 @@ import {
   ShoppingBag,
   Mail,
 } from '@/components/ui/custom-icons';
+import { ThemeToggle } from '@/components/theme';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
@@ -214,8 +215,11 @@ export function TopBar() {
           </motion.button>
         </div>
 
-        {/* Right Section - Credits, Notifications, Profile */}
+        {/* Right Section - Theme, Credits, Notifications, Profile */}
         <div className="flex items-center gap-2 lg:gap-3">
+          {/* Theme Toggle */}
+          <ThemeToggle size="sm" />
+
           {/* Credits Display - Enhanced, hidden on very small screens */}
           <motion.button
             whileHover={{ scale: 1.02 }}

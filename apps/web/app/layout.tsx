@@ -13,6 +13,7 @@ import { PostHogProvider } from '@/components/posthog';
 import { KeyboardShortcutsProvider } from '@/components/providers/keyboard-shortcuts-provider';
 import { TRPCReactProvider } from '@/components/providers/trpc-provider';
 import { SessionProvider } from '@/components/session-provider';
+import { ThemeProvider, themeScript } from '@/components/theme';
 import { ToastProvider } from '@/hooks/useToast';
 import {
   generateMetadata as generateSEOMetadata,
@@ -50,8 +51,8 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#000000' },
-    { media: '(prefers-color-scheme: light)', color: '#000000' },
+    { media: '(prefers-color-scheme: dark)', color: '#1c1915' },
+    { media: '(prefers-color-scheme: light)', color: '#faf8f5' },
   ],
 };
 
@@ -74,9 +75,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${dmSansDisplay.variable} ${jetbrainsMono.variable}`}
+      className={`${dmSans.variable} ${dmSansDisplay.variable} ${jetbrainsMono.variable} dark`}
+      suppressHydrationWarning
     >
       <head>
+        {/* Theme script - must run before React to prevent flash */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+
         {/* PERFORMANCE: DNS Prefetch for third-party origins */}
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
@@ -190,23 +195,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="font-sans antialiased">
         <ErrorBoundary>
           <SessionProvider session={session}>
-            <ErrorMonitoringProvider>
-              <TRPCReactProvider>
-                <PostHogProvider>
-                  <AblyProvider>
-                    <KeyboardShortcutsProvider>
-                      <ToastProvider>
-                        <OfflineIndicator />
-                        <PWAUpdatePrompt />
-                        <NavBar />
-                        {children}
-                        <InstallAppBanner />
-                      </ToastProvider>
-                    </KeyboardShortcutsProvider>
-                  </AblyProvider>
-                </PostHogProvider>
-              </TRPCReactProvider>
-            </ErrorMonitoringProvider>
+            <ThemeProvider defaultTheme="system">
+              <ErrorMonitoringProvider>
+                <TRPCReactProvider>
+                  <PostHogProvider>
+                    <AblyProvider>
+                      <KeyboardShortcutsProvider>
+                        <ToastProvider>
+                          <OfflineIndicator />
+                          <PWAUpdatePrompt />
+                          <NavBar />
+                          {children}
+                          <InstallAppBanner />
+                        </ToastProvider>
+                      </KeyboardShortcutsProvider>
+                    </AblyProvider>
+                  </PostHogProvider>
+                </TRPCReactProvider>
+              </ErrorMonitoringProvider>
+            </ThemeProvider>
           </SessionProvider>
         </ErrorBoundary>
       </body>

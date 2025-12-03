@@ -1,6 +1,7 @@
 import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { auth } from '@/auth';
 import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getClientIp } from '@/lib/security';
 
@@ -128,6 +129,10 @@ export async function GET(request: NextRequest) {
     // Get total count for pagination
     const total = await prisma.user.count({ where: whereCondition });
 
+    // Check if user is logged in (optional - for isFollowing status)
+    const session = await auth();
+    const currentUserId = session?.user?.id;
+
     // Fetch users with relevant data
     const users = await prisma.user.findMany({
       where: whereCondition,
@@ -159,6 +164,20 @@ export async function GET(request: NextRequest) {
       orderBy: [{ createdAt: 'desc' }],
     });
 
+    // Get follow status for current user if logged in
+    let followingSet = new Set<string>();
+    if (currentUserId && users.length > 0) {
+      const userIds = users.map(u => u.id);
+      const following = await prisma.userFollow.findMany({
+        where: {
+          followerId: currentUserId,
+          followingId: { in: userIds },
+        },
+        select: { followingId: true },
+      });
+      followingSet = new Set(following.map(f => f.followingId));
+    }
+
     // Transform data for response
     const results = users.map((user) => ({
       id: user.id,
@@ -172,6 +191,7 @@ export async function GET(request: NextRequest) {
         following: user._count.following,
         tracks: user._count.communityTracks,
       },
+      isFollowing: followingSet.has(user.id),
     }));
 
     const response = {

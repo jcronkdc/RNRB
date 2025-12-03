@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { ThemeLogo, ThemeToggle } from './theme';
 import { UserMenu } from './UserMenu';
 
 // ============================================================================
@@ -929,17 +929,8 @@ export function NavBar() {
       }`}
     >
       <nav className="container flex h-16 items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="group flex items-center gap-3">
-          <Image
-            src="/logo-dark.png"
-            alt="Rock N' Roll Basement"
-            className="nav-logo h-10 w-auto transition-all duration-300 group-hover:brightness-110"
-            width={120}
-            height={40}
-            priority
-          />
-        </Link>
+        {/* Logo - Theme Aware */}
+        <ThemeLogo size="md" priority className="nav-logo" />
 
         {/* Desktop Navigation */}
         <div className="hidden items-center gap-1 md:flex">
@@ -972,6 +963,9 @@ export function NavBar() {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
+          {/* Theme Toggle */}
+          <ThemeToggle size="sm" />
+
           <UserMenu />
 
           {/* Mobile Menu Toggle */}
