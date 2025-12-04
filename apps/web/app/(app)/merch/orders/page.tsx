@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { EmptyState } from '@/components/empty-states';
 import { formatPrice } from '@/lib/merch/cart-context';
 
 interface OrderItem {
@@ -333,28 +335,13 @@ export default function OrderHistoryPage() {
             <p className="text-red-400">{error}</p>
           </div>
         ) : orders.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="py-16 text-center"
-          >
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-white/5">
-              <ShoppingBag className="h-10 w-10 text-white/30" />
-            </div>
-            <h2 className="mb-2 text-xl font-semibold text-white">No orders yet</h2>
-            <p className="mb-6 text-white/50">
-              Your order history will appear here after you make a purchase
-            </p>
-            <Link href="/merch">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white"
-              >
-                Browse Merch
-              </motion.button>
-            </Link>
-          </motion.div>
+          <EmptyState
+            type="analytics"
+            title="No orders yet"
+            description="Your order history will appear here after you make a purchase"
+            actionLabel="Browse Merch"
+            actionHref="/merch"
+          />
         ) : (
           <div className="space-y-4">
             {orders.map((order, index) => (

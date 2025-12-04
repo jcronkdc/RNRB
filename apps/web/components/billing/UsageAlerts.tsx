@@ -73,14 +73,18 @@ export function UsageAlerts() {
 
   useEffect(() => {
     // Load dismissed alerts from localStorage
-    const stored = localStorage.getItem('dismissedUsageAlerts');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      // Only restore dismissals from today
-      const today = new Date().toDateString();
-      if (parsed.date === today) {
-        setDismissedAlerts(new Set(parsed.alerts));
+    try {
+      const stored = localStorage.getItem('dismissedUsageAlerts');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Only restore dismissals from today
+        const today = new Date().toDateString();
+        if (parsed.date === today && Array.isArray(parsed.alerts)) {
+          setDismissedAlerts(new Set(parsed.alerts));
+        }
       }
+    } catch (e) {
+      console.warn('Failed to load dismissed alerts:', e);
     }
 
     // Fetch usage data

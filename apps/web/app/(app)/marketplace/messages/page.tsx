@@ -19,6 +19,9 @@ import { useSession } from 'next-auth/react';
 import { trpc as api } from '@cronkwaters/trpc/client/react';
 import { Suspense } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { InboxSkeleton } from '@/components/loading-skeletons';
+
 function formatTime(date: Date | string): string {
   const d = new Date(date);
   const now = new Date();
@@ -216,10 +219,10 @@ function MessagesContent() {
   if (sessionStatus === 'loading') {
     return (
       <div
-        className="flex min-h-screen items-center justify-center"
+        className="min-h-screen p-6"
         style={{ background: 'linear-gradient(135deg, #0f0f1a 0%, #1a1025 50%, #0d1520 100%)' }}
       >
-        <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
+        <InboxSkeleton count={6} />
       </div>
     );
   }
@@ -296,13 +299,14 @@ function MessagesContent() {
               </h2>
 
               {loadingConversations ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
-                </div>
+                <UserListSkeleton count={4} />
               ) : conversations?.length === 0 ? (
-                <div className="py-8 text-center">
-                  <MessageSquare className="mx-auto mb-3 h-10 w-10 text-white/20" />
-                  <p className="text-sm text-white/50">No messages yet</p>
+                <div className="px-2 py-8">
+                  <EmptyState
+                    type="messages"
+                    title="No messages yet"
+                    description="Conversations with buyers/sellers will appear here"
+                  />
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -366,14 +370,14 @@ function MessagesContent() {
                 {/* Messages */}
                 <div className="flex-1 space-y-4 overflow-y-auto p-4">
                   {loadingMessages ? (
-                    <div className="flex h-full items-center justify-center">
-                      <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
-                    </div>
+                    <InboxSkeleton count={5} />
                   ) : messages?.length === 0 ? (
-                    <div className="flex h-full flex-col items-center justify-center text-center">
-                      <MessageSquare className="mb-3 h-12 w-12 text-white/20" />
-                      <p className="text-white/50">No messages yet</p>
-                      <p className="text-sm text-white/30">Start the conversation</p>
+                    <div className="flex h-full items-center justify-center">
+                      <EmptyState
+                        type="messages"
+                        title="No messages yet"
+                        description="Start the conversation"
+                      />
                     </div>
                   ) : (
                     <>
@@ -438,10 +442,10 @@ export default function MessagesPage() {
     <Suspense
       fallback={
         <div
-          className="flex min-h-screen items-center justify-center"
+          className="min-h-screen p-6"
           style={{ background: 'linear-gradient(135deg, #0f0f1a 0%, #1a1025 50%, #0d1520 100%)' }}
         >
-          <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
+          <InboxSkeleton count={6} />
         </div>
       }
     >

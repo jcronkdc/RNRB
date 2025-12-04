@@ -29,7 +29,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/share?error=session_expired', req.url));
     }
 
-    const oauthData = JSON.parse(oauthCookie.value);
+    let oauthData;
+    try {
+      oauthData = JSON.parse(oauthCookie.value);
+    } catch {
+      return NextResponse.redirect(new URL('/share?error=invalid_session', req.url));
+    }
 
     if (state !== oauthData.state) {
       return NextResponse.redirect(new URL('/share?error=invalid_state', req.url));

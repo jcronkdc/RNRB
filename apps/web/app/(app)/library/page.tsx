@@ -8,9 +8,6 @@ import {
   List,
   Search,
   FileAudio,
-  Disc,
-  Mic2,
-  Radio,
   Loader2,
   Folder,
   Download,
@@ -25,7 +22,6 @@ import {
   FileMusic,
   ScrollText,
   Piano,
-  FolderOpen,
   File,
   Eye,
   Heart,
@@ -50,14 +46,19 @@ import {
   HardDrive,
   Music2,
   FileType,
-  Calendar,
   Hash,
   ArrowRight,
   Share2,
   Archive,
-  Users,
   FileArchive,
   Send,
+  // Custom musician icons
+  VinylRecord,
+  VintageCondenserMic,
+  BroadcastTower,
+  SessionFolder,
+  TourCalendar,
+  BandMembers,
   Layers,
   Link2,
   Check as CheckIcon,
@@ -88,6 +89,7 @@ import {
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { EmptyState } from '@/components/workshop';
 import { microCopy } from '@/lib/workshop-voice';
+import { LibrarySkeleton } from '@/components/loading-skeletons';
 
 // File type configuration
 const FILE_TYPE_CONFIG: Record<
@@ -609,16 +611,8 @@ export default function LibraryPage() {
 
   if (authLoading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            Opening your creative vault...
-          </p>
-        </div>
+      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+        <LibrarySkeleton count={8} />
       </div>
     );
   }
@@ -1390,14 +1384,7 @@ export default function LibraryPage() {
             {activeTab === 'shared-with-me' ? (
               <SharedFilesView />
             ) : isLoading && files.length === 0 ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="flex flex-col items-center gap-3">
-                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                    Loading your files...
-                  </p>
-                </div>
-              </div>
+              <LibrarySkeleton count={6} />
             ) : files.length === 0 ? (
               searchQuery || filterType !== 'all' || showFavorites ? (
                 <EmptyState

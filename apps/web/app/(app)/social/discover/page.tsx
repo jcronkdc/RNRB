@@ -21,6 +21,7 @@ import { useState, useEffect } from 'react';
 
 import { UserProfileCard, type UserProfileCardProps } from '@/components/user-profile-card';
 import { useDebounce } from '@/hooks/use-debounce';
+import { UsersSkeleton } from '@/components/loading-skeletons';
 
 interface SearchUser extends UserProfileCardProps {
   isFollowing?: boolean;
@@ -590,9 +591,7 @@ export default function DiscoverPage() {
             </div>
 
             {suggestionsLoading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-              </div>
+              <UsersSkeleton count={6} />
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {suggestedUsers.map((user) => (

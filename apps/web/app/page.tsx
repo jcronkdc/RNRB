@@ -1407,12 +1407,11 @@ export default function HomePage() {
               </p>
               <div className="overflow-x-auto">
                 <div
-                  className="rounded-3xl border-2 p-6 shadow-2xl md:p-8"
+                  className="comparison-table-container rounded-3xl border-2 p-6 shadow-2xl md:p-8"
                   style={{
-                    background:
-                      'linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)',
+                    background: 'var(--panel)',
                     borderColor: 'var(--accent)',
-                    boxShadow: '0 0 80px rgba(255, 99, 71, 0.25)',
+                    boxShadow: '0 0 80px rgba(255, 99, 71, 0.15)',
                   }}
                 >
                   <table className="w-full" style={{ minWidth: '1300px' }}>
@@ -2176,7 +2175,7 @@ export default function HomePage() {
                       ].map((row, i) => (
                         <tr
                           key={i}
-                          className="border-b transition-all hover:bg-white/5"
+                          className="comparison-table-row border-b transition-all"
                           style={{ borderColor: 'var(--border-subtle)' }}
                         >
                           <td className="py-3 text-sm font-medium" style={{ color: 'var(--text)' }}>
@@ -2237,8 +2236,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2270,8 +2269,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2303,8 +2302,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2336,8 +2335,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2369,8 +2368,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2402,8 +2401,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2435,8 +2434,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2468,8 +2467,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>
@@ -2501,8 +2500,8 @@ export default function HomePage() {
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="2"
-                                className="inline-block opacity-20"
-                                style={{ color: 'var(--muted)' }}
+                                className="comparison-x-mark inline-block"
+                                style={{ color: 'var(--muted-soft)' }}
                               >
                                 <path d="M18 6L6 18M6 6l12 12" />
                               </svg>

@@ -5,10 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Music2,
-  Drum,
   Clock,
   Target,
-  Mic,
   Scroll,
   Package,
   FileText,
@@ -18,6 +16,13 @@ import {
   ClipboardList,
   LayoutGrid,
   List,
+  // Custom musician icons
+  DrumKit,
+  VintageCondenserMic,
+  Metronome,
+  StageLights,
+  EffectsPedal,
+  TapeReel,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
@@ -60,7 +65,7 @@ const TOOLS: Tool[] = [
     id: 'click-track',
     name: 'Click Track Generator',
     description: 'Create tempo tracks for practice & recording',
-    icon: Drum,
+    icon: Metronome,
     category: 'practice',
     status: 'ready',
     gradient: 'from-orange-500 to-red-600',
@@ -87,7 +92,7 @@ const TOOLS: Tool[] = [
     id: 'performer-mode',
     name: 'Performer Mode',
     description: 'Teleprompter & lyrics display for live shows',
-    icon: Mic,
+    icon: StageLights,
     category: 'performance',
     status: 'ready',
     gradient: 'from-pink-500 to-rose-600',
@@ -150,7 +155,7 @@ const TOOLS: Tool[] = [
     id: 'session-notes',
     name: 'Recording Session Notes',
     description: 'Track gear settings, mics & signal chains',
-    icon: ClipboardList,
+    icon: VintageCondenserMic,
     category: 'recording',
     status: 'ready',
     gradient: 'from-teal-500 to-emerald-600',
@@ -159,7 +164,7 @@ const TOOLS: Tool[] = [
     id: 'stem-separator',
     name: 'AI Stem Separator',
     description: 'Split any song into vocals, drums, bass & more',
-    icon: Music2,
+    icon: TapeReel,
     category: 'recording',
     status: 'ready',
     gradient: 'from-rose-500 to-pink-600',

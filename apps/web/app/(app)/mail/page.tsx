@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { InboxSkeleton, LibrarySkeleton, SettingsSkeleton } from '@/components/loading-skeletons';
 import {
   Mail,
   Inbox,
@@ -1006,9 +1007,7 @@ export default function WebmailPage() {
             }}
           >
             {loadingMessages ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
-              </div>
+              <InboxSkeleton count={8} />
             ) : messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <Inbox className="mb-4 h-12 w-12 text-orange-400/30" />
@@ -1090,8 +1089,8 @@ export default function WebmailPage() {
           {/* Message Detail - Premium View */}
           <div className="flex-1 overflow-y-auto" style={{ background: 'var(--bg)' }}>
             {loadingMessage ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
+              <div className="p-6">
+                <SettingsSkeleton />
               </div>
             ) : selectedMessage ? (
               <div className="p-6">
@@ -1789,9 +1788,7 @@ export default function WebmailPage() {
               {/* File List */}
               <div className="flex-1 overflow-y-auto p-4">
                 {libraryLoading ? (
-                  <div className="flex items-center justify-center py-12">
-                    <Loader2 className="h-8 w-8 animate-spin text-emerald-400" />
-                  </div>
+                  <LibrarySkeleton count={4} />
                 ) : libraryFiles.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <FolderOpen className="mb-3 h-12 w-12 text-white/20" />

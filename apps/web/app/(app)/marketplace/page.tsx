@@ -39,6 +39,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+
 const CATEGORIES = [
   { id: 'mixing', name: 'Mixing', icon: Sliders, color: '#f97316' },
   { id: 'mastering', name: 'Mastering', icon: Volume2, color: '#8b5cf6' },
@@ -220,20 +222,18 @@ export default function MarketplacePage() {
             ))}
           </div>
         ) : filteredProviders.length === 0 ? (
-          <Card className="py-16 text-center">
-            <Users className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-            <h3 className="mb-2 text-xl font-semibold text-foreground">No providers yet</h3>
-            <p className="mb-6 text-muted-foreground">
-              {selectedCategory
-                ? 'No providers found in this category.'
-                : 'Be the first to offer your services!'}
-            </p>
-            <Link href="/marketplace/become-provider">
-              <Button className="bg-brand-primary hover:bg-brand-primary/90">
-                Become a Provider
-              </Button>
-            </Link>
-          </Card>
+          <EmptyState
+            type={selectedCategory ? 'search' : 'marketplace'}
+            title={selectedCategory ? 'No providers in this category' : 'No providers yet'}
+            description={
+              selectedCategory
+                ? 'Try selecting a different category or become a provider'
+                : 'Be the first to offer your services!'
+            }
+            actionLabel={selectedCategory ? 'Clear Filter' : 'Become a Provider'}
+            actionHref={selectedCategory ? undefined : '/marketplace/become-provider'}
+            onAction={selectedCategory ? () => setSelectedCategory(null) : undefined}
+          />
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredProviders.map((provider, index) => (

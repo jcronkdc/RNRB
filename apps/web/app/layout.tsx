@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { DM_Sans, JetBrains_Mono } from 'next/font/google';
+import { DM_Sans, JetBrains_Mono, Heebo, Oswald } from 'next/font/google';
 
 import { auth } from '@/auth';
 import { AblyProvider } from '@/components/ably/ably-provider';
@@ -23,10 +23,26 @@ import {
 } from '@/lib/seo';
 import './globals.css';
 
-// Typography - Custom, distinctive, not generic
+// Typography - NextRecord inspired (Heebo for body, Oswald for headings)
+// Keep DM Sans as fallback/dark mode font
 const dmSans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
+  display: 'swap',
+});
+
+// Heebo - Clean, modern body font from NextRecord theme
+const heebo = Heebo({
+  subsets: ['latin'],
+  variable: '--font-heebo',
+  display: 'swap',
+});
+
+// Oswald - Bold, impactful heading font from NextRecord theme
+const oswald = Oswald({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-oswald',
   display: 'swap',
 });
 
@@ -52,7 +68,7 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: dark)', color: '#1c1915' },
-    { media: '(prefers-color-scheme: light)', color: '#faf8f5' },
+    { media: '(prefers-color-scheme: light)', color: '#FFFFFF' },
   ],
 };
 
@@ -75,7 +91,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${dmSansDisplay.variable} ${jetbrainsMono.variable} dark`}
+      className={`${dmSans.variable} ${heebo.variable} ${oswald.variable} ${dmSansDisplay.variable} ${jetbrainsMono.variable} dark`}
       suppressHydrationWarning
     >
       <head>

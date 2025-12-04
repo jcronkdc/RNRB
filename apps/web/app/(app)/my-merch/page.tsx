@@ -22,6 +22,8 @@ import {
   ArrowRight,
 } from '@/components/ui/custom-icons';
 
+import { EmptyState } from '@/components/empty-states';
+
 interface Product {
   id: string;
   name: string;
@@ -304,26 +306,13 @@ export default function MyMerchPage() {
               <p className="text-red-400">{error}</p>
             </div>
           ) : filteredProducts.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center"
-            >
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-500/20">
-                <ShoppingBag className="h-8 w-8 text-orange-400" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-white">No products yet</h3>
-              <p className="mb-6 text-white/60">
-                Create your first product to start selling merchandise
-              </p>
-              <Link
-                href="/my-merch/create"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white"
-              >
-                <Plus className="h-5 w-5" />
-                Create Your First Product
-              </Link>
-            </motion.div>
+            <EmptyState
+              type="marketplace"
+              title="No products yet"
+              description="Create your first product to start selling merchandise"
+              actionLabel="Create Your First Product"
+              actionHref="/my-merch/create"
+            />
           ) : (
             <motion.div
               initial={{ opacity: 0 }}

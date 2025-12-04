@@ -1,238 +1,252 @@
-# 🎸 Rock N' Roll Basement (RNRB) - Agent Handoff
+# 🎸 CronkWaters / Rock N' Roll Basement - Session Handoff
 
-**Date:** December 3, 2025  
-**Project:** CronkWaters / Rock N' Roll Basement  
-**Status:** All systems operational, major features deployed
+**Date:** December 4, 2025  
+**Session Focus:** Sidebar enhancements, Global Search, Theme Switcher, Pinned Items
 
 ---
 
-## 🚀 What Was Just Completed
+## ✅ Completed Features This Session
 
-### 1. AI Workspace Builder Enhancement
+### 1. Dynamic Sidebar Navigation
+
+**Files Modified:** `apps/web/components/sidebar-nav.tsx`
+
+- **Projects Quick Access** - Expandable list under Projects nav item showing user's projects with visibility icons (🔒 private, 🌐 public)
+- **Songs Quick Access** - Recent songs with status indicators (✅ completed, ✏️ in progress, 💡 idea, ⭐ favorite)
+- **Messages Quick Access** - Recent conversations with avatars, unread badges, and message previews
+- **Library Quick Access** - Recent files with type icons (🎵 audio, 🖼️ image, 🎹 MIDI)
+- **Shows Quick Access** - Upcoming gigs with smart date labels (Today, Tomorrow, This week)
+- **Collapsible Sections** - State persisted to localStorage
+- **Sidebar Toggle** - Cmd+B to collapse/expand, state persisted
+
+### 2. Notification Badge
+
+**Files Modified:** `apps/web/components/sidebar-nav.tsx`
+
+- Unread count badge on Notifications nav item
+- Real-time polling (30 second intervals)
+- Event listener for explicit refreshes
+
+### 3. Global Search (Cmd+K)
+
+**Files Created/Modified:**
+
+- `apps/web/app/api/search/global/route.ts` (NEW)
+- `apps/web/hooks/use-command-palette.ts`
+- `apps/web/components/command-palette.tsx`
+
+**Search Categories:**
+
+- 📁 Projects (by name, description)
+- 🎵 Songs (by title, lyrics)
+- 👥 People/Users (by name, instruments, genres)
+- 💬 Messages (conversation content)
+- 📂 Files (by name, tags)
+- 🎸 Shows (by venue, city)
+
+**Features:**
+
+- 300ms debounced search
+- Loading spinner during search
+- Result count banner
+- Rich previews with avatars/images
+- Category grouping (content first, then navigation)
+- Keyboard navigation (↑↓ Enter Esc)
+
+### 4. Theme Quick Switcher
 
 **Files Modified:**
 
-- `apps/web/app/api/assistant/workspace-builder/route.ts` - Enhanced AI with smart action routing
-- `apps/web/components/workspace/ai-workspace-chat.tsx` - Frontend integration
-- `apps/web/components/workspace/workspace-context.tsx` - Added banner settings
-- `apps/web/components/workspace/customizable-dashboard.tsx` - Conditional banner rendering
+- `apps/web/components/sidebar-nav.tsx` (ThemeQuickSwitcher component)
+- `apps/web/hooks/use-command-palette.ts`
 
-**New Capabilities:**
+**Features:**
 
-- Rename workspaces via natural language ("Rename this to Songwriting")
-- Add/remove specific tools from workspaces
-- Configure promotional banners (merch, email) per workspace
-- Smart action detection (create, modify, suggest, cleanup)
+- Theme picker at bottom of sidebar
+- Visual preview circles with actual theme colors
+- Light / Dark / System options
+- Keyboard shortcut: `Cmd+Shift+T` to toggle
+- Command palette actions: "Toggle Theme", "Theme Settings"
 
-### 2. MCP Server Expansion (9 → 43 Tools)
+### 5. Pinned Items (NEW)
 
-**Deployed to:** `https://rnrb-mcp-server.justincronk.workers.dev`
+**Files Modified:**
 
-**Files:**
+- `apps/web/components/sidebar-nav.tsx` (PinnedItem interface, pinned section)
+- `apps/web/hooks/use-command-palette.ts` (pinned item actions)
 
-- `apps/mcp-server/src/tools.ts` - Tool definitions with Zod schemas
-- `apps/mcp-server/src/handlers.ts` - Tool handlers
-- `apps/mcp-server/src/index.ts` - Hono server with routing
+**Features:**
 
-**Tool Categories:**
-| Category | Count | Tools |
-|----------|-------|-------|
-| Support & Feedback | 9 | create_support_ticket, view_my_tickets, troubleshoot_issue, etc. |
-| Workspace Management | 6 | create_workspace, update_workspace, configure_workspace_banners, etc. |
-| Songwriting & Creative | 8 | create_song, generate_lyric_ideas, find_rhymes, get_chord_progressions, etc. |
-| Collaboration | 5 | find_collaborators, send_collab_request, schedule_meeting, etc. |
-| Tour & Performance | 6 | create_show, create_setlist, create_tour, find_venues, etc. |
-| Business & Monetization | 5 | get_revenue_stats, list_opportunities, create_merch_product, etc. |
-| Account & Settings | 4 | get_profile, update_profile, get_usage_stats, get_notifications |
+- **Pinned Section** at top of sidebar showing user's pinned items
+- **Pinnable Items:** Projects, Songs, Library Files, Conversations
+- **Type-aware Icons:** Each pin type has distinct colors (purple=projects, orange=songs, green=files, blue=conversations)
+- **Hover Pin Button:** Appears on items when hovering to quickly pin
+- **Unpin via X Button:** Appears on hover in the pinned section
+- **Pin Indicators:** Small pin icon shows when item is already pinned
+- **localStorage Persistence:** Pinned items stored in `sidebar-pinned-items`
+- **Collapsible Section:** Toggle with expand/collapse, state persisted
+- **Command Palette Integration:**
+  - "View Pinned Items" - Expands sidebar pinned section
+  - "Clear All Pinned Items" - Removes all pins
+  - "Toggle Pinned Section" - Show/hide pinned section
+- **Toast Notifications:** Confirms pin/unpin actions
 
----
+**Data Structure:**
 
-## 📁 Project Structure
-
-```
-CronkWaters/
-├── apps/
-│   ├── web/                    # Next.js 15 main web app
-│   │   ├── app/               # App router pages
-│   │   │   ├── (app)/         # Protected routes (dashboard, features)
-│   │   │   ├── (auth)/        # Auth routes (sign-in, sign-up)
-│   │   │   ├── (marketing)/   # Public pages
-│   │   │   └── api/           # API routes
-│   │   ├── components/        # React components
-│   │   │   ├── workspace/     # Dashboard & workspace system
-│   │   │   ├── ai-assistant/  # AI chat components
-│   │   │   └── ui/            # Shared UI components
-│   │   └── lib/               # Utilities, auth, database
-│   └── mcp-server/            # Cloudflare Workers MCP server
-├── packages/
-│   ├── ui/                    # Shared UI package
-│   ├── database/              # Prisma schema & client
-│   └── config-*/              # Shared configs
-└── turbo.json                 # Turborepo config
+```typescript
+interface PinnedItem {
+  id: string;
+  type: 'project' | 'song' | 'file' | 'conversation';
+  name: string;
+  url: string;
+  meta?: {
+    projectName?: string; // For songs in projects
+    status?: string; // Song status
+    fileType?: string; // audio/image/midi
+    avatar?: string; // Conversation avatar
+  };
+  pinnedAt: number; // Timestamp for ordering
+}
 ```
 
----
+### 6. Focus Mode (NEW)
 
-## 🔑 Critical Rules (MUST FOLLOW)
+**Files Created:**
 
-### 1. Logo Usage [[memory:11700420]]
+- `apps/web/hooks/use-focus-mode.ts` (FocusModeProvider, useFocusMode hook)
+- `apps/web/components/focus-mode-overlay.tsx` (Entry hint, exit button)
 
-- **Dark backgrounds:** Use `/logo-dark.png` (WHITE logo)
-- **Light backgrounds:** Use `/logo-light.png` (DARK logo)
-- Every feature page needs the white RR logo at top, centered, linking to "/"
+**Files Modified:**
 
-### 2. No Emojis in UI
+- `apps/web/components/app-layout.tsx` (FocusModeProvider integration, conditional UI hiding)
+- `apps/web/hooks/use-command-palette.ts` (Focus mode actions)
 
-- All icons must be custom SVGs or from icon library
-- Never use emoji characters in the application UI
+**Features:**
 
-### 3. Tech Stack
+- **Distraction-Free Mode:** Hides sidebar, topbar, breadcrumbs, AI assistant
+- **Full-Screen Content:** Content expands to fill entire viewport
+- **Keyboard Toggle:** `Cmd+Shift+F` to enter, `Esc` to exit
+- **Entry Notification:** Shows brief hint with exit instructions when entering
+- **Hover Exit Button:** Appears at top of screen when mouse moves to top edge
+- **Corner Click Zones:** Click top corners to exit focus mode
+- **Command Palette Integration:**
+  - "Enter Focus Mode" - Activates distraction-free mode
+  - "Exit Focus Mode" - Returns to normal view
+- **localStorage Persistence:** Tracks focus mode preference
 
-- **Framework:** Next.js 15 (App Router)
-- **Database:** PostgreSQL via Prisma (Supabase)
-- **Auth:** Better Auth
-- **Styling:** Tailwind CSS
-- **Deployment:** Vercel (web), Cloudflare Workers (MCP)
-- **AI:** Claude Sonnet 4 (workspace builder)
+**What Gets Hidden:**
 
----
+- Sidebar navigation
+- Top bar header
+- Breadcrumbs
+- Transport bar
+- AI Assistant widget
 
-## 🌐 Deployed Endpoints
+**What Stays Visible:**
 
-| Service    | URL                                             |
-| ---------- | ----------------------------------------------- |
-| Main App   | https://cronkwaters.com                         |
-| MCP Server | https://rnrb-mcp-server.justincronk.workers.dev |
-| GitHub     | https://github.com/jcronkdc/RNRB                |
-
-### MCP Server Test Commands
-
-```bash
-# Health check
-curl https://rnrb-mcp-server.justincronk.workers.dev/health
-
-# List all 43 tools
-curl https://rnrb-mcp-server.justincronk.workers.dev/tools
-
-# Tool call (requires auth)
-curl -X POST https://rnrb-mcp-server.justincronk.workers.dev/tools/call \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"name": "check_system_status", "arguments": {}}'
-```
+- Page content (expanded)
+- Command Palette (Cmd+K still works)
+- Usage alerts (important)
+- Version checker
 
 ---
 
-## ⚠️ Known Issues / In Progress
+## 📁 Key Files Reference
 
-### 1. Local API Issues
-
-- The local development environment has some workspace API issues (500 errors)
-- Production (Vercel) should work correctly
-- Test new features on https://cronkwaters.com/dashboard
-
-### 2. MCP Server Secrets
-
-The MCP server needs these Cloudflare secrets configured:
-
-```bash
-wrangler secret put RNRB_API_URL  # https://cronkwaters.com
-wrangler secret put RNRB_API_KEY  # Internal API key
-```
-
-### 3. API Routes Needed
-
-The MCP tools call these API endpoints that may need implementation:
-
-- `/api/songs` - CRUD for songs
-- `/api/shows` - CRUD for shows/gigs
-- `/api/tours` - Tour management
-- `/api/collaboration` - Collaboration requests
-- `/api/discover/users` - Find collaborators
-- `/api/revenue/stats` - Revenue analytics
-- `/api/ecosystem/opportunities` - Gig/sync opportunities
+| File                                           | Purpose                                             |
+| ---------------------------------------------- | --------------------------------------------------- |
+| `apps/web/components/sidebar-nav.tsx`          | Main sidebar with all dynamic lists, theme switcher |
+| `apps/web/components/app-layout.tsx`           | Main app layout wrapper                             |
+| `apps/web/app/api/search/global/route.ts`      | Global search API endpoint                          |
+| `apps/web/hooks/use-command-palette.ts`        | Command palette hook with search integration        |
+| `apps/web/components/command-palette.tsx`      | Command palette UI component                        |
+| `apps/web/components/theme/theme-provider.tsx` | Theme context provider                              |
+| `apps/web/app/(app)/settings/display/page.tsx` | Full theme settings page                            |
 
 ---
 
-## 🧪 Testing the AI Workspace Builder
+## 🔧 Technical Notes
 
-1. Go to https://cronkwaters.com/dashboard
-2. Open the AI Workspace Builder (chat icon)
-3. Try these commands:
-   - "Create a Songwriting workspace with lyrics and collaboration tools"
-   - "Rename this tab to Songwriting"
-   - "Remove the merch and email banners"
-   - "Add collaboration tools to this workspace"
+### Theme System
 
----
+- Themes: `light`, `dark`, `system`
+- Storage key: `rnrb-theme` in localStorage
+- CSS variables defined in `apps/web/app/globals.css`
+- Theme provider at `apps/web/components/theme/theme-provider.tsx`
 
-## 📋 Potential Next Tasks
+### Sidebar State
 
-1. **Implement missing API endpoints** for MCP tools (songs, shows, tours, etc.)
-2. **Claude Desktop integration** - Test MCP server with Claude Desktop app
-3. **AI Assistant refinement** - Improve workspace builder responses
-4. **Feature pages** - Build out Songwriting, Collaboration, Tour features
-5. **Real-time collaboration** - WebSocket/Liveblocks for shared editing
+- Collapsed state: `sidebar-collapsed` in localStorage
+- Expanded sections: `sidebar-expanded-sections` in localStorage
+- Pinned items: `sidebar-pinned-items` in localStorage (JSON array)
+- Pinned expanded: `sidebar-pinned-expanded` in localStorage
+- Event: `sidebar-toggle` for programmatic toggling
+- Event: `theme-change` for theme updates
+- Event: `pinned-items-changed` for pin updates from command palette
 
----
+### API Endpoints Used
 
-## 🛠️ Development Commands
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run development server
-pnpm dev
-
-# Build all packages
-pnpm build
-
-# Deploy MCP server
-cd apps/mcp-server && npx wrangler deploy
-
-# Type check
-pnpm tsc --noEmit
-
-# Lint
-pnpm lint
-```
+- `/api/projects` - User's projects
+- `/api/songs/all` - All songs (standalone + project)
+- `/api/messages/conversations` - Recent conversations
+- `/api/notifications/unread-count` - Notification badge count
+- `/api/library` - Library files
+- `/api/shows` - Upcoming shows
+- `/api/search/global` - Global search (NEW)
 
 ---
 
-## 📊 Recent Git Commits
+## 🎯 Suggested Next Features
 
-```
-62cced6d - 🚀 Full Platform Upgrade: AI Workspace Builder + 43 MCP Tools
-1fcd4dac - (previous state)
-```
+### Quick Wins
 
----
+- [x] Pinned Items - Pin favorites to top of sidebar ✅
+- [x] Focus Mode - Distraction-free writing mode ✅
 
-## 💡 Architecture Notes
+### Medium Effort
 
-### Workspace System
+- [ ] Dashboard Widgets - Customizable stats cards
+- [ ] PWA Support - Install as desktop app
 
-- Workspaces are tabs on the dashboard
-- Each workspace has: name, icon, tools[], settings
-- Settings include: showMerchBanner, showEmailBanner
-- Stored in WorkspaceContext (React context)
+### Bigger Features
 
-### AI Workspace Builder Flow
-
-1. User sends message → `ai-workspace-chat.tsx`
-2. POST to `/api/assistant/workspace-builder`
-3. AI analyzes intent, returns action JSON
-4. Frontend executes action via WorkspaceContext methods
-
-### MCP Server Architecture
-
-- Hono framework on Cloudflare Workers
-- SSE endpoint for streaming (`/sse`)
-- JSON-RPC endpoint (`/mcp`)
-- REST endpoint (`/tools/call`)
-- All handlers call main RNRB API with user's auth token
+- [ ] Mini Player - Reference track player in sidebar (Note: MIDI requires Tone.js integration)
+- [ ] Keyboard Navigation - Full keyboard control of app
 
 ---
 
-**End of Handoff - Good luck! 🎸**
+## 🚨 Important Rules (from user preferences)
+
+1. **No emojis in UI** - All icons must be custom, emojis never allowed unless custom version
+2. **White RR logo on feature pages** - Use `/logo-dark.png` for dark backgrounds (white logo)
+3. **Token monitoring** - User requested token count at start/end of responses
+4. **Clean builds** - No shortcuts, do it right the first time
+5. **Human Test** - Ensure logical flow like mycelial network/Tokyo subway
+
+---
+
+## 🔑 Keyboard Shortcuts Added
+
+| Shortcut      | Action                                  |
+| ------------- | --------------------------------------- |
+| `Cmd+K`       | Open Global Search / Command Palette    |
+| `Cmd+B`       | Toggle Sidebar collapse                 |
+| `Cmd+Shift+T` | Toggle Light/Dark theme                 |
+| `Cmd+Shift+F` | Toggle Focus Mode                       |
+| `↑ ↓`         | Navigate search results                 |
+| `Enter`       | Select search result                    |
+| `Esc`         | Close command palette / Exit Focus Mode |
+
+---
+
+## 📊 Session Stats
+
+- **Starting Token Count:** ~3,500
+- **Current Token Count:** ~25,000
+- **Features Completed:** 6 major features (Dynamic Sidebar, Notifications, Global Search, Theme Switcher, Pinned Items, Focus Mode)
+- **Files Created:** 3
+- **Files Modified:** 6
+
+---
+
+_Last updated: December 4, 2025_

@@ -18,6 +18,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { NotificationsSkeleton } from '@/components/loading-skeletons';
+
 type NotificationType =
   | 'like'
   | 'comment'
@@ -319,43 +322,19 @@ export default function NotificationsPage() {
 
       <div className="mx-auto max-w-2xl px-4 py-6">
         {loading ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-          </div>
+          <NotificationsSkeleton count={5} />
         ) : filteredNotifications.length === 0 ? (
-          <div
-            style={{
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--panel)',
-              padding: '48px',
-              textAlign: 'center',
-            }}
-          >
-            <Bell
-              style={{
-                margin: '0 auto 16px',
-                height: '64px',
-                width: '64px',
-                color: 'var(--muted)',
-              }}
-            />
-            <h3
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                color: 'var(--text)',
-                marginBottom: '8px',
-              }}
-            >
-              {activeFilter === 'unread' ? 'All caught up!' : 'No notifications yet'}
-            </h3>
-            <p style={{ color: 'var(--muted)' }}>
-              {activeFilter === 'unread'
+          <EmptyState
+            type="messages"
+            title={activeFilter === 'unread' ? 'All caught up!' : 'No notifications yet'}
+            description={
+              activeFilter === 'unread'
                 ? 'You have no unread notifications'
-                : 'When you get activity, it will show up here'}
-            </p>
-          </div>
+                : 'When you get activity, it will show up here'
+            }
+            actionLabel="Explore"
+            actionHref="/explore"
+          />
         ) : (
           <div className="space-y-2">
             {filteredNotifications.map((notification) => {

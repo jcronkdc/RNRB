@@ -56,9 +56,13 @@ export function NotificationSettings() {
       }
 
       // Load saved preferences
-      const savedPrefs = localStorage.getItem('notification-preferences');
-      if (savedPrefs) {
-        setPreferences(JSON.parse(savedPrefs));
+      try {
+        const savedPrefs = localStorage.getItem('notification-preferences');
+        if (savedPrefs) {
+          setPreferences(JSON.parse(savedPrefs));
+        }
+      } catch (e) {
+        console.warn('Failed to load notification preferences:', e);
       }
 
       setIsLoading(false);

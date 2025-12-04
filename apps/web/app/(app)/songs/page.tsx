@@ -37,6 +37,7 @@ import { ProjectSelector } from '@/components/project-selector';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { EmptyState } from '@/components/workshop';
 import { microCopy } from '@/lib/workshop-voice';
+import { ProjectsSkeleton } from '@/components/loading-skeletons';
 
 // Types
 type Song = {
@@ -1249,14 +1250,7 @@ export default function SongsPage() {
 
         {/* Content */}
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="flex flex-col items-center gap-3">
-              <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                {microCopy.loading.songs}
-              </p>
-            </div>
-          </div>
+          <ProjectsSkeleton count={6} />
         ) : error ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}

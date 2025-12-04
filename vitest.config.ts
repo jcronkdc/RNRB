@@ -48,11 +48,6 @@ export default defineConfig({
     },
     // Performance settings
     pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
     // Better error output
     reporters: ['default'],
     // Timeouts

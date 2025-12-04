@@ -16,6 +16,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { InboxSkeleton } from '@/components/loading-skeletons';
+
 interface MessageRequest {
   id: string;
   sender: {
@@ -192,41 +195,15 @@ export default function MessageRequestsPage() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-          </div>
+          <InboxSkeleton count={4} />
         ) : requests.length === 0 ? (
-          <div
-            style={{
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--panel)',
-              padding: '48px',
-              textAlign: 'center',
-            }}
-          >
-            <MessageSquare
-              style={{
-                margin: '0 auto 16px',
-                height: '64px',
-                width: '64px',
-                color: 'var(--muted)',
-              }}
-            />
-            <h3
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                color: 'var(--text)',
-                marginBottom: '8px',
-              }}
-            >
-              No message requests
-            </h3>
-            <p style={{ color: 'var(--muted)' }}>
-              When someone you don't know messages you, it will appear here
-            </p>
-          </div>
+          <EmptyState
+            type="messages"
+            title="No message requests"
+            description="When someone you don't know messages you, it will appear here"
+            actionLabel="View Inbox"
+            actionHref="/social/messages/inbox"
+          />
         ) : (
           <div className="space-y-3">
             {requests.map((request) => (
@@ -266,9 +243,7 @@ export default function MessageRequestsPage() {
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center">
-                          <Users
-                            style={{ height: '24px', width: '24px', color: 'var(--muted)' }}
-                          />
+                          <Users style={{ height: '24px', width: '24px', color: 'var(--muted)' }} />
                         </div>
                       )}
                     </div>
@@ -276,9 +251,7 @@ export default function MessageRequestsPage() {
                     {/* Info */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <h3
-                          style={{ fontWeight: '600', color: 'var(--text)', fontSize: '1rem' }}
-                        >
+                        <h3 style={{ fontWeight: '600', color: 'var(--text)', fontSize: '1rem' }}>
                           {request.sender.name}
                         </h3>
                         <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
@@ -396,4 +369,3 @@ export default function MessageRequestsPage() {
     </div>
   );
 }
-

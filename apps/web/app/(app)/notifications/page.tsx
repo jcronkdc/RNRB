@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
 import {
   useNotifications,
   getNotificationIcon,
@@ -163,17 +164,13 @@ export default function NotificationsPage() {
         {/* Notifications List */}
         <div className="space-y-3">
           {notifications.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center backdrop-blur-sm"
-            >
-              <Bell className="mx-auto mb-4 h-16 w-16 text-muted-foreground opacity-50" />
-              <p className="mb-2 text-lg font-medium text-white">No notifications yet</p>
-              <p className="text-sm text-muted-foreground">
-                We'll notify you when something happens
-              </p>
-            </motion.div>
+            <EmptyState
+              type="messages"
+              title="No notifications yet"
+              description="We'll notify you when something happens"
+              actionLabel="Explore"
+              actionHref="/explore"
+            />
           ) : (
             notifications.map((notification, index) => (
               <motion.div

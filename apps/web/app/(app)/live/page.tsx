@@ -2,17 +2,21 @@
 
 import { motion } from 'framer-motion';
 import {
-  Radio,
   Calendar,
   Play,
   Users,
   Clock,
   ArrowRight,
   Sparkles,
+  // Custom musician icons
+  BroadcastTower,
+  StageLights,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+
+import { EmptyState } from '@/components/empty-states';
 
 interface LiveStream {
   id: string;
@@ -293,26 +297,13 @@ export default function LivePage() {
 
             {/* Empty state */}
             {liveStreams.length === 0 && scheduledStreams.length === 0 && (
-              <div className="py-20 text-center">
-                <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-white/5">
-                  <Radio className="h-10 w-10 text-white/30" />
-                </div>
-                <h2 className="mb-2 text-2xl font-bold text-white">No Live Streams</h2>
-                <p className="mx-auto mb-6 max-w-md text-white/60">
-                  No one is streaming right now. Be the first to go live!
-                </p>
-                <Link href="/live/go">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/30"
-                  >
-                    <Sparkles className="h-5 w-5" />
-                    Start Streaming
-                    <ArrowRight className="h-5 w-5" />
-                  </motion.button>
-                </Link>
-              </div>
+              <EmptyState
+                type="feed"
+                title="No Live Streams"
+                description="No one is streaming right now. Be the first to go live!"
+                actionLabel="Start Streaming"
+                actionHref="/live/go"
+              />
             )}
           </>
         )}

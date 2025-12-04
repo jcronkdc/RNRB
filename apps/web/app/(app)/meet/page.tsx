@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion';
 import {
   Video,
-  Calendar,
   Link2 as LinkIcon,
   Clock,
   Users,
@@ -11,11 +10,15 @@ import {
   CalendarPlus,
   Check,
   Sparkles,
-  Radio,
   Monitor,
+  // Custom musician icons
+  TourCalendar,
+  BroadcastTower,
+  BandMembers,
 } from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { EmptyState } from '@/components/empty-states';
 import { ThemeLogo } from '@/components/theme';
 
 interface Meeting {
@@ -593,23 +596,13 @@ export default function MeetPage() {
 
         {/* Empty State */}
         {!isLoading && meetings.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] py-16 text-center backdrop-blur-sm"
-          >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
-            <div className="relative z-10">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-white/10 to-white/5">
-                <Video className="h-10 w-10 text-white/40" />
-              </div>
-              <p className="mb-2 text-lg font-medium text-white/60">No meetings yet</p>
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                Start an instant meeting or schedule one for later
-              </p>
-            </div>
-          </motion.div>
+          <EmptyState
+            type="collaborations"
+            title="No meetings yet"
+            description="Start an instant meeting or schedule one for later"
+            actionLabel="Start Instant Meeting"
+            onAction={handleInstantMeeting}
+          />
         )}
 
         {/* Loading */}

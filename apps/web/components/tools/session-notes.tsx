@@ -142,8 +142,12 @@ export function SessionNotes() {
         setSessions((data || []).map(transformApiNote));
       } else if (res.status !== 401) {
         // Fallback to localStorage on API error (not auth)
-        const saved = localStorage.getItem('session-notes');
-        if (saved) setSessions(JSON.parse(saved));
+        try {
+          const saved = localStorage.getItem('session-notes');
+          if (saved) setSessions(JSON.parse(saved));
+        } catch (e) {
+          console.warn('Failed to parse session notes:', e);
+        }
       }
     } catch {
       // Fallback to localStorage on network error

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { fetchWithTimeout, TIMEOUT_PRESETS } from '@/lib/fetch-with-timeout';
 
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID || '';
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET || '';
@@ -29,14 +30,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/share?error=session_expired', req.url));
     }
 
-    const oauthData = JSON.parse(oauthCookie.value);
+    let oauthData;
+    try {
+      oauthData = JSON.parse(oauthCookie.value);
+    } catch {
+      return NextResponse.redirect(new URL('/share?error=invalid_session', req.url));
+    }
 
     if (state !== oauthData.state) {
       return NextResponse.redirect(new URL('/share?error=invalid_state', req.url));
     }
 
     // Exchange code for access token
-    const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
+    const tokenResponse = await fetchWithTimeout('https://www.linkedin.com/oauth/v2/accessToken', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -48,6 +54,7 @@ export async function GET(req: NextRequest) {
         client_id: LINKEDIN_CLIENT_ID,
         client_secret: LINKEDIN_CLIENT_SECRET,
       }),
+      timeout: TIMEOUT_PRESETS.SLOW, // 30s for OAuth
     });
 
     if (!tokenResponse.ok) {
@@ -58,10 +65,11 @@ export async function GET(req: NextRequest) {
     const tokens = await tokenResponse.json();
 
     // Get user info using the new userinfo endpoint
-    const userResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
+    const userResponse = await fetchWithTimeout('https://api.linkedin.com/v2/userinfo', {
       headers: {
         Authorization: `Bearer ${tokens.access_token}`,
       },
+      timeout: TIMEOUT_PRESETS.SLOW, // 30s for external API
     });
 
     if (!userResponse.ok) {

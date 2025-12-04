@@ -106,8 +106,12 @@ export function PracticeLogger() {
         setSessions((sessionsData.sessions || []).map(transformSession));
       } else if (sessionsRes.status !== 401) {
         // Fallback to localStorage if API fails (not auth error)
-        const savedSessions = localStorage.getItem('practice-sessions');
-        if (savedSessions) setSessions(JSON.parse(savedSessions));
+        try {
+          const savedSessions = localStorage.getItem('practice-sessions');
+          if (savedSessions) setSessions(JSON.parse(savedSessions));
+        } catch (e) {
+          console.warn('Failed to parse practice sessions:', e);
+        }
       }
 
       if (goalsRes.ok) {

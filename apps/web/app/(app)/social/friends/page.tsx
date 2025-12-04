@@ -19,6 +19,9 @@ import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+import { EmptyState } from '@/components/empty-states';
+import { UsersSkeleton } from '@/components/loading-skeletons';
+
 type TabType = 'friends' | 'requests' | 'sent';
 
 interface Friend {
@@ -364,9 +367,7 @@ export default function FriendsPage() {
         )}
 
         {loading ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-          </div>
+          <UsersSkeleton count={6} />
         ) : (
           <>
             {/* Friends Tab */}
@@ -515,37 +516,13 @@ export default function FriendsPage() {
             {activeTab === 'requests' && (
               <>
                 {receivedRequests.length === 0 ? (
-                  <div
-                    style={{
-                      borderRadius: 'var(--radius)',
-                      border: '1px solid var(--border)',
-                      backgroundColor: 'var(--panel)',
-                      padding: '48px',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <UserPlus
-                      style={{
-                        margin: '0 auto 16px',
-                        height: '64px',
-                        width: '64px',
-                        color: 'var(--muted)',
-                      }}
-                    />
-                    <h3
-                      style={{
-                        fontSize: '1.25rem',
-                        fontWeight: '600',
-                        color: 'var(--text)',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      No friend requests
-                    </h3>
-                    <p style={{ color: 'var(--muted)' }}>
-                      When musicians want to connect, their requests will appear here
-                    </p>
-                  </div>
+                  <EmptyState
+                    type="messages"
+                    title="No friend requests"
+                    description="When musicians want to connect, their requests will appear here"
+                    actionLabel="Discover Musicians"
+                    actionHref="/discover"
+                  />
                 ) : (
                   <div className="space-y-4">
                     {receivedRequests.map((request) => (

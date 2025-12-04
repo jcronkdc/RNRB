@@ -34,6 +34,7 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { RevenueListSkeleton, SettingsSkeleton } from '@/components/loading-skeletons';
 
 // Supported file types
 const SUPPORTED_AUDIO_TYPES = ['.mp3', '.wav', '.ogg', '.flac'];
@@ -261,14 +262,8 @@ export default function ContributePage() {
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-purple-400" />
-          <p className="text-gray-400">Loading contribution portal...</p>
-        </motion.div>
+      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+        <SettingsSkeleton />
       </div>
     );
   }
@@ -554,9 +549,7 @@ export default function ContributePage() {
             </div>
 
             {isLoadingContributions ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              </div>
+              <RevenueListSkeleton count={3} />
             ) : contributions.length > 0 ? (
               <div className="space-y-2">
                 {contributions.map((contrib) => (

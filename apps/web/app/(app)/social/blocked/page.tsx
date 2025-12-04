@@ -13,6 +13,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { UserListSkeleton } from '@/components/loading-skeletons';
+
 interface BlockedUser {
   id: string;
   user: {
@@ -164,35 +167,15 @@ export default function BlockedUsersPage() {
 
         {/* Blocked Users List */}
         {loading ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-          </div>
+          <UserListSkeleton count={5} />
         ) : blockedUsers.length === 0 ? (
-          <div
-            style={{
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--panel)',
-              padding: '48px',
-              textAlign: 'center',
-            }}
-          >
-            <UserX className="mx-auto mb-4 h-16 w-16" style={{ color: 'var(--muted)' }} />
-            <h3
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                color: 'var(--text)',
-                marginBottom: '8px',
-              }}
-            >
-              No blocked users
-            </h3>
-            <p style={{ color: 'var(--muted)' }}>
-              You haven't blocked anyone. If someone is bothering you, you can block them from their
-              profile or from a conversation.
-            </p>
-          </div>
+          <EmptyState
+            type="collaborations"
+            title="No blocked users"
+            description="You haven't blocked anyone. If someone is bothering you, you can block them from their profile or from a conversation."
+            actionLabel="Back to Network"
+            actionHref="/social/network"
+          />
         ) : (
           <div className="space-y-2">
             {blockedUsers.map((blocked) => (

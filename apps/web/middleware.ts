@@ -32,8 +32,12 @@ const KNOWN_DOMAINS = [
   'rocknrollbasement.com',
   'www.rocknrollbasement.com',
   // Development
-  'localhost:3001',
+  'localhost',
   'localhost:3000',
+  'localhost:3001',
+  '127.0.0.1',
+  '127.0.0.1:3000',
+  '127.0.0.1:3001',
 ];
 
 // Domains that support wildcard subdomains for artist sites
@@ -49,7 +53,7 @@ const PROFILE_DOMAINS = [
 // The canonical CronkWaters origin for internal API calls
 // Custom domains must route API lookups to the main CronkWaters origin
 const CRONKWATERS_ORIGIN =
-  process.env.NODE_ENV === 'production' ? 'https://www.cronkwaters.com' : 'http://localhost:3000';
+  process.env.NODE_ENV === 'production' ? 'https://www.cronkwaters.com' : 'http://localhost:3001';
 
 // Routes that require authentication
 const protectedPaths = [

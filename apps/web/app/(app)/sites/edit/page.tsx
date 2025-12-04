@@ -50,6 +50,7 @@ import { SubscriptionGate, useSubscription } from '@/components/site-builder/Sub
 import { TemplateSwitcher } from '@/components/site-builder/TemplateSwitcher';
 import { UserGuides } from '@/components/site-builder/UserGuides';
 import { WebsiteAIAssistant } from '@/components/site-builder/WebsiteAIAssistant';
+import { SettingsSkeleton } from '@/components/loading-skeletons';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 
 interface SiteSection {
@@ -142,11 +143,24 @@ function SiteEditorContent() {
     };
   }, []);
 
+  // Safe deep clone helper to prevent JSON.parse crashes
+  const safeDeepClone = <T,>(obj: T): T | null => {
+    try {
+      return JSON.parse(JSON.stringify(obj));
+    } catch (error) {
+      console.error('Failed to deep clone object:', error);
+      return null;
+    }
+  };
+
   // Initialize history when site loads
   useEffect(() => {
     if (site && history.length === 0) {
-      setHistory([JSON.parse(JSON.stringify(site))]);
-      setHistoryIndex(0);
+      const cloned = safeDeepClone(site);
+      if (cloned) {
+        setHistory([cloned]);
+        setHistoryIndex(0);
+      }
     }
   }, [site, history.length]);
 
@@ -154,8 +168,11 @@ function SiteEditorContent() {
   const saveToHistory = useCallback(() => {
     if (!site) return;
 
+    const cloned = safeDeepClone(site);
+    if (!cloned) return; // Skip if clone fails
+
     const newHistory = history.slice(0, historyIndex + 1);
-    newHistory.push(JSON.parse(JSON.stringify(site)));
+    newHistory.push(cloned);
 
     // Limit history to 50 entries
     if (newHistory.length > 50) {
@@ -170,20 +187,26 @@ function SiteEditorContent() {
   // Undo handler
   const handleUndo = useCallback(() => {
     if (historyIndex > 0) {
-      setHistoryIndex((prev) => prev - 1);
-      setSite(JSON.parse(JSON.stringify(history[historyIndex - 1])));
-      setHasChanges(true);
-      setPreviewRefreshKey((k) => k + 1);
+      const cloned = safeDeepClone(history[historyIndex - 1]);
+      if (cloned) {
+        setHistoryIndex((prev) => prev - 1);
+        setSite(cloned);
+        setHasChanges(true);
+        setPreviewRefreshKey((k) => k + 1);
+      }
     }
   }, [history, historyIndex]);
 
   // Redo handler
   const handleRedo = useCallback(() => {
     if (historyIndex < history.length - 1) {
-      setHistoryIndex((prev) => prev + 1);
-      setSite(JSON.parse(JSON.stringify(history[historyIndex + 1])));
-      setHasChanges(true);
-      setPreviewRefreshKey((k) => k + 1);
+      const cloned = safeDeepClone(history[historyIndex + 1]);
+      if (cloned) {
+        setHistoryIndex((prev) => prev + 1);
+        setSite(cloned);
+        setHasChanges(true);
+        setPreviewRefreshKey((k) => k + 1);
+      }
     }
   }, [history, historyIndex]);
 
@@ -552,11 +575,8 @@ function SiteEditorContent() {
 
   if (isLoading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+        <SettingsSkeleton />
       </div>
     );
   }
@@ -1782,8 +1802,8 @@ function PagesTab({ site: _site, onUpdate }: { site: Site; onUpdate: () => void 
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+      <div className="py-6">
+        <SettingsSkeleton />
       </div>
     );
   }
@@ -1803,11 +1823,8 @@ export default function SiteEditorPage() {
   return (
     <Suspense
       fallback={
-        <div
-          className="flex min-h-screen items-center justify-center"
-          style={{ background: 'var(--bg)' }}
-        >
-          <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+        <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+          <SettingsSkeleton />
         </div>
       }
     >

@@ -26,7 +26,9 @@ import {
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { EmptyState } from '@/components/empty-states';
 import { ThemeLogo } from '@/components/theme';
+import { FeedSkeleton } from '@/components/loading-skeletons';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
@@ -450,34 +452,15 @@ export default function FeedPage() {
           {/* Main Feed */}
           <div className="lg:col-span-8">
             {loading ? (
-              <div className="flex flex-col items-center justify-center gap-3 py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  {microCopy.loading.feed}
-                </p>
-              </div>
+              <FeedSkeleton count={4} />
             ) : activities.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="rounded-2xl p-12 text-center"
-                style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
-              >
-                <Zap className="mx-auto mb-4 h-12 w-12" style={{ color: 'var(--muted)' }} />
-                <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-                  Your network awaits
-                </h3>
-                <p className="mb-4 text-sm" style={{ color: 'var(--muted)' }}>
-                  Connect with musicians, share your work, and see what the community is creating.
-                </p>
-                <Link
-                  href="/discover"
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 px-5 py-2.5 font-medium text-white"
-                >
-                  <Users className="h-4 w-4" />
-                  Find Musicians
-                </Link>
-              </motion.div>
+              <EmptyState
+                type="feed"
+                title="Your network awaits"
+                description="Connect with musicians, share your work, and see what the community is creating."
+                actionLabel="Find Musicians"
+                actionHref="/discover"
+              />
             ) : (
               <div className="space-y-4">
                 {activities.map((activity, i) => (

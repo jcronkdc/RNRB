@@ -2,19 +2,25 @@
 
 import { motion } from 'framer-motion';
 import {
-  Music2,
   Sparkles,
-  Mic2,
   FlaskConical,
-  Wrench,
-  Calendar,
   ListMusic,
   Globe,
+  // Custom musician icons
+  SongManuscript,
+  VintageCondenserMic,
+  MusiciansMultiTool,
+  TourCalendar,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
 const tools = [
-  { icon: Music2, label: 'Write Song', href: '/songwriting', color: 'from-purple-500 to-pink-500' },
+  {
+    icon: SongManuscript,
+    label: 'Write Song',
+    href: '/songwriting',
+    color: 'from-purple-500 to-pink-500',
+  },
   {
     icon: Sparkles,
     label: 'AI Sketch',
@@ -22,7 +28,12 @@ const tools = [
     color: 'from-orange-500 to-red-500',
     badge: 'AI',
   },
-  { icon: Mic2, label: 'Studio', href: '/studio', color: 'from-blue-500 to-cyan-500' },
+  {
+    icon: VintageCondenserMic,
+    label: 'Studio',
+    href: '/studio',
+    color: 'from-blue-500 to-cyan-500',
+  },
   {
     icon: FlaskConical,
     label: 'RNRB Labs',
@@ -30,8 +41,13 @@ const tools = [
     color: 'from-emerald-500 to-green-500',
     badge: 'NEW',
   },
-  { icon: Wrench, label: 'Toolbox', href: '/tools', color: 'from-amber-500 to-yellow-500' },
-  { icon: Calendar, label: 'Shows', href: '/shows', color: 'from-rose-500 to-pink-500' },
+  {
+    icon: MusiciansMultiTool,
+    label: 'Toolbox',
+    href: '/tools',
+    color: 'from-amber-500 to-yellow-500',
+  },
+  { icon: TourCalendar, label: 'Shows', href: '/shows', color: 'from-rose-500 to-pink-500' },
   { icon: ListMusic, label: 'Setlists', href: '/setlists', color: 'from-indigo-500 to-violet-500' },
   { icon: Globe, label: 'Tours', href: '/tours', color: 'from-teal-500 to-emerald-500' },
 ];

@@ -24,6 +24,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
 import { UpgradeModal, useUpgradeModal } from '@/components/upgrade-modal';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSetlistAccess } from '@/hooks/use-subscription';
@@ -358,10 +359,21 @@ export default function SetlistsPage() {
           </motion.div>
         )}
 
+        {/* Empty State - Real Setlists */}
+        {hasAccess && setlists.length === 0 && !isLoadingSetlists && (
+          <EmptyState
+            type="setlists"
+            title="No setlists created yet"
+            description="Build your first AI-powered setlist optimized for energy flow and crowd engagement"
+            actionLabel="Generate Setlist"
+            actionHref="/setlists/new"
+          />
+        )}
+
         {/* Setlists Grid */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
           <AnimatePresence>
-            {mockSetlists.map((setlist, index) => {
+            {(hasAccess && setlists.length > 0 ? setlists : mockSetlists).map((setlist, index) => {
               const EnergyIcon = getEnergyIcon(setlist.energyLevel);
               const energyColor = getEnergyColor(setlist.energyLevel);
 

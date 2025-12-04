@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { fetchWithTimeout, TIMEOUT_PRESETS } from '@/lib/fetch-with-timeout';
 
 const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID || '';
 const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET || '';
@@ -30,7 +31,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(new URL('/share?error=session_expired', req.url));
     }
 
-    const oauthData = JSON.parse(oauthCookie.value);
+    let oauthData;
+    try {
+      oauthData = JSON.parse(oauthCookie.value);
+    } catch {
+      return NextResponse.redirect(new URL('/share?error=invalid_session', req.url));
+    }
 
     // Validate state
     if (state !== oauthData.state) {
@@ -38,7 +44,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Exchange code for tokens
-    const tokenResponse = await fetch('https://api.twitter.com/2/oauth2/token', {
+    const tokenResponse = await fetchWithTimeout('https://api.twitter.com/2/oauth2/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -50,6 +56,7 @@ export async function GET(req: NextRequest) {
         redirect_uri: TWITTER_REDIRECT_URI,
         code_verifier: oauthData.verifier,
       }),
+      timeout: TIMEOUT_PRESETS.SLOW, // 30s for OAuth
     });
 
     if (!tokenResponse.ok) {
@@ -61,12 +68,13 @@ export async function GET(req: NextRequest) {
     const tokens = await tokenResponse.json();
 
     // Get user info from Twitter
-    const userResponse = await fetch(
+    const userResponse = await fetchWithTimeout(
       'https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,username',
       {
         headers: {
           Authorization: `Bearer ${tokens.access_token}`,
         },
+        timeout: TIMEOUT_PRESETS.SLOW, // 30s for external API
       }
     );
 

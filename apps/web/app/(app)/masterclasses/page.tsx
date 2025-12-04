@@ -23,6 +23,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+
 interface Instructor {
   id: string;
   displayName: string;
@@ -482,27 +484,17 @@ export default function MasterclassesPage() {
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--panel)]">
-              <GraduationCap className="h-10 w-10 text-[var(--muted)]" />
-            </div>
-            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">No Masterclasses Found</h2>
-            <p className="mb-6 text-[var(--muted)]">
-              {search || category
+          <EmptyState
+            type="masterclasses"
+            title={search || category ? 'No Masterclasses Found' : 'No Masterclasses Available'}
+            description={
+              search || category
                 ? 'Try adjusting your filters or search terms'
-                : 'Be the first to create a masterclass!'}
-            </p>
-            <Link href="/masterclasses/instructor">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 font-semibold text-white"
-              >
-                <GraduationCap className="h-5 w-5" />
-                Become an Instructor
-              </motion.button>
-            </Link>
-          </div>
+                : 'Be the first to create a masterclass and share your expertise!'
+            }
+            actionLabel="Become an Instructor"
+            actionHref="/masterclasses/instructor"
+          />
         )}
 
         {/* Become an Instructor CTA */}

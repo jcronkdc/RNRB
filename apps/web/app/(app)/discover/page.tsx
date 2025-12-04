@@ -19,6 +19,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { UsersSkeleton } from '@/components/loading-skeletons';
 import { UserProfileCard, type UserProfileCardProps } from '@/components/user-profile-card';
 import { useDebounce } from '@/hooks/use-debounce';
 
@@ -410,35 +412,16 @@ export default function DiscoverPage() {
         )}
 
         {hasSearched && !isLoading && searchResults.length === 0 && !error && (
-          <div
-            style={{
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--panel)',
-              padding: '48px',
-              textAlign: 'center',
+          <EmptyState
+            type="search"
+            title="No users found"
+            description="Try adjusting your search terms or search type"
+            actionLabel="Clear Search"
+            onAction={() => {
+              setSearchQuery('');
+              setHasSearched(false);
             }}
-          >
-            <Users
-              style={{
-                margin: '0 auto 16px',
-                height: '64px',
-                width: '64px',
-                color: 'var(--muted)',
-              }}
-            />
-            <h3
-              style={{
-                marginBottom: '8px',
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                color: 'var(--text)',
-              }}
-            >
-              No users found
-            </h3>
-            <p style={{ color: 'var(--muted)' }}>Try adjusting your search terms or search type</p>
-          </div>
+          />
         )}
 
         {searchResults.length > 0 && (
@@ -590,9 +573,7 @@ export default function DiscoverPage() {
             </div>
 
             {suggestionsLoading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-              </div>
+              <UsersSkeleton count={6} />
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {suggestedUsers.map((user) => (

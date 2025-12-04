@@ -41,6 +41,7 @@ import Link from 'next/link';
 import { useState, useCallback } from 'react';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';
+import { SettingsSkeleton } from '@/components/loading-skeletons';
 
 // Stem types with their colors and icons
 const STEM_DEFINITIONS = [
@@ -184,14 +185,8 @@ export default function ExperimentPage() {
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-purple-400" />
-          <p className="text-gray-400">Loading experiment...</p>
-        </motion.div>
+      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+        <SettingsSkeleton />
       </div>
     );
   }

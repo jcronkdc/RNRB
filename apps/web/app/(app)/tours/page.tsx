@@ -17,8 +17,6 @@ import { DailyProvider } from '@daily-co/daily-react';
 import { motion } from 'framer-motion';
 import {
   MapPin,
-  Calendar,
-  Radio,
   Plus,
   ChevronDown,
   Loader2,
@@ -33,12 +31,17 @@ import {
   LayoutGrid,
   Ticket,
   Clock,
+  // Custom musician icons
+  TourCalendar,
+  BroadcastTower,
+  StageLights,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, memo, useCallback, useMemo, useRef } from 'react';
 
 import { LivePerformance } from '@/components/daily/live-performance';
+import { EmptyState, LoadingState } from '@/components/empty-states';
 import { ToastNotification, useToast } from '@/components/toast-notification';
 import { ToursListSkeleton } from '@/components/tours/loading-skeletons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
@@ -164,11 +167,8 @@ export default function ToursPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
-        <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[color:var(--accent)]" />
-          <p className="text-lg text-[color:var(--muted)]">Loading...</p>
-        </div>
+      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+        <ToursListSkeleton />
       </div>
     );
   }
@@ -638,47 +638,13 @@ export default function ToursPage() {
 
             {/* Empty State */}
             {!toursLoading && tours.length === 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl border p-12 text-center backdrop-blur-sm"
-                style={{
-                  borderColor: 'var(--border)',
-                  background:
-                    'linear-gradient(135deg, rgba(255, 99, 71, 0.05), rgba(255, 215, 0, 0.03))',
-                }}
-              >
-                <div
-                  className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(255, 99, 71, 0.15), rgba(255, 215, 0, 0.1))',
-                  }}
-                >
-                  <Calendar className="h-12 w-12" style={{ color: 'var(--accent)' }} />
-                </div>
-                <h2 className="mb-4 text-3xl font-bold" style={{ color: 'var(--text)' }}>
-                  World-Class Tour Management
-                </h2>
-                <p className="mx-auto mb-8 max-w-xl text-lg" style={{ color: 'var(--muted)' }}>
-                  Schedule shows, add ticket links, optimize routing, and manage your tour. Create
-                  your first tour to get started.
-                </p>
-                <Link href="/tours/new">
-                  <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(255, 99, 71, 0.4)' }}
-                    whileTap={{ scale: 0.98 }}
-                    className="inline-flex items-center gap-3 rounded-xl px-8 py-4 text-lg font-bold text-white shadow-lg"
-                    style={{
-                      background: 'linear-gradient(135deg, var(--accent), #ff7f50)',
-                      boxShadow: '0 4px 30px rgba(255, 99, 71, 0.3)',
-                    }}
-                  >
-                    <Plus className="h-6 w-6" />
-                    Create Your First Tour
-                  </motion.button>
-                </Link>
-              </motion.div>
+              <EmptyState
+                type="tours"
+                title="World-Class Tour Management"
+                description="Schedule shows, add ticket links, optimize routing, and manage your tour. Create your first tour to get started."
+                actionLabel="Create Your First Tour"
+                actionHref="/tours/new"
+              />
             )}
 
             {/* Tours Grid */}
@@ -724,40 +690,16 @@ export default function ToursPage() {
 
             {/* No Results */}
             {!toursLoading && tours.length > 0 && filteredTours.length === 0 && (
-              <div
-                className="rounded-2xl border p-12 text-center backdrop-blur-sm"
-                style={{
-                  borderColor: 'var(--border)',
-                  background: 'rgba(42, 42, 42, 0.3)',
+              <EmptyState
+                type="search"
+                title="No tours found"
+                description="Try adjusting your search or filters"
+                actionLabel="Clear Filters"
+                onAction={() => {
+                  setSearchQuery('');
+                  setStatusFilter('all');
                 }}
-              >
-                <Search
-                  className="mx-auto mb-4 h-16 w-16 opacity-30"
-                  style={{ color: 'var(--muted)' }}
-                />
-                <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-                  No tours found
-                </h3>
-                <p className="mb-6" style={{ color: 'var(--muted)' }}>
-                  Try adjusting your search or filters
-                </p>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    setSearchQuery('');
-                    setStatusFilter('all');
-                  }}
-                  className="rounded-xl border px-6 py-3 font-medium transition-all"
-                  style={{
-                    borderColor: 'var(--border)',
-                    color: 'var(--text)',
-                    background: 'rgba(255, 255, 255, 0.03)',
-                  }}
-                >
-                  Clear Filters
-                </motion.button>
-              </div>
+              />
             )}
 
             {/* Features Info */}

@@ -28,6 +28,8 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 
 import { microCopy } from '@/lib/workshop-voice';
+import { EmptyState } from '@/components/empty-states';
+import { ChartSkeleton, RevenueListSkeleton } from '@/components/loading-skeletons';
 
 // Revenue source icons
 const sourceIcons: Record<string, any> = {
@@ -283,9 +285,7 @@ export default function RevenuePage() {
           >
             <h3 className="mb-4 font-semibold text-white">Revenue Over Time</h3>
             {loading ? (
-              <div className="flex h-40 items-center justify-center">
-                <Loader2 className="h-6 w-6 animate-spin text-white/40" />
-              </div>
+              <ChartSkeleton />
             ) : totals.byMonth.length > 0 ? (
               <RevenueChart data={totals.byMonth} />
             ) : (
@@ -358,10 +358,7 @@ export default function RevenuePage() {
           </div>
 
           {loading ? (
-            <div className="flex flex-col items-center justify-center gap-3 py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
-              <p className="text-sm text-white/50">{microCopy.loading.revenue}</p>
-            </div>
+            <RevenueListSkeleton count={5} />
           ) : revenues.length > 0 ? (
             <div className="space-y-2">
               {revenues.slice(0, 10).map((revenue) => (
@@ -369,20 +366,7 @@ export default function RevenuePage() {
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-white/10 p-12 text-center">
-              <DollarSign className="mx-auto mb-4 h-12 w-12 text-white/30" />
-              <h3 className="mb-2 text-lg font-semibold text-white">Your music has value</h3>
-              <p className="mb-4 text-sm text-white/50">
-                Track every gig, stream, and sync. Watch your music career grow.
-              </p>
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-5 py-2.5 font-medium text-white"
-              >
-                <Plus className="h-4 w-4" />
-                Log Your First Income
-              </button>
-            </div>
+            <EmptyState type="revenue" onAction={() => setShowAddModal(true)} />
           )}
         </motion.div>
       </div>

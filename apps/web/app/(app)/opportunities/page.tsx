@@ -24,6 +24,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { ProjectsSkeleton } from '@/components/loading-skeletons';
 import { microCopy } from '@/lib/workshop-voice';
 
 // Opportunity types with icons
@@ -370,33 +372,20 @@ export default function OpportunitiesPage() {
 
         {/* Opportunities Grid */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
-            <p className="text-sm text-[var(--muted)]">{microCopy.loading.opportunities}</p>
-          </div>
+          <ProjectsSkeleton count={6} />
         ) : filteredOpportunities.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl border border-[var(--border)] bg-[var(--panel)] p-12 text-center"
-          >
-            <Briefcase className="mx-auto mb-4 h-12 w-12 text-[var(--muted-soft)]" />
-            <h3 className="mb-2 text-lg font-semibold text-[var(--text)]">
-              Opportunities are everywhere
-            </h3>
-            <p className="mb-4 text-sm text-[var(--muted)]">
-              {activeType !== 'all'
+          <EmptyState
+            type={activeType !== 'all' ? 'search' : 'analytics'}
+            title="Opportunities are everywhere"
+            description={
+              activeType !== 'all'
                 ? `No ${activeType.replace('_', ' ')} opportunities available right now—but that could change any moment.`
-                : 'Be the first to post an opportunity and help fellow musicians get paid!'}
-            </p>
-            <Link
-              href="/opportunities/post"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-5 py-2.5 font-medium text-[var(--text)]"
-            >
-              <Plus className="h-4 w-4" />
-              Post an Opportunity
-            </Link>
-          </motion.div>
+                : 'Be the first to post an opportunity and help fellow musicians get paid!'
+            }
+            actionLabel={activeType !== 'all' ? 'Clear Filter' : 'Post an Opportunity'}
+            actionHref={activeType !== 'all' ? undefined : '/opportunities/post'}
+            onAction={activeType !== 'all' ? () => setActiveType('all') : undefined}
+          />
         ) : (
           <motion.div
             initial={{ opacity: 0 }}

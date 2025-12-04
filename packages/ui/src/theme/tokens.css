@@ -1,40 +1,41 @@
 :root {
-  /* Light theme - Warm, inviting, creative */
-  --sf-color-background: 28 40% 98%;
-  --sf-color-surface: 27 32% 96%;
-  --sf-color-surface-muted: 28 28% 92%;
-  --sf-color-surface-elevated: 26 24% 90%;
-  --sf-color-foreground: 26 30% 18%;
-  --sf-color-muted: 26 16% 42%;
-  --sf-color-muted-foreground: 26 14% 34%;
-  --sf-color-border: 27 18% 78%;
-  --sf-color-overlay: 28 30% 16%;
+  /* Light theme - NextRecord inspired: clean white, orange accent */
+  --sf-color-background: 0 0% 100%; /* #FFFFFF - pure white */
+  --sf-color-surface: 0 0% 100%; /* #FFFFFF - white surfaces */
+  --sf-color-surface-muted: 0 0% 96%; /* #F5F5F5 - subtle muted */
+  --sf-color-surface-elevated: 0 0% 100%; /* #FFFFFF - elevated stays white */
+  --sf-color-surface-hover: 0 0% 96%; /* #F5F5F5 - hover state */
+  --sf-color-foreground: 270 5% 11%; /* #1C1B1F - near black text */
+  --sf-color-muted: 0 0% 53%; /* #888888 - gray text */
+  --sf-color-muted-foreground: 0 0% 69%; /* #B1B1B1 - light gray text */
+  --sf-color-border: 0 0% 90%; /* #E5E5E5 - clean light border */
+  --sf-color-overlay: 270 5% 11%; /* #1C1B1F - overlay color */
 
-  /* Brand colors - Expressive orange/amber, warm and energetic */
-  --sf-color-brand-primary: 21 88% 52%;
-  --sf-color-brand-primary-foreground: 32 64% 98%;
-  --sf-color-brand-secondary: 25 34% 34%;
-  --sf-color-brand-secondary-foreground: 35 58% 94%;
-  --sf-color-brand-muted: 27 22% 82%;
-  --sf-color-brand-muted-foreground: 26 24% 32%;
-  --sf-color-brand-foreground: 26 30% 18%;
+  /* Brand colors - NextRecord orange */
+  --sf-color-brand-primary: 24 100% 50%; /* #FF6600 - signature orange */
+  --sf-color-brand-primary-foreground: 0 0% 100%; /* #FFFFFF - white on orange */
+  --sf-color-brand-secondary: 38 95% 63%; /* #FCBC45 - secondary gold */
+  --sf-color-brand-secondary-foreground: 270 5% 11%; /* #1C1B1F - dark on gold */
+  --sf-color-brand-muted: 24 100% 97%; /* #FFF5ED - very light orange */
+  --sf-color-brand-muted-foreground: 24 100% 40%; /* #CC5200 - dark orange */
+  --sf-color-brand-foreground: 270 5% 11%; /* #1C1B1F - brand text */
 
-  /* Accent - Complementary warm tones */
-  --sf-color-accent: 19 92% 52%;
-  --sf-color-accent-foreground: 28 32% 16%;
-  --sf-color-accent-subtle: 20 88% 88%;
+  /* Accent - NextRecord orange */
+  --sf-color-accent: 24 100% 50%; /* #FF6600 - orange accent */
+  --sf-color-accent-foreground: 0 0% 100%; /* #FFFFFF - white on accent */
+  --sf-color-accent-subtle: 24 100% 97%; /* #FFF5ED - subtle orange */
 
-  /* Semantic colors - Expressive but accessible */
-  --sf-color-success: 142 42% 42%;
-  --sf-color-success-foreground: 32 58% 96%;
-  --sf-color-warning: 36 94% 56%;
-  --sf-color-warning-foreground: 28 40% 16%;
-  --sf-color-danger: 5 78% 50%;
-  --sf-color-danger-foreground: 26 62% 96%;
+  /* Semantic colors - clean and accessible */
+  --sf-color-success: 142 71% 45%; /* #22C55E - green */
+  --sf-color-success-foreground: 0 0% 100%; /* #FFFFFF */
+  --sf-color-warning: 38 95% 63%; /* #FCBC45 - gold/amber */
+  --sf-color-warning-foreground: 270 5% 11%; /* #1C1B1F */
+  --sf-color-danger: 0 84% 60%; /* #DC2626 - red */
+  --sf-color-danger-foreground: 0 0% 100%; /* #FFFFFF */
 
-  --sf-ring: 21 88% 52%;
-  --sf-outline: 26 18% 80%;
-  --sf-ring-offset: 28 38% 96%;
+  --sf-ring: 24 100% 50%; /* #FF6600 - orange ring */
+  --sf-outline: 0 0% 90%; /* #E5E5E5 - border outline */
+  --sf-ring-offset: 0 0% 100%; /* #FFFFFF - white offset */
 
   /* Spacing - Generous, breathing room */
   --sf-space-2xs: 0.25rem;
@@ -56,11 +57,11 @@
   --sf-radius-xl: 40px;
   --sf-radius-full: 9999px;
 
-  /* Shadows - Deeper, more expressive */
-  --sf-shadow-soft: 0 28px 60px -32px rgb(56 34 20 / 0.28);
-  --sf-shadow-elevated: 0 22px 48px -28px rgb(56 34 20 / 0.24);
-  --sf-shadow-outline: 0 0 0 1px rgb(70 50 38 / 0.2);
-  --sf-shadow-glow: 0 0 40px -8px hsl(var(--sf-color-brand-primary) / 0.4);
+  /* Shadows - Subtle, clean for light mode */
+  --sf-shadow-soft: 0 4px 6px -1px rgb(28 27 31 / 0.08), 0 2px 4px -1px rgb(28 27 31 / 0.04);
+  --sf-shadow-elevated: 0 10px 15px -3px rgb(28 27 31 / 0.12), 0 4px 6px -2px rgb(28 27 31 / 0.06);
+  --sf-shadow-outline: 0 0 0 1px rgb(229 229 229 / 1);
+  --sf-shadow-glow: 0 0 20px -4px hsl(var(--sf-color-brand-primary) / 0.25);
 
   /* Transitions - Smooth, musical */
   --sf-transition-fast: 140ms ease-out;

@@ -18,6 +18,8 @@ import {
   ArrowDownRight,
 } from '@/components/ui/custom-icons';
 
+import { EmptyState } from '@/components/empty-states';
+
 interface Earning {
   id: string;
   productName: string;
@@ -266,26 +268,13 @@ export default function EarningsPage() {
               <p className="text-red-400">{error}</p>
             </div>
           ) : filteredEarnings.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center"
-            >
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20">
-                <DollarSign className="h-8 w-8 text-emerald-400" />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-white">No earnings yet</h3>
-              <p className="mb-6 text-white/60">
-                Start selling merchandise to see your earnings here
-              </p>
-              <Link
-                href="/my-merch/create"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500 px-6 py-3 font-semibold text-white"
-              >
-                <ShoppingBag className="h-5 w-5" />
-                Create Product
-              </Link>
-            </motion.div>
+            <EmptyState
+              type="analytics"
+              title="No earnings yet"
+              description="Start selling merchandise to see your earnings here"
+              actionLabel="Create Product"
+              actionHref="/my-merch/create"
+            />
           ) : (
             <motion.div
               initial={{ opacity: 0 }}

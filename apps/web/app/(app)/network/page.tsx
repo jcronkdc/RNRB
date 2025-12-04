@@ -14,6 +14,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+import { UsersSkeleton } from '@/components/loading-skeletons';
+
 interface NetworkUser {
   id: string;
   name: string | null;
@@ -136,16 +139,7 @@ export default function NetworkPage() {
         className="flex min-h-screen flex-col items-center justify-center gap-4"
         style={{ background: 'var(--bg)' }}
       >
-        <div className="relative">
-          <div
-            className="absolute inset-0 animate-ping rounded-full"
-            style={{ background: 'rgba(232, 93, 59, 0.2)' }}
-          />
-          <Loader2 className="h-12 w-12 animate-spin" style={{ color: 'var(--accent)' }} />
-        </div>
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>
-          Loading your network...
-        </p>
+        <UsersSkeleton count={8} />
       </div>
     );
   }
@@ -292,56 +286,17 @@ export default function NetworkPage() {
 
         {/* User List */}
         {currentList.length === 0 ? (
-          <div
-            style={{
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--panel)',
-              padding: '48px',
-              textAlign: 'center',
-            }}
-          >
-            <Users
-              style={{
-                margin: '0 auto 16px',
-                height: '64px',
-                width: '64px',
-                color: 'var(--muted)',
-              }}
-            />
-            <h3
-              style={{
-                marginBottom: '8px',
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                color: 'var(--text)',
-              }}
-            >
-              {activeTab === 'following' ? 'Not following anyone yet' : 'No followers yet'}
-            </h3>
-            <p style={{ color: 'var(--muted)', marginBottom: '24px' }}>
-              {activeTab === 'following'
+          <EmptyState
+            type="collaborations"
+            title={activeTab === 'following' ? 'Not following anyone yet' : 'No followers yet'}
+            description={
+              activeTab === 'following'
                 ? 'Discover musicians and start building your network'
-                : 'Share your profile and create great content to gain followers'}
-            </p>
-            <Link href="/discover">
-              <button
-                style={{
-                  padding: '12px 32px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontWeight: '600',
-                  backgroundColor: 'var(--accent)',
-                  color: 'var(--text)',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-              >
-                Discover Musicians
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </Link>
-          </div>
+                : 'Share your profile and create great content to gain followers'
+            }
+            actionLabel={activeTab === 'following' ? 'Discover Musicians' : 'View Your Profile'}
+            actionHref={activeTab === 'following' ? '/discover' : '/settings/profile'}
+          />
         ) : (
           <div className="space-y-3">
             {currentList.map((user) => (

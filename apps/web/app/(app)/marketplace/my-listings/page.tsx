@@ -27,6 +27,9 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { trpc as api } from '@cronkwaters/trpc/client/react';
 
+import { EmptyState } from '@/components/empty-states';
+import { ProjectsSkeleton } from '@/components/loading-skeletons';
+
 type ListingStatus = 'active' | 'pending' | 'sold' | 'traded' | 'expired' | 'removed' | 'draft';
 
 const STATUS_CONFIG: Record<ListingStatus, { label: string; color: string; icon: typeof Check }> = {
@@ -422,35 +425,25 @@ export default function MyListingsPage() {
 
         {/* Listings */}
         {isLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-orange-400" />
-          </div>
+          <ProjectsSkeleton count={4} />
         ) : error ? (
           <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-8 text-center">
             <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-rose-400" />
             <p className="text-white/70">Failed to load listings. Please try again.</p>
           </div>
         ) : data?.listings?.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="rounded-xl border border-white/10 bg-white/[0.03] p-12 text-center"
-          >
-            <Package className="mx-auto mb-4 h-16 w-16 text-white/20" />
-            <h3 className="mb-2 text-xl font-semibold text-white">No listings yet</h3>
-            <p className="mb-6 text-white/60">
-              {activeTab === 'all'
+          <EmptyState
+            type={activeTab === 'all' ? 'marketplace' : 'search'}
+            title="No listings yet"
+            description={
+              activeTab === 'all'
                 ? 'Start selling your gear to fellow musicians'
-                : `No ${activeTab} listings`}
-            </p>
-            <Link
-              href="/marketplace/create"
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 font-semibold text-white"
-            >
-              <Plus className="h-5 w-5" />
-              Create Your First Listing
-            </Link>
-          </motion.div>
+                : `No ${activeTab} listings`
+            }
+            actionLabel={activeTab === 'all' ? 'Create Your First Listing' : 'View All'}
+            actionHref={activeTab === 'all' ? '/marketplace/create' : undefined}
+            onAction={activeTab !== 'all' ? () => setActiveTab('all') : undefined}
+          />
         ) : (
           <div className="space-y-4">
             {data?.listings?.map((listing: any) => (

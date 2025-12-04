@@ -42,6 +42,8 @@ import { useEffect, useState, useMemo, Suspense } from 'react';
 
 import { CalendarView } from '@/components/gig-calendar/calendar-view';
 import { ConflictDetector } from '@/components/gig-calendar/conflict-detector';
+import { EmptyState } from '@/components/empty-states';
+import { CalendarSkeleton } from '@/components/loading-skeletons';
 import { ToastNotification, useToast } from '@/components/toast-notification';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { formatDateWithDay, formatTime } from '@/lib/format-date';
@@ -221,11 +223,8 @@ function CalendarPageContent() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
-        <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[color:var(--accent)]" />
-          <p className="text-lg text-[color:var(--muted)]">Loading calendar...</p>
-        </div>
+      <div className="min-h-screen bg-[color:var(--bg)] p-6">
+        <CalendarSkeleton />
       </div>
     );
   }
@@ -377,9 +376,15 @@ function CalendarPageContent() {
         {/* Calendar */}
         <Card className="rnrb-card p-6">
           {loadingShows ? (
-            <div className="flex min-h-[600px] items-center justify-center">
-              <Loader2 className="h-12 w-12 animate-spin text-[color:var(--accent)]" />
-            </div>
+            <CalendarSkeleton />
+          ) : shows.length === 0 ? (
+            <EmptyState
+              type="shows"
+              title="No shows on your calendar"
+              description="Start booking gigs and tracking your performances"
+              actionLabel="Create Your First Show"
+              actionHref="/shows/new"
+            />
           ) : (
             <CalendarView
               shows={shows}
@@ -460,11 +465,8 @@ export default function CalendarPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
-          <div className="text-center">
-            <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[color:var(--accent)]" />
-            <p className="text-lg text-[color:var(--muted)]">Loading calendar...</p>
-          </div>
+        <div className="min-h-screen bg-[color:var(--bg)] p-6">
+          <CalendarSkeleton />
         </div>
       }
     >

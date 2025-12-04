@@ -27,6 +27,7 @@ type Show = {
 };
 
 import { DayOfShowView } from '@/components/gig-calendar/day-of-show-view';
+import { CalendarSkeleton } from '@/components/loading-skeletons';
 import { ToastNotification, useToast } from '@/components/toast-notification';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
@@ -108,11 +109,8 @@ export default function DayOfShowPage() {
 
   if (loading || loadingShow) {
     return (
-      <div
-        className="relative flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <div className="flex flex-col items-center gap-4">
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="flex flex-col items-center gap-4 p-6">
           {/* White RR Logo [[memory:11700420]] */}
           <Link href="/" className="group mb-4">
             <Image
@@ -124,8 +122,9 @@ export default function DayOfShowPage() {
               priority
             />
           </Link>
-          <Loader2 className="h-10 w-10 animate-spin" style={{ color: 'var(--accent)' }} />
-          <p style={{ color: 'var(--muted)' }}>{microCopy.loading.shows}</p>
+        </div>
+        <div className="px-6">
+          <CalendarSkeleton />
         </div>
       </div>
     );

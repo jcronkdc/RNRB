@@ -428,14 +428,40 @@ export const Bed = createIcon(
   'Bed'
 );
 
-// Calendar - gig calendar
+// Calendar - tour/gig calendar with music theme
 export const Calendar = createIcon(
   <>
-    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-    <circle cx="12" cy="15" r="1" fill="currentColor" />
+    {/* Calendar frame */}
+    <rect
+      x="3"
+      y="4"
+      width="18"
+      height="18"
+      rx="2"
+      ry="2"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Binding rings */}
+    <line x1="7" y1="2" x2="7" y2="6" strokeWidth="1.8" strokeLinecap="round" />
+    <line x1="12" y1="2" x2="12" y2="6" strokeWidth="1.8" strokeLinecap="round" />
+    <line x1="17" y1="2" x2="17" y2="6" strokeWidth="1.8" strokeLinecap="round" />
+    {/* Header separator */}
+    <line x1="3" y1="9" x2="21" y2="9" strokeWidth="1.5" />
+    {/* Date markers with music notes */}
+    <circle cx="8" cy="13" r="0.8" fill="currentColor" opacity="0.4" />
+    <circle cx="12" cy="13" r="0.8" fill="currentColor" opacity="0.4" />
+    <circle cx="16" cy="13" r="0.8" fill="currentColor" opacity="0.4" />
+    {/* Featured show date (music note) */}
+    <circle cx="12" cy="17" r="1.2" fill="currentColor" />
+    <line x1="13.2" y1="17" x2="13.2" y2="14" strokeWidth="1.2" />
+    {/* Venue marker (pin shape) */}
+    <path
+      d="M16 17.5c0 1-.7 1.5-1 1.5s-1-.5-1-1.5c0-.8.5-1.2 1-1.5.5.3 1 .7 1 1.5z"
+      fill="currentColor"
+      opacity="0.6"
+    />
   </>,
   'Calendar'
 );
@@ -607,12 +633,58 @@ export const Crown = createIcon(
   'Crown'
 );
 
-// Disc - record/vinyl
+// Disc - detailed vinyl record with grooves
 export const Disc = createIcon(
   <>
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="3" />
-    <circle cx="12" cy="12" r="1" fill="currentColor" />
+    {/* Outer edge of vinyl */}
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Groove rings (visible grooves on vinyl) */}
+    <circle
+      cx="12"
+      cy="12"
+      r="8.5"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="7.5"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="6.5"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle
+      cx="12"
+      cy="12"
+      r="5.5"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.5"
+    />
+    {/* Label area */}
+    <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    {/* Center spindle hole */}
+    <circle cx="12" cy="12" r="1.2" fill="currentColor" />
+    {/* Label text marks (simulated) */}
+    <line x1="10" y1="9.5" x2="14" y2="9.5" strokeWidth="0.4" opacity="0.4" />
+    <line x1="10.5" y1="11" x2="13.5" y2="11" strokeWidth="0.4" opacity="0.4" />
+    <line x1="10" y1="14.5" x2="14" y2="14.5" strokeWidth="0.4" opacity="0.4" />
+    {/* Side highlight (gives depth) */}
+    <path d="M3 12c0-4 2.5-7.5 6-8.5" strokeWidth="0.8" opacity="0.3" fill="none" />
   </>,
   'Disc'
 );
@@ -1120,14 +1192,36 @@ export const Mic = createIcon(
   'Mic'
 );
 
-// Mic2 - studio mic
+// Mic2 - vintage condenser studio microphone (detailed)
 export const Mic2 = createIcon(
   <>
-    <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" />
-    <path d="M19 10v2a7 7 0 01-14 0v-2" />
-    <path d="M12 19v4" />
-    <path d="M8 23h8" />
-    <rect x="10" y="1" width="4" height="3" rx="1" />
+    {/* Microphone capsule (top) */}
+    <ellipse cx="12" cy="6" rx="3.5" ry="4" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Capsule grille lines */}
+    <line x1="9" y1="4" x2="15" y2="4" strokeWidth="0.3" opacity="0.6" />
+    <line x1="9" y1="6" x2="15" y2="6" strokeWidth="0.3" opacity="0.6" />
+    <line x1="9" y1="8" x2="15" y2="8" strokeWidth="0.3" opacity="0.6" />
+    {/* Microphone body */}
+    <rect
+      x="10.5"
+      y="10"
+      width="3"
+      height="8"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Body accent ring */}
+    <line x1="10" y1="14" x2="14" y2="14" strokeWidth="0.8" />
+    {/* XLR connection at bottom */}
+    <circle cx="12" cy="19" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <circle cx="11" cy="19.5" r="0.3" fill="currentColor" />
+    <circle cx="13" cy="19.5" r="0.3" fill="currentColor" />
+    <circle cx="12" cy="18.5" r="0.3" fill="currentColor" />
+    {/* Mic stand mount */}
+    <path d="M12 20.5v1.5" strokeWidth="1.5" />
+    <line x1="10" y1="22" x2="14" y2="22" strokeWidth="1.5" strokeLinecap="round" />
   </>,
   'Mic2'
 );
@@ -1415,11 +1509,43 @@ export const Quote = createIcon(
   'Quote'
 );
 
-// Radio - broadcast/live
+// Radio - broadcast tower with sound waves (live streaming)
 export const Radio = createIcon(
   <>
-    <circle cx="12" cy="12" r="2" />
-    <path d="M16.24 7.76a6 6 0 010 8.49m-8.48-.01a6 6 0 010-8.49m11.31-2.82a10 10 0 010 14.14m-14.14 0a10 10 0 010-14.14" />
+    {/* Broadcast tower structure */}
+    <path d="M12 2v8" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M10 4l2-2 2 2" strokeWidth="1.2" fill="none" />
+    {/* Tower top antenna */}
+    <circle cx="12" cy="2" r="1" fill="currentColor" />
+    <line x1="11" y1="2" x2="10" y2="1" strokeWidth="0.8" />
+    <line x1="13" y1="2" x2="14" y2="1" strokeWidth="0.8" />
+    {/* Tower cross beams */}
+    <line x1="10" y1="6" x2="14" y2="6" strokeWidth="1" opacity="0.6" />
+    <line x1="10.5" y1="8" x2="13.5" y2="8" strokeWidth="1" opacity="0.6" />
+    {/* Transmitter pod */}
+    <rect x="10" y="9" width="4" height="3" rx="0.5" fill="currentColor" opacity="0.8" />
+    {/* Base platform */}
+    <path d="M8 12l4 2 4-2" strokeWidth="1.5" fill="none" />
+    <rect
+      x="9"
+      y="14"
+      width="6"
+      height="8"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Control panel details */}
+    <circle cx="11" cy="17" r="0.8" fill="currentColor" opacity="0.5" />
+    <circle cx="13" cy="17" r="0.8" fill="currentColor" opacity="0.5" />
+    <line x1="10" y1="20" x2="14" y2="20" strokeWidth="0.8" opacity="0.4" />
+    {/* Broadcast waves (left) */}
+    <path d="M6 10c-1.5 1-2 2.5-2 4s.5 3 2 4" strokeWidth="1.2" fill="none" opacity="0.6" />
+    <path d="M3 8c-2 1.5-3 3.5-3 6s1 4.5 3 6" strokeWidth="1" fill="none" opacity="0.4" />
+    {/* Broadcast waves (right) */}
+    <path d="M18 10c1.5 1 2 2.5 2 4s-.5 3-2 4" strokeWidth="1.2" fill="none" opacity="0.6" />
+    <path d="M21 8c2 1.5 3 3.5 3 6s-1 4.5-3 6" strokeWidth="1" fill="none" opacity="0.4" />
   </>,
   'Radio'
 );
@@ -1819,13 +1945,37 @@ export const UserPlus = createIcon(
   'UserPlus'
 );
 
-// Users - multiple users/team
+// Users - band members with instruments (musician-specific)
 export const Users = createIcon(
   <>
-    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-    <circle cx="9" cy="7" r="4" />
-    <path d="M23 21v-2a4 4 0 00-3-3.87" />
-    <path d="M16 3.13a4 4 0 010 7.75" />
+    {/* Left musician with guitar */}
+    <circle cx="7" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <path d="M4 21v-3c0-1.5 1-2.5 3-2.5s3 1 3 2.5v3" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Guitar shape */}
+    <path
+      d="M6 15.5c-.5.3-.8.8-.8 1.2 0 .5.4.8.8.8s.8-.3.8-.8c0-.4-.3-.9-.8-1.2z"
+      fill="currentColor"
+      opacity="0.7"
+    />
+
+    {/* Right musician with headphones */}
+    <circle cx="17" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <path d="M14 21v-3c0-1.5 1-2.5 3-2.5s3 1 3 2.5v3" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Headphones arc */}
+    <path
+      d="M15 5.5c.5-.8 1.2-1.2 2-1.2s1.5.4 2 1.2"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+      opacity="0.7"
+    />
+
+    {/* Center musician (vocalist/frontperson) - slightly forward */}
+    <circle cx="12" cy="4.5" r="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <path d="M10 21v-4c0-1 .8-1.5 2-1.5s2 .5 2 1.5v4" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Microphone in hand */}
+    <line x1="12" y1="13" x2="12" y2="15.5" strokeWidth="1.2" opacity="0.7" />
+    <circle cx="12" cy="13" r="0.8" fill="currentColor" opacity="0.7" />
   </>,
   'Users'
 );
@@ -2018,11 +2168,31 @@ export const Maximize = createIcon(
   'Maximize'
 );
 
-// FolderOpen - open folder
+// FolderOpen - session folder with waveform (project folder)
 export const FolderOpen = createIcon(
   <>
-    <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
-    <path d="M2 10h20" />
+    {/* Folder back flap */}
+    <path
+      d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Folder tab */}
+    <path d="M9 3l2 3" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Folder opening line */}
+    <path d="M2 11h20" strokeWidth="1.2" opacity="0.6" />
+    {/* Waveform inside folder (audio session indicator) */}
+    <path
+      d="M6 15v2 M8 14v4 M10 15v2 M12 13v5 M14 14v4 M16 15v2 M18 14v4"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      opacity="0.7"
+    />
+    {/* File count indicator dots */}
+    <circle cx="5" cy="8" r="0.5" fill="currentColor" opacity="0.5" />
+    <circle cx="7" cy="8" r="0.5" fill="currentColor" opacity="0.5" />
+    <circle cx="9" cy="8" r="0.5" fill="currentColor" opacity="0.5" />
   </>,
   'FolderOpen'
 );
@@ -2152,12 +2322,39 @@ export const UserSearch = createIcon(
   'UserSearch'
 );
 
-// Music4 - music note with staff
+// Music4 - detailed song manuscript with musical staff
 export const Music4 = createIcon(
   <>
-    <path d="M9 18V5l12-2v13" />
-    <path d="M6 15H4c-1.1 0-2 .9-2 2s.9 2 2 2h2c1.1 0 2-.9 2-2s-.9-2-2-2z" />
-    <circle cx="18" cy="16" r="3" />
+    {/* Sheet music paper */}
+    <rect
+      x="3"
+      y="4"
+      width="18"
+      height="16"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Musical staff lines */}
+    <line x1="5" y1="8" x2="19" y2="8" strokeWidth="0.5" />
+    <line x1="5" y1="10" x2="19" y2="10" strokeWidth="0.5" />
+    <line x1="5" y1="12" x2="19" y2="12" strokeWidth="0.5" />
+    <line x1="5" y1="14" x2="19" y2="14" strokeWidth="0.5" />
+    <line x1="5" y1="16" x2="19" y2="16" strokeWidth="0.5" />
+    {/* Treble clef shape */}
+    <path
+      d="M7 14c0-2 1-3.5 1.5-4.5.3-.6.5-1 .5-1.5 0-.8-.5-1-1-1-.3 0-.5.1-.7.3"
+      strokeWidth="1.2"
+      fill="none"
+    />
+    {/* Music notes */}
+    <circle cx="11" cy="12" r="1" fill="currentColor" />
+    <line x1="12" y1="12" x2="12" y2="8" strokeWidth="1" />
+    <circle cx="14" cy="14" r="1" fill="currentColor" />
+    <line x1="15" y1="14" x2="15" y2="10" strokeWidth="1" />
+    <circle cx="17" cy="11" r="1" fill="currentColor" />
+    <line x1="18" y1="11" x2="18" y2="7" strokeWidth="1" />
   </>,
   'Music4'
 );
@@ -2184,10 +2381,33 @@ export const FlaskConical = createIcon(
   'FlaskConical'
 );
 
-// Wrench - tool/settings
+// Wrench - musician's multi-tool (tuner, picks, tools)
 export const Wrench = createIcon(
   <>
-    <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
+    {/* Main wrench body */}
+    <path
+      d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Guitar pick overlay (multi-tool theme) */}
+    <path
+      d="M19 3c.5 0 1 .3 1.3.7.2.3.2.6 0 .8-.3.4-.8.7-1.3.7s-1-.3-1.3-.7c-.2-.2-.2-.5 0-.8.3-.4.8-.7 1.3-.7z"
+      fill="currentColor"
+      opacity="0.6"
+    />
+    {/* Tuning peg detail */}
+    <circle
+      cx="6"
+      cy="18"
+      r="1.5"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+      opacity="0.5"
+    />
+    <line x1="5" y1="17" x2="7" y2="19" strokeWidth="0.8" opacity="0.5" />
   </>,
   'Wrench'
 );
@@ -2367,6 +2587,1273 @@ export const Layout = createIcon(
     <path d="M9 21V9" />
   </>,
   'Layout'
+);
+
+// =====================
+// STUDIO EQUIPMENT ICONS
+// Professional recording studio gear
+// =====================
+
+// MixingConsole - studio mixing board/desk
+export const MixingConsole = createIcon(
+  <>
+    {/* Console body/frame */}
+    <rect
+      x="2"
+      y="6"
+      width="20"
+      height="14"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Top meter bridge */}
+    <rect
+      x="3"
+      y="3"
+      width="18"
+      height="3"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+      opacity="0.7"
+    />
+    {/* VU meter displays */}
+    <rect x="5" y="3.5" width="3" height="2" rx="0.3" fill="currentColor" opacity="0.4" />
+    <rect x="10" y="3.5" width="3" height="2" rx="0.3" fill="currentColor" opacity="0.4" />
+    <rect x="16" y="3.5" width="3" height="2" rx="0.3" fill="currentColor" opacity="0.4" />
+    {/* Channel strips - faders */}
+    <line x1="5" y1="9" x2="5" y2="17" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="8" y1="9" x2="8" y2="17" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="11" y1="9" x2="11" y2="17" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="14" y1="9" x2="14" y2="17" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="17" y1="9" x2="17" y2="17" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="20" y1="9" x2="20" y2="17" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Fader caps at different positions */}
+    <rect x="4" y="11" width="2" height="1.5" rx="0.3" fill="currentColor" />
+    <rect x="7" y="14" width="2" height="1.5" rx="0.3" fill="currentColor" />
+    <rect x="10" y="12" width="2" height="1.5" rx="0.3" fill="currentColor" />
+    <rect x="13" y="15" width="2" height="1.5" rx="0.3" fill="currentColor" />
+    <rect x="16" y="10" width="2" height="1.5" rx="0.3" fill="currentColor" />
+    <rect x="19" y="13" width="2" height="1.5" rx="0.3" fill="currentColor" />
+    {/* Knob row */}
+    <circle cx="5" cy="8" r="0.6" fill="currentColor" opacity="0.6" />
+    <circle cx="8" cy="8" r="0.6" fill="currentColor" opacity="0.6" />
+    <circle cx="11" cy="8" r="0.6" fill="currentColor" opacity="0.6" />
+    <circle cx="14" cy="8" r="0.6" fill="currentColor" opacity="0.6" />
+    <circle cx="17" cy="8" r="0.6" fill="currentColor" opacity="0.6" />
+    <circle cx="20" cy="8" r="0.6" fill="currentColor" opacity="0.6" />
+  </>,
+  'MixingConsole'
+);
+
+// AudioInterface - USB/Thunderbolt audio interface
+export const AudioInterface = createIcon(
+  <>
+    {/* Main unit body */}
+    <rect
+      x="2"
+      y="7"
+      width="20"
+      height="10"
+      rx="2"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Input gain knobs */}
+    <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <line x1="5" y1="10.5" x2="5" y2="11.5" strokeWidth="1" />
+    <circle cx="10" cy="12" r="2" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <line x1="10" y1="10.5" x2="10" y2="11.5" strokeWidth="1" />
+    {/* Monitor knob (larger) */}
+    <circle cx="16" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <line x1="16" y1="10" x2="16" y2="11.2" strokeWidth="1.2" />
+    {/* LED meters */}
+    <rect
+      x="19"
+      y="9"
+      width="1.5"
+      height="6"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      fill="none"
+    />
+    <rect x="19.2" y="13" width="1.1" height="1" fill="currentColor" opacity="0.3" />
+    <rect x="19.2" y="11.5" width="1.1" height="1" fill="currentColor" opacity="0.5" />
+    <rect x="19.2" y="10" width="1.1" height="1" fill="currentColor" opacity="0.7" />
+    {/* Input labels */}
+    <text x="5" y="16" fontSize="2" fill="currentColor" textAnchor="middle" opacity="0.5">
+      1
+    </text>
+    <text x="10" y="16" fontSize="2" fill="currentColor" textAnchor="middle" opacity="0.5">
+      2
+    </text>
+    {/* USB indicator */}
+    <rect
+      x="3"
+      y="4"
+      width="4"
+      height="2"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.6"
+    />
+    <line x1="5" y1="6" x2="5" y2="7" strokeWidth="0.8" opacity="0.6" />
+    {/* Phantom power indicator */}
+    <circle cx="7.5" cy="9" r="0.5" fill="currentColor" opacity="0.4" />
+  </>,
+  'AudioInterface'
+);
+
+// StudioMonitors - pair of studio monitor speakers
+export const StudioMonitors = createIcon(
+  <>
+    {/* Left monitor cabinet */}
+    <rect
+      x="2"
+      y="4"
+      width="8"
+      height="16"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Left tweeter */}
+    <circle cx="6" cy="7.5" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <circle cx="6" cy="7.5" r="0.4" fill="currentColor" />
+    {/* Left woofer */}
+    <circle cx="6" cy="14" r="3" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <circle cx="6" cy="14" r="1.5" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <circle cx="6" cy="14" r="0.5" fill="currentColor" />
+    {/* Left port (bass reflex) */}
+    <rect x="4.5" y="18" width="3" height="1" rx="0.3" fill="currentColor" opacity="0.5" />
+
+    {/* Right monitor cabinet */}
+    <rect
+      x="14"
+      y="4"
+      width="8"
+      height="16"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Right tweeter */}
+    <circle cx="18" cy="7.5" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <circle cx="18" cy="7.5" r="0.4" fill="currentColor" />
+    {/* Right woofer */}
+    <circle cx="18" cy="14" r="3" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <circle cx="18" cy="14" r="1.5" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <circle cx="18" cy="14" r="0.5" fill="currentColor" />
+    {/* Right port */}
+    <rect x="16.5" y="18" width="3" height="1" rx="0.3" fill="currentColor" opacity="0.5" />
+
+    {/* Sound waves between monitors */}
+    <path d="M10.5 10c.5 1 .5 4 0 5" strokeWidth="0.8" fill="none" opacity="0.4" />
+    <path d="M13.5 10c-.5 1-.5 4 0 5" strokeWidth="0.8" fill="none" opacity="0.4" />
+  </>,
+  'StudioMonitors'
+);
+
+// BassGuitar - electric bass guitar
+export const BassGuitar = createIcon(
+  <>
+    {/* Headstock */}
+    <path d="M3 3v4c0 .5.5 1 1 1h1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Tuning pegs (4 for bass) */}
+    <circle cx="2.5" cy="4" r="0.8" fill="currentColor" opacity="0.7" />
+    <circle cx="2.5" cy="6" r="0.8" fill="currentColor" opacity="0.7" />
+    {/* Neck */}
+    <rect
+      x="4"
+      y="4"
+      width="2"
+      height="12"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Fret markers */}
+    <circle cx="5" cy="7" r="0.4" fill="currentColor" opacity="0.4" />
+    <circle cx="5" cy="10" r="0.4" fill="currentColor" opacity="0.4" />
+    <circle cx="5" cy="13" r="0.4" fill="currentColor" opacity="0.4" />
+    {/* Body (jazz bass style) */}
+    <path
+      d="M6 16c0 3 2 5 6 5 5 0 9-2 9-6 0-3-2-5-4-5-1 0-2 .5-2.5 1.5-.3.5-.5 1-1.5 1-.8 0-1-.3-1.5-1S10 10 9 10c-2 0-3 3-3 6z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Pickups (split-coil jazz style) */}
+    <rect x="10" y="13" width="3" height="1.5" rx="0.3" fill="currentColor" opacity="0.6" />
+    <rect x="14" y="14" width="3" height="1.5" rx="0.3" fill="currentColor" opacity="0.6" />
+    {/* Bridge */}
+    <rect x="16" y="16" width="2" height="3" rx="0.3" fill="currentColor" opacity="0.5" />
+    {/* Control knobs */}
+    <circle cx="11" cy="18" r="0.8" fill="currentColor" opacity="0.5" />
+    <circle cx="13" cy="19" r="0.8" fill="currentColor" opacity="0.5" />
+    {/* Strings (4) */}
+    <line x1="4.5" y1="4" x2="17" y2="16" strokeWidth="0.3" opacity="0.3" />
+    <line x1="5" y1="4" x2="17.5" y2="16.5" strokeWidth="0.3" opacity="0.3" />
+    <line x1="5.5" y1="4" x2="18" y2="17" strokeWidth="0.3" opacity="0.3" />
+    <line x1="6" y1="4" x2="18.5" y2="17.5" strokeWidth="0.3" opacity="0.3" />
+  </>,
+  'BassGuitar'
+);
+
+// DrumKit - detailed drum set
+export const DrumKit = createIcon(
+  <>
+    {/* Bass drum (center) */}
+    <ellipse cx="12" cy="16" rx="5" ry="4" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <ellipse
+      cx="12"
+      cy="16"
+      rx="3"
+      ry="2.5"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      fill="none"
+      opacity="0.5"
+    />
+    {/* Bass drum logo area */}
+    <circle cx="12" cy="16" r="1.5" fill="currentColor" opacity="0.3" />
+
+    {/* Snare drum (left front) */}
+    <ellipse cx="6" cy="12" rx="3" ry="1.5" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <path
+      d="M3 12v2c0 .8 1.3 1.5 3 1.5s3-.7 3-1.5v-2"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+    />
+
+    {/* Hi-hat (far left) */}
+    <ellipse cx="3" cy="8" rx="2" ry="0.8" stroke="currentColor" strokeWidth="1" fill="none" />
+    <ellipse cx="3" cy="8.5" rx="2" ry="0.8" stroke="currentColor" strokeWidth="1" fill="none" />
+    <line x1="3" y1="9.3" x2="3" y2="14" strokeWidth="0.8" />
+
+    {/* Floor tom (right) */}
+    <ellipse cx="18" cy="14" rx="3" ry="1.5" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <path
+      d="M15 14v3c0 .8 1.3 1.5 3 1.5s3-.7 3-1.5v-3"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+    />
+
+    {/* Rack tom 1 (left top) */}
+    <ellipse cx="8" cy="6" rx="2.5" ry="1.2" stroke="currentColor" strokeWidth="1" fill="none" />
+    <path
+      d="M5.5 6v2c0 .6 1.1 1.2 2.5 1.2s2.5-.6 2.5-1.2V6"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+    />
+
+    {/* Rack tom 2 (right top) */}
+    <ellipse cx="16" cy="6" rx="2.5" ry="1.2" stroke="currentColor" strokeWidth="1" fill="none" />
+    <path
+      d="M13.5 6v2c0 .6 1.1 1.2 2.5 1.2s2.5-.6 2.5-1.2V6"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+    />
+
+    {/* Crash cymbal (right) */}
+    <ellipse cx="20" cy="4" rx="2.5" ry="0.8" stroke="currentColor" strokeWidth="1" fill="none" />
+    <line x1="20" y1="4.8" x2="20" y2="8" strokeWidth="0.8" />
+
+    {/* Ride cymbal (far right) */}
+    <ellipse
+      cx="22"
+      cy="9"
+      rx="2"
+      ry="0.7"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.7"
+    />
+  </>,
+  'DrumKit'
+);
+
+// Amplifier - guitar/bass amp head
+export const Amplifier = createIcon(
+  <>
+    {/* Amp head cabinet */}
+    <rect
+      x="2"
+      y="3"
+      width="20"
+      height="10"
+      rx="1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Tolex texture lines */}
+    <line x1="3" y1="5" x2="21" y2="5" strokeWidth="0.3" opacity="0.3" />
+    <line x1="3" y1="7" x2="21" y2="7" strokeWidth="0.3" opacity="0.3" />
+    <line x1="3" y1="9" x2="21" y2="9" strokeWidth="0.3" opacity="0.3" />
+    <line x1="3" y1="11" x2="21" y2="11" strokeWidth="0.3" opacity="0.3" />
+    {/* Control panel (recessed) */}
+    <rect
+      x="3"
+      y="4"
+      width="18"
+      height="4"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+      opacity="0.8"
+    />
+    {/* Knobs row */}
+    <circle cx="5" cy="6" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <line x1="5" y1="5.2" x2="5" y2="5.8" strokeWidth="0.6" />
+    <circle cx="8" cy="6" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <line x1="8" y1="5.2" x2="8" y2="5.8" strokeWidth="0.6" />
+    <circle cx="11" cy="6" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <line x1="11" y1="5.2" x2="11" y2="5.8" strokeWidth="0.6" />
+    <circle cx="14" cy="6" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <line x1="14" y1="5.2" x2="14" y2="5.8" strokeWidth="0.6" />
+    <circle cx="17" cy="6" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <line x1="17" y1="5.2" x2="17" y2="5.8" strokeWidth="0.6" />
+    {/* Power/standby switches */}
+    <rect x="19" y="5" width="1.5" height="2" rx="0.3" fill="currentColor" opacity="0.5" />
+    {/* Handle */}
+    <path d="M8 2h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    {/* Vent slots */}
+    <line x1="4" y1="10" x2="6" y2="10" strokeWidth="0.5" opacity="0.4" />
+    <line x1="8" y1="10" x2="10" y2="10" strokeWidth="0.5" opacity="0.4" />
+    <line x1="14" y1="10" x2="16" y2="10" strokeWidth="0.5" opacity="0.4" />
+    <line x1="18" y1="10" x2="20" y2="10" strokeWidth="0.5" opacity="0.4" />
+    {/* Speaker cabinet (below) */}
+    <rect
+      x="2"
+      y="14"
+      width="20"
+      height="8"
+      rx="1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Speaker grille pattern */}
+    <rect
+      x="3"
+      y="15"
+      width="18"
+      height="6"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.6"
+    />
+    {/* Speaker cones visible through grille */}
+    <circle
+      cx="8"
+      cy="18"
+      r="2.5"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle cx="8" cy="18" r="1" fill="currentColor" opacity="0.3" />
+    <circle
+      cx="16"
+      cy="18"
+      r="2.5"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle cx="16" cy="18" r="1" fill="currentColor" opacity="0.3" />
+    {/* Logo badge */}
+    <rect x="10" y="10.5" width="4" height="1.5" rx="0.3" fill="currentColor" opacity="0.4" />
+  </>,
+  'Amplifier'
+);
+
+// KeyboardSynth - MIDI keyboard / synthesizer
+export const KeyboardSynth = createIcon(
+  <>
+    {/* Main keyboard body */}
+    <rect
+      x="1"
+      y="8"
+      width="22"
+      height="10"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Control panel section */}
+    <rect
+      x="2"
+      y="9"
+      width="20"
+      height="3"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.7"
+    />
+    {/* Mod and pitch wheels */}
+    <rect x="3" y="9.5" width="1.5" height="2" rx="0.3" fill="currentColor" opacity="0.5" />
+    <rect x="5" y="9.5" width="1.5" height="2" rx="0.3" fill="currentColor" opacity="0.5" />
+    {/* Knobs */}
+    <circle cx="9" cy="10.5" r="0.7" fill="currentColor" opacity="0.4" />
+    <circle cx="11" cy="10.5" r="0.7" fill="currentColor" opacity="0.4" />
+    <circle cx="13" cy="10.5" r="0.7" fill="currentColor" opacity="0.4" />
+    <circle cx="15" cy="10.5" r="0.7" fill="currentColor" opacity="0.4" />
+    {/* Display screen */}
+    <rect x="17" y="9.5" width="4" height="2" rx="0.3" fill="currentColor" opacity="0.3" />
+    {/* White keys */}
+    <rect
+      x="2"
+      y="13"
+      width="2.5"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect
+      x="5"
+      y="13"
+      width="2.5"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect
+      x="8"
+      y="13"
+      width="2.5"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect
+      x="11"
+      y="13"
+      width="2.5"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect
+      x="14"
+      y="13"
+      width="2.5"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect
+      x="17"
+      y="13"
+      width="2.5"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect
+      x="20"
+      y="13"
+      width="2"
+      height="4"
+      rx="0.2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    {/* Black keys */}
+    <rect x="4" y="13" width="1.5" height="2.5" rx="0.2" fill="currentColor" />
+    <rect x="7" y="13" width="1.5" height="2.5" rx="0.2" fill="currentColor" />
+    <rect x="13" y="13" width="1.5" height="2.5" rx="0.2" fill="currentColor" />
+    <rect x="16" y="13" width="1.5" height="2.5" rx="0.2" fill="currentColor" />
+    <rect x="19" y="13" width="1.5" height="2.5" rx="0.2" fill="currentColor" />
+  </>,
+  'KeyboardSynth'
+);
+
+// StudioHeadphones - professional closed-back headphones
+export const StudioHeadphones = createIcon(
+  <>
+    {/* Headband */}
+    <path
+      d="M4 12a8 8 0 0116 0"
+      stroke="currentColor"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Headband padding */}
+    <path
+      d="M8 6a4 4 0 018 0"
+      stroke="currentColor"
+      strokeWidth="3"
+      fill="none"
+      strokeLinecap="round"
+      opacity="0.3"
+    />
+    {/* Left ear cup outer */}
+    <rect
+      x="2"
+      y="11"
+      width="5"
+      height="7"
+      rx="1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Left ear cup inner (cushion) */}
+    <ellipse cx="4.5" cy="14.5" rx="1.5" ry="2" fill="currentColor" opacity="0.3" />
+    {/* Left hinge */}
+    <rect x="5" y="12" width="1.5" height="2" rx="0.3" fill="currentColor" opacity="0.5" />
+    {/* Right ear cup outer */}
+    <rect
+      x="17"
+      y="11"
+      width="5"
+      height="7"
+      rx="1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Right ear cup inner (cushion) */}
+    <ellipse cx="19.5" cy="14.5" rx="1.5" ry="2" fill="currentColor" opacity="0.3" />
+    {/* Right hinge */}
+    <rect x="17.5" y="12" width="1.5" height="2" rx="0.3" fill="currentColor" opacity="0.5" />
+    {/* Cable from left ear cup */}
+    <path
+      d="M4.5 18v2c0 1 .5 2 1.5 2"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Cable connector */}
+    <rect x="5.5" y="21" width="2" height="1.5" rx="0.3" fill="currentColor" opacity="0.6" />
+  </>,
+  'StudioHeadphones'
+);
+
+// EffectsPedal - guitar effects pedal / stompbox
+export const EffectsPedal = createIcon(
+  <>
+    {/* Pedal body */}
+    <rect
+      x="4"
+      y="4"
+      width="16"
+      height="16"
+      rx="2"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Footswitch (main button) */}
+    <circle cx="12" cy="15" r="3" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <circle cx="12" cy="15" r="1.5" fill="currentColor" opacity="0.4" />
+    {/* Knobs row */}
+    <circle cx="7" cy="7" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <line x1="7" y1="5.8" x2="7" y2="6.5" strokeWidth="0.8" />
+    <circle cx="12" cy="7" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <line x1="12" y1="5.8" x2="12" y2="6.5" strokeWidth="0.8" />
+    <circle cx="17" cy="7" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <line x1="17" y1="5.8" x2="17" y2="6.5" strokeWidth="0.8" />
+    {/* LED indicator */}
+    <circle cx="12" cy="10.5" r="0.8" fill="currentColor" />
+    {/* Input/output jacks (top) */}
+    <circle cx="6" cy="3" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.6" />
+    <circle
+      cx="18"
+      cy="3"
+      r="1"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.6"
+    />
+    {/* Label area */}
+    <rect x="8" y="11.5" width="8" height="1.5" rx="0.3" fill="currentColor" opacity="0.2" />
+    {/* Rubber feet corners */}
+    <circle cx="5.5" cy="18.5" r="0.5" fill="currentColor" opacity="0.4" />
+    <circle cx="18.5" cy="18.5" r="0.5" fill="currentColor" opacity="0.4" />
+  </>,
+  'EffectsPedal'
+);
+
+// AcousticGuitar - acoustic guitar with sound hole and strings
+export const AcousticGuitar = createIcon(
+  <>
+    {/* Headstock */}
+    <path d="M4 2v3c0 .5.5 1 1 1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Tuning pegs */}
+    <circle cx="3" cy="2.5" r="0.6" fill="currentColor" opacity="0.7" />
+    <circle cx="3" cy="4" r="0.6" fill="currentColor" opacity="0.7" />
+    <circle cx="5" cy="2.5" r="0.6" fill="currentColor" opacity="0.7" />
+    <circle cx="5" cy="4" r="0.6" fill="currentColor" opacity="0.7" />
+    {/* Nut */}
+    <rect x="4.5" y="5" width="2" height="0.5" fill="currentColor" opacity="0.5" />
+    {/* Neck */}
+    <rect
+      x="5"
+      y="5"
+      width="1.5"
+      height="8"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+    />
+    {/* Fret markers */}
+    <circle cx="5.75" cy="7" r="0.3" fill="currentColor" opacity="0.4" />
+    <circle cx="5.75" cy="9" r="0.3" fill="currentColor" opacity="0.4" />
+    <circle cx="5.75" cy="11" r="0.3" fill="currentColor" opacity="0.4" />
+    {/* Body (dreadnought shape) */}
+    <path
+      d="M6.5 13c0 2.5 1.5 4 4 5 3 1.2 6 1.5 7.5 0 1.5-1.5 2-3 2-5s-.5-3.5-2-4.5c-1.2-.8-3-1-4.5-.5-2 .7-3 1.5-4 2.5-1 1-3 1-3 2.5z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Sound hole */}
+    <circle cx="13" cy="14" r="2.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    {/* Rosette pattern */}
+    <circle
+      cx="13"
+      cy="14"
+      r="3"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.4"
+    />
+    <circle
+      cx="13"
+      cy="14"
+      r="2"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.4"
+    />
+    {/* Bridge */}
+    <rect x="11" y="17.5" width="5" height="1" rx="0.3" fill="currentColor" opacity="0.6" />
+    {/* Saddle */}
+    <rect x="11.5" y="17" width="4" height="0.5" rx="0.2" fill="currentColor" opacity="0.8" />
+    {/* Strings */}
+    <line x1="5.2" y1="5.5" x2="12" y2="17.5" strokeWidth="0.2" opacity="0.3" />
+    <line x1="5.5" y1="5.5" x2="12.5" y2="17.5" strokeWidth="0.2" opacity="0.3" />
+    <line x1="5.8" y1="5.5" x2="13" y2="17.5" strokeWidth="0.2" opacity="0.3" />
+    <line x1="6.1" y1="5.5" x2="13.5" y2="17.5" strokeWidth="0.2" opacity="0.3" />
+    <line x1="6.4" y1="5.5" x2="14" y2="17.5" strokeWidth="0.2" opacity="0.3" />
+    <line x1="6.7" y1="5.5" x2="14.5" y2="17.5" strokeWidth="0.2" opacity="0.3" />
+    {/* Pickguard */}
+    <path
+      d="M10 12c1 0 2 1 2 2.5s0 3-1.5 3.5"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      fill="none"
+      opacity="0.4"
+    />
+  </>,
+  'AcousticGuitar'
+);
+
+// StageLights - concert stage lighting rig
+export const StageLights = createIcon(
+  <>
+    {/* Truss bar */}
+    <rect
+      x="2"
+      y="2"
+      width="20"
+      height="2"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+    />
+    <line x1="3" y1="2" x2="3" y2="4" strokeWidth="0.5" opacity="0.5" />
+    <line x1="6" y1="2" x2="6" y2="4" strokeWidth="0.5" opacity="0.5" />
+    <line x1="9" y1="2" x2="9" y2="4" strokeWidth="0.5" opacity="0.5" />
+    <line x1="15" y1="2" x2="15" y2="4" strokeWidth="0.5" opacity="0.5" />
+    <line x1="18" y1="2" x2="18" y2="4" strokeWidth="0.5" opacity="0.5" />
+    <line x1="21" y1="2" x2="21" y2="4" strokeWidth="0.5" opacity="0.5" />
+
+    {/* Left PAR can */}
+    <path d="M3 4v2" stroke="currentColor" strokeWidth="1" />
+    <rect
+      x="1"
+      y="6"
+      width="4"
+      height="4"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+    />
+    <circle cx="3" cy="8" r="1.2" fill="currentColor" opacity="0.5" />
+    {/* Left light beam */}
+    <path d="M1.5 10L0 16M4.5 10L6 16" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+
+    {/* Center moving head */}
+    <path d="M12 4v1" stroke="currentColor" strokeWidth="1.2" />
+    <rect
+      x="10"
+      y="5"
+      width="4"
+      height="2"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+    />
+    <ellipse cx="12" cy="9" rx="2.5" ry="3" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <circle cx="12" cy="9" r="1.5" fill="currentColor" opacity="0.6" />
+    {/* Center beam (wide) */}
+    <path d="M9.5 12L7 20M14.5 12L17 20" stroke="currentColor" strokeWidth="0.6" opacity="0.4" />
+    <path d="M11 12L10 20M13 12L14 20" stroke="currentColor" strokeWidth="0.4" opacity="0.2" />
+
+    {/* Right PAR can */}
+    <path d="M21 4v2" stroke="currentColor" strokeWidth="1" />
+    <rect
+      x="19"
+      y="6"
+      width="4"
+      height="4"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+    />
+    <circle cx="21" cy="8" r="1.2" fill="currentColor" opacity="0.5" />
+    {/* Right light beam */}
+    <path d="M19.5 10L18 16M22.5 10L24 16" stroke="currentColor" strokeWidth="0.5" opacity="0.3" />
+
+    {/* Floor/stage line */}
+    <line x1="0" y1="22" x2="24" y2="22" strokeWidth="0.8" opacity="0.3" />
+  </>,
+  'StageLights'
+);
+
+// PatchCable - XLR/instrument cable
+export const PatchCable = createIcon(
+  <>
+    {/* Left XLR connector body */}
+    <rect
+      x="2"
+      y="9"
+      width="4"
+      height="6"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* XLR pins */}
+    <circle cx="4" cy="11" r="0.5" fill="currentColor" />
+    <circle cx="3.2" cy="13" r="0.5" fill="currentColor" />
+    <circle cx="4.8" cy="13" r="0.5" fill="currentColor" />
+    {/* Left strain relief */}
+    <rect x="1" y="10" width="1" height="4" rx="0.3" fill="currentColor" opacity="0.5" />
+
+    {/* Cable - curved path */}
+    <path
+      d="M6 12c2 0 3 4 6 4s4-4 6-4"
+      stroke="currentColor"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Cable highlight */}
+    <path
+      d="M6 11.5c2 0 3 4 6 4s4-4 6-4"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      fill="none"
+      opacity="0.3"
+    />
+
+    {/* Right XLR connector body */}
+    <rect
+      x="18"
+      y="9"
+      width="4"
+      height="6"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* XLR socket holes */}
+    <circle cx="20" cy="11" r="0.6" stroke="currentColor" strokeWidth="0.5" fill="none" />
+    <circle cx="19.2" cy="13" r="0.6" stroke="currentColor" strokeWidth="0.5" fill="none" />
+    <circle cx="20.8" cy="13" r="0.6" stroke="currentColor" strokeWidth="0.5" fill="none" />
+    {/* Right strain relief */}
+    <rect x="22" y="10" width="1" height="4" rx="0.3" fill="currentColor" opacity="0.5" />
+
+    {/* Ground lug indicator on connector */}
+    <line x1="3" y1="15.5" x2="5" y2="15.5" strokeWidth="0.8" opacity="0.4" />
+    <line x1="19" y1="15.5" x2="21" y2="15.5" strokeWidth="0.8" opacity="0.4" />
+  </>,
+  'PatchCable'
+);
+
+// Metronome - timing/practice tool
+export const Metronome = createIcon(
+  <>
+    {/* Main body (pyramid shape) */}
+    <path d="M12 2L5 20h14L12 2z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Base */}
+    <rect
+      x="4"
+      y="19"
+      width="16"
+      height="3"
+      rx="0.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Pendulum arm */}
+    <line
+      x1="12"
+      y1="18"
+      x2="8"
+      y2="6"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    {/* Weight on pendulum */}
+    <rect x="7" y="8" width="3" height="2" rx="0.5" fill="currentColor" />
+    {/* Scale markings */}
+    <line x1="9" y1="12" x2="10" y2="12" strokeWidth="0.8" opacity="0.5" />
+    <line x1="9.5" y1="10" x2="10.5" y2="10" strokeWidth="0.8" opacity="0.5" />
+    <line x1="10" y1="8" x2="11" y2="8" strokeWidth="0.8" opacity="0.5" />
+    <line x1="14" y1="12" x2="15" y2="12" strokeWidth="0.8" opacity="0.5" />
+    <line x1="13.5" y1="10" x2="14.5" y2="10" strokeWidth="0.8" opacity="0.5" />
+    <line x1="13" y1="8" x2="14" y2="8" strokeWidth="0.8" opacity="0.5" />
+    {/* Center pivot */}
+    <circle cx="12" cy="18" r="0.8" fill="currentColor" />
+    {/* Tempo indicator */}
+    <rect x="10" y="14" width="4" height="2" rx="0.3" fill="currentColor" opacity="0.3" />
+  </>,
+  'Metronome'
+);
+
+// MusicStand - sheet music stand
+export const MusicStand = createIcon(
+  <>
+    {/* Music sheet holder (angled) */}
+    <path
+      d="M4 4h16v12H4z"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+      transform="rotate(-5 12 10)"
+    />
+    {/* Sheet music lines */}
+    <line x1="6" y1="7" x2="18" y2="6.5" strokeWidth="0.5" opacity="0.4" />
+    <line x1="6" y1="9" x2="18" y2="8.5" strokeWidth="0.5" opacity="0.4" />
+    <line x1="6" y1="11" x2="18" y2="10.5" strokeWidth="0.5" opacity="0.4" />
+    <line x1="6" y1="13" x2="18" y2="12.5" strokeWidth="0.5" opacity="0.4" />
+    {/* Music notes on staff */}
+    <ellipse
+      cx="8"
+      cy="8"
+      rx="1"
+      ry="0.7"
+      fill="currentColor"
+      opacity="0.6"
+      transform="rotate(-10 8 8)"
+    />
+    <ellipse
+      cx="12"
+      cy="10.5"
+      rx="1"
+      ry="0.7"
+      fill="currentColor"
+      opacity="0.6"
+      transform="rotate(-10 12 10.5)"
+    />
+    <ellipse
+      cx="15"
+      cy="7"
+      rx="1"
+      ry="0.7"
+      fill="currentColor"
+      opacity="0.6"
+      transform="rotate(-10 15 7)"
+    />
+    {/* Note stems */}
+    <line x1="9" y1="8" x2="9" y2="5" strokeWidth="0.6" opacity="0.6" />
+    <line x1="13" y1="10.5" x2="13" y2="7.5" strokeWidth="0.6" opacity="0.6" />
+    <line x1="16" y1="7" x2="16" y2="4" strokeWidth="0.6" opacity="0.6" />
+    {/* Lip/edge at bottom of holder */}
+    <path d="M4 16h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    {/* Main pole */}
+    <line x1="12" y1="16" x2="12" y2="22" stroke="currentColor" strokeWidth="2" />
+    {/* Tripod base */}
+    <path
+      d="M12 22L8 23M12 22L16 23M12 22L12 23.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </>,
+  'MusicStand'
+);
+
+// Turntable - DJ turntable/deck
+export const Turntable = createIcon(
+  <>
+    {/* Base/deck */}
+    <rect
+      x="2"
+      y="4"
+      width="20"
+      height="16"
+      rx="1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+    />
+    {/* Platter */}
+    <circle cx="10" cy="12" r="6" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    {/* Record grooves */}
+    <circle
+      cx="10"
+      cy="12"
+      r="5"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.3"
+    />
+    <circle
+      cx="10"
+      cy="12"
+      r="4"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.3"
+    />
+    <circle
+      cx="10"
+      cy="12"
+      r="3"
+      stroke="currentColor"
+      strokeWidth="0.3"
+      fill="none"
+      opacity="0.3"
+    />
+    {/* Label */}
+    <circle cx="10" cy="12" r="2" fill="currentColor" opacity="0.4" />
+    {/* Spindle */}
+    <circle cx="10" cy="12" r="0.5" fill="currentColor" />
+    {/* Tonearm base */}
+    <circle cx="19" cy="7" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    <circle cx="19" cy="7" r="0.5" fill="currentColor" />
+    {/* Tonearm */}
+    <path d="M19 7L16 10L14 11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    {/* Cartridge/stylus */}
+    <rect x="13" y="10.5" width="1.5" height="2" rx="0.2" fill="currentColor" opacity="0.7" />
+    {/* Pitch slider */}
+    <rect
+      x="18"
+      y="11"
+      width="2"
+      height="6"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <rect x="18.4" y="13" width="1.2" height="1.5" rx="0.2" fill="currentColor" opacity="0.5" />
+    {/* Start/stop button */}
+    <circle cx="19" cy="18" r="1" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    <circle cx="19" cy="18" r="0.4" fill="currentColor" opacity="0.6" />
+  </>,
+  'Turntable'
+);
+
+// Saxophone - wind instrument
+export const Saxophone = createIcon(
+  <>
+    {/* Mouthpiece */}
+    <path
+      d="M6 2l2 1v2"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Neck */}
+    <path
+      d="M8 5c0 1 1 2 2 3"
+      stroke="currentColor"
+      strokeWidth="2"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Body curve */}
+    <path
+      d="M10 8c1 1 2 3 2 5s-1 4-2 6c-1 2-2 3-4 3"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Bell */}
+    <ellipse cx="6" cy="21" rx="3" ry="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <path d="M4 20c-1 0-2 .5-2 1" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    {/* Keys */}
+    <circle cx="11" cy="10" r="0.8" fill="currentColor" opacity="0.7" />
+    <circle cx="11.5" cy="12" r="0.8" fill="currentColor" opacity="0.7" />
+    <circle cx="11" cy="14" r="0.8" fill="currentColor" opacity="0.7" />
+    <circle cx="10" cy="16" r="0.8" fill="currentColor" opacity="0.7" />
+    <circle cx="9" cy="18" r="0.8" fill="currentColor" opacity="0.7" />
+    {/* Side keys */}
+    <ellipse cx="8" cy="11" rx="0.6" ry="1" fill="currentColor" opacity="0.5" />
+    <ellipse cx="7" cy="14" rx="0.6" ry="1" fill="currentColor" opacity="0.5" />
+    {/* Octave key */}
+    <circle cx="9" cy="7" r="0.5" fill="currentColor" opacity="0.6" />
+    {/* Bell rim highlight */}
+    <ellipse
+      cx="6"
+      cy="20.5"
+      rx="2"
+      ry="0.8"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      fill="none"
+      opacity="0.5"
+    />
+  </>,
+  'Saxophone'
+);
+
+// Violin - string instrument
+export const Violin = createIcon(
+  <>
+    {/* Scroll */}
+    <path
+      d="M3 2c1 0 2 1 2 2s-1 1-1 2"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+      strokeLinecap="round"
+    />
+    {/* Pegbox */}
+    <rect
+      x="3"
+      y="5"
+      width="2"
+      height="3"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+    />
+    {/* Tuning pegs */}
+    <line x1="2" y1="5.5" x2="3" y2="5.5" strokeWidth="1" />
+    <line x1="2" y1="7" x2="3" y2="7" strokeWidth="1" />
+    <line x1="5" y1="5.5" x2="6" y2="5.5" strokeWidth="1" />
+    <line x1="5" y1="7" x2="6" y2="7" strokeWidth="1" />
+    {/* Neck */}
+    <rect
+      x="3.5"
+      y="8"
+      width="1.5"
+      height="5"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="1"
+      fill="none"
+    />
+    {/* Body upper bout */}
+    <ellipse cx="8" cy="14" rx="4" ry="2.5" stroke="currentColor" strokeWidth="1.3" fill="none" />
+    {/* Body lower bout */}
+    <ellipse cx="8" cy="19" rx="5" ry="3" stroke="currentColor" strokeWidth="1.3" fill="none" />
+    {/* Waist (C-bouts) */}
+    <path d="M4 16c0 1 1 1.5 1 2" stroke="currentColor" strokeWidth="1" fill="none" />
+    <path d="M12 16c0 1-1 1.5-1 2" stroke="currentColor" strokeWidth="1" fill="none" />
+    {/* F-holes */}
+    <path
+      d="M6 15c-.5.5-.5 1.5 0 2s0 1.5-.5 2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+    />
+    <path d="M10 15c.5.5.5 1.5 0 2s0 1.5.5 2" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    {/* Bridge */}
+    <path d="M6 17.5h4" stroke="currentColor" strokeWidth="1" />
+    <path d="M7 17.5v1M9 17.5v1" strokeWidth="0.6" />
+    {/* Tailpiece */}
+    <path d="M7 20h2v2H7z" stroke="currentColor" strokeWidth="0.8" fill="none" />
+    {/* Chinrest */}
+    <ellipse
+      cx="11"
+      cy="20"
+      rx="1.5"
+      ry="1"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.7"
+    />
+    {/* Strings */}
+    <line x1="4" y1="8" x2="7" y2="20" strokeWidth="0.3" opacity="0.4" />
+    <line x1="4.5" y1="8" x2="7.7" y2="20" strokeWidth="0.3" opacity="0.4" />
+    <line x1="5" y1="8" x2="8.3" y2="20" strokeWidth="0.3" opacity="0.4" />
+    <line x1="5.5" y1="8" x2="9" y2="20" strokeWidth="0.3" opacity="0.4" />
+    {/* Bow (to the side) */}
+    <path d="M16 4c0 5 1 10 1 15" stroke="currentColor" strokeWidth="1.2" fill="none" />
+    <path
+      d="M15.5 4h1.5M15.5 19h1.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+    {/* Bow hair */}
+    <path
+      d="M17 5c.5 4 .5 9 0 13"
+      stroke="currentColor"
+      strokeWidth="0.4"
+      fill="none"
+      opacity="0.5"
+    />
+  </>,
+  'Violin'
+);
+
+// TapeReel - vintage recording tape reel
+export const TapeReel = createIcon(
+  <>
+    {/* Left reel */}
+    <circle cx="7" cy="10" r="5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <circle
+      cx="7"
+      cy="10"
+      r="3"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle cx="7" cy="10" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    {/* Left reel center hole */}
+    <circle cx="7" cy="10" r="0.5" fill="currentColor" />
+    {/* Left reel spokes */}
+    <line x1="7" y1="6.5" x2="7" y2="8" strokeWidth="0.8" opacity="0.4" />
+    <line x1="7" y1="12" x2="7" y2="13.5" strokeWidth="0.8" opacity="0.4" />
+    <line x1="3.5" y1="10" x2="5" y2="10" strokeWidth="0.8" opacity="0.4" />
+    <line x1="9" y1="10" x2="10.5" y2="10" strokeWidth="0.8" opacity="0.4" />
+
+    {/* Right reel (less tape) */}
+    <circle cx="17" cy="10" r="5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    <circle
+      cx="17"
+      cy="10"
+      r="2"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.5"
+    />
+    <circle cx="17" cy="10" r="1.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    {/* Right reel center hole */}
+    <circle cx="17" cy="10" r="0.5" fill="currentColor" />
+    {/* Right reel spokes */}
+    <line x1="17" y1="6.5" x2="17" y2="8" strokeWidth="0.8" opacity="0.4" />
+    <line x1="17" y1="12" x2="17" y2="13.5" strokeWidth="0.8" opacity="0.4" />
+    <line x1="13.5" y1="10" x2="15" y2="10" strokeWidth="0.8" opacity="0.4" />
+    <line x1="19" y1="10" x2="20.5" y2="10" strokeWidth="0.8" opacity="0.4" />
+
+    {/* Tape path */}
+    <path d="M12 10h0" stroke="currentColor" strokeWidth="0.8" />
+    <path d="M7 5c2-2 8-2 10 0" stroke="currentColor" strokeWidth="0.8" fill="none" opacity="0.6" />
+    <path
+      d="M7 15c2 2 8 2 10 0"
+      stroke="currentColor"
+      strokeWidth="0.8"
+      fill="none"
+      opacity="0.6"
+    />
+
+    {/* Tape heads */}
+    <rect x="10" y="14" width="4" height="2" rx="0.3" fill="currentColor" opacity="0.5" />
+    <line x1="11" y1="14" x2="11" y2="16" strokeWidth="0.5" opacity="0.3" />
+    <line x1="12" y1="14" x2="12" y2="16" strokeWidth="0.5" opacity="0.3" />
+    <line x1="13" y1="14" x2="13" y2="16" strokeWidth="0.5" opacity="0.3" />
+
+    {/* Recording deck base */}
+    <rect
+      x="2"
+      y="18"
+      width="20"
+      height="4"
+      rx="1"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      fill="none"
+    />
+    {/* Transport buttons */}
+    <circle cx="6" cy="20" r="0.8" fill="currentColor" opacity="0.4" />
+    <rect x="8" y="19.3" width="1.4" height="1.4" fill="currentColor" opacity="0.4" />
+    <path d="M11 19.3l1.5.7-1.5.7z" fill="currentColor" opacity="0.4" />
+    <path d="M14 19.3l1.5.7-1.5.7zM15.5 19.3l1.5.7-1.5.7z" fill="currentColor" opacity="0.4" />
+    {/* VU meter */}
+    <rect
+      x="18"
+      y="19"
+      width="3"
+      height="2"
+      rx="0.3"
+      stroke="currentColor"
+      strokeWidth="0.5"
+      fill="none"
+      opacity="0.6"
+    />
+  </>,
+  'TapeReel'
 );
 
 // =====================
@@ -2809,6 +4296,8 @@ export const Icons = {
   Activity,
   AlertCircle,
   AlertTriangle,
+  Amplifier,
+  AcousticGuitar,
   Archive,
   ArrowDown,
   ArrowDownRight,
@@ -2817,10 +4306,12 @@ export const Icons = {
   ArrowUp,
   ArrowUpRight,
   AtSign,
+  AudioInterface,
   Award,
   Banknote,
   BarChart,
   BarChart3,
+  BassGuitar,
   BadgeCheck,
   Bell,
   BellOff,
@@ -2864,6 +4355,8 @@ export const Icons = {
   DollarSign,
   Download,
   Drum,
+  DrumKit,
+  EffectsPedal,
   Edit,
   Edit2,
   Edit3,
@@ -2918,6 +4411,7 @@ export const Icons = {
   Instagram,
   Key,
   Keyboard,
+  KeyboardSynth,
   LayoutDashboard,
   LayoutGrid,
   Layers,
@@ -2946,6 +4440,7 @@ export const Icons = {
   Mic,
   Mic2,
   MicOff,
+  MixingConsole,
   Minimize2,
   Minus,
   Monitor,
@@ -2968,6 +4463,7 @@ export const Icons = {
   PanelLeft,
   PanelLeftClose,
   Paperclip,
+  PatchCable,
   Pause,
   Pen,
   PenTool,
@@ -3018,6 +4514,12 @@ export const Icons = {
   Star,
   StickyNote,
   StopCircle,
+  StudioMonitors,
+  StudioHeadphones,
+  StageLights,
+  Metronome,
+  MusicStand,
+  Saxophone,
   Sun,
   Tablet,
   Tag,
@@ -3026,6 +4528,8 @@ export const Icons = {
   Megaphone,
   Ticket,
   Timer,
+  Turntable,
+  TapeReel,
   Trash2,
   TrendingDown,
   TrendingUp,
@@ -3046,6 +4550,7 @@ export const Icons = {
   UserX,
   Video,
   VideoIcon,
+  Violin,
   VideoOff,
   Ban,
   Ghost,

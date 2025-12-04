@@ -4,17 +4,22 @@ import { motion } from 'framer-motion';
 import {
   Music2,
   Sparkles,
-  FolderOpen,
   Library,
-  Users,
   Plus,
   Upload,
   Search,
-  Mic2,
   MessageSquare,
   BarChart3,
   AlertCircle,
   WifiOff,
+  MapPin,
+  // Custom musician icons
+  SessionFolder,
+  BandMembers,
+  VintageCondenserMic,
+  TourCalendar,
+  VinylRecord,
+  StageLights,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
@@ -27,7 +32,14 @@ type EmptyStateType =
   | 'messages'
   | 'analytics'
   | 'error'
-  | 'offline';
+  | 'offline'
+  | 'shows'
+  | 'tours'
+  | 'setlists'
+  | 'marketplace'
+  | 'masterclasses'
+  | 'feed'
+  | 'revenue';
 
 interface EmptyStateProps {
   type: EmptyStateType;
@@ -49,7 +61,7 @@ const stateConfigs: Record<
   }
 > = {
   projects: {
-    icon: FolderOpen,
+    icon: SessionFolder,
     defaultTitle: 'No projects yet',
     defaultDescription: 'Create your first project to start making music',
     defaultActionLabel: 'Create Project',
@@ -76,7 +88,7 @@ const stateConfigs: Record<
     defaultActionLabel: 'Clear Search',
   },
   collaborations: {
-    icon: Users,
+    icon: BandMembers,
     defaultTitle: 'No active collaborations',
     defaultDescription: 'Invite others to collaborate on your projects',
     defaultActionLabel: 'Invite Collaborators',
@@ -106,6 +118,54 @@ const stateConfigs: Record<
     defaultTitle: "You're offline",
     defaultDescription: 'Check your internet connection and try again',
     defaultActionLabel: 'Retry',
+  },
+  shows: {
+    icon: Calendar,
+    defaultTitle: 'No shows scheduled',
+    defaultDescription: 'Create your first show to start tracking gigs and performances',
+    defaultActionLabel: 'Create Show',
+    defaultActionHref: '/shows/new',
+  },
+  tours: {
+    icon: MapPin,
+    defaultTitle: 'No tours yet',
+    defaultDescription: 'Start planning your first tour to organize multiple shows',
+    defaultActionLabel: 'Create Tour',
+    defaultActionHref: '/tours/new',
+  },
+  setlists: {
+    icon: Music2,
+    defaultTitle: 'No setlists created',
+    defaultDescription: 'Build your first setlist to organize songs for performances',
+    defaultActionLabel: 'Create Setlist',
+    defaultActionHref: '/setlists/new',
+  },
+  marketplace: {
+    icon: Users,
+    defaultTitle: 'No listings found',
+    defaultDescription: 'Browse services or become a provider to get started',
+    defaultActionLabel: 'Become Provider',
+    defaultActionHref: '/marketplace/become-provider',
+  },
+  masterclasses: {
+    icon: Sparkles,
+    defaultTitle: 'No masterclasses available',
+    defaultDescription: 'Check back soon for expert-led courses and workshops',
+    defaultActionLabel: 'Browse All',
+    defaultActionHref: '/masterclasses',
+  },
+  feed: {
+    icon: MessageSquare,
+    defaultTitle: 'Your feed is empty',
+    defaultDescription: 'Follow other musicians or create posts to see updates here',
+    defaultActionLabel: 'Explore Musicians',
+    defaultActionHref: '/explore',
+  },
+  revenue: {
+    icon: BarChart3,
+    defaultTitle: 'Your music has value',
+    defaultDescription: 'Track every gig, stream, and sync. Watch your music career grow.',
+    defaultActionLabel: 'Log Your First Income',
   },
 };
 

@@ -1,33 +1,32 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { SettingsSkeleton } from '@/components/loading-skeletons';
+import {
+  Bell,
+  Check,
+  CheckCircle,
+  ChevronRight,
+  Copy,
+  Crown,
+  Eye,
+  EyeOff,
+  Forward,
+  Loader2,
+  Mail,
+  Monitor,
+  Plus,
+  Settings,
+  Shield,
+  Smartphone,
+  Star,
+  Trash2,
+  X,
+  Zap,
+} from '@/components/ui/custom-icons';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  Mail,
-  Check,
-  X,
-  Copy,
-  Eye,
-  EyeOff,
-  Plus,
-  Trash2,
-  Smartphone,
-  Monitor,
-  Shield,
-  Settings,
-  Bell,
-  Forward,
-  Loader2,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  ChevronRight,
-  Crown,
-  Zap,
-  Star,
-} from '@/components/ui/custom-icons';
+import { useEffect, useState } from 'react';
 
 interface EmailAccount {
   id: string;
@@ -458,8 +457,8 @@ export default function EmailSettingsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--accent)]" />
+      <div className="p-6">
+        <SettingsSkeleton />
       </div>
     );
   }

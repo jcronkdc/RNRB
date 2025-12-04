@@ -27,6 +27,9 @@ import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 
+import { EmptyState } from '@/components/empty-states';
+import { InboxSkeleton } from '@/components/loading-skeletons';
+
 type FilterType = 'all' | 'unread' | 'archived' | 'trash';
 
 interface Conversation {
@@ -440,51 +443,32 @@ export default function MessagesInboxPage() {
 
         {/* Conversations List */}
         {loading ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-          </div>
+          <InboxSkeleton count={6} />
         ) : conversations.length === 0 ? (
-          <div
-            style={{
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--panel)',
-              padding: '48px',
-              textAlign: 'center',
-            }}
-          >
-            {filter === 'all' && (
-              <Inbox className="mx-auto mb-4 h-16 w-16" style={{ color: 'var(--muted)' }} />
-            )}
-            {filter === 'unread' && (
-              <MessageSquare className="mx-auto mb-4 h-16 w-16" style={{ color: 'var(--muted)' }} />
-            )}
-            {filter === 'archived' && (
-              <Archive className="mx-auto mb-4 h-16 w-16" style={{ color: 'var(--muted)' }} />
-            )}
-            {filter === 'trash' && (
-              <Trash2 className="mx-auto mb-4 h-16 w-16" style={{ color: 'var(--muted)' }} />
-            )}
-            <h3
-              style={{
-                fontSize: '1.25rem',
-                fontWeight: '600',
-                color: 'var(--text)',
-                marginBottom: '8px',
-              }}
-            >
-              {filter === 'all' && 'No conversations yet'}
-              {filter === 'unread' && 'All caught up!'}
-              {filter === 'archived' && 'No archived conversations'}
-              {filter === 'trash' && 'Trash is empty'}
-            </h3>
-            <p style={{ color: 'var(--muted)' }}>
-              {filter === 'all' && 'Start a conversation with someone!'}
-              {filter === 'unread' && 'You have no unread messages'}
-              {filter === 'archived' && 'Archived conversations will appear here'}
-              {filter === 'trash' && 'Deleted conversations will appear here'}
-            </p>
-          </div>
+          <EmptyState
+            type="messages"
+            title={
+              filter === 'all'
+                ? 'No conversations yet'
+                : filter === 'unread'
+                  ? 'All caught up!'
+                  : filter === 'archived'
+                    ? 'No archived conversations'
+                    : 'Trash is empty'
+            }
+            description={
+              filter === 'all'
+                ? 'Start a conversation with someone!'
+                : filter === 'unread'
+                  ? 'You have no unread messages'
+                  : filter === 'archived'
+                    ? 'Archived conversations will appear here'
+                    : 'Deleted conversations will appear here'
+            }
+            actionLabel={filter === 'all' ? 'Find Musicians' : 'View All'}
+            actionHref={filter === 'all' ? '/discover' : undefined}
+            onAction={filter !== 'all' ? () => setFilter('all') : undefined}
+          />
         ) : (
           <div className="space-y-2">
             {conversations.map((conversation) => (

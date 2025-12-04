@@ -25,6 +25,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 
+import { EmptyState } from '@/components/empty-states';
+
 // Need types with icons
 const needTypes = [
   { id: 'all', label: 'All Needs', icon: Users },
@@ -310,28 +312,13 @@ export default function CollaborationNeedsPage() {
             </div>
           </div>
         ) : filteredNeeds.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl border p-12 text-center"
-            style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
-          >
-            <Users className="mx-auto mb-4 h-12 w-12" style={{ color: 'var(--muted)' }} />
-            <h3 className="mb-2 text-lg font-semibold" style={{ color: 'var(--text)' }}>
-              No collaboration needs found
-            </h3>
-            <p className="mb-4 text-sm" style={{ color: 'var(--muted)' }}>
-              Be the first to post what you're looking for!
-            </p>
-            <Link
-              href="/collaboration-needs/new"
-              className="inline-flex items-center gap-2 rounded-xl px-5 py-2.5 font-medium text-white"
-              style={{ background: 'var(--accent)' }}
-            >
-              <Plus className="h-4 w-4" />
-              Post What You Need
-            </Link>
-          </motion.div>
+          <EmptyState
+            type="collaborations"
+            title="No collaboration needs found"
+            description="Be the first to post what you're looking for!"
+            actionLabel="Post What You Need"
+            actionHref="/collaboration-needs/new"
+          />
         ) : (
           <motion.div
             initial={{ opacity: 0 }}

@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { fetchWithTimeout, TIMEOUT_PRESETS } from '@/lib/fetch-with-timeout';
+
 /**
  * GET /api/spotify/callback
  * Handle Spotify OAuth callback
@@ -31,7 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Exchange code for access token
-    const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
+    const tokenResponse = await fetchWithTimeout('https://accounts.spotify.com/api/token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -42,6 +44,7 @@ export async function GET(request: NextRequest) {
         code,
         redirect_uri: redirectUri,
       }),
+      timeout: TIMEOUT_PRESETS.SLOW, // 30s for OAuth
     });
 
     if (!tokenResponse.ok) {

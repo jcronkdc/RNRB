@@ -5,12 +5,14 @@ import {
   Check,
   Loader2,
   AlertCircle,
-  Music4,
   Sparkles,
   GitBranch,
   Save,
   Download,
   Disc3,
+  // Custom musician icons
+  SongManuscript,
+  VinylRecord,
 } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';

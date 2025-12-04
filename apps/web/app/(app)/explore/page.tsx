@@ -16,6 +16,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import { AudioPlayer } from '@/components/audio-player';
+import { EmptyState } from '@/components/empty-states';
+import { ProjectsSkeleton } from '@/components/loading-skeletons';
 import { TrackCard } from '@/components/track-card';
 
 interface CommunityTrack {
@@ -267,37 +269,22 @@ export default function ExplorePage() {
         </motion.div>
 
         {/* Loading State */}
-        {loading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="relative mx-auto mb-4 h-12 w-12">
-                <div className="absolute inset-0 animate-ping rounded-full bg-cyan-500/30" />
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/20">
-                  <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
-                </div>
-              </div>
-              <p className="text-gray-400">Discovering tracks...</p>
-            </div>
-          </div>
-        )}
+        {loading && <ProjectsSkeleton count={6} />}
 
         {/* Empty State */}
         {!loading && tracks.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-12 text-center backdrop-blur-sm"
-          >
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20">
-              <Compass className="h-8 w-8 text-cyan-400" />
-            </div>
-            <h3 className="mb-2 text-xl font-semibold text-white">No tracks found</h3>
-            <p className="text-gray-400">
-              {searchQuery
+          <EmptyState
+            type="search"
+            title="No tracks found"
+            description={
+              searchQuery
                 ? 'Try adjusting your search query'
-                : 'Be the first to share your music with the community!'}
-            </p>
-          </motion.div>
+                : 'Be the first to share your music with the community!'
+            }
+            actionLabel={searchQuery ? 'Clear Search' : 'Create Track'}
+            actionHref={searchQuery ? undefined : '/create'}
+            onAction={searchQuery ? () => setSearchQuery('') : undefined}
+          />
         )}
 
         {/* Tracks Grid */}

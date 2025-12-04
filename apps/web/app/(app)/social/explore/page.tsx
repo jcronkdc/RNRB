@@ -1,16 +1,9 @@
 import { prisma } from '@cronkwaters/db';
-import {
-  Loader2,
-  Hash,
-  TrendingUp,
-  Music,
-  Users,
-  Sparkles,
-  ArrowRight,
-} from '@/components/ui/custom-icons';
+import { Hash, TrendingUp, Music, Users, Sparkles, ArrowRight } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import { FeedSkeleton, TableSkeleton, UsersSkeleton } from '@/components/loading-skeletons';
 
 import { microCopy } from '@/lib/workshop-voice';
 
@@ -369,16 +362,7 @@ export default function ExplorePage() {
                 View feed <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <Suspense
-              fallback={
-                <div className="flex flex-col items-center justify-center gap-3 py-12">
-                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                    {microCopy.loading.feed}
-                  </p>
-                </div>
-              }
-            >
+            <Suspense fallback={<FeedSkeleton count={3} />}>
               <TrendingHashtags />
             </Suspense>
           </section>
@@ -391,13 +375,7 @@ export default function ExplorePage() {
                 Popular Genres
               </h2>
             </div>
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-                </div>
-              }
-            >
+            <Suspense fallback={<TableSkeleton rows={5} cols={3} />}>
               <TrendingGenres />
             </Suspense>
           </section>
@@ -419,13 +397,7 @@ export default function ExplorePage() {
                 See all <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-                </div>
-              }
-            >
+            <Suspense fallback={<FeedSkeleton count={2} />}>
               <RecentAudioPosts />
             </Suspense>
           </section>
@@ -438,13 +410,7 @@ export default function ExplorePage() {
                 Rising Artists
               </h2>
             </div>
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-                </div>
-              }
-            >
+            <Suspense fallback={<UsersSkeleton count={6} />}>
               <RisingArtists />
             </Suspense>
           </section>

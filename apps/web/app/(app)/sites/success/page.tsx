@@ -11,6 +11,7 @@
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
+import { SettingsSkeleton } from '@/components/loading-skeletons';
 import {
   CheckCircle,
   Globe,
@@ -236,14 +237,8 @@ function DeploymentSuccessContent() {
 
   if (isLoading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-orange-400" />
-          <p className="text-gray-400">Loading deployment status...</p>
-        </motion.div>
+      <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+        <SettingsSkeleton />
       </div>
     );
   }
@@ -691,11 +686,8 @@ export default function DeploymentSuccessPage() {
   return (
     <Suspense
       fallback={
-        <div
-          className="flex min-h-screen items-center justify-center"
-          style={{ background: 'var(--bg)' }}
-        >
-          <Loader2 className="h-12 w-12 animate-spin text-orange-400" />
+        <div className="min-h-screen p-6" style={{ background: 'var(--bg)' }}>
+          <SettingsSkeleton />
         </div>
       }
     >

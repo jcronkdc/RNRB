@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { SocialFeed } from '@/components/social-feed/SocialFeed';
 import { ActivityStatus } from '@/components/social/ActivityStatus';
 import { OnlineStatus } from '@/components/social/OnlineStatus';
+import { DashboardStatsSkeleton } from '@/components/loading-skeletons';
 
 interface SocialStats {
   followers: number;
@@ -205,9 +206,7 @@ export default function SocialPage() {
 
             {/* Stats Cards */}
             {loading ? (
-              <div className="flex justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
-              </div>
+              <DashboardStatsSkeleton />
             ) : (
               <>
                 {/* Your Stats */}
