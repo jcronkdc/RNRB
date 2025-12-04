@@ -31,6 +31,8 @@ import {
   LayoutGrid,
   Ticket,
   Clock,
+  Calendar,
+  Radio,
   // Custom musician icons
   TourCalendar,
   BroadcastTower,

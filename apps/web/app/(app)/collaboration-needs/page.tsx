@@ -26,6 +26,7 @@ import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 
 import { EmptyState } from '@/components/empty-states';
+import { ProjectsSkeleton } from '@/components/loading-skeletons';
 
 // Need types with icons
 const needTypes = [
@@ -302,15 +303,7 @@ export default function CollaborationNeedsPage() {
 
         {/* Needs Grid */}
         {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="flex flex-col items-center gap-3">
-              <div
-                className="h-8 w-8 animate-spin rounded-full border-2"
-                style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }}
-              />
-              <p style={{ color: 'var(--muted)' }}>Finding collaborators...</p>
-            </div>
-          </div>
+          <ProjectsSkeleton count={6} />
         ) : filteredNeeds.length === 0 ? (
           <EmptyState
             type="collaborations"

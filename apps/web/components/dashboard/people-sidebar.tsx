@@ -13,6 +13,7 @@ import {
   RefreshCw,
   MessageCircle,
 } from '@/components/ui/custom-icons';
+import { UserListSkeleton } from '@/components/loading-skeletons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -103,9 +104,7 @@ export function PeopleSidebar() {
   if (loading) {
     return (
       <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
-        </div>
+        <UserListSkeleton count={5} />
       </div>
     );
   }

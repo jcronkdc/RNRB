@@ -34,8 +34,9 @@ export async function GET(request: NextRequest) {
       conversationSettings = await prisma.conversationSettings.findMany({
         where: { userId },
       });
-    } catch {
-      // Model might not exist yet
+    } catch (error) {
+      // Model might not exist yet - this is okay, continue with empty settings
+      console.log('[Conversations API] ConversationSettings table not available:', error);
     }
 
     const settingsMap = new Map(conversationSettings.map((s) => [s.conversationId, s]));
@@ -138,8 +139,9 @@ export async function GET(request: NextRequest) {
             },
           });
           isBlocked = !!block;
-        } catch {
-          // Model might not exist
+        } catch (error) {
+          // Model might not exist - this is okay, assume not blocked
+          console.log('[Conversations API] UserBlock table not available:', error);
         }
 
         return {

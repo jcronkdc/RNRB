@@ -47,15 +47,20 @@ import {
   File,
   Calendar,
   MapPin,
-  // Using existing icons as musician-themed alternatives
-  Music2 as SongManuscript,
-  Mic2 as VintageCondenserMic,
-  Radio as BroadcastTower,
-  Calendar as TourCalendar,
-  FolderOpen as SessionFolder,
-  Wrench as MusiciansMultiTool,
-  Users as BandMembers,
+  Music2,
+  Mic2,
+  Radio,
+  Wrench,
 } from '@/components/ui/custom-icons';
+
+// Using existing icons as musician-themed alternatives
+const SongManuscript = Music2;
+const VintageCondenserMic = Mic2;
+const BroadcastTower = Radio;
+const TourCalendar = Calendar;
+const SessionFolder = FolderOpen;
+const MusiciansMultiTool = Wrench;
+const BandMembers = Users;
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';

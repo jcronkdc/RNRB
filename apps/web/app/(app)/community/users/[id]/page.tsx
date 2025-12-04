@@ -36,6 +36,7 @@ import { useEffect, useState, useCallback } from 'react';
 
 import { FeedPost } from '@/components/social-feed/FeedPost';
 import { TrackCard } from '@/components/track-card';
+import { ProfileSkeleton } from '@/components/loading-skeletons';
 
 interface MusicianProfile {
   instruments: string[];
@@ -178,20 +179,22 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-screen flex-col items-center justify-center gap-4"
-        style={{ background: 'var(--bg)' }}
-      >
-        <div className="relative">
-          <div
-            className="absolute inset-0 animate-ping rounded-full"
-            style={{ background: 'rgba(232, 93, 59, 0.2)' }}
-          />
-          <Loader2 className="h-12 w-12 animate-spin" style={{ color: 'var(--accent)' }} />
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {/* Logo */}
+          <div className="mb-8 flex justify-center">
+            <Link href="/">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={56}
+                className="transition-opacity hover:opacity-80"
+              />
+            </Link>
+          </div>
+          <ProfileSkeleton />
         </div>
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>
-          Loading profile...
-        </p>
       </div>
     );
   }

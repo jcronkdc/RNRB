@@ -57,53 +57,95 @@ export async function GET(req: NextRequest) {
     }
 
     // Get total count
-    const total = await db.song.count({ where });
+    let total = 0;
+    let songs: any[] = [];
+    let stats = {
+      total: 0,
+      standalone: 0,
+      inProject: 0,
+      drafts: 0,
+      complete: 0,
+      favorites: 0,
+    };
 
-    // Get songs with project info
-    const songs = await db.song.findMany({
-      where,
-      orderBy: {
-        [sortBy]: sortOrder,
-      },
-      skip: offset,
-      take: limit,
-      select: {
-        id: true,
-        title: true,
-        key: true,
-        tempo: true,
-        timeSignature: true,
-        status: true,
-        visibility: true,
-        lyrics: true,
-        chords: true,
-        tags: true,
-        projectId: true,
-        isFavorite: true,
-        lastSavedAt: true,
-        createdAt: true,
-        updatedAt: true,
-        // Include project info if song is in a project
-        project: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            coverImage: true,
+    try {
+      total = await db.song.count({ where });
+
+      // Get songs with project info
+      songs = await db.song.findMany({
+        where,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+        skip: offset,
+        take: limit,
+        select: {
+          id: true,
+          title: true,
+          key: true,
+          tempo: true,
+          timeSignature: true,
+          status: true,
+          visibility: true,
+          lyrics: true,
+          chords: true,
+          tags: true,
+          projectId: true,
+          isFavorite: true,
+          lastSavedAt: true,
+          createdAt: true,
+          updatedAt: true,
+          // Include project info if song is in a project
+          project: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              coverImage: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    // Get stats
-    const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] =
-      await Promise.all([
-        db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
-        db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
-        db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
-        db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
-        db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
-      ]);
+      // Get stats
+      const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] =
+        await Promise.all([
+          db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
+          db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
+          db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
+          db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
+          db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
+        ]);
+
+      stats = {
+        total: standaloneCount + inProjectCount,
+        standalone: standaloneCount,
+        inProject: inProjectCount,
+        drafts: draftCount,
+        complete: completeCount,
+        favorites: favoritesCount,
+      };
+    } catch (dbError) {
+      console.error('[Songs API] Database error:', dbError);
+      // Return empty results if there's a database error (e.g., table doesn't exist)
+      return NextResponse.json({
+        songs: [],
+        pagination: {
+          total: 0,
+          limit,
+          offset,
+          hasMore: false,
+        },
+        stats: {
+          total: 0,
+          standalone: 0,
+          inProject: 0,
+          drafts: 0,
+          complete: 0,
+          favorites: 0,
+        },
+      });
+    }
 
     return NextResponse.json({
       songs,
@@ -113,14 +155,7 @@ export async function GET(req: NextRequest) {
         offset,
         hasMore: offset + songs.length < total,
       },
-      stats: {
-        total: standaloneCount + inProjectCount,
-        standalone: standaloneCount,
-        inProject: inProjectCount,
-        drafts: draftCount,
-        complete: completeCount,
-        favorites: favoritesCount,
-      },
+      stats,
     });
   } catch (error) {
     return handleApiError(error, { route: '/api/songs/all', method: 'GET' });

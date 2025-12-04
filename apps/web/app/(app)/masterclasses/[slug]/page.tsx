@@ -25,6 +25,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
+import { CourseCardSkeleton } from '@/components/loading-skeletons';
 
 interface Lesson {
   id: string;
@@ -759,8 +760,33 @@ export default function MasterclassDetailPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
+        <div className="min-h-screen bg-[var(--bg)]">
+          <div className="mx-auto max-w-7xl px-4 py-8">
+            {/* Logo */}
+            <div className="mb-8 flex justify-center">
+              <Link href="/">
+                <Image
+                  src="/logo-dark.png"
+                  alt="Rock N' Roll Basement"
+                  width={140}
+                  height={56}
+                  className="transition-opacity hover:opacity-80"
+                />
+              </Link>
+            </div>
+            <div className="space-y-6">
+              <CourseCardSkeleton />
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div className="space-y-4 lg:col-span-2">
+                  <CourseCardSkeleton />
+                  <CourseCardSkeleton />
+                </div>
+                <div>
+                  <CourseCardSkeleton />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       }
     >

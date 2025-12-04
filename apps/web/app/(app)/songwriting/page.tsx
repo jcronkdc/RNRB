@@ -13,6 +13,7 @@ import {
   // Custom musician icons
   SongManuscript,
   VinylRecord,
+  Music4,
 } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -26,6 +27,7 @@ import { ToastNotification, useToast } from '@/components/toast-notification';
 import type { LibraryFile } from '@/hooks/use-library';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSongAutoSave, type SongData } from '@/hooks/use-song-auto-save';
+import { PageSkeleton } from '@/components/loading-skeletons';
 
 // Import the streamlined song builder (cleaner single-flow UX)
 const StreamlinedSongBuilder = dynamic(
@@ -804,16 +806,8 @@ export default function SongwritingPage() {
           className="min-h-[600px]"
         >
           {activeView === 'structure' && loading && (
-            <div
-              className="flex min-h-[500px] items-center justify-center rounded-xl"
-              style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
-            >
-              <div className="text-center">
-                <div className="mx-auto mb-4 h-6 w-6 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Loading Studio...
-                </p>
-              </div>
+            <div className="min-h-[500px]">
+              <PageSkeleton title={false} stats={false} content="list" />
             </div>
           )}
 

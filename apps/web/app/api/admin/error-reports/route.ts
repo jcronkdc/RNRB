@@ -182,6 +182,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
+    // Check if ErrorReport table exists
+    try {
+      await prisma.$queryRaw`SELECT 1 FROM "ErrorReport" LIMIT 1`;
+    } catch (tableError) {
+      // Table doesn't exist yet, return empty results
+      return NextResponse.json({
+        reports: [],
+        counts: {
+          unresolved: 0,
+          critical: 0,
+          high: 0,
+          medium: 0,
+          low: 0,
+          total: 0,
+        },
+        pagination: {
+          limit: 50,
+          offset: 0,
+          hasMore: false,
+        },
+      });
+    }
+
     const { searchParams } = new URL(request.url);
     const severity = searchParams.get('severity');
     const category = searchParams.get('category');

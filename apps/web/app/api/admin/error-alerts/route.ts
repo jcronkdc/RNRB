@@ -71,6 +71,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
+    // Check if AdminErrorAlert table exists
+    try {
+      await prisma.$queryRaw`SELECT 1 FROM "AdminErrorAlert" LIMIT 1`;
+    } catch (tableError) {
+      // Table doesn't exist yet, return empty results
+      return NextResponse.json({
+        alerts: [],
+        unreadCount: 0,
+      });
+    }
+
     const { searchParams } = new URL(request.url);
     const acknowledged = searchParams.get('acknowledged');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100);

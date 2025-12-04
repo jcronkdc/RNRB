@@ -23,6 +23,11 @@ import {
   ChevronRight,
   RefreshCw,
 } from 'lucide-react';
+import {
+  DashboardStatsSkeleton,
+  ChartSkeleton,
+  RevenueListSkeleton,
+} from '@/components/loading-skeletons';
 
 // Tier configuration
 const tiers = [
@@ -127,8 +132,30 @@ export default function AffiliateDashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <RefreshCw className="h-8 w-8 animate-spin" style={{ color: 'var(--accent)' }} />
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="px-4 py-8">
+          <div className="mx-auto max-w-7xl">
+            {/* Logo */}
+            <div className="mb-8 flex justify-center">
+              <Link href="/">
+                <Image
+                  src="/logo-dark.png"
+                  alt="Rock N' Roll Basement"
+                  width={140}
+                  height={56}
+                  className="transition-opacity hover:opacity-80"
+                />
+              </Link>
+            </div>
+
+            {/* Loading Skeletons */}
+            <div className="space-y-8">
+              <DashboardStatsSkeleton />
+              <ChartSkeleton />
+              <RevenueListSkeleton count={4} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

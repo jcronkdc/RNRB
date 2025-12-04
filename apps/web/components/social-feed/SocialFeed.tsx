@@ -20,6 +20,7 @@ import { FeedPost } from './FeedPost';
 import { PostComposer } from './PostComposer';
 import { SearchModal } from './SearchModal';
 import { TrendingSidebar } from './TrendingSidebar';
+import { FeedSkeleton } from '@/components/loading-skeletons';
 
 interface FeedProps {
   initialType?: 'following' | 'public' | 'discover' | 'audio' | 'algorithm';
@@ -270,9 +271,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
 
         {/* Posts Feed */}
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-          </div>
+          <FeedSkeleton count={3} />
         ) : posts.length === 0 ? (
           <div className="rounded-xl border border-white/10 bg-black/40 p-12 text-center">
             <Music className="mx-auto mb-4 h-12 w-12 text-white/20" />

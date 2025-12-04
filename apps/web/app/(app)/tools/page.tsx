@@ -3,6 +3,9 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { PageSkeleton } from '@/components/loading-skeletons';
+import Image from 'next/image';
+import Link from 'next/link';
 import {
   Music2,
   Clock,
@@ -518,11 +521,24 @@ export default function ToolsPage() {
   return (
     <Suspense
       fallback={
-        <div
-          className="flex min-h-screen items-center justify-center"
-          style={{ background: 'var(--bg)' }}
-        >
-          <div className="animate-pulse text-[color:var(--muted)]">Loading tools...</div>
+        <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+          <div className="px-4 py-8">
+            <div className="mx-auto max-w-7xl">
+              {/* Logo */}
+              <div className="mb-8 flex justify-center">
+                <Link href="/">
+                  <Image
+                    src="/logo-dark.png"
+                    alt="Rock N' Roll Basement"
+                    width={140}
+                    height={56}
+                    className="transition-opacity hover:opacity-80"
+                  />
+                </Link>
+              </div>
+              <PageSkeleton title={true} stats={false} content="grid" />
+            </div>
+          </div>
         </div>
       }
     >
