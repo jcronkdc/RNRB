@@ -27,7 +27,6 @@ import {
   EffectsPedal,
   TapeReel,
 } from '@/components/ui/custom-icons';
-import Link from 'next/link';
 
 import { ThemeLogo } from '@/components/theme';
 import { ChromaticTuner } from '@/components/tools/chromatic-tuner';
