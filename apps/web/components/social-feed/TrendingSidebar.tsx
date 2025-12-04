@@ -11,6 +11,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { ROUTES } from '@/lib/routes';
 
 interface TrendingItem {
   id: string;
@@ -115,7 +116,7 @@ export function TrendingSidebar() {
             {artists.slice(0, 5).map((artist) => (
               <Link
                 key={artist.id}
-                href={`/community/users/${artist.id}`}
+                href={ROUTES.profile.view(artist.id)}
                 className="group flex items-center gap-3 rounded-lg p-2 transition-all hover:bg-white/5"
               >
                 <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">

@@ -18,6 +18,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "validate:routes": "npx tsx scripts/validate-routes.ts",
+    "validate:icons": "npx tsx scripts/validate-icons.ts",
+    "validate": "pnpm validate:routes && pnpm validate:icons",
+    "prebuild": "pnpm validate:icons",
     "bundle:analyze": "ANALYZE=true pnpm build && open bundle-report.html",
     "bundle:size": "pnpm build && du -sh .next",
     "lighthouse": "lighthouse https://www.cronkwaters.com/social/explore --output json --output html --output-path ./lighthouse-report.html"

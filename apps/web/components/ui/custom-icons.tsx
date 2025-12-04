@@ -10,6 +10,14 @@ export interface IconProps extends SVGProps<SVGSVGElement> {
   strokeWidth?: number;
 }
 
+/**
+ * Type for icon components (compatible with Lucide icon type)
+ * Use this when you need to pass icons as props
+ */
+export type LucideIcon = React.ForwardRefExoticComponent<
+  IconProps & React.RefAttributes<SVGSVGElement>
+>;
+
 const createIcon = (path: React.ReactNode, displayName: string, defaultStrokeWidth = 2) => {
   const Icon = forwardRef<SVGSVGElement, IconProps>(
     ({ size = 24, strokeWidth = defaultStrokeWidth, className = '', ...props }, ref) => (
@@ -1092,6 +1100,16 @@ export const Lock = createIcon(
     <circle cx="12" cy="16" r="1" fill="currentColor" />
   </>,
   'Lock'
+);
+
+// Unlock - unlocked padlock
+export const Unlock = createIcon(
+  <>
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+    <path d="M7 11V7a5 5 0 019.9-1" />
+    <circle cx="12" cy="16" r="1" fill="currentColor" />
+  </>,
+  'Unlock'
 );
 
 // LogOut - sign out

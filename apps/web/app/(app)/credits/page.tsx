@@ -19,6 +19,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { CreditsSkeleton } from '@/components/loading-skeletons';
 import { microCopy } from '@/lib/workshop-voice';
 
 export default function CreditsPage() {
@@ -29,6 +30,11 @@ export default function CreditsPage() {
   const { data: limits, isLoading: limitsLoading } = trpc.usage.getLimits.useQuery();
 
   const isLoading = summaryLoading || limitsLoading;
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return <CreditsSkeleton />;
+  }
 
   // Calculate percentage for progress bars
   const aiPercentage = summary?.ai.limit

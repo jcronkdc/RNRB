@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { FeedSkeleton, TableSkeleton, UsersSkeleton } from '@/components/loading-skeletons';
+import { ROUTES } from '@/lib/routes';
 
 import { microCopy } from '@/lib/workshop-voice';
 
@@ -175,7 +176,7 @@ async function RisingArtists() {
           artist && (
             <Link
               key={artist.id}
-              href={`/community/users/${artist.id}`}
+              href={ROUTES.profile.view(artist.id)}
               className="group flex items-center gap-4 rounded-xl p-4 transition-all"
               style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
             >

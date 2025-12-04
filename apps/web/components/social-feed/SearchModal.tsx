@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { ROUTES } from '@/lib/routes';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -222,7 +223,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     {results.users.map((user: any) => (
                       <Link
                         key={user.id}
-                        href={`/community/users/${user.id}`}
+                        href={ROUTES.profile.view(user.id)}
                         onClick={onClose}
                         className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:border-purple-500/30 hover:bg-white/10"
                       >

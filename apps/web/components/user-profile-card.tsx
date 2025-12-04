@@ -15,6 +15,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useCallback } from 'react';
+import { ROUTES } from '@/lib/routes';
 
 interface MusicianProfile {
   instruments: string[];
@@ -90,13 +91,13 @@ export function UserProfileCard({
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      router.push(`/mail/compose?to=${id}`);
+      router.push(ROUTES.mail.compose(id));
     },
     [id, router]
   );
 
   return (
-    <Link href={`/community/users/${id}`}>
+    <Link href={ROUTES.profile.view(id)}>
       <Card className="rnrb-card group relative overflow-hidden p-6 transition-all hover:shadow-xl">
         {/* Hover Effect */}
         <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />

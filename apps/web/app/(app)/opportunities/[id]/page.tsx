@@ -22,6 +22,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { ROUTES } from '@/lib/routes';
 
 import { microCopy } from '@/lib/workshop-voice';
 
@@ -474,7 +475,7 @@ export default function OpportunityDetailPage() {
             {/* Posted by */}
             <div className="rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--panel)] to-[var(--bg-elevated)] p-6">
               <h3 className="mb-4 text-sm font-medium text-[var(--text-secondary)]">Posted By</h3>
-              <Link href={`/community/users/${opportunity.postedBy.id}`} className="group block">
+              <Link href={ROUTES.profile.view(opportunity.postedBy.id)} className="group block">
                 <div className="flex items-center gap-3">
                   <div className="h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--clay)]">
                     {opportunity.postedBy.image ? (
