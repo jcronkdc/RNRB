@@ -13,11 +13,11 @@ import {
   AlertCircle,
   WifiOff,
   MapPin,
+  Calendar,
   // Using existing icons as musician-themed alternatives
   FolderOpen as SessionFolder,
   Users as BandMembers,
   Mic2 as VintageCondenserMic,
-  Calendar as TourCalendar,
   Disc3 as VinylRecord,
   StageLights,
 } from '@/components/ui/custom-icons';
