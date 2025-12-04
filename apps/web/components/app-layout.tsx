@@ -3,18 +3,63 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Suspense, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
-import { AssistantChat } from './ai-assistant/assistant-chat';
-import { AppVersionChecker } from './app-version-checker';
-import { UsageAlerts } from './billing/UsageAlerts';
+// Eager imports - needed immediately
 import { Breadcrumbs } from './breadcrumbs';
-import { CommandPalette } from './command-palette';
-import { FocusModeOverlay } from './focus-mode-overlay';
-import { KeyboardShortcutsHelp } from './keyboard-shortcuts-help';
 import { SidebarNav, MobileMenuProvider } from './sidebar-nav';
 import { TopBar } from './top-bar';
 import { TransportBar } from './transport-bar';
 import { FocusModeProvider, useFocusMode } from '@/hooks/use-focus-mode';
+
+// Dynamic imports - load on-demand to reduce initial bundle
+// These components are only needed when user interacts with them
+const CommandPalette = dynamic(
+  () => import('./command-palette').then((mod) => ({ default: mod.CommandPalette })),
+  {
+    ssr: false,
+    loading: () => null, // No loading UI needed - component handles its own visibility
+  }
+);
+
+const KeyboardShortcutsHelp = dynamic(
+  () => import('./keyboard-shortcuts-help').then((mod) => ({ default: mod.KeyboardShortcutsHelp })),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const AssistantChat = dynamic(
+  () => import('./ai-assistant/assistant-chat').then((mod) => ({ default: mod.AssistantChat })),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+const FocusModeOverlay = dynamic(
+  () => import('./focus-mode-overlay').then((mod) => ({ default: mod.FocusModeOverlay })),
+  {
+    ssr: false,
+    loading: () => null,
+  }
+);
+
+// Can load after initial render since they're not immediately visible
+const AppVersionChecker = dynamic(
+  () => import('./app-version-checker').then((mod) => ({ default: mod.AppVersionChecker })),
+  {
+    ssr: false,
+  }
+);
+
+const UsageAlerts = dynamic(
+  () => import('./billing/UsageAlerts').then((mod) => ({ default: mod.UsageAlerts })),
+  {
+    ssr: false,
+  }
+);
 
 // NOTE: AblyProvider removed - it's already provided in app/layout.tsx
 // Having nested AblyProviders caused duplicate connections and ERR_INSUFFICIENT_RESOURCES

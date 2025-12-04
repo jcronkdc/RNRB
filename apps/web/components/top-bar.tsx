@@ -125,6 +125,7 @@ export function TopBar() {
             onClick={() => setSearchOpen(!searchOpen)}
             className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-black/5 dark:hover:bg-white/5 lg:px-4"
             style={{ border: '1px solid var(--border)' }}
+            aria-label="Find people (Ctrl+Shift+F)"
           >
             <Users
               className="h-4 w-4 group-hover:text-orange-400"
@@ -152,6 +153,7 @@ export function TopBar() {
               background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
               boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
             }}
+            aria-label="Create new track"
           >
             <Plus className="h-4 w-4" />
             <span className="hidden text-sm sm:inline">New</span>
@@ -169,6 +171,7 @@ export function TopBar() {
               boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
               color: '#ffffff',
             }}
+            aria-label="Go live - Start streaming"
           >
             <Radio className="h-4 w-4" style={{ color: '#ffffff' }} />
             <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
@@ -187,6 +190,7 @@ export function TopBar() {
               boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
               color: '#ffffff',
             }}
+            aria-label="Start video meeting"
           >
             <Video className="h-4 w-4" style={{ color: '#ffffff' }} />
             <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
@@ -206,6 +210,7 @@ export function TopBar() {
               color: '#ffffff',
             }}
             title="Design and sell your own merchandise"
+            aria-label="Design and sell your own merchandise"
           >
             <ShoppingBag className="h-4 w-4" style={{ color: '#ffffff' }} />
             <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
@@ -225,6 +230,7 @@ export function TopBar() {
               color: '#ffffff',
             }}
             title="Your professional @rnrb.me email"
+            aria-label="Open email - Your professional @rnrb.me email"
           >
             <Mail className="h-4 w-4" />
             <span className="hidden text-sm sm:inline">Mail</span>
@@ -250,6 +256,9 @@ export function TopBar() {
                 ? `${creditsData.used} / ${creditsData.limit === -1 ? '∞' : creditsData.limit} used`
                 : 'Loading...'
             }
+            aria-label={
+              creditsData ? `View credits - ${creditsData.remaining} remaining` : 'View credits'
+            }
           >
             <Zap className={`h-4 w-4 ${creditsColor}`} />
             <span className={`text-sm font-medium ${creditsColor}`}>{creditsDisplay}</span>
@@ -265,6 +274,8 @@ export function TopBar() {
               onClick={() => setProfileOpen(!profileOpen)}
               className="flex items-center gap-2 rounded-xl px-2 py-1.5 transition-all hover:bg-black/5 dark:hover:bg-white/5 lg:px-3"
               style={{ border: '1px solid var(--border)' }}
+              aria-label={`Profile menu - ${user?.name || user?.email?.split('@')[0] || 'Artist'}`}
+              aria-expanded={profileOpen}
             >
               {user?.image ? (
                 <img

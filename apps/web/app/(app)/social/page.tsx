@@ -117,7 +117,7 @@ export default function SocialPage() {
               <Image
                 src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
-                width={140}
+                width={137}
                 height={57}
                 priority
                 className="transition-opacity duration-200 group-hover:opacity-80"
@@ -154,6 +154,7 @@ export default function SocialPage() {
             <div className="flex gap-3">
               <Link href="/social/friends">
                 <button
+                  aria-label="Find and add friends"
                   style={{
                     padding: '10px 20px',
                     borderRadius: 'var(--radius-sm)',
@@ -172,6 +173,7 @@ export default function SocialPage() {
               </Link>
               <Link href="/social/profile">
                 <button
+                  aria-label="View my profile"
                   style={{
                     padding: '10px 20px',
                     borderRadius: 'var(--radius-sm)',

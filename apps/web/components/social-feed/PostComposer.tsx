@@ -315,6 +315,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
               setAudioUrl(null);
               setContentType('text');
             }}
+            aria-label="Remove audio file"
             className="text-white/60 hover:text-white"
           >
             <X className="h-5 w-5" />
@@ -335,6 +336,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
               />
               <button
                 onClick={() => removeImage(i)}
+                aria-label={`Remove image ${i + 1}`}
                 className="absolute right-1 top-1 rounded-full bg-black/60 p-1 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <X className="h-4 w-4 text-white" />
@@ -385,6 +387,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
                         setLinkPreview(null);
                         setContentType('text');
                       }}
+                      aria-label="Remove link preview"
                       className="ml-2 text-white/40 hover:text-white"
                     >
                       <X className="h-4 w-4" />
@@ -455,6 +458,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
           <button
             onClick={() => audioInputRef.current?.click()}
             disabled={uploading || posting || contentType === 'audio'}
+            aria-label="Upload audio file"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 transition-all hover:bg-white/5 hover:text-white disabled:opacity-50"
           >
             <Music className="h-5 w-5" />
@@ -472,6 +476,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
           <button
             onClick={() => imageInputRef.current?.click()}
             disabled={uploading || posting || imagePreviews.length >= 4}
+            aria-label="Upload photos (up to 4)"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-white/60 transition-all hover:bg-white/5 hover:text-white disabled:opacity-50"
           >
             <ImageIcon className="h-5 w-5" />
@@ -490,6 +495,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
           <select
             value={visibility}
             onChange={(e) => setVisibility(e.target.value as any)}
+            aria-label="Post visibility"
             className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white focus:border-purple-500/50 focus:outline-none"
           >
             <option value="public" className="bg-gray-900">
@@ -508,6 +514,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
         <button
           onClick={handleSubmit}
           disabled={posting || uploading || (!content && !audioUrl && imageFiles.length === 0)}
+          aria-label={posting || uploading ? 'Posting content' : 'Publish post'}
           className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-purple-500/40 disabled:opacity-50 disabled:shadow-none"
         >
           {posting || uploading ? (

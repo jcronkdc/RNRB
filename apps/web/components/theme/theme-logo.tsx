@@ -17,13 +17,16 @@ interface ThemeLogoProps {
   priority?: boolean;
 }
 
+// Logo actual dimensions: 240x100 (aspect ratio 2.4:1)
+// All size configs must maintain this 2.4:1 ratio to prevent CLS
+// Note: Using explicit width/height in style to prevent CLS
 const sizeConfig = {
-  sm: { width: 80, height: 27, className: 'h-7 w-auto' },
-  md: { width: 120, height: 40, className: 'h-10 w-auto' },
-  lg: { width: 160, height: 53, className: 'h-14 w-auto' },
-  xl: { width: 200, height: 67, className: 'h-16 w-auto' },
-  hero: { width: 240, height: 80, className: 'logo-hero' },
-  mega: { width: 320, height: 107, className: 'logo-mega' },
+  sm: { width: 65, height: 27, className: '' },
+  md: { width: 96, height: 40, className: '' },
+  lg: { width: 127, height: 53, className: '' },
+  xl: { width: 161, height: 67, className: '' },
+  hero: { width: 192, height: 80, className: '' },
+  mega: { width: 257, height: 107, className: '' },
 };
 
 /**

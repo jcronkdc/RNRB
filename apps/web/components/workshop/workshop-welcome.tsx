@@ -155,6 +155,7 @@ export function WorkshopWelcome({ className = '', showActions = true }: Workshop
                 background: 'var(--accent)',
                 boxShadow: '0 4px 12px var(--accent-glow)',
               }}
+              aria-label="Create new song"
             >
               <Plus className="h-4 w-4" />
               <span className="hidden sm:inline">New Song</span>

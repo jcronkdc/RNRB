@@ -157,125 +157,6 @@ export function CustomizableDashboard() {
           </motion.div>
         )}
 
-        {/* Promotional Banners (hidden in edit mode and controllable per workspace) */}
-        {!isEditMode && (
-          <>
-            {/* Merch Store Banner - controllable via workspace settings */}
-            {activeWorkspace?.settings?.showMerchBanner !== false && (
-              <motion.section
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 }}
-                className="mb-6"
-              >
-                <Link href="/my-merch">
-                  <div
-                    className="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/10"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%)',
-                      borderColor: 'rgba(245, 158, 11, 0.2)',
-                    }}
-                  >
-                    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
-                          style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}
-                        >
-                          <ShoppingBag className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold" style={{ color: 'var(--text)' }}>
-                              Sell Your Own Merch
-                            </h3>
-                            <span
-                              className="rounded-full px-2 py-0.5 text-xs font-bold"
-                              style={{ background: 'var(--gold)', color: '#000' }}
-                            >
-                              FREE
-                            </span>
-                          </div>
-                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            Design custom T-shirts, hoodies & more. Keep 85% of profits.
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        className="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold"
-                        style={{
-                          background: 'linear-gradient(135deg, #f59e0b, #d97706)',
-                          color: '#000',
-                        }}
-                      >
-                        Start Selling →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.section>
-            )}
-
-            {/* Email Banner - controllable via workspace settings */}
-            {activeWorkspace?.settings?.showEmailBanner !== false && (
-              <motion.section
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.08 }}
-                className="mb-6"
-              >
-                <Link href="/settings/email">
-                  <div
-                    className="group relative overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:border-sky-500/50 hover:shadow-lg hover:shadow-sky-500/10"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(14, 165, 233, 0.05) 100%)',
-                      borderColor: 'rgba(56, 189, 248, 0.2)',
-                    }}
-                  >
-                    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
-                          style={{ background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)' }}
-                        >
-                          <Mail className="h-6 w-6 text-white" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold" style={{ color: 'var(--text)' }}>
-                              Get Your @rnrb.me Email
-                            </h3>
-                            <span
-                              className="rounded-full px-2 py-0.5 text-xs font-bold"
-                              style={{ background: '#38bdf8', color: '#000' }}
-                            >
-                              INCLUDED
-                            </span>
-                          </div>
-                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                            Professional email for musicians. yourname@rnrb.me
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        className="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold"
-                        style={{
-                          background: 'linear-gradient(135deg, #38bdf8, #0ea5e9)',
-                          color: '#000',
-                        }}
-                      >
-                        Get Email →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              </motion.section>
-            )}
-          </>
-        )}
-
         {/* Main Grid Layout */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Left Column: Workspace Tools (takes 2 columns) */}
@@ -359,40 +240,95 @@ export function CustomizableDashboard() {
           </div>
         </div>
 
-        {/* Install App Card (hidden in edit mode) */}
+        {/* Discover More Section - Subtle promotional links at bottom */}
         {!isEditMode && (
           <motion.section
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.35 }}
             className="mt-6"
           >
             <div
               className="overflow-hidden rounded-2xl border"
-              style={{
-                borderColor: 'rgba(34, 197, 94, 0.3)',
-                background:
-                  'linear-gradient(135deg, var(--panel) 0%, rgba(34, 197, 94, 0.05) 100%)',
-              }}
+              style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
             >
-              <div className="flex flex-col items-center gap-4 p-5 sm:flex-row sm:justify-between">
-                <div className="flex items-center gap-4">
+              <div className="px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
+                <h3 className="text-sm font-medium" style={{ color: 'var(--muted)' }}>
+                  Explore More Features
+                </h3>
+              </div>
+              <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-3">
+                {/* Merch Link */}
+                {activeWorkspace?.settings?.showMerchBanner !== false && (
+                  <Link href="/my-merch">
+                    <div
+                      className="group flex items-center gap-3 rounded-xl p-3 transition-all hover:scale-[1.01]"
+                      style={{ background: 'var(--surface)' }}
+                    >
+                      <div
+                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
+                        style={{ background: 'rgba(245, 158, 11, 0.15)' }}
+                      >
+                        <ShoppingBag className="h-5 w-5" style={{ color: '#f59e0b' }} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                          Sell Merch
+                        </div>
+                        <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>
+                          Keep 85% of profits
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                )}
+
+                {/* Email Link */}
+                {activeWorkspace?.settings?.showEmailBanner !== false && (
+                  <Link href="/settings/email">
+                    <div
+                      className="group flex items-center gap-3 rounded-xl p-3 transition-all hover:scale-[1.01]"
+                      style={{ background: 'var(--surface)' }}
+                    >
+                      <div
+                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
+                        style={{ background: 'rgba(56, 189, 248, 0.15)' }}
+                      >
+                        <Mail className="h-5 w-5" style={{ color: '#38bdf8' }} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                          @rnrb.me Email
+                        </div>
+                        <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>
+                          Professional email included
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                )}
+
+                {/* Install App Link */}
+                <div
+                  className="group flex items-center gap-3 rounded-xl p-3 transition-all"
+                  style={{ background: 'var(--surface)' }}
+                >
                   <div
-                    className="flex h-12 w-12 items-center justify-center rounded-xl"
+                    className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
                     style={{ background: 'rgba(34, 197, 94, 0.15)' }}
                   >
-                    <Download className="h-6 w-6" style={{ color: '#22c55e' }} />
+                    <Download className="h-5 w-5" style={{ color: '#22c55e' }} />
                   </div>
-                  <div>
-                    <h3 className="font-semibold" style={{ color: 'var(--text)' }}>
-                      Install Rock N' Roll Basement
-                    </h3>
-                    <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                      Get the app for quick access & offline use
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+                      Install App
+                    </div>
+                    <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>
+                      Quick access & offline
                     </p>
                   </div>
+                  <InstallAppButton variant="minimal" />
                 </div>
-                <InstallAppButton variant="prominent" />
               </div>
             </div>
           </motion.section>

@@ -55,6 +55,22 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    // Check if AdminErrorAlert table exists FIRST (before auth to avoid unnecessary queries)
+    let tableExists = true;
+    try {
+      await prisma.$queryRaw`SELECT 1 FROM "AdminErrorAlert" LIMIT 1`;
+    } catch (tableError) {
+      tableExists = false;
+    }
+
+    if (!tableExists) {
+      // Table doesn't exist yet, return empty results without requiring auth
+      return NextResponse.json({
+        alerts: [],
+        unreadCount: 0,
+      });
+    }
+
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -69,17 +85,6 @@ export async function GET(request: NextRequest) {
 
     if (!user?.isOwner) {
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    // Check if AdminErrorAlert table exists
-    try {
-      await prisma.$queryRaw`SELECT 1 FROM "AdminErrorAlert" LIMIT 1`;
-    } catch (tableError) {
-      // Table doesn't exist yet, return empty results
-      return NextResponse.json({
-        alerts: [],
-        unreadCount: 0,
-      });
     }
 
     const { searchParams } = new URL(request.url);

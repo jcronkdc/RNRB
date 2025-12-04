@@ -6,6 +6,7 @@
     "dev": "next dev --port 3001",
     "build": "pnpm --filter @cronkwaters/db run build && next build",
     "build:analyze": "ANALYZE=true pnpm build",
+    "build:prod": "NODE_ENV=production pnpm build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix --max-warnings 0",
@@ -16,7 +17,10 @@
     "fix": "pnpm lint:fix && pnpm format",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "bundle:analyze": "ANALYZE=true pnpm build && open bundle-report.html",
+    "bundle:size": "pnpm build && du -sh .next",
+    "lighthouse": "lighthouse https://www.cronkwaters.com/social/explore --output json --output html --output-path ./lighthouse-report.html"
   },
   "dependencies": {
     "@cronkwaters/auth": "workspace:*",
@@ -94,5 +98,22 @@
     "msw": "^2.7.3",
     "sharp": "^0.34.5",
     "vitest": "^4.0.8"
+  },
+  "browserslist": {
+    "production": [
+      "chrome >= 92",
+      "edge >= 92",
+      "firefox >= 90",
+      "safari >= 15.4",
+      "ios >= 15.4",
+      "not dead",
+      "not op_mini all",
+      "not ie 11"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

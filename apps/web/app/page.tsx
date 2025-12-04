@@ -43,31 +43,40 @@ export default function HomePage() {
           className="hero-section relative min-h-screen overflow-hidden pt-20"
           aria-label="Hero"
         >
-          {/* Animated Background - Enhanced */}
-          <div className="absolute inset-0">
-            {/* Floating music notes */}
+          {/* PERFORMANCE: Simplified animated background - reduced elements for faster FCP */}
+          <div className="absolute inset-0" aria-hidden="true">
+            {/* Reduced floating music notes (4 instead of 12) */}
             <div className="music-notes-container">
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="music-note"
-                  style={{
-                    left: `${5 + i * 8}%`,
-                    animationDelay: `${i * 0.7}s`,
-                    fontSize: `${18 + (i % 4) * 8}px`,
-                  }}
-                >
-                  {['♪', '♫', '♬', '♩'][i % 4]}
-                </div>
-              ))}
+              <div
+                className="music-note"
+                style={{ left: '10%', animationDelay: '0s', fontSize: '24px' }}
+              >
+                ♪
+              </div>
+              <div
+                className="music-note"
+                style={{ left: '35%', animationDelay: '2s', fontSize: '32px' }}
+              >
+                ♫
+              </div>
+              <div
+                className="music-note"
+                style={{ left: '65%', animationDelay: '4s', fontSize: '28px' }}
+              >
+                ♬
+              </div>
+              <div
+                className="music-note"
+                style={{ left: '85%', animationDelay: '6s', fontSize: '20px' }}
+              >
+                ♩
+              </div>
             </div>
 
-            {/* Enhanced gradient orbs */}
+            {/* Essential gradient orbs (reduced from 4 to 2) */}
             <div className="absolute inset-0">
               <div className="gradient-orb gradient-orb-1"></div>
               <div className="gradient-orb gradient-orb-2"></div>
-              <div className="gradient-orb gradient-orb-3"></div>
-              <div className="gradient-orb-accent"></div>
             </div>
 
             {/* Subtle grid pattern */}
@@ -76,23 +85,11 @@ export default function HomePage() {
 
           <div className="container relative z-10 flex min-h-screen flex-col items-center justify-center py-16">
             <div className="mx-auto max-w-5xl text-center">
-              {/* SUPER PROMINENT LOGO - Theme Aware */}
+              {/* PERFORMANCE: Simplified logo section - reduced decorative elements */}
               <div className="logo-mega-wrapper mb-8">
-                <div className="logo-spotlight"></div>
                 <div className="logo-ring logo-ring-1"></div>
-                <div className="logo-ring logo-ring-2"></div>
-                <div className="logo-ring logo-ring-3"></div>
                 <HeroLogo />
                 <div className="logo-mega-glow"></div>
-                <div className="logo-particles">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="logo-particle"
-                      style={{ '--i': i } as React.CSSProperties}
-                    ></div>
-                  ))}
-                </div>
               </div>
 
               {/* Animated Title */}

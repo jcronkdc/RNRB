@@ -867,7 +867,9 @@ export function NavBar() {
     pathname?.startsWith('/discover') ||
     pathname?.startsWith('/messages') ||
     pathname?.startsWith('/notifications') ||
+    pathname?.startsWith('/network') ||
     pathname?.startsWith('/collaboration') ||
+    pathname?.startsWith('/collaboration-needs') ||
     pathname?.startsWith('/credits') ||
     pathname?.startsWith('/settings') ||
     pathname?.startsWith('/onboarding') ||
@@ -876,17 +878,21 @@ export function NavBar() {
     pathname?.startsWith('/labs') ||
     pathname?.startsWith('/songs') ||
     pathname?.startsWith('/feed') ||
+    pathname?.startsWith('/social') ||
     pathname?.startsWith('/tools') ||
     pathname?.startsWith('/live') ||
     pathname?.startsWith('/meet') ||
+    pathname?.startsWith('/mail') ||
     pathname?.startsWith('/marketplace') ||
     pathname?.startsWith('/masterclasses') ||
     pathname?.startsWith('/merch') ||
+    pathname?.startsWith('/my-merch') ||
     pathname?.startsWith('/opportunities') ||
     pathname?.startsWith('/affiliate') ||
     pathname?.startsWith('/share') ||
     pathname?.startsWith('/revenue') ||
     pathname?.startsWith('/admin') || // Admin dashboard has its own layout
+    pathname?.startsWith('/help') || // Help pages have app layout
     pathname?.startsWith('/u/') || // Public profile pages have their own layout
     pathname?.startsWith('/setlist/'); // Public setlist pages (viral loop)
 

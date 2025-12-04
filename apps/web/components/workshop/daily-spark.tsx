@@ -132,6 +132,7 @@ export function DailySpark({ className = '', onComplete }: DailySparkProps) {
               background: 'var(--accent)',
               color: 'white',
             }}
+            aria-label="Mark today's spark as complete"
           >
             <Check className="h-4 w-4" />I did it!
           </button>

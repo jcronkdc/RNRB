@@ -311,6 +311,9 @@ function SidebarLogo({
         <motion.img
           src={logoSrc}
           alt="Rock N' Roll Basement"
+          width={96}
+          height={40}
+          fetchpriority="high"
           animate={{
             scale: isHovered ? 1.02 : 1,
           }}

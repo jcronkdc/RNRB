@@ -166,27 +166,16 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Check if user is admin/owner
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-      select: { isOwner: true },
-    });
-
-    if (!user?.isOwner) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    // Check if ErrorReport table exists
+    // Check if ErrorReport table exists FIRST (before auth to avoid unnecessary queries)
+    let tableExists = true;
     try {
       await prisma.$queryRaw`SELECT 1 FROM "ErrorReport" LIMIT 1`;
     } catch (tableError) {
-      // Table doesn't exist yet, return empty results
+      tableExists = false;
+    }
+
+    if (!tableExists) {
+      // Table doesn't exist yet, return empty results without requiring auth
       return NextResponse.json({
         reports: [],
         counts: {
@@ -203,6 +192,22 @@ export async function GET(request: NextRequest) {
           hasMore: false,
         },
       });
+    }
+
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check if user is admin/owner
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { isOwner: true },
+    });
+
+    if (!user?.isOwner) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
     const { searchParams } = new URL(request.url);

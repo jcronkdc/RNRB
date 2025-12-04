@@ -199,9 +199,10 @@ export default function DiscoverPage() {
               <Image
                 src="/logo-dark.png"
                 alt="Rock N' Roll Basement"
-                width={140}
-                height={57}
+                width={168}
+                height={70}
                 priority
+                style={{ width: '168px', height: '70px' }}
                 className="transition-opacity duration-200 group-hover:opacity-80"
               />
             </Link>
@@ -278,13 +279,15 @@ export default function DiscoverPage() {
           <div className="mb-6 flex flex-wrap gap-2">
             <button
               onClick={() => setSearchType('username')}
+              aria-label="Search by username"
+              aria-pressed={searchType === 'username'}
               style={{
                 borderRadius: 'var(--radius-sm)',
                 padding: '10px 24px',
                 fontWeight: '500',
                 transition: 'all 0.2s',
                 backgroundColor: searchType === 'username' ? 'var(--accent)' : 'var(--bg)',
-                color: 'var(--text)',
+                color: searchType === 'username' ? '#ffffff' : 'var(--text)',
                 border: searchType === 'username' ? 'none' : '1px solid var(--border)',
               }}
             >
@@ -293,13 +296,15 @@ export default function DiscoverPage() {
             </button>
             <button
               onClick={() => setSearchType('email')}
+              aria-label="Search by email"
+              aria-pressed={searchType === 'email'}
               style={{
                 borderRadius: 'var(--radius-sm)',
                 padding: '10px 24px',
                 fontWeight: '500',
                 transition: 'all 0.2s',
                 backgroundColor: searchType === 'email' ? 'var(--accent)' : 'var(--bg)',
-                color: 'var(--text)',
+                color: searchType === 'email' ? '#ffffff' : 'var(--text)',
                 border: searchType === 'email' ? 'none' : '1px solid var(--border)',
               }}
             >
@@ -308,13 +313,15 @@ export default function DiscoverPage() {
             </button>
             <button
               onClick={() => setSearchType('phone')}
+              aria-label="Search by phone number"
+              aria-pressed={searchType === 'phone'}
               style={{
                 borderRadius: 'var(--radius-sm)',
                 padding: '10px 24px',
                 fontWeight: '500',
                 transition: 'all 0.2s',
                 backgroundColor: searchType === 'phone' ? 'var(--accent)' : 'var(--bg)',
-                color: 'var(--text)',
+                color: searchType === 'phone' ? '#ffffff' : 'var(--text)',
                 border: searchType === 'phone' ? 'none' : '1px solid var(--border)',
               }}
             >
@@ -901,7 +908,7 @@ export default function DiscoverPage() {
                     padding: '12px 32px',
                     fontWeight: '600',
                     backgroundColor: 'var(--accent)',
-                    color: 'var(--text)',
+                    color: '#ffffff',
                   }}
                 >
                   Set Up Your Profile First

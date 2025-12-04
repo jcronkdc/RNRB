@@ -222,7 +222,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                     {results.users.map((user: any) => (
                       <Link
                         key={user.id}
-                        href={`/profile/${user.id}`}
+                        href={`/community/users/${user.id}`}
                         onClick={onClose}
                         className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:border-purple-500/30 hover:bg-white/10"
                       >

@@ -187,6 +187,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
         <div className="mb-4">
           <button
             onClick={() => setShowSearch(true)}
+            aria-label="Search posts, music, artists, and hashtags"
             className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white/50 transition-all hover:border-purple-500/30 hover:bg-black/60"
           >
             <Search className="h-5 w-5" />
@@ -209,6 +210,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
             </span>
             <button
               onClick={clearFilter}
+              aria-label="Clear filter"
               className="ml-auto flex items-center gap-1 rounded-lg bg-white/10 px-3 py-1 text-sm font-medium text-white/70 transition-all hover:bg-white/20 hover:text-white"
             >
               <X className="h-4 w-4" />
@@ -262,6 +264,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
         {hasNewPosts && (
           <button
             onClick={handleLoadNewPosts}
+            aria-label="Load new posts"
             className="mb-4 flex w-full items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 py-3 font-medium text-purple-300 transition-all hover:bg-purple-500/20"
           >
             <RefreshCw className="h-4 w-4" />
@@ -326,6 +329,8 @@ function FeedTypeButton({
   return (
     <button
       onClick={onClick}
+      aria-label={`View ${label.toLowerCase()} feed`}
+      aria-pressed={active}
       className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-all ${
         active
           ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
