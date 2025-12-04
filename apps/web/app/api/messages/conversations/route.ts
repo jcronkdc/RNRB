@@ -42,20 +42,30 @@ export async function GET(request: NextRequest) {
     const settingsMap = new Map(conversationSettings.map((s) => [s.conversationId, s]));
 
     // Get all DM channels the user is part of
-    const messages = await prisma.chatMessage.findMany({
-      where: {
-        channelType: 'dm',
-        channelId: {
-          contains: userId,
+    let messages: any[] = [];
+    try {
+      messages = await prisma.chatMessage.findMany({
+        where: {
+          channelType: 'dm',
+          channelId: {
+            contains: userId,
+          },
+          isDeleted: false,
         },
-        isDeleted: false,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      distinct: ['channelId'],
-      take: 100,
-    });
+        orderBy: {
+          createdAt: 'desc',
+        },
+        distinct: ['channelId'],
+        take: 100,
+      });
+    } catch (error) {
+      // ChatMessage table might not exist yet - return empty conversations
+      console.log('[Conversations API] ChatMessage table not available:', error);
+      return NextResponse.json({
+        conversations: [],
+        total: 0,
+      });
+    }
 
     // Get unique channel IDs
     const channelIds = [...new Set(messages.map((m) => m.channelId))];
@@ -196,7 +206,22 @@ export async function GET(request: NextRequest) {
       total: filteredConversations.length,
     });
   } catch (error) {
-    console.error('Error fetching conversations:', error);
-    return NextResponse.json({ error: 'Failed to fetch conversations' }, { status: 500 });
+    console.error('[Conversations API] Error details:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      userId: session?.user?.id,
+    });
+    return NextResponse.json(
+      {
+        error: 'Failed to fetch conversations',
+        details:
+          process.env.NODE_ENV === 'development'
+            ? error instanceof Error
+              ? error.message
+              : 'Unknown error'
+            : undefined,
+      },
+      { status: 500 }
+    );
   }
 }
