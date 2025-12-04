@@ -102,7 +102,7 @@ export function PeopleSidebar() {
 
   if (loading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
         <div className="flex items-center justify-center py-8">
           <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
         </div>
@@ -114,7 +114,7 @@ export function PeopleSidebar() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl"
+      className="rounded-2xl border border-white/10 bg-black/40"
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/10 p-4">

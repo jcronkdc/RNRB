@@ -238,7 +238,7 @@ export function NewsletterSignup({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 p-8 backdrop-blur-xl md:p-10"
+          className="relative overflow-hidden rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 p-8 md:p-10"
         >
           {/* Background decoration */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">

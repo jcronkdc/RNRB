@@ -25,15 +25,16 @@ import {
   ListMusic,
   Headphones,
   type IconProps,
-  // Custom musician icons
-  SongManuscript,
-  VintageCondenserMic,
-  BandMembers,
-  TourCalendar,
-  BroadcastTower,
-  VinylRecord,
-  MusiciansMultiTool,
+  // Existing icons used as musician-themed alternatives
+  Music2 as SongManuscript,
+  Mic2 as VintageCondenserMic,
+  Users as BandMembers,
+  Calendar as TourCalendar,
+  Radio as BroadcastTower,
+  Disc3 as VinylRecord,
+  Wrench as MusiciansMultiTool,
   StageLights,
+  FolderOpen as SessionFolder,
 } from '@/components/ui/custom-icons';
 
 export interface ToolDefinition {

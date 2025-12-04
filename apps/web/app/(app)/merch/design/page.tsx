@@ -593,7 +593,7 @@ export default function MerchDesignerPage() {
                     />
                   </div>
                 )}
-                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/50 p-3 backdrop-blur-sm">
+                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/50 p-3">
                   <p className="text-center text-sm text-white">
                     {selectedProduct.name} • {selectedColor || 'Select color'}
                   </p>

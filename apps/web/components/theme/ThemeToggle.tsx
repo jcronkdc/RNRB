@@ -144,11 +144,9 @@ export function ThemeToggle({ showMenu = false, size = 'md', className = '' }: T
             transition={{ duration: 0.15 }}
             className="absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-xl"
             style={{
-              background:
-                resolvedTheme === 'dark' ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+              background: resolvedTheme === 'dark' ? 'rgb(30, 30, 30)' : 'rgb(255, 255, 255)',
               border: `1px solid ${resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-              backdropFilter: 'blur(20px)',
             }}
           >
             <div className="p-1">

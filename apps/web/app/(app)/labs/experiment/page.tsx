@@ -246,7 +246,7 @@ export default function ExperimentPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl">
+          <Card className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
             {/* Prompt Input */}
             <div className="border-b border-white/10 p-6">
               <label className="mb-2 block text-sm font-medium text-gray-300">
@@ -493,7 +493,7 @@ export default function ExperimentPage() {
           className="mt-8 space-y-4"
         >
           {/* Feature Status */}
-          <Card className="rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+          <Card className="rounded-xl border border-white/10 bg-white/5 p-6">
             <h3 className="mb-4 flex items-center gap-2 font-bold text-white">
               <FlaskConical className="h-5 w-5 text-purple-400" />
               Experiment Status

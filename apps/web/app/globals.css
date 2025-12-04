@@ -1163,15 +1163,14 @@ body {
 }
 
 .nav-scrolled {
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(20px);
+  background: rgb(30, 30, 30);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Light mode navigation */
 html.light .nav-scrolled {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255, 255, 255);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
@@ -3904,10 +3903,8 @@ html.light {
     --tw-ring-color: var(--border) !important;
   }
 
-  /* === BACKDROP FILTER SUPPORT === */
-  [class*='backdrop-blur'] {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-  }
+  /* === BACKDROP FILTER SUPPORT - REMOVED === */
+  /* Transparency has been removed from all menus */
 
   /* === LOADING STATES === */
   [class*='animate-pulse'] {

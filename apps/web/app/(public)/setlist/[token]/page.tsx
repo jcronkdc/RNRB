@@ -152,7 +152,7 @@ export default function PublicSetlistPage() {
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden border-b border-white/10 bg-gradient-to-r from-orange-500/20 via-transparent to-purple-500/20 px-4 py-8 backdrop-blur-sm"
+        className="relative overflow-hidden border-b border-white/10 bg-gradient-to-r from-orange-500/20 via-transparent to-purple-500/20 px-4 py-8"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -267,7 +267,7 @@ export default function PublicSetlistPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 + index * 0.05 }}
-                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-white/5 px-4 py-3 backdrop-blur-sm transition-all hover:border-orange-500/30 hover:bg-white/10"
+                className="group flex items-center gap-4 rounded-xl border border-white/5 bg-white/5 px-4 py-3 transition-all hover:border-orange-500/30 hover:bg-white/10"
               >
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-sm font-bold text-orange-400">
                   {song.position}

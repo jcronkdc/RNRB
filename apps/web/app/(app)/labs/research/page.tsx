@@ -301,7 +301,7 @@ export default function ResearchDashboardPage() {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2"
           >
-            <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <Card className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="flex items-center gap-2 text-xl font-bold text-white">
                   <Target className="h-5 w-5 text-purple-400" />
@@ -379,7 +379,7 @@ export default function ResearchDashboardPage() {
             className="space-y-6"
           >
             {/* Model Architecture */}
-            <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <Card className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
                 <CircuitBoard className="h-5 w-5 text-blue-400" />
                 Model Architecture
@@ -412,7 +412,7 @@ export default function ResearchDashboardPage() {
             </Card>
 
             {/* Training Progress */}
-            <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+            <Card className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
                 <Cpu className="h-5 w-5 text-green-400" />
                 Training Status
@@ -504,7 +504,7 @@ export default function ResearchDashboardPage() {
           transition={{ delay: 0.4 }}
           className="mt-8"
         >
-          <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+          <Card className="rounded-2xl border border-white/10 bg-white/5 p-6">
             <div className="flex items-start gap-4">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-500/20">
                 <Shield className="h-6 w-6 text-green-400" />

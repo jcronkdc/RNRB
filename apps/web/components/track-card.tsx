@@ -93,7 +93,7 @@ export function TrackCard({
         <motion.div
           initial={false}
           animate={{ opacity: isHovered ? 1 : 0 }}
-          className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-sm"
+          className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/60"
         >
           <button
             onClick={onPlay}
@@ -109,7 +109,7 @@ export function TrackCard({
             setLiked(!liked);
             onLike?.();
           }}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-all duration-200 hover:bg-background"
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 transition-all duration-200 hover:bg-background"
         >
           <Heart
             className={`h-4 w-4 transition-colors ${
@@ -119,7 +119,7 @@ export function TrackCard({
         </button>
 
         {/* Duration Badge */}
-        <div className="absolute bottom-3 left-3 rounded-md bg-background/80 px-2 py-1 text-xs font-medium backdrop-blur-sm">
+        <div className="absolute bottom-3 left-3 rounded-md bg-background/80 px-2 py-1 text-xs font-medium">
           {formatDuration(duration)}
         </div>
       </div>

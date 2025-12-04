@@ -186,7 +186,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
         <div className="mb-4">
           <button
             onClick={() => setShowSearch(true)}
-            className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white/50 backdrop-blur-xl transition-all hover:border-purple-500/30 hover:bg-black/60"
+            className="flex w-full items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-white/50 transition-all hover:border-purple-500/30 hover:bg-black/60"
           >
             <Search className="h-5 w-5" />
             <span>Search posts, music, artists, #hashtags...</span>
@@ -198,7 +198,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
 
         {/* Active Filter Display */}
         {(tagFilter || genreFilter) && (
-          <div className="mb-4 flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3 backdrop-blur-xl">
+          <div className="mb-4 flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3">
             <Hash className="h-5 w-5 text-purple-400" />
             <span className="font-medium text-white">
               {tagFilter ? `#${tagFilter}` : genreFilter}
@@ -217,7 +217,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
         )}
 
         {/* Feed Type Selector */}
-        <div className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-black/40 p-2 backdrop-blur-xl">
+        <div className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-black/40 p-2">
           <FeedTypeButton
             active={feedType === 'following'}
             icon={<Users className="h-4 w-4" />}
@@ -274,7 +274,7 @@ export function SocialFeed({ initialType = 'following' }: FeedProps) {
             <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
           </div>
         ) : posts.length === 0 ? (
-          <div className="rounded-xl border border-white/10 bg-black/40 p-12 text-center backdrop-blur-xl">
+          <div className="rounded-xl border border-white/10 bg-black/40 p-12 text-center">
             <Music className="mx-auto mb-4 h-12 w-12 text-white/20" />
             <h3 className="mb-2 text-lg font-semibold text-white">No posts yet</h3>
             <p className="text-sm text-white/60">Be the first to share something amazing!</p>

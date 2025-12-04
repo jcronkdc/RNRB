@@ -25,8 +25,7 @@ export function LandingAuthControls() {
     <div
       className="fixed right-4 top-4 z-50 flex items-center gap-1 rounded-full px-1 py-1"
       style={{
-        background: 'rgba(0, 0, 0, 0.6)',
-        backdropFilter: 'blur(12px)',
+        background: 'rgba(0, 0, 0, 0.9)',
         border: '1px solid rgba(255, 255, 255, 0.1)',
       }}
     >

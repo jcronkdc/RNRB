@@ -150,10 +150,7 @@ export function CountdownSection({ content, theme, siteId }: CountdownSectionPro
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
     <div className="text-center">
-      <div
-        className="mb-2 rounded-xl p-4 md:p-6"
-        style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}
-      >
+      <div className="mb-2 rounded-xl p-4 md:p-6" style={{ background: 'rgba(255,255,255,0.1)' }}>
         <span className="text-4xl font-bold text-white md:text-6xl">
           {value.toString().padStart(2, '0')}
         </span>

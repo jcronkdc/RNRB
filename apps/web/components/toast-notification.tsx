@@ -72,7 +72,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
       initial={{ opacity: 0, y: 50, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, x: 100, scale: 0.9 }}
-      className={`flex items-start gap-3 rounded-lg border ${color.bg} ${color.border} p-4 shadow-lg backdrop-blur-sm`}
+      className={`flex items-start gap-3 rounded-lg border ${color.bg} ${color.border} p-4 shadow-lg`}
     >
       <Icon className={`h-5 w-5 shrink-0 ${color.icon}`} />
       <p className={`flex-1 text-sm font-medium ${color.text}`}>{toast.message}</p>

@@ -786,7 +786,7 @@ function WorkspacePreviewCard({
     >
       {/* Header with gradient */}
       <div className={cn('flex items-center gap-3 px-4 py-3', `bg-gradient-to-r ${gradient}`)}>
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
           <Icon className="h-5 w-5 text-white" />
         </div>
         <div className="min-w-0 flex-1">

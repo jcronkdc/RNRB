@@ -2,7 +2,7 @@
 
 /**
  * WORKSPACE CUSTOMIZER
- * 
+ *
  * Allows users to personalize their workspace with:
  * - Custom header images
  * - Background colors/gradients
@@ -12,15 +12,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWorkspace } from './workspace-context';
-import {
-  Image,
-  Palette,
-  X,
-  Upload,
-  Check,
-  Trash2,
-  Sparkles,
-} from '@/components/ui/custom-icons';
+import { Image, Palette, X, Upload, Check, Trash2, Sparkles } from '@/components/ui/custom-icons';
 
 // Preset gradient options
 const PRESET_GRADIENTS = [
@@ -52,7 +44,8 @@ interface WorkspaceCustomizerProps {
 }
 
 export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProps) {
-  const { activeWorkspace, updateWorkspaceImage, updateWorkspaceColors, updateWorkspace } = useWorkspace();
+  const { activeWorkspace, updateWorkspaceImage, updateWorkspaceColors, updateWorkspace } =
+    useWorkspace();
   const [activeTab, setActiveTab] = useState<'image' | 'colors'>('image');
   const [isUploading, setIsUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -108,16 +101,22 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
   }, [activeWorkspace, updateWorkspaceImage]);
 
   // Handle gradient selection
-  const handleGradientSelect = useCallback(async (gradient: string) => {
-    if (!activeWorkspace) return;
-    await updateWorkspaceColors(activeWorkspace.id, { backgroundColor: gradient });
-  }, [activeWorkspace, updateWorkspaceColors]);
+  const handleGradientSelect = useCallback(
+    async (gradient: string) => {
+      if (!activeWorkspace) return;
+      await updateWorkspaceColors(activeWorkspace.id, { backgroundColor: gradient });
+    },
+    [activeWorkspace, updateWorkspaceColors]
+  );
 
   // Handle accent color selection
-  const handleAccentSelect = useCallback(async (color: string) => {
-    if (!activeWorkspace) return;
-    await updateWorkspaceColors(activeWorkspace.id, { accentColor: color || undefined });
-  }, [activeWorkspace, updateWorkspaceColors]);
+  const handleAccentSelect = useCallback(
+    async (color: string) => {
+      if (!activeWorkspace) return;
+      await updateWorkspaceColors(activeWorkspace.id, { accentColor: color || undefined });
+    },
+    [activeWorkspace, updateWorkspaceColors]
+  );
 
   // Handle clearing background
   const handleClearBackground = useCallback(async () => {
@@ -133,7 +132,7 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
         onClick={onClose}
       >
         <motion.div
@@ -141,16 +140,16 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl"
+          className="w-full max-w-lg overflow-hidden rounded-2xl shadow-2xl"
           style={{ background: 'var(--panel)' }}
         >
           {/* Header */}
-          <div 
+          <div
             className="flex items-center justify-between px-6 py-4"
             style={{ borderBottom: '1px solid var(--border)' }}
           >
             <div className="flex items-center gap-3">
-              <div 
+              <div
                 className="flex h-10 w-10 items-center justify-center rounded-xl"
                 style={{ background: 'var(--accent-glow)' }}
               >
@@ -167,7 +166,7 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+              className="rounded-lg p-2 transition-colors hover:bg-black/10 dark:hover:bg-white/10"
               style={{ color: 'var(--muted)' }}
             >
               <X className="h-5 w-5" />
@@ -179,13 +178,11 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
             <button
               onClick={() => setActiveTab('image')}
               className={`flex items-center gap-2 px-4 py-3 font-medium transition-all ${
-                activeTab === 'image'
-                  ? 'border-b-2'
-                  : 'opacity-60 hover:opacity-100'
+                activeTab === 'image' ? 'border-b-2' : 'opacity-60 hover:opacity-100'
               }`}
-              style={{ 
+              style={{
                 borderColor: activeTab === 'image' ? 'var(--accent)' : 'transparent',
-                color: activeTab === 'image' ? 'var(--accent)' : 'var(--text)'
+                color: activeTab === 'image' ? 'var(--accent)' : 'var(--text)',
               }}
             >
               <Image className="h-4 w-4" />
@@ -194,13 +191,11 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
             <button
               onClick={() => setActiveTab('colors')}
               className={`flex items-center gap-2 px-4 py-3 font-medium transition-all ${
-                activeTab === 'colors'
-                  ? 'border-b-2'
-                  : 'opacity-60 hover:opacity-100'
+                activeTab === 'colors' ? 'border-b-2' : 'opacity-60 hover:opacity-100'
               }`}
-              style={{ 
+              style={{
                 borderColor: activeTab === 'colors' ? 'var(--accent)' : 'transparent',
-                color: activeTab === 'colors' ? 'var(--accent)' : 'var(--text)'
+                color: activeTab === 'colors' ? 'var(--accent)' : 'var(--text)',
               }}
             >
               <Sparkles className="h-4 w-4" />
@@ -213,26 +208,26 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
             {activeTab === 'image' && (
               <div className="space-y-4">
                 {/* Current/Preview Image */}
-                <div 
-                  className="relative aspect-[3/1] rounded-xl overflow-hidden"
+                <div
+                  className="relative aspect-[3/1] overflow-hidden rounded-xl"
                   style={{ background: 'var(--surface)' }}
                 >
-                  {(previewImage || activeWorkspace.headerImage) ? (
+                  {previewImage || activeWorkspace.headerImage ? (
                     <>
                       <img
                         src={previewImage || activeWorkspace.headerImage}
                         alt="Workspace header"
-                        className="w-full h-full object-cover"
+                        className="h-full w-full object-cover"
                       />
                       <button
                         onClick={previewImage ? () => setPreviewImage(null) : handleRemoveImage}
-                        className="absolute top-2 right-2 p-2 rounded-lg bg-black/50 text-white hover:bg-black/70 transition-colors"
+                        className="absolute right-2 top-2 rounded-lg bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-full gap-2">
+                    <div className="flex h-full flex-col items-center justify-center gap-2">
                       <Image className="h-8 w-8" style={{ color: 'var(--muted)' }} />
                       <p className="text-sm" style={{ color: 'var(--muted)' }}>
                         No header image
@@ -249,11 +244,11 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                   onChange={handleFileSelect}
                   className="hidden"
                 />
-                
+
                 <div className="flex gap-2">
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-medium transition-all hover:scale-[1.02]"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-medium transition-all hover:scale-[1.02]"
                     style={{
                       background: 'var(--surface)',
                       border: '2px dashed var(--border)',
@@ -263,12 +258,12 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                     <Upload className="h-4 w-4" />
                     {previewImage ? 'Choose Different' : 'Upload Image'}
                   </button>
-                  
+
                   {previewImage && (
                     <button
                       onClick={handleUploadImage}
                       disabled={isUploading}
-                      className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all hover:scale-[1.02] disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold text-white transition-all hover:scale-[1.02] disabled:opacity-50"
                       style={{ background: 'var(--accent)' }}
                     >
                       <Check className="h-4 w-4" />
@@ -277,7 +272,7 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                   )}
                 </div>
 
-                <p className="text-xs text-center" style={{ color: 'var(--muted)' }}>
+                <p className="text-center text-xs" style={{ color: 'var(--muted)' }}>
                   Recommended: 1200x400px, max 5MB
                 </p>
               </div>
@@ -287,17 +282,17 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
               <div className="space-y-6">
                 {/* Background Gradients */}
                 <div>
-                  <h3 className="font-medium mb-3" style={{ color: 'var(--text)' }}>
+                  <h3 className="mb-3 font-medium" style={{ color: 'var(--text)' }}>
                     Background Gradient
                   </h3>
                   <div className="grid grid-cols-4 gap-2">
                     {/* Clear option */}
                     <button
                       onClick={handleClearBackground}
-                      className={`aspect-square rounded-xl border-2 transition-all hover:scale-105 flex items-center justify-center ${
+                      className={`flex aspect-square items-center justify-center rounded-xl border-2 transition-all hover:scale-105 ${
                         !activeWorkspace.backgroundColor ? 'ring-2 ring-offset-2' : ''
                       }`}
-                      style={{ 
+                      style={{
                         borderColor: 'var(--border)',
                         background: 'var(--surface)',
                         ringColor: 'var(--accent)',
@@ -305,15 +300,17 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                     >
                       <X className="h-4 w-4" style={{ color: 'var(--muted)' }} />
                     </button>
-                    
+
                     {PRESET_GRADIENTS.map((gradient) => (
                       <button
                         key={gradient.id}
                         onClick={() => handleGradientSelect(gradient.value)}
                         className={`aspect-square rounded-xl transition-all hover:scale-105 ${
-                          activeWorkspace.backgroundColor === gradient.value ? 'ring-2 ring-offset-2' : ''
+                          activeWorkspace.backgroundColor === gradient.value
+                            ? 'ring-2 ring-offset-2'
+                            : ''
                         }`}
-                        style={{ 
+                        style={{
                           background: gradient.value,
                           ringColor: 'var(--accent)',
                         }}
@@ -325,7 +322,7 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
 
                 {/* Accent Colors */}
                 <div>
-                  <h3 className="font-medium mb-3" style={{ color: 'var(--text)' }}>
+                  <h3 className="mb-3 font-medium" style={{ color: 'var(--text)' }}>
                     Accent Color
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -333,12 +330,12 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                       <button
                         key={accent.id}
                         onClick={() => handleAccentSelect(accent.value)}
-                        className={`w-10 h-10 rounded-xl transition-all hover:scale-110 ${
-                          (activeWorkspace.accentColor || '') === accent.value 
-                            ? 'ring-2 ring-offset-2' 
+                        className={`h-10 w-10 rounded-xl transition-all hover:scale-110 ${
+                          (activeWorkspace.accentColor || '') === accent.value
+                            ? 'ring-2 ring-offset-2'
                             : ''
                         }`}
-                        style={{ 
+                        style={{
                           background: accent.value || 'var(--accent)',
                           ringColor: 'var(--text)',
                         }}
@@ -359,4 +356,3 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
     </AnimatePresence>
   );
 }
-

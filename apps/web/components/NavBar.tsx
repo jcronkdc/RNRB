@@ -259,8 +259,7 @@ function Dropdown({ label, items, isScrolled }: DropdownProps) {
             : 'invisible -translate-y-3 scale-95 opacity-0'
         }`}
         style={{
-          background:
-            'linear-gradient(180deg, rgba(38, 38, 38, 0.98) 0%, rgba(28, 28, 28, 0.98) 100%)',
+          background: 'linear-gradient(180deg, rgb(38, 38, 38) 0%, rgb(28, 28, 28) 100%)',
           border: '1px solid rgba(255, 255, 255, 0.08)',
           borderRadius: '16px',
           boxShadow: `
@@ -269,7 +268,6 @@ function Dropdown({ label, items, isScrolled }: DropdownProps) {
             0 10px 30px -5px rgba(0, 0, 0, 0.5),
             inset 0 1px 0 rgba(255, 255, 255, 0.05)
           `,
-          backdropFilter: 'blur(20px)',
         }}
       >
         {/* Decorative top gradient line */}
@@ -515,14 +513,13 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
   return (
     <>
-      {/* Backdrop with blur */}
+      {/* Backdrop */}
       <div
         className="fixed inset-0 z-40 md:hidden"
         onClick={onClose}
         aria-hidden="true"
         style={{
-          background: 'radial-gradient(ellipse at top, rgba(0,0,0,0.7), rgba(0,0,0,0.9))',
-          backdropFilter: 'blur(8px)',
+          background: 'radial-gradient(ellipse at top, rgba(0,0,0,0.85), rgba(0,0,0,0.95))',
         }}
       />
 
@@ -530,8 +527,7 @@ function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       <nav
         className="fixed inset-x-0 top-16 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto md:hidden"
         style={{
-          background:
-            'linear-gradient(180deg, rgba(30, 30, 30, 0.98) 0%, rgba(20, 20, 20, 0.98) 100%)',
+          background: 'linear-gradient(180deg, rgb(30, 30, 30) 0%, rgb(20, 20, 20) 100%)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
           boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.8)',
         }}

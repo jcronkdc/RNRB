@@ -757,7 +757,7 @@ export default function CreateProductPage() {
 
                     {/* Loading overlay when generating mockup */}
                     {isUploading && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                         <div className="text-center">
                           <Loader2 className="mx-auto h-8 w-8 animate-spin text-orange-400" />
                           <p className="mt-2 text-sm text-white">Processing...</p>

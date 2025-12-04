@@ -369,7 +369,7 @@ export default function VolunteerPortalPage() {
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
         >
-          <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl sm:p-8">
+          <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8">
             {/* Step 1: Profile */}
             {step === 1 && (
               <>

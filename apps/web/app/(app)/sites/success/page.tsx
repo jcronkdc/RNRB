@@ -351,7 +351,7 @@ function DeploymentSuccessContent() {
           transition={{ delay: 0.1 }}
           className="mb-8"
         >
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
             <div className="mb-4 flex items-center gap-2">
               <Globe className="h-5 w-5 text-orange-400" />
               <span className="font-semibold text-white">{site.siteName || 'Your Website'}</span>

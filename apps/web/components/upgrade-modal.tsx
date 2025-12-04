@@ -82,7 +82,7 @@ export function UpgradeModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/90"
           />
 
           {/* Modal */}
@@ -104,7 +104,7 @@ export function UpgradeModal({
               {/* Header with gradient */}
               <div className={`bg-gradient-to-r ${tier.color} p-8 text-white`}>
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-full bg-white/20 p-3 backdrop-blur-sm">
+                  <div className="rounded-full bg-white/30 p-3">
                     <Lock className="h-6 w-6" />
                   </div>
                   <div>

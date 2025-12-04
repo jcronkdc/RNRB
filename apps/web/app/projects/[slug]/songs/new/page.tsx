@@ -225,7 +225,7 @@ export default function NewSongPage() {
 
         {/* Save Button (Always Visible) */}
         <div
-          className="sticky bottom-4 mt-8 flex items-center justify-between rounded-xl p-4 shadow-lg backdrop-blur-sm"
+          className="sticky bottom-4 mt-8 flex items-center justify-between rounded-xl p-4 shadow-lg"
           style={{ background: 'rgba(26, 24, 20, 0.9)', border: '1px solid var(--border)' }}
         >
           <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>

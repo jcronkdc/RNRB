@@ -56,14 +56,14 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
   // Handle follow/unfollow
   const handleFollowToggle = async () => {
     if (isFollowLoading || isOwnPost) return;
-    
+
     setIsFollowLoading(true);
     try {
       const response = await fetch(`/api/community/users/${localPost.author.id}/follow`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setIsFollowing(data.isFollowing);
@@ -258,7 +258,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6 backdrop-blur-xl transition-all hover:border-purple-500/30">
+    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6 transition-all hover:border-purple-500/30">
       {/* Repost Header */}
       {isRepost && (
         <div className="mb-4 flex items-center gap-2 text-sm text-white/60">
@@ -334,7 +334,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
 
           {/* Dropdown Menu */}
           {showMenu && (
-            <div className="absolute right-0 top-full z-50 mt-1 min-w-[200px] overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 py-1 shadow-xl backdrop-blur-xl">
+            <div className="absolute right-0 top-full z-50 mt-1 min-w-[200px] overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 py-1 shadow-xl">
               {isOwnPost ? (
                 <>
                   {/* Edit */}
@@ -600,7 +600,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
 
       {/* Delete Confirmation Modal - Facebook style */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div
             className="mx-4 w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
@@ -666,7 +666,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
 
       {/* Edit Modal - Facebook style */}
       {isEditing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div
             className="mx-4 w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 shadow-2xl"
             onClick={(e) => e.stopPropagation()}

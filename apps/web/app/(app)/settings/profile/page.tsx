@@ -1811,7 +1811,6 @@ function ProfileSettingsContent() {
               className="rounded-xl p-5"
               style={{
                 background: 'rgba(42, 42, 42, 0.95)',
-                backdropFilter: 'blur(12px)',
                 border: '1px solid var(--border)',
                 boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.5)',
               }}

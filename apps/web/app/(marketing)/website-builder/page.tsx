@@ -127,7 +127,7 @@ function TestimonialCard({
   rating: number;
 }) {
   return (
-    <div className="rounded-2xl bg-gray-900/50 p-8 backdrop-blur-sm">
+    <div className="rounded-2xl bg-gray-900/50 p-8">
       <div className="mb-4 flex gap-1">
         {Array.from({ length: rating }).map((_, i) => (
           <Star key={i} className="h-5 w-5 fill-orange-500 text-orange-500" />
@@ -234,7 +234,7 @@ export default function WebsiteBuilderLanding() {
         <div className="relative mx-auto max-w-7xl px-6 pb-32 pt-24">
           {/* Badge */}
           <div className="mb-8 flex justify-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500/20 to-pink-500/20 px-4 py-2 text-sm backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500/20 to-pink-500/20 px-4 py-2 text-sm">
               <Sparkles className="h-4 w-4 text-orange-500" />
               <span className="text-orange-300">AI-Powered Website Builder for Musicians</span>
             </div>

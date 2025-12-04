@@ -56,6 +56,14 @@ const config = {
           DEFAULT: withAlpha('--sf-color-muted'),
           foreground: withAlpha('--sf-color-muted-foreground')
         },
+        card: {
+          DEFAULT: withAlpha('--sf-color-surface'),
+          foreground: withAlpha('--sf-color-foreground')
+        },
+        popover: {
+          DEFAULT: withAlpha('--sf-color-surface'),
+          foreground: withAlpha('--sf-color-foreground')
+        },
         success: withAlpha('--color-success'),
         warning: withAlpha('--color-warning'),
         error: withAlpha('--color-error'),

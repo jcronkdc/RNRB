@@ -673,7 +673,7 @@ export default function LibraryPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-black/80"
           >
             <motion.div
               initial={{ scale: 0.9 }}
@@ -1447,7 +1447,7 @@ export default function LibraryPage() {
                         {isSelectionMode && (
                           <button
                             onClick={() => toggleFileSelection(file.id)}
-                            className="absolute left-3 top-3 z-10 rounded-lg bg-gray-800/80 p-1.5 backdrop-blur-sm"
+                            className="absolute left-3 top-3 z-10 rounded-lg bg-gray-800/80 p-1.5"
                           >
                             {selectedFiles.has(file.id) ? (
                               <CheckSquare className="h-4 w-4 text-orange-500" />

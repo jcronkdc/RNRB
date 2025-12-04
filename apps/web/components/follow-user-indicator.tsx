@@ -33,7 +33,7 @@ export function FollowUserIndicator({
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className={`fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full border border-border border-brand-primary bg-brand-primary/10 px-4 py-2 shadow-lg backdrop-blur-sm ${className}`}
+          className={`fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-3 rounded-full border border-border border-brand-primary bg-brand-primary/10 px-4 py-2 shadow-lg ${className}`}
         >
           {/* Following indicator */}
           <div className="flex items-center gap-2">

@@ -121,7 +121,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
 
     setIsFollowLoading(true);
     setFollowError(null);
-    
+
     try {
       const response = await fetch(`/api/community/users/${userId}/follow`, {
         method: 'POST',
@@ -214,7 +214,11 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
           <h2 style={{ fontSize: '1.25rem', fontWeight: '600', color: 'var(--text)' }}>
             User not found
           </h2>
-          <Link href="/community" className="mt-4 inline-block text-sm" style={{ color: 'var(--accent)' }}>
+          <Link
+            href="/community"
+            className="mt-4 inline-block text-sm"
+            style={{ color: 'var(--accent)' }}
+          >
             Back to Community
           </Link>
         </div>
@@ -290,7 +294,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
         {profile.isOwnProfile && (
           <button
             className="absolute bottom-4 right-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all hover:opacity-90"
-            style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}
+            style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
           >
             <Camera className="h-4 w-4" />
             Edit Cover
@@ -382,7 +386,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
               {/* Location & Status Message */}
               <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
                 {mp?.location && (
-                  <span className="flex items-center gap-1 text-sm" style={{ color: 'var(--muted)' }}>
+                  <span
+                    className="flex items-center gap-1 text-sm"
+                    style={{ color: 'var(--muted)' }}
+                  >
                     <MapPin className="h-4 w-4" />
                     {mp.location}
                   </span>
@@ -396,7 +403,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
 
               {/* Mutual Friends */}
               {profile.mutualConnections.length > 0 && !profile.isOwnProfile && (
-                <div className="mt-2 flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+                <div
+                  className="mt-2 flex items-center gap-2 text-sm"
+                  style={{ color: 'var(--muted)' }}
+                >
                   <div className="flex -space-x-2">
                     {profile.mutualConnections.slice(0, 3).map((mutual) => (
                       <div
@@ -405,7 +415,12 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                         style={{ borderColor: 'var(--bg)', backgroundColor: 'var(--panel)' }}
                       >
                         {mutual.image ? (
-                          <Image src={mutual.image} alt={mutual.name || ''} width={24} height={24} />
+                          <Image
+                            src={mutual.image}
+                            alt={mutual.name || ''}
+                            width={24}
+                            height={24}
+                          />
                         ) : (
                           <User className="h-full w-full p-1" />
                         )}
@@ -468,7 +483,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                     {showMoreMenu && (
                       <div
                         className="absolute right-0 top-full z-50 mt-2 min-w-[180px] rounded-lg py-2 shadow-xl"
-                        style={{ backgroundColor: 'var(--panel)', border: '1px solid var(--border)' }}
+                        style={{
+                          backgroundColor: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                        }}
                       >
                         <button className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm transition-colors hover:bg-white/5">
                           <Users className="h-4 w-4" />
@@ -555,7 +573,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
             <>
               <div className="h-8 w-px" style={{ backgroundColor: 'var(--border)' }} />
               <div className="text-center">
-                <div className="flex items-center gap-1 text-2xl font-bold" style={{ color: 'var(--accent)' }}>
+                <div
+                  className="flex items-center gap-1 text-2xl font-bold"
+                  style={{ color: 'var(--accent)' }}
+                >
                   <Flame className="h-5 w-5" />
                   {mp.currentStreak}
                 </div>
@@ -582,7 +603,8 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                 className="flex items-center gap-2 whitespace-nowrap px-6 py-4 text-sm font-semibold transition-all"
                 style={{
                   color: activeTab === tab.key ? 'var(--accent)' : 'var(--muted)',
-                  borderBottom: activeTab === tab.key ? '3px solid var(--accent)' : '3px solid transparent',
+                  borderBottom:
+                    activeTab === tab.key ? '3px solid var(--accent)' : '3px solid transparent',
                 }}
               >
                 <tab.icon className="h-4 w-4" />
@@ -662,7 +684,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                 className="rounded-xl p-6"
                 style={{ backgroundColor: 'var(--panel)', border: '1px solid var(--border)' }}
               >
-                <h3 className="mb-4 flex items-center gap-2 text-lg font-bold" style={{ color: 'var(--text)' }}>
+                <h3
+                  className="mb-4 flex items-center gap-2 text-lg font-bold"
+                  style={{ color: 'var(--text)' }}
+                >
                   <Trophy className="h-5 w-5" style={{ color: 'var(--accent)' }} />
                   Achievements
                 </h3>
@@ -832,72 +857,90 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                   </div>
 
                   {/* Skills & Genres */}
-                  {mp && (mp.skills?.length > 0 || mp.genres?.length > 0 || mp.instruments?.length > 0) && (
-                    <div
-                      className="rounded-xl p-6"
-                      style={{ backgroundColor: 'var(--panel)', border: '1px solid var(--border)' }}
-                    >
-                      <h3 className="mb-4 text-lg font-bold" style={{ color: 'var(--text)' }}>
-                        Skills & Expertise
-                      </h3>
-                      <div className="space-y-4">
-                        {mp.instruments?.length > 0 && (
-                          <div>
-                            <h4 className="mb-2 text-sm font-medium" style={{ color: 'var(--muted)' }}>
-                              Instruments
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {mp.instruments.map((item: string) => (
-                                <span
-                                  key={item}
-                                  className="rounded-lg px-3 py-1.5 text-sm font-medium"
-                                  style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
+                  {mp &&
+                    (mp.skills?.length > 0 ||
+                      mp.genres?.length > 0 ||
+                      mp.instruments?.length > 0) && (
+                      <div
+                        className="rounded-xl p-6"
+                        style={{
+                          backgroundColor: 'var(--panel)',
+                          border: '1px solid var(--border)',
+                        }}
+                      >
+                        <h3 className="mb-4 text-lg font-bold" style={{ color: 'var(--text)' }}>
+                          Skills & Expertise
+                        </h3>
+                        <div className="space-y-4">
+                          {mp.instruments?.length > 0 && (
+                            <div>
+                              <h4
+                                className="mb-2 text-sm font-medium"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                Instruments
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {mp.instruments.map((item: string) => (
+                                  <span
+                                    key={item}
+                                    className="rounded-lg px-3 py-1.5 text-sm font-medium"
+                                    style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
+                                  >
+                                    {item}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                        {mp.genres?.length > 0 && (
-                          <div>
-                            <h4 className="mb-2 text-sm font-medium" style={{ color: 'var(--muted)' }}>
-                              Genres
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {mp.genres.map((item: string) => (
-                                <span
-                                  key={item}
-                                  className="rounded-lg px-3 py-1.5 text-sm font-medium"
-                                  style={{ backgroundColor: 'var(--accent-dim)', color: 'var(--accent)' }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
+                          )}
+                          {mp.genres?.length > 0 && (
+                            <div>
+                              <h4
+                                className="mb-2 text-sm font-medium"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                Genres
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {mp.genres.map((item: string) => (
+                                  <span
+                                    key={item}
+                                    className="rounded-lg px-3 py-1.5 text-sm font-medium"
+                                    style={{
+                                      backgroundColor: 'var(--accent-dim)',
+                                      color: 'var(--accent)',
+                                    }}
+                                  >
+                                    {item}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                        {mp.skills?.length > 0 && (
-                          <div>
-                            <h4 className="mb-2 text-sm font-medium" style={{ color: 'var(--muted)' }}>
-                              Skills
-                            </h4>
-                            <div className="flex flex-wrap gap-2">
-                              {mp.skills.map((item: string) => (
-                                <span
-                                  key={item}
-                                  className="rounded-lg px-3 py-1.5 text-sm font-medium"
-                                  style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
-                                >
-                                  {item}
-                                </span>
-                              ))}
+                          )}
+                          {mp.skills?.length > 0 && (
+                            <div>
+                              <h4
+                                className="mb-2 text-sm font-medium"
+                                style={{ color: 'var(--muted)' }}
+                              >
+                                Skills
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {mp.skills.map((item: string) => (
+                                  <span
+                                    key={item}
+                                    className="rounded-lg px-3 py-1.5 text-sm font-medium"
+                                    style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
+                                  >
+                                    {item}
+                                  </span>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {/* Availability */}
                   {mp && (
@@ -985,13 +1028,19 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                     className="rounded-xl p-6"
                     style={{ backgroundColor: 'var(--panel)', border: '1px solid var(--border)' }}
                   >
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-bold" style={{ color: 'var(--text)' }}>
+                    <h3
+                      className="mb-4 flex items-center gap-2 text-lg font-bold"
+                      style={{ color: 'var(--text)' }}
+                    >
                       <Play className="h-5 w-5" style={{ color: 'var(--accent)' }} />
                       Published Tracks ({profile.trackCount})
                     </h3>
                     {profile.tracks.length === 0 ? (
                       <div className="py-8 text-center">
-                        <Music className="mx-auto mb-4 h-12 w-12" style={{ color: 'var(--muted)', opacity: 0.5 }} />
+                        <Music
+                          className="mx-auto mb-4 h-12 w-12"
+                          style={{ color: 'var(--muted)', opacity: 0.5 }}
+                        />
                         <p style={{ color: 'var(--muted)' }}>No tracks published yet</p>
                       </div>
                     ) : (
@@ -1015,13 +1064,19 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                     className="rounded-xl p-6"
                     style={{ backgroundColor: 'var(--panel)', border: '1px solid var(--border)' }}
                   >
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-bold" style={{ color: 'var(--text)' }}>
+                    <h3
+                      className="mb-4 flex items-center gap-2 text-lg font-bold"
+                      style={{ color: 'var(--text)' }}
+                    >
                       <Music className="h-5 w-5" style={{ color: 'var(--accent)' }} />
                       Songs ({profile.songCount})
                     </h3>
                     {profile.songs.length === 0 ? (
                       <div className="py-8 text-center">
-                        <Music className="mx-auto mb-4 h-12 w-12" style={{ color: 'var(--muted)', opacity: 0.5 }} />
+                        <Music
+                          className="mx-auto mb-4 h-12 w-12"
+                          style={{ color: 'var(--muted)', opacity: 0.5 }}
+                        />
                         <p style={{ color: 'var(--muted)' }}>No public songs yet</p>
                       </div>
                     ) : (
@@ -1035,7 +1090,9 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                             <div
                               className="flex h-12 w-12 items-center justify-center rounded-lg"
                               style={{
-                                backgroundColor: song.coverArt ? 'transparent' : 'var(--accent-dim)',
+                                backgroundColor: song.coverArt
+                                  ? 'transparent'
+                                  : 'var(--accent-dim)',
                               }}
                             >
                               {song.coverArt ? (
@@ -1055,7 +1112,8 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                                 {song.title}
                               </h4>
                               <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                                {song.genre || 'No genre'} · {format(new Date(song.createdAt), 'MMM yyyy')}
+                                {song.genre || 'No genre'} ·{' '}
+                                {format(new Date(song.createdAt), 'MMM yyyy')}
                               </p>
                             </div>
                             <ChevronRight className="h-5 w-5" style={{ color: 'var(--muted)' }} />
@@ -1071,7 +1129,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                       className="rounded-xl p-6"
                       style={{ backgroundColor: 'var(--panel)', border: '1px solid var(--border)' }}
                     >
-                      <h3 className="mb-4 flex items-center gap-2 text-lg font-bold" style={{ color: 'var(--text)' }}>
+                      <h3
+                        className="mb-4 flex items-center gap-2 text-lg font-bold"
+                        style={{ color: 'var(--text)' }}
+                      >
                         <Briefcase className="h-5 w-5" style={{ color: 'var(--accent)' }} />
                         Projects ({profile.projectCount})
                       </h3>
@@ -1081,7 +1142,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                             key={project.id}
                             href={`/projects/${project.id}`}
                             className="group overflow-hidden rounded-lg transition-all hover:scale-[1.02]"
-                            style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}
+                            style={{
+                              backgroundColor: 'var(--bg)',
+                              border: '1px solid var(--border)',
+                            }}
                           >
                             <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-pink-600/20">
                               {project.coverImage && (
@@ -1143,7 +1207,12 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                               style={{ backgroundColor: 'var(--bg)' }}
                             >
                               {user.image ? (
-                                <Image src={user.image} alt={user.name || ''} width={48} height={48} />
+                                <Image
+                                  src={user.image}
+                                  alt={user.name || ''}
+                                  width={48}
+                                  height={48}
+                                />
                               ) : (
                                 <div className="flex h-full w-full items-center justify-center">
                                   <User className="h-6 w-6" style={{ color: 'var(--muted)' }} />
@@ -1184,7 +1253,12 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                               style={{ backgroundColor: 'var(--bg)' }}
                             >
                               {user.image ? (
-                                <Image src={user.image} alt={user.name || ''} width={48} height={48} />
+                                <Image
+                                  src={user.image}
+                                  alt={user.name || ''}
+                                  width={48}
+                                  height={48}
+                                />
                               ) : (
                                 <div className="flex h-full w-full items-center justify-center">
                                   <User className="h-6 w-6" style={{ color: 'var(--muted)' }} />

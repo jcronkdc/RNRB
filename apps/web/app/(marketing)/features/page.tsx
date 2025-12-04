@@ -2396,7 +2396,7 @@ export default function FeaturesPage() {
 
       {/* Sticky Navigation - Rock Style */}
       <section
-        className="sticky top-0 z-40 py-4 backdrop-blur-xl"
+        className="sticky top-0 z-40 py-4"
         style={{
           background: 'rgba(18, 18, 20, 0.9)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',

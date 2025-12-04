@@ -87,7 +87,7 @@ export function ReactionBar({
           onClick={() => onReact(type)}
           disabled={disabled}
           whileTap={{ scale: 0.85 }}
-          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-sm disabled:opacity-50"
+          className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 disabled:opacity-50"
         >
           <div className="text-xl">{REACTION_ICONS[type]}</div>
         </motion.button>
@@ -154,7 +154,7 @@ export function FloatingReactions({ reactions, onReact, disabled }: FloatingReac
           <motion.button
             onClick={() => setShowPicker(!showPicker)}
             whileTap={{ scale: 0.95 }}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-sm"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white"
           >
             <Sparkles size={18} />
           </motion.button>
@@ -167,7 +167,7 @@ export function FloatingReactions({ reactions, onReact, disabled }: FloatingReac
               initial={{ opacity: 0, y: 10, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.9 }}
-              className="absolute bottom-full left-0 mb-2 flex gap-1 rounded-2xl border border-white/20 bg-white/10 p-2 backdrop-blur-xl"
+              className="absolute bottom-full left-0 mb-2 flex gap-1 rounded-2xl border border-white/20 bg-white/10 p-2"
             >
               {(Object.keys(REACTION_ICONS) as Reaction['type'][]).map((type) => (
                 <motion.button

@@ -77,10 +77,10 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-20">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/90" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl rounded-2xl border border-white/10 bg-gradient-to-br from-black/90 via-purple-950/20 to-black/90 shadow-2xl backdrop-blur-xl">
+      <div className="relative w-full max-w-2xl rounded-2xl border border-white/10 bg-gradient-to-br from-black via-purple-950/20 to-black shadow-2xl">
         {/* Search Input */}
         <div className="flex items-center gap-3 border-b border-white/10 p-4">
           <Search className="h-5 w-5 text-white/50" />

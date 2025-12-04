@@ -6,11 +6,11 @@ import {
   FlaskConical,
   ListMusic,
   Globe,
-  // Custom musician icons
-  SongManuscript,
-  VintageCondenserMic,
-  MusiciansMultiTool,
-  TourCalendar,
+  // Using existing icons as musician-themed alternatives
+  Music2 as SongManuscript,
+  Mic2 as VintageCondenserMic,
+  Wrench as MusiciansMultiTool,
+  Calendar as TourCalendar,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 
@@ -58,7 +58,7 @@ export function QuickTools() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-xl"
+      className="rounded-2xl border border-white/10 bg-black/40 p-4"
     >
       <h3 className="mb-4 font-semibold text-white">Quick Access</h3>
       <div className="grid grid-cols-4 gap-2">

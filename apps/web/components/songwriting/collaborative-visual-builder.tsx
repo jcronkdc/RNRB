@@ -174,7 +174,7 @@ const SortableBlock = memo(function SortableBlock({
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="absolute -top-3 left-4 flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-lg backdrop-blur-sm"
+          className="absolute -top-3 left-4 flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium shadow-lg"
           style={{
             borderColor: editor.userColor,
             backgroundColor: `${editor.userColor}20`,
@@ -725,7 +725,7 @@ function CollaborativeVisualBuilderInner({
         <div
           role="button"
           tabIndex={0}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setShowCollaborators(false)}
           onKeyDown={(e) => e.key === 'Escape' && setShowCollaborators(false)}
         >
@@ -803,7 +803,7 @@ function CollaborativeVisualBuilderInner({
         <div
           role="button"
           tabIndex={0}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setShowHistory(false)}
           onKeyDown={(e) => e.key === 'Escape' && setShowHistory(false)}
         >
@@ -894,7 +894,7 @@ function CollaborativeVisualBuilderInner({
         <div
           role="button"
           tabIndex={0}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setShowSuggestions(false)}
           onKeyDown={(e) => e.key === 'Escape' && setShowSuggestions(false)}
         >
@@ -1109,7 +1109,7 @@ function CollaborativeVisualBuilderInner({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
             onClick={() => setShowKeyboardHelp(false)}
           >
             <motion.div

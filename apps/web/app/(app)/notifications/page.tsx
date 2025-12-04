@@ -154,7 +154,7 @@ export default function NotificationsPage() {
               transition={{ duration: 0.3 }}
               className="mb-8 overflow-hidden"
             >
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
                 <NotificationSettings />
               </div>
             </motion.div>

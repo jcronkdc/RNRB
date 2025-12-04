@@ -229,7 +229,7 @@ export default function MyMerchPage() {
               transition={{ delay: 0.1 }}
               className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
             >
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/20">
                   <Package className="h-5 w-5 text-blue-400" />
                 </div>
@@ -238,7 +238,7 @@ export default function MyMerchPage() {
                 <p className="text-xs text-white/40">{summary.activeProducts} active</p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-green-500/20">
                   <TrendingUp className="h-5 w-5 text-green-400" />
                 </div>
@@ -247,7 +247,7 @@ export default function MyMerchPage() {
                 <p className="text-xs text-white/40">items sold</p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/20">
                   <BarChart3 className="h-5 w-5 text-purple-400" />
                 </div>
@@ -256,7 +256,7 @@ export default function MyMerchPage() {
                 <p className="text-xs text-white/40">total sales</p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
                   <DollarSign className="h-5 w-5 text-emerald-400" />
                 </div>
@@ -326,7 +326,7 @@ export default function MyMerchPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
-                  className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10"
+                  className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10"
                 >
                   {/* Product Image */}
                   <div className="relative aspect-square bg-gradient-to-br from-white/10 to-white/5">

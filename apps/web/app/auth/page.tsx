@@ -270,7 +270,7 @@ function AuthForm() {
           </div>
 
           {/* Form Card */}
-          <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/50 p-8 backdrop-blur-xl">
+          <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/50 p-8">
             <div className="mb-8 text-center">
               <h2 className="text-3xl font-bold text-white">
                 {isSignup ? 'Create Account' : 'Welcome Back'}

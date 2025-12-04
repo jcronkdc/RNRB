@@ -342,7 +342,6 @@ export default function ToursPage() {
               style={{
                 borderColor: 'var(--border)',
                 background: 'rgba(42, 42, 42, 0.5)',
-                backdropFilter: 'blur(20px)',
               }}
             >
               <h3 className="mb-6 text-left text-lg font-bold" style={{ color: 'var(--text)' }}>
@@ -535,7 +534,7 @@ export default function ToursPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.4 }}
-                  className="rounded-xl border p-6 backdrop-blur-sm transition-all hover:scale-[1.02]"
+                  className="rounded-xl border p-6 transition-all hover:scale-[1.02]"
                   style={{
                     borderColor: 'var(--border)',
                     background: `linear-gradient(135deg, ${stat.gradient}, transparent)`,
@@ -710,7 +709,7 @@ export default function ToursPage() {
               className="mt-12"
             >
               <div
-                className="rounded-2xl border p-8 backdrop-blur-sm"
+                className="rounded-2xl border p-8"
                 style={{
                   borderColor: 'var(--border)',
                   background:
@@ -811,7 +810,7 @@ const TourCard = memo(function TourCard({
       whileHover={{ scale: 1.02, y: -4 }}
     >
       <div
-        className="group h-full rounded-xl border p-6 backdrop-blur-sm transition-all"
+        className="group h-full rounded-xl border p-6 transition-all"
         style={{
           borderColor: 'var(--border)',
           background: 'rgba(42, 42, 42, 0.4)',

@@ -599,7 +599,7 @@ export default function ProductCustomizerPage() {
 
                 {/* Loading overlay */}
                 {isGeneratingMockup && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60">
                     <div className="text-center">
                       <Loader2 className="mx-auto h-10 w-10 animate-spin text-purple-400" />
                       <p className="mt-3 text-sm text-white">Generating mockup...</p>
@@ -608,7 +608,7 @@ export default function ProductCustomizerPage() {
                 )}
 
                 {/* Color indicator */}
-                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 backdrop-blur-sm">
+                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2">
                   <div
                     className="h-4 w-4 rounded-full border border-white/20"
                     style={{

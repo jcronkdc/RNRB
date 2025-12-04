@@ -471,7 +471,7 @@ export function TeamMemberManager({
       {/* Invite Modal */}
       {showInviteModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setShowInviteModal(false)}
         >
           <Card className="rnrb-card w-full max-w-md p-8" onClick={(e) => e.stopPropagation()}>

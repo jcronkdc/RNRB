@@ -183,7 +183,7 @@ export default function EarningsPage() {
               transition={{ delay: 0.1 }}
               className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
             >
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20">
                   <DollarSign className="h-5 w-5 text-emerald-400" />
                 </div>
@@ -194,7 +194,7 @@ export default function EarningsPage() {
                 <p className="text-xs text-white/40">All-time</p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-yellow-500/20">
                   <Calendar className="h-5 w-5 text-yellow-400" />
                 </div>
@@ -205,7 +205,7 @@ export default function EarningsPage() {
                 {getMonthChange()}
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/20">
                   <Package className="h-5 w-5 text-blue-400" />
                 </div>
@@ -216,7 +216,7 @@ export default function EarningsPage() {
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/20">
                   <TrendingUp className="h-5 w-5 text-orange-400" />
                 </div>
@@ -280,7 +280,7 @@ export default function EarningsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm"
+              className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
             >
               <div className="overflow-x-auto">
                 <table className="w-full">

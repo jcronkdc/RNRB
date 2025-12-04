@@ -109,7 +109,7 @@ export default function MarketplacePage() {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header with Logo */}
-      <header className="border-b border-white/10 bg-surface/50 backdrop-blur-sm">
+      <header className="border-b border-white/10 bg-surface/50">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">

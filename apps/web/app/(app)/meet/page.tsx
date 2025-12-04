@@ -70,7 +70,7 @@ function MeetingCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      className={`group relative overflow-hidden rounded-2xl border backdrop-blur-sm transition-all duration-300 ${
+      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 ${
         isActive
           ? 'border-green-500/30 bg-gradient-to-br from-green-500/10 to-white/[0.02] hover:border-green-500/50'
           : isPast
@@ -407,14 +407,14 @@ export default function MeetPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
             onClick={() => setShowSchedule(false)}
           >
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] shadow-2xl backdrop-blur-xl"
+              className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] shadow-2xl"
             >
               {/* Modal header gradient line */}
               <div className="h-1 bg-gradient-to-r from-purple-500 via-brand-primary to-orange-500" />
@@ -625,7 +625,7 @@ export default function MeetPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="mt-16 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-8 backdrop-blur-sm"
+          className="mt-16 overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-8"
         >
           <div className="mb-6 text-center">
             <h3 className="mb-2 text-xl font-bold text-white">Built for Musicians</h3>

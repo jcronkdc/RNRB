@@ -36,7 +36,7 @@ export function ReactionPicker({ onSelect, onClose, currentReaction }: ReactionP
   return (
     <div
       ref={ref}
-      className="absolute bottom-full left-0 mb-2 rounded-full border border-white/10 bg-black/90 p-2 shadow-2xl backdrop-blur-xl"
+      className="absolute bottom-full left-0 mb-2 rounded-full border border-white/10 bg-black/90 p-2 shadow-2xl"
     >
       <div className="flex items-center gap-1">
         {REACTIONS.map(({ emoji, label }) => (

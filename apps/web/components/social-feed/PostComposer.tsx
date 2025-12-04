@@ -271,7 +271,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
   if (!session?.user) return null;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6 backdrop-blur-xl">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6">
       {/* User Avatar & Input */}
       <div className="mb-4 flex gap-3">
         <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">

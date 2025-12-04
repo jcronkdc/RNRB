@@ -156,7 +156,7 @@ export function UsageAlerts() {
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 100 }}
-              className={`rounded-xl border p-4 shadow-lg backdrop-blur-sm ${
+              className={`rounded-xl border p-4 shadow-lg ${
                 isCritical
                   ? 'border-red-500/50 bg-red-950/90'
                   : 'border-orange-500/50 bg-orange-950/90'

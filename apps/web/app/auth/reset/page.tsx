@@ -162,7 +162,7 @@ function PasswordResetContent() {
           transition={{ duration: 0.7 }}
           className="w-full max-w-md"
         >
-          <div className="rounded-2xl border border-zinc-800/60 bg-zinc-900/60 p-8 backdrop-blur-2xl">
+          <div className="2xl rounded-2xl border border-zinc-800/60 bg-zinc-900/60 p-8">
             <div className="mb-8 text-center">
               <p className="text-sm uppercase tracking-[0.3em] text-zinc-500">Account access</p>
               <h1 className="mt-3 text-3xl font-bold text-white">{headline}</h1>

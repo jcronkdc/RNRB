@@ -246,7 +246,7 @@ function ArtistStoreContent() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
-                  className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition-all hover:border-white/20 hover:bg-white/10"
+                  className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10"
                 >
                   {/* Product Image */}
                   <div className="relative aspect-square bg-gradient-to-br from-white/10 to-white/5">

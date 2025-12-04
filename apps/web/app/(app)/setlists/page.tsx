@@ -174,7 +174,7 @@ export default function SetlistsPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 }}
-                className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-2 backdrop-blur-sm"
+                className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-2"
               >
                 <Star className="h-4 w-4 text-orange-500" />
                 <span className="text-sm text-gray-300">
@@ -185,7 +185,7 @@ export default function SetlistsPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2 }}
-                className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-2 backdrop-blur-sm"
+                className="flex items-center gap-2 rounded-xl border border-gray-800 bg-gray-900/50 px-4 py-2"
               >
                 <TrendingUp className="h-4 w-4 text-green-500" />
                 <span className="text-sm text-gray-300">
@@ -203,7 +203,7 @@ export default function SetlistsPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.3 }}
                   whileHover={{ scale: 1.05 }}
-                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 to-rose-500/10 px-4 py-2 backdrop-blur-sm transition-colors hover:border-pink-500/50"
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 to-rose-500/10 px-4 py-2 transition-colors hover:border-pink-500/50"
                 >
                   <Presentation className="h-4 w-4 text-pink-500" />
                   <span className="text-sm font-medium text-pink-400">Performer Mode</span>
@@ -236,7 +236,7 @@ export default function SetlistsPage() {
                 }
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden rounded-xl border-2 border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-red-500/10 px-6 py-3 font-bold text-white shadow-lg backdrop-blur-sm transition-all hover:border-orange-500 hover:shadow-2xl hover:shadow-orange-500/40"
+                className="group relative overflow-hidden rounded-xl border-2 border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-red-500/10 px-6 py-3 font-bold text-white shadow-lg transition-all hover:border-orange-500 hover:shadow-2xl hover:shadow-orange-500/40"
               >
                 <div className="relative flex items-center gap-2">
                   <Lock className="h-5 w-5 text-orange-500" />
@@ -254,7 +254,7 @@ export default function SetlistsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mb-8 overflow-hidden rounded-2xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 via-red-500/5 to-orange-500/10 p-8 backdrop-blur-sm"
+            className="mb-8 overflow-hidden rounded-2xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 via-red-500/5 to-orange-500/10 p-8"
           >
             {/* Animated glow effect */}
             <div className="absolute inset-0 -z-10 opacity-50">
@@ -312,7 +312,7 @@ export default function SetlistsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + index * 0.1 }}
                   whileHover={{ y: -4, scale: 1.02 }}
-                  className="group relative overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50 p-6 backdrop-blur-sm transition-all hover:border-gray-700"
+                  className="group relative overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50 p-6 transition-all hover:border-gray-700"
                 >
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 transition-opacity group-hover:opacity-10`}
@@ -350,7 +350,7 @@ export default function SetlistsPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="rounded-xl border-2 border-gray-700 bg-gray-900/50 px-8 py-4 font-bold text-white backdrop-blur-sm transition-all hover:border-gray-600 hover:bg-gray-800/50"
+                  className="rounded-xl border-2 border-gray-700 bg-gray-900/50 px-8 py-4 font-bold text-white transition-all hover:border-gray-600 hover:bg-gray-800/50"
                 >
                   Compare All Plans
                 </motion.button>
@@ -405,7 +405,7 @@ export default function SetlistsPage() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="absolute inset-0 z-20 flex items-center justify-center bg-black/90 backdrop-blur-md transition-all group-hover:bg-black/80"
+                        className="absolute inset-0 z-20 flex items-center justify-center bg-black/90 transition-all group-hover:bg-black/80"
                       >
                         <motion.button
                           onClick={() =>
@@ -489,10 +489,10 @@ export default function SetlistsPage() {
                               Perform
                             </button>
                           </Link>
-                          <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 backdrop-blur-sm transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
+                          <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
                             <Edit className="h-4 w-4" />
                           </button>
-                          <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 backdrop-blur-sm transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
+                          <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
                             <Share2 className="h-4 w-4" />
                           </button>
                         </div>

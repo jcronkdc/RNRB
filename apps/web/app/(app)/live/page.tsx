@@ -75,7 +75,7 @@ function LiveStreamCard({ stream, featured = false }: { stream: LiveStream; feat
               </span>
               <span className="text-xs font-bold uppercase text-white">Live</span>
             </div>
-            <div className="flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 backdrop-blur-sm">
+            <div className="flex items-center gap-1 rounded-full bg-black/60 px-2 py-1">
               <Users className="h-3 w-3 text-white" />
               <span className="text-xs text-white">{stream.viewerCount.toLocaleString()}</span>
             </div>
@@ -85,7 +85,7 @@ function LiveStreamCard({ stream, featured = false }: { stream: LiveStream; feat
         {/* Scheduled badge */}
         {!isLive && stream.scheduledAt && (
           <div className="absolute left-3 top-3">
-            <div className="flex items-center gap-2 rounded-full bg-amber-500/80 px-3 py-1 backdrop-blur-sm">
+            <div className="flex items-center gap-2 rounded-full bg-amber-500/80 px-3 py-1">
               <Calendar className="h-3 w-3 text-white" />
               <span className="text-xs font-medium text-white">
                 {new Date(stream.scheduledAt).toLocaleDateString(undefined, {
@@ -198,7 +198,7 @@ export default function LivePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/10 bg-black/80">
         <div className="mx-auto max-w-7xl px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}

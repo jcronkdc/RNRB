@@ -403,7 +403,7 @@ export default function ContributePage() {
               exit={{ opacity: 0, height: 0 }}
               className="mb-8"
             >
-              <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+              <Card className="rounded-2xl border border-white/10 bg-white/5 p-6">
                 <div className="mb-4 flex items-center justify-between">
                   <h3 className="flex items-center gap-2 font-bold text-white">
                     <File className="h-5 w-5 text-orange-400" />
@@ -542,7 +542,7 @@ export default function ContributePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+          <Card className="rounded-2xl border border-white/10 bg-white/5 p-6">
             <div className="mb-4 flex items-center gap-2">
               <Clock className="h-5 w-5 text-purple-400" />
               <h3 className="font-bold text-white">Your Contributions</h3>

@@ -120,7 +120,6 @@ export default function MyProfilePage() {
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            backdropFilter: 'blur(4px)',
           }}
         >
           <Camera className="h-4 w-4" />

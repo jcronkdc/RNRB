@@ -227,7 +227,7 @@ export default function ExplorePage() {
               placeholder="Search tracks, styles, or moods..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none backdrop-blur-sm transition placeholder:text-gray-500 focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
             />
           </div>
 
@@ -335,7 +335,7 @@ export default function ExplorePage() {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/90 p-4 backdrop-blur-xl"
+            className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/90 p-4"
           >
             <div className="mx-auto max-w-4xl">
               <div className="flex items-center gap-4">

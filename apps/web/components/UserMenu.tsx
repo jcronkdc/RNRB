@@ -103,10 +103,9 @@ export function UserMenu() {
               transition={{ duration: 0.15 }}
               className="absolute right-0 z-50 mt-2 w-48 overflow-hidden rounded-xl"
               style={{
-                background: 'rgba(30, 30, 30, 0.95)',
+                background: 'rgb(30, 30, 30)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
-                backdropFilter: 'blur(20px)',
               }}
             >
               {/* User Info */}

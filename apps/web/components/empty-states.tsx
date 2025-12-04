@@ -13,12 +13,12 @@ import {
   AlertCircle,
   WifiOff,
   MapPin,
-  // Custom musician icons
-  SessionFolder,
-  BandMembers,
-  VintageCondenserMic,
-  TourCalendar,
-  VinylRecord,
+  // Using existing icons as musician-themed alternatives
+  FolderOpen as SessionFolder,
+  Users as BandMembers,
+  Mic2 as VintageCondenserMic,
+  Calendar as TourCalendar,
+  Disc3 as VinylRecord,
   StageLights,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';

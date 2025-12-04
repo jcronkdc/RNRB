@@ -108,9 +108,9 @@ export function TopBar() {
 
   return (
     <header
-      className="fixed left-0 right-0 top-0 z-30 h-14 backdrop-blur-xl lg:ml-[260px]"
+      className="fixed left-0 right-0 top-0 z-30 h-14 lg:ml-[260px]"
       style={{
-        background: 'var(--topbar-bg, rgba(30, 30, 30, 0.8))',
+        background: 'var(--topbar-bg, rgb(30, 30, 30))',
         borderBottom: '1px solid var(--border)',
       }}
     >
@@ -308,7 +308,6 @@ export function TopBar() {
                     background: 'var(--panel)',
                     border: '1px solid var(--border)',
                     boxShadow: 'var(--shadow-lg)',
-                    backdropFilter: 'blur(20px)',
                   }}
                 >
                   <div className="border-b p-4" style={{ borderColor: 'var(--border)' }}>

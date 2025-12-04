@@ -309,7 +309,7 @@ function ToolsContent() {
             ))}
           </div>
           <div
-            className="flex gap-1 rounded-xl p-1.5 backdrop-blur-sm"
+            className="flex gap-1 rounded-xl p-1.5"
             style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
           >
             <button
@@ -470,7 +470,7 @@ function ToolsContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="mt-16 overflow-hidden rounded-2xl p-8 backdrop-blur-sm"
+          className="mt-16 overflow-hidden rounded-2xl p-8"
           style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
           <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">

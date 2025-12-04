@@ -50,7 +50,7 @@ export function KeyboardShortcutsHelp() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setShowHelp(false)}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/60"
           />
 
           {/* Modal */}
@@ -60,7 +60,7 @@ export function KeyboardShortcutsHelp() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.2 }}
-              className="bg-card w-full max-w-2xl overflow-hidden rounded-xl border border-border shadow-2xl"
+              className="w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
             >
               {/* Header */}
               <div className="flex items-center justify-between border-b border-border bg-muted/30 p-6">

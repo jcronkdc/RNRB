@@ -203,7 +203,7 @@ export default function PerformerModePage() {
       onTouchEnd={handleTouchEnd}
     >
       {/* Header */}
-      <div className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-sm">
+      <div className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Button
             variant="ghost"
@@ -362,7 +362,7 @@ export default function PerformerModePage() {
       </div>
 
       {/* Navigation Footer */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/95 backdrop-blur-sm">
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <Button
             onClick={goPrevious}

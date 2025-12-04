@@ -307,7 +307,7 @@ export default function MeetAnalyticsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
+              className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-5"
             >
               {/* Background Gradient */}
               <div
@@ -351,7 +351,7 @@ export default function MeetAnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+            className="rounded-2xl border border-white/10 bg-white/5 p-6"
           >
             <div className="mb-6 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
@@ -375,7 +375,7 @@ export default function MeetAnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+            className="rounded-2xl border border-white/10 bg-white/5 p-6"
           >
             <div className="mb-6 flex items-center justify-between">
               <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
@@ -430,7 +430,7 @@ export default function MeetAnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm"
+          className="overflow-hidden rounded-2xl border border-white/10 bg-white/5"
         >
           <div className="border-b border-white/10 p-6">
             <h3 className="flex items-center gap-2 text-lg font-semibold text-white">

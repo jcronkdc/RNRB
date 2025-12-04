@@ -185,10 +185,7 @@ export function WaveformPlayer({
             <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
           </div>
         )}
-        <div
-          ref={waveformRef}
-          className="rounded-lg border border-gray-700 bg-gray-800/50 backdrop-blur"
-        />
+        <div ref={waveformRef} className="rounded-lg border border-gray-700 bg-gray-800" />
       </div>
 
       {/* Current Lyric Display */}

@@ -139,7 +139,7 @@ export function CommandPalette() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={close}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/90"
           />
 
           {/* Command Palette Modal */}
@@ -152,7 +152,7 @@ export function CommandPalette() {
               className="mx-4 w-full max-w-2xl"
             >
               <div
-                className="bg-card overflow-hidden rounded-xl border border-border shadow-2xl"
+                className="overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
                 style={{
                   boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
                 }}

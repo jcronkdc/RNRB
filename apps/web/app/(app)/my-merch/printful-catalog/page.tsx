@@ -446,7 +446,7 @@ export default function PrintfulCatalogPage() {
 
                       {/* Variant Count Badge */}
                       {viewMode === 'grid' && (
-                        <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                        <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
                           {product.variant_count} variants
                         </div>
                       )}

@@ -192,13 +192,13 @@ export function VideoHeroSection({ content, styles }: VideoHeroSectionProps) {
         <div className="absolute bottom-6 left-6 z-10 flex gap-2">
           <button
             onClick={togglePlay}
-            className="rounded-full bg-white/20 p-3 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
+            className="rounded-full bg-white/20 p-3 text-white transition-colors hover:bg-white/30"
           >
             {isPlaying ? <Pause size={20} /> : <Play size={20} />}
           </button>
           <button
             onClick={toggleMute}
-            className="rounded-full bg-white/20 p-3 text-white backdrop-blur-sm transition-colors hover:bg-white/30"
+            className="rounded-full bg-white/20 p-3 text-white transition-colors hover:bg-white/30"
           >
             {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
           </button>

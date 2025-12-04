@@ -139,7 +139,7 @@ export default function GoLivePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-zinc-950 to-black">
       {/* Header */}
-      <div className="sticky top-0 z-10 border-b border-white/10 bg-black/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/10 bg-black/80">
         <div className="mx-auto max-w-4xl px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
@@ -173,7 +173,7 @@ export default function GoLivePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
-              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6">
                 <h2 className="mb-6 text-xl font-bold text-white">Stream Details</h2>
 
                 {/* Title */}
@@ -334,7 +334,7 @@ export default function GoLivePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
-              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6 backdrop-blur-sm">
+              <div className="rounded-2xl border border-white/10 bg-zinc-900/50 p-6">
                 <h2 className="mb-4 text-xl font-bold text-white">Stream Setup</h2>
 
                 <div className="mb-6 rounded-xl border border-blue-500/50 bg-blue-500/20 p-4">
@@ -431,7 +431,7 @@ export default function GoLivePage() {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-6"
             >
-              <div className="rounded-2xl border border-red-500/50 bg-zinc-900/50 p-6 backdrop-blur-sm">
+              <div className="rounded-2xl border border-red-500/50 bg-zinc-900/50 p-6">
                 {/* Live indicator */}
                 <div className="mb-6 flex items-center justify-between">
                   <div className="flex items-center gap-3">

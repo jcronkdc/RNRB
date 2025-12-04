@@ -47,14 +47,14 @@ import {
   File,
   Calendar,
   MapPin,
-  // Custom musician icons
-  SongManuscript,
-  VintageCondenserMic,
-  BroadcastTower,
-  TourCalendar,
-  SessionFolder,
-  MusiciansMultiTool,
-  BandMembers,
+  // Using existing icons as musician-themed alternatives
+  Music2 as SongManuscript,
+  Mic2 as VintageCondenserMic,
+  Radio as BroadcastTower,
+  Calendar as TourCalendar,
+  FolderOpen as SessionFolder,
+  Wrench as MusiciansMultiTool,
+  Users as BandMembers,
 } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -882,7 +882,7 @@ export function SidebarNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/90 lg:hidden"
             onClick={() => setMobileMenuOpen(false)}
           />
         )}

@@ -62,7 +62,7 @@ const VideoTile = memo(({ participant }: { participant: DailyParticipant }) => {
           </div>
         </div>
       )}
-      <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm">
+      <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5">
         <span className="text-sm font-medium text-white">{participant.user_name || 'Guest'}</span>
         {!participant.audio && <MicOff className="h-3 w-3 text-white/80" />}
         {participant.local && <span className="text-xs text-white/60">(You)</span>}

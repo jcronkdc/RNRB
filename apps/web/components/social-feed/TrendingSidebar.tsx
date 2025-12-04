@@ -54,7 +54,7 @@ export function TrendingSidebar() {
   if (loading) {
     return (
       <div className="sticky top-20 space-y-6">
-        <div className="rounded-2xl border border-white/10 bg-black/40 p-6 backdrop-blur-xl">
+        <div className="rounded-2xl border border-white/10 bg-black/40 p-6">
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-purple-500" />
           </div>
@@ -66,7 +66,7 @@ export function TrendingSidebar() {
   return (
     <div className="sticky top-20 space-y-6">
       {/* Trending Section */}
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-5 backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-5">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
           <TrendingUp className="h-5 w-5 text-purple-400" />
           Trending Now
@@ -102,7 +102,7 @@ export function TrendingSidebar() {
       </div>
 
       {/* Rising Artists */}
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-pink-900/10 to-black/60 p-5 backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-pink-900/10 to-black/60 p-5">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-white">
           <Users className="h-5 w-5 text-pink-400" />
           Rising Artists
@@ -142,7 +142,7 @@ export function TrendingSidebar() {
       </div>
 
       {/* Quick Links */}
-      <div className="rounded-2xl border border-white/10 bg-black/40 p-5 backdrop-blur-xl">
+      <div className="rounded-2xl border border-white/10 bg-black/40 p-5">
         <div className="space-y-2 text-sm">
           <Link
             href="/feed/explore"

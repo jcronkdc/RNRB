@@ -85,7 +85,7 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
           <div className="absolute right-2 top-2">
             {project.visibility === 'private' && (
               <div
-                className="rounded-lg border p-1 backdrop-blur-sm sm:p-1.5"
+                className="rounded-lg border p-1 sm:p-1.5"
                 style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
               >
                 <Lock className="h-3 w-3 sm:h-4 sm:w-4" style={{ color: 'var(--muted)' }} />
@@ -93,7 +93,7 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
             )}
             {project.visibility === 'public' && (
               <div
-                className="rounded-lg border p-1 backdrop-blur-sm sm:p-1.5"
+                className="rounded-lg border p-1 sm:p-1.5"
                 style={{ background: 'var(--bg)', borderColor: 'var(--sage)' }}
               >
                 <Globe className="h-3 w-3 sm:h-4 sm:w-4" style={{ color: 'var(--sage)' }} />

@@ -75,14 +75,14 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
 
         {/* Category Badge */}
         <div className="absolute left-3 top-3">
-          <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium capitalize text-white backdrop-blur-sm">
+          <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium capitalize text-white">
             {product.category.replace('-', ' ')}
           </span>
         </div>
 
         {/* Out of Stock Overlay */}
         {!product.inStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
             <span className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white">
               Out of Stock
             </span>

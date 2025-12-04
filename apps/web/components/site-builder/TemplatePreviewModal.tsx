@@ -287,7 +287,7 @@ export function TemplatePreviewModal({
             >
               {/* ========== NAVIGATION ========== */}
               <nav
-                className="sticky top-0 z-40 backdrop-blur-xl"
+                className="sticky top-0 z-40"
                 style={{
                   background: `${colors.primary}ee`,
                   borderBottom: `1px solid ${colors.border}`,
@@ -327,7 +327,6 @@ export function TemplatePreviewModal({
                     style={{
                       background: `${colors.primary}80`,
                       border: `1px solid ${colors.border}`,
-                      backdropFilter: 'blur(10px)',
                     }}
                   >
                     {Object.entries(PREVIEW_CONTENT.stats).map(([key, value]) => (

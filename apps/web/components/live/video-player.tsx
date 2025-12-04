@@ -286,12 +286,12 @@ export function VideoPlayer({
             className="absolute left-4 top-4 z-10 flex items-center gap-3"
           >
             {isLive && (
-              <div className="flex items-center gap-2 rounded-full bg-red-600/90 px-3 py-1.5 backdrop-blur-sm">
+              <div className="flex items-center gap-2 rounded-full bg-red-600/90 px-3 py-1.5">
                 <div className="h-2 w-2 animate-pulse rounded-full bg-white" />
                 <span className="text-sm font-semibold text-white">LIVE</span>
               </div>
             )}
-            <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm">
+            <div className="flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5">
               <Eye className="h-4 w-4 text-white/80" />
               <span className="text-sm text-white">{viewerCount.toLocaleString()}</span>
             </div>
@@ -310,7 +310,7 @@ export function VideoPlayer({
           >
             {/* Connection Quality Indicator */}
             <div
-              className={`flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1.5 backdrop-blur-sm ${getConnectionColor()}`}
+              className={`flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1.5 ${getConnectionColor()}`}
             >
               <Wifi className="h-4 w-4" />
               <span className="text-xs capitalize">{connectionQuality}</span>
@@ -320,7 +320,7 @@ export function VideoPlayer({
             <div className="relative">
               <button
                 onClick={() => setShowQualityMenu(!showQualityMenu)}
-                className="flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+                className="flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-white transition-colors hover:bg-black/80"
               >
                 <Settings className="h-4 w-4" />
                 <span className="text-sm">
@@ -337,7 +337,7 @@ export function VideoPlayer({
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 top-full mt-2 min-w-[180px] overflow-hidden rounded-xl border border-white/10 bg-gray-900/95 shadow-xl backdrop-blur-xl"
+                    className="absolute right-0 top-full mt-2 min-w-[180px] overflow-hidden rounded-xl border border-white/10 bg-gray-900/95 shadow-xl"
                   >
                     <div className="p-2">
                       <p className="px-3 py-1.5 text-xs uppercase tracking-wider text-white/50">
@@ -371,7 +371,7 @@ export function VideoPlayer({
             {/* Fullscreen Toggle */}
             <button
               onClick={toggleFullscreen}
-              className="rounded-full bg-black/60 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/80"
+              className="rounded-full bg-black/60 p-2 text-white transition-colors hover:bg-black/80"
             >
               {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
             </button>

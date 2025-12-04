@@ -283,7 +283,7 @@ export default function LabsPage() {
             </p>
           </div>
 
-          <Card className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/5 via-transparent to-orange-500/5 p-8 backdrop-blur-xl">
+          <Card className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/5 via-transparent to-orange-500/5 p-8">
             <div className="grid gap-8 md:grid-cols-2">
               {/* Stem Types */}
               <div>
@@ -398,7 +398,7 @@ export default function LabsPage() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
             >
-              <Card className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+              <Card className="rounded-2xl border border-white/10 bg-white/5 p-8">
                 <div className="flex items-start gap-6">
                   <div
                     className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-${RESEARCH_PHASES[activePhase].color}-500/20`}
@@ -606,7 +606,7 @@ export default function LabsPage() {
                 transition={{ delay: 0.8 + index * 0.1 }}
               >
                 <Card
-                  className={`h-full rounded-2xl border border-white/10 bg-gradient-to-br ${item.gradient} p-6 backdrop-blur-xl`}
+                  className={`h-full rounded-2xl border border-white/10 bg-gradient-to-br ${item.gradient} p-6`}
                 >
                   <item.icon className="mb-4 h-8 w-8 text-white" />
                   <h3 className="mb-2 text-xl font-bold text-white">{item.title}</h3>
@@ -624,7 +624,7 @@ export default function LabsPage() {
           transition={{ delay: 0.8 }}
           className="mb-16"
         >
-          <Card className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl">
+          <Card className="rounded-2xl border border-white/10 bg-white/5 p-8">
             <h3 className="mb-6 text-2xl font-bold text-white">"Why not just use Suno or Udio?"</h3>
 
             <div className="space-y-6">

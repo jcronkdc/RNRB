@@ -129,7 +129,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
       <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border-2 border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8 shadow-2xl">
         <div className="mb-6">
           <h2 className="mb-2 text-3xl font-bold text-white">Choose Your Song Structure</h2>

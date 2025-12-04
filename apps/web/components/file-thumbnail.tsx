@@ -126,7 +126,7 @@ export function FileThumbnail({
       {/* Play overlay for audio files */}
       {showPlayOverlay && isAudio && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity hover:opacity-100">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
             <Play className="h-4 w-4 text-white" fill="white" />
           </div>
         </div>

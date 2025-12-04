@@ -766,7 +766,7 @@ export default function MessagesPage() {
             <div className="flex h-full flex-1 flex-col">
               {/* Chat Header */}
               <div
-                className="flex items-center justify-between border-b p-4 backdrop-blur-xl"
+                className="flex items-center justify-between border-b p-4"
                 style={{ borderColor: 'var(--border)', background: 'rgba(42, 42, 42, 0.8)' }}
               >
                 <div className="flex items-center gap-3">
@@ -854,7 +854,7 @@ export default function MessagesPage() {
 
               {/* Info Footer */}
               <div
-                className="border-t p-3 backdrop-blur-xl"
+                className="border-t p-3"
                 style={{ borderColor: 'var(--border)', background: 'rgba(42, 42, 42, 0.5)' }}
               >
                 <p className="flex items-center gap-2 text-xs" style={{ color: 'var(--muted)' }}>
@@ -928,7 +928,7 @@ export default function MessagesPage() {
                     <motion.div
                       key={feature.label}
                       whileHover={{ scale: 1.02 }}
-                      className="flex items-start gap-3 rounded-xl border p-4 backdrop-blur-sm"
+                      className="flex items-start gap-3 rounded-xl border p-4"
                       style={{ borderColor: 'var(--border)', background: 'rgba(42, 42, 42, 0.5)' }}
                     >
                       <div
@@ -980,7 +980,7 @@ export default function MessagesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
             onClick={() => {
               setShowNewConversation(false);
               setNewUserEmail('');

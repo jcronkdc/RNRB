@@ -189,7 +189,7 @@ export function LiveChat({
   const regularMessages = messages.filter((m) => !m.isPinned);
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm">
+    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-black/40">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <h3 className="font-semibold text-white">Live Chat</h3>

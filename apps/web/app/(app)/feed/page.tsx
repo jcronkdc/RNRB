@@ -100,7 +100,7 @@ function ActivityCard({ activity, onCelebrate }: { activity: any; onCelebrate: (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl p-5 backdrop-blur-sm transition-all"
+      className="rounded-2xl p-5 transition-all"
       style={{
         background: 'var(--panel)',
         border: '1px solid var(--border)',

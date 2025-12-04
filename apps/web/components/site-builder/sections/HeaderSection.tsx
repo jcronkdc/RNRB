@@ -57,7 +57,6 @@ export function HeaderSection({ content, theme, socialLinks }: HeaderSectionProp
           backgroundColor: isScrolled
             ? (theme.primaryColor as string) + 'f0' || '#000000f0'
             : 'transparent',
-          backdropFilter: isScrolled ? 'blur(10px)' : 'none',
         }}
       >
         <nav className="mx-auto max-w-7xl px-4 py-4">

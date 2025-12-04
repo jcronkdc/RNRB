@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-[#0a0a0f]">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-zinc-800/50 bg-zinc-900/50 backdrop-blur-xl">
+      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-zinc-800/50 bg-zinc-900/50">
         {/* Logo */}
         <div className="flex h-16 items-center border-b border-zinc-800/50 px-6">
           <Link href="/admin" className="flex items-center gap-3">

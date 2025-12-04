@@ -465,7 +465,7 @@ export default function MyListingsPage() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
-              className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-6 py-4 backdrop-blur-sm"
+              className="fixed bottom-8 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-6 py-4"
             >
               <p className="text-sm text-white">Click delete again to confirm</p>
             </motion.div>

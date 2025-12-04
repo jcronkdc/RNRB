@@ -720,7 +720,7 @@ export default function WebmailPage() {
             ].map((item, i) => (
               <div
                 key={item.label}
-                className="rounded-xl p-3 backdrop-blur-sm"
+                className="rounded-xl p-3"
                 style={{
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid rgba(255,255,255,0.1)',
@@ -1394,7 +1394,7 @@ export default function WebmailPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
             onClick={() => setShowCompose(false)}
           >
             <motion.div
@@ -1456,7 +1456,7 @@ export default function WebmailPage() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 z-50 flex items-center justify-center rounded-2xl"
-                    style={{ background: 'rgba(255, 99, 71, 0.1)', backdropFilter: 'blur(4px)' }}
+                    style={{ background: 'rgba(255, 99, 71, 0.1)' }}
                   >
                     <div className="flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-orange-500 p-8">
                       <Upload className="h-12 w-12 text-orange-500" />
@@ -1728,7 +1728,7 @@ export default function WebmailPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-4"
             onClick={() => setShowLibraryPicker(false)}
           >
             <motion.div

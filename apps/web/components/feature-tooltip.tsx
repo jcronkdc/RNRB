@@ -47,7 +47,7 @@ export function FeatureTooltip({
             transition={{ duration: 0.15 }}
             className={`absolute z-50 ${placementStyles[placement]} pointer-events-none w-80`}
           >
-            <div className="rounded-xl border border-orange-500/30 bg-zinc-900/95 p-4 shadow-xl backdrop-blur-sm">
+            <div className="rounded-xl border border-orange-500/30 bg-zinc-900/95 p-4 shadow-xl">
               <div className="mb-2 flex items-start gap-2">
                 {icon && (
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-500/10">
@@ -144,14 +144,14 @@ export function OnboardingTour({ steps, onComplete, onSkip }: OnboardingTourProp
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ duration: 0.2 }}
-          className="mx-4 w-full max-w-md rounded-2xl border border-orange-500/30 bg-zinc-900/95 p-6 shadow-2xl backdrop-blur-sm"
+          className="mx-4 w-full max-w-md rounded-2xl border border-orange-500/30 bg-zinc-900/95 p-6 shadow-2xl"
         >
           {/* Header */}
           <div className="mb-4 flex items-start justify-between">

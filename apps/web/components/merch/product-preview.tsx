@@ -73,7 +73,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
         onClick={onClose}
       >
         <motion.div
@@ -86,7 +86,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors hover:bg-black/70"
+            className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
           >
             <X className="h-5 w-5" />
           </button>
@@ -116,13 +116,13 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-black/70"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:scale-110 hover:bg-black/70"
                     >
                       <ChevronLeft className="h-6 w-6" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-black/70"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:scale-110 hover:bg-black/70"
                     >
                       <ChevronRight className="h-6 w-6" />
                     </button>
@@ -131,7 +131,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
 
                 {/* Zoom Hint */}
                 {!isZoomed && (
-                  <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white backdrop-blur-sm">
+                  <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
                     <ZoomIn className="h-4 w-4" />
                     Click to zoom
                   </div>
@@ -139,14 +139,14 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
 
                 {/* Image Counter */}
                 {mockupImages.length > 1 && (
-                  <div className="absolute bottom-4 left-4 rounded-full bg-black/50 px-4 py-2 text-sm text-white backdrop-blur-sm">
+                  <div className="absolute bottom-4 left-4 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
                     {currentIndex + 1} / {mockupImages.length}
                   </div>
                 )}
 
                 {/* Color Badge */}
                 {currentMockup?.productColor && (
-                  <div className="absolute left-4 top-4 rounded-full bg-black/50 px-4 py-2 text-sm text-white backdrop-blur-sm">
+                  <div className="absolute left-4 top-4 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
                     {currentMockup.productColor}
                   </div>
                 )}
@@ -267,7 +267,7 @@ export function ProductCardWithPreview({ product }: { product: ProductPreviewPro
 
           {/* Multiple Images Badge */}
           {product.mockups && product.mockups.length > 1 && (
-            <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+            <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
               {product.mockups.length} views
             </div>
           )}

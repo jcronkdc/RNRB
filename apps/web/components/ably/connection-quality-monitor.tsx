@@ -182,7 +182,7 @@ export function ConnectionQualityMonitor({
       className="fixed right-4 top-20 z-50"
     >
       <div
-        className={`cursor-pointer rounded-lg border border-border bg-surface/95 p-2 shadow-lg backdrop-blur-sm transition-all ${
+        className={`cursor-pointer rounded-lg border border-border bg-surface/95 p-2 shadow-lg transition-all ${
           isExpanded ? 'w-64' : 'w-auto'
         }`}
         onClick={() => setIsExpanded(!isExpanded)}
