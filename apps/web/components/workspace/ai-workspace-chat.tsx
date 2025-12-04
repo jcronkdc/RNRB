@@ -617,17 +617,17 @@ export function AIWorkspaceChat() {
                 {/* Message bubble */}
                 <div
                   className={cn(
-                    'inline-block rounded-2xl px-4 py-3 text-sm',
+                    'inline-block rounded-2xl px-4 py-3 text-sm leading-relaxed',
                     message.role === 'user'
-                      ? 'bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-lg shadow-purple-500/20'
-                      : ''
+                      ? 'bg-gradient-to-r from-violet-500 to-purple-600 font-medium text-white shadow-lg shadow-purple-500/20'
+                      : 'font-medium'
                   )}
                   style={
                     message.role === 'assistant'
                       ? {
-                          background: 'var(--panel)',
-                          border: '1px solid var(--border)',
-                          color: 'var(--text)',
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          color: '#fff',
                         }
                       : undefined
                   }
@@ -806,8 +806,8 @@ function WorkspacePreviewCard({
             return (
               <span
                 key={toolKey}
-                className="rounded-md px-2 py-1 text-xs"
-                style={{ background: 'var(--accent-dim)', color: 'var(--text-secondary)' }}
+                className="rounded-md px-2 py-1 text-xs font-medium"
+                style={{ background: 'var(--accent-dim)', color: 'var(--text)' }}
               >
                 {tool?.label || toolKey}
               </span>

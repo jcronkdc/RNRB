@@ -168,11 +168,12 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                     )}
                   </button>
 
-                  {/* Delete button in edit mode */}
-                  {isEditMode && !workspace.isDefault && (
+                  {/* Delete button (shows on hover) */}
+                  {!workspace.isDefault && (
                     <button
                       onClick={(e) => handleDeleteTab(workspace.id, e)}
-                      className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      className="absolute -right-1 -top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100"
+                      title="Delete tab"
                     >
                       <X className="h-3 w-3" />
                     </button>
