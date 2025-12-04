@@ -6,8 +6,8 @@
   --sf-color-surface-elevated: 0 0% 100%; /* #FFFFFF - elevated stays white */
   --sf-color-surface-hover: 0 0% 96%; /* #F5F5F5 - hover state */
   --sf-color-foreground: 270 5% 11%; /* #1C1B1F - near black text */
-  --sf-color-muted: 0 0% 53%; /* #888888 - gray text */
-  --sf-color-muted-foreground: 0 0% 69%; /* #B1B1B1 - light gray text */
+  --sf-color-muted: 215 16% 47%; /* #6B7280 - gunmetal gray text - better contrast */
+  --sf-color-muted-foreground: 215 25% 27%; /* #374151 - dark gunmetal - high readability */
   --sf-color-border: 0 0% 90%; /* #E5E5E5 - clean light border */
   --sf-color-overlay: 270 5% 11%; /* #1C1B1F - overlay color */
 

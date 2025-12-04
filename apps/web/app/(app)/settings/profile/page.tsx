@@ -38,6 +38,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef, Suspense } from 'react';
 
 import { createBrowserClient } from '@/lib/supabase';
+import { SettingsSkeleton } from '@/components/loading-skeletons';
 
 // All social media platforms a musician might use
 type SocialLinks = {
@@ -614,13 +615,23 @@ function ProfileSettingsContent() {
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
-          <p style={{ color: 'var(--muted)' }}>Loading your profile...</p>
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="px-4 py-8 sm:py-12">
+          <div className="mx-auto max-w-3xl">
+            {/* Logo at the top - ALWAYS shown per HARD RULE */}
+            <div className="mb-8 text-center">
+              <Link href="/">
+                <Image
+                  src="/logo-dark.png"
+                  alt="Rock N' Roll Basement"
+                  width={140}
+                  height={56}
+                  className="mx-auto transition-opacity hover:opacity-80"
+                />
+              </Link>
+            </div>
+            <SettingsSkeleton />
+          </div>
         </div>
       </div>
     );

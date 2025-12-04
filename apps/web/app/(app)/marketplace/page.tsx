@@ -40,6 +40,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import { EmptyState } from '@/components/empty-states';
+import { UserCardSkeleton } from '@/components/loading-skeletons';
 
 const CATEGORIES = [
   { id: 'mixing', name: 'Mixing', icon: Sliders, color: '#f97316' },
@@ -207,18 +208,9 @@ export default function MarketplacePage() {
 
         {/* Provider Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse p-6">
-                <div className="mb-4 flex items-center gap-4">
-                  <div className="h-16 w-16 rounded-full bg-surface-muted" />
-                  <div className="flex-1">
-                    <div className="mb-2 h-5 w-32 rounded bg-surface-muted" />
-                    <div className="h-4 w-24 rounded bg-surface-muted" />
-                  </div>
-                </div>
-                <div className="h-4 w-full rounded bg-surface-muted" />
-              </Card>
+              <UserCardSkeleton key={i} />
             ))}
           </div>
         ) : filteredProviders.length === 0 ? (

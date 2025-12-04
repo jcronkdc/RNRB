@@ -30,6 +30,7 @@ import { useRequireAuth } from '@/hooks/use-require-auth';
 import { useSetlistAccess } from '@/hooks/use-subscription';
 import { formatDateWithDay } from '@/lib/format-date';
 import { microCopy } from '@/lib/workshop-voice';
+import { ProjectsSkeleton } from '@/components/loading-skeletons';
 
 interface Setlist {
   id: string;
@@ -359,6 +360,13 @@ export default function SetlistsPage() {
           </motion.div>
         )}
 
+        {/* Loading State */}
+        {isLoadingSetlists && (
+          <div className="mt-8">
+            <ProjectsSkeleton count={6} />
+          </div>
+        )}
+
         {/* Empty State - Real Setlists */}
         {hasAccess && setlists.length === 0 && !isLoadingSetlists && (
           <EmptyState
@@ -371,139 +379,143 @@ export default function SetlistsPage() {
         )}
 
         {/* Setlists Grid */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          <AnimatePresence>
-            {(hasAccess && setlists.length > 0 ? setlists : mockSetlists).map((setlist, index) => {
-              const EnergyIcon = getEnergyIcon(setlist.energyLevel);
-              const energyColor = getEnergyColor(setlist.energyLevel);
+        {!isLoadingSetlists && (
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
+            <AnimatePresence>
+              {(hasAccess && setlists.length > 0 ? setlists : mockSetlists).map(
+                (setlist, index) => {
+                  const EnergyIcon = getEnergyIcon(setlist.energyLevel);
+                  const energyColor = getEnergyColor(setlist.energyLevel);
 
-              return (
-                <motion.div
-                  key={setlist.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ delay: index * 0.1, type: 'spring' }}
-                  onHoverStart={() => setHoveredCard(setlist.id)}
-                  onHoverEnd={() => setHoveredCard(null)}
-                  className="group relative"
-                >
-                  <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-black transition-all duration-300 hover:border-gray-700 hover:shadow-2xl">
-                    {/* Hover glow effect */}
-                    {hoveredCard === setlist.id && (
-                      <motion.div
-                        layoutId="card-glow"
-                        className={`absolute inset-0 bg-gradient-to-br ${energyColor} opacity-5`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.1 }}
-                        exit={{ opacity: 0 }}
-                      />
-                    )}
-
-                    {/* Locked Overlay */}
-                    {!hasAccess && (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="absolute inset-0 z-20 flex items-center justify-center bg-black/90 transition-all group-hover:bg-black/80"
-                      >
-                        <motion.button
-                          onClick={() =>
-                            showUpgradeModal({
-                              feature: 'setlistManagement',
-                              requiredTier: 'creator',
-                            })
-                          }
-                          whileHover={{ scale: 1.1, y: -4 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="flex flex-col items-center gap-3 text-white"
-                        >
+                  return (
+                    <motion.div
+                      key={setlist.id}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ delay: index * 0.1, type: 'spring' }}
+                      onHoverStart={() => setHoveredCard(setlist.id)}
+                      onHoverEnd={() => setHoveredCard(null)}
+                      className="group relative"
+                    >
+                      <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-black transition-all duration-300 hover:border-gray-700 hover:shadow-2xl">
+                        {/* Hover glow effect */}
+                        {hoveredCard === setlist.id && (
                           <motion.div
-                            animate={{ y: [0, -8, 0] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                            className="rounded-full bg-gradient-to-br from-orange-500 to-red-500 p-4 shadow-lg shadow-orange-500/50"
-                          >
-                            <Lock className="h-8 w-8" />
-                          </motion.div>
-                          <div className="text-center">
-                            <div className="mb-1 text-lg font-bold">Unlock to View</div>
-                            <div className="text-sm text-gray-400">Upgrade to Creator</div>
-                          </div>
-                        </motion.button>
-                      </motion.div>
-                    )}
+                            layoutId="card-glow"
+                            className={`absolute inset-0 bg-gradient-to-br ${energyColor} opacity-5`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 0.1 }}
+                            exit={{ opacity: 0 }}
+                          />
+                        )}
 
-                    <div className="relative p-6">
-                      {/* Header */}
-                      <div className="mb-4 flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`rounded-xl bg-gradient-to-br ${energyColor} p-3 shadow-lg`}
+                        {/* Locked Overlay */}
+                        {!hasAccess && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="absolute inset-0 z-20 flex items-center justify-center bg-black/90 transition-all group-hover:bg-black/80"
                           >
-                            <EnergyIcon className="h-6 w-6 text-white" />
+                            <motion.button
+                              onClick={() =>
+                                showUpgradeModal({
+                                  feature: 'setlistManagement',
+                                  requiredTier: 'creator',
+                                })
+                              }
+                              whileHover={{ scale: 1.1, y: -4 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="flex flex-col items-center gap-3 text-white"
+                            >
+                              <motion.div
+                                animate={{ y: [0, -8, 0] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                                className="rounded-full bg-gradient-to-br from-orange-500 to-red-500 p-4 shadow-lg shadow-orange-500/50"
+                              >
+                                <Lock className="h-8 w-8" />
+                              </motion.div>
+                              <div className="text-center">
+                                <div className="mb-1 text-lg font-bold">Unlock to View</div>
+                                <div className="text-sm text-gray-400">Upgrade to Creator</div>
+                              </div>
+                            </motion.button>
+                          </motion.div>
+                        )}
+
+                        <div className="relative p-6">
+                          {/* Header */}
+                          <div className="mb-4 flex items-start justify-between">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`rounded-xl bg-gradient-to-br ${energyColor} p-3 shadow-lg`}
+                              >
+                                <EnergyIcon className="h-6 w-6 text-white" />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-bold text-white">{setlist.name}</h3>
+                                {setlist.showName && (
+                                  <p className="text-sm text-gray-400">{setlist.showName}</p>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-white">{setlist.name}</h3>
-                            {setlist.showName && (
-                              <p className="text-sm text-gray-400">{setlist.showName}</p>
+
+                          {/* Details */}
+                          <div className="mb-4 space-y-3">
+                            {setlist.showDate && (
+                              <div className="flex items-center gap-2 text-sm text-gray-400">
+                                <Calendar className="h-4 w-4 text-orange-500" />
+                                <span>{formatDateWithDay(setlist.showDate)}</span>
+                              </div>
+                            )}
+                            <div className="flex items-center gap-2 text-sm text-gray-400">
+                              <Clock className="h-4 w-4 text-orange-500" />
+                              <span>
+                                {setlist.songCount} songs • {formatDuration(setlist.totalDuration)}
+                              </span>
+                            </div>
+                            {setlist.venue && (
+                              <div className="truncate text-sm text-gray-500">{setlist.venue}</div>
                             )}
                           </div>
-                        </div>
-                      </div>
 
-                      {/* Details */}
-                      <div className="mb-4 space-y-3">
-                        {setlist.showDate && (
-                          <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <Calendar className="h-4 w-4 text-orange-500" />
-                            <span>{formatDateWithDay(setlist.showDate)}</span>
+                          {/* Energy Badge */}
+                          <div className="mb-4">
+                            <span
+                              className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${energyColor} px-3 py-1 text-xs font-bold text-white`}
+                            >
+                              <Activity className="h-3 w-3" />
+                              {setlist.energyLevel.toUpperCase()} ENERGY
+                            </span>
                           </div>
-                        )}
-                        <div className="flex items-center gap-2 text-sm text-gray-400">
-                          <Clock className="h-4 w-4 text-orange-500" />
-                          <span>
-                            {setlist.songCount} songs • {formatDuration(setlist.totalDuration)}
-                          </span>
-                        </div>
-                        {setlist.venue && (
-                          <div className="truncate text-sm text-gray-500">{setlist.venue}</div>
-                        )}
-                      </div>
 
-                      {/* Energy Badge */}
-                      <div className="mb-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${energyColor} px-3 py-1 text-xs font-bold text-white`}
-                        >
-                          <Activity className="h-3 w-3" />
-                          {setlist.energyLevel.toUpperCase()} ENERGY
-                        </span>
-                      </div>
-
-                      {/* Actions */}
-                      {hasAccess && (
-                        <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                          <Link href={`/setlists/${setlist.id}/perform`} className="flex-1">
-                            <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-4 py-2.5 text-sm font-bold text-white transition-all hover:shadow-lg hover:shadow-orange-500/50">
-                              <Play className="h-4 w-4" />
-                              Perform
-                            </button>
-                          </Link>
-                          <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
-                            <Share2 className="h-4 w-4" />
-                          </button>
+                          {/* Actions */}
+                          {hasAccess && (
+                            <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+                              <Link href={`/setlists/${setlist.id}/perform`} className="flex-1">
+                                <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-4 py-2.5 text-sm font-bold text-white transition-all hover:shadow-lg hover:shadow-orange-500/50">
+                                  <Play className="h-4 w-4" />
+                                  Perform
+                                </button>
+                              </Link>
+                              <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button className="rounded-lg border border-gray-700 bg-gray-800/50 p-2.5 text-gray-400 transition-all hover:border-gray-600 hover:bg-gray-700/50 hover:text-white">
+                                <Share2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
+                      </div>
+                    </motion.div>
+                  );
+                }
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
 
       {/* Upgrade Modal */}

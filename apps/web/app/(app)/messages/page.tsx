@@ -37,6 +37,7 @@ import { createBrowserClient } from '@/lib/supabase';
 import { EmptyStateInline } from '@/components/workshop';
 import { useAblyClient } from '@/hooks/use-ably-client';
 import { formatRelativeTime } from '@/lib/format-date';
+import { InboxSkeleton } from '@/components/loading-skeletons';
 
 // Dynamically import Ably ChatRoom for real-time messaging
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
@@ -424,18 +425,42 @@ export default function MessagesPage() {
   // Loading state
   if (loading) {
     return (
-      <div
-        className="flex h-screen items-center justify-center"
-        style={{ background: 'var(--bg)' }}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div
-            className="border-3 h-10 w-10 animate-spin rounded-full"
-            style={{ borderColor: 'var(--border)', borderTopColor: 'var(--accent)' }}
-          />
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            Loading your conversations...
-          </p>
+      <div className="relative flex h-screen flex-col" style={{ background: 'var(--bg)' }}>
+        {/* Header with Logo [[memory:11700420]] */}
+        <div
+          className="flex items-center justify-between border-b px-4 py-3 sm:px-6 sm:py-4"
+          style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
+        >
+          <div className="flex items-center gap-3">
+            <Link href="/" className="group">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={100}
+                height={40}
+                className="transition-opacity group-hover:opacity-80"
+              />
+            </Link>
+            <h1 className="hidden text-lg font-semibold sm:block" style={{ color: 'var(--text)' }}>
+              Messages
+            </h1>
+          </div>
+        </div>
+
+        {/* Loading skeleton */}
+        <div className="flex flex-1 overflow-hidden">
+          <div className="w-full border-r sm:w-80 lg:w-96" style={{ borderColor: 'var(--border)' }}>
+            <div className="p-4">
+              <InboxSkeleton count={8} />
+            </div>
+          </div>
+          <div className="hidden flex-1 sm:block">
+            <div className="flex h-full items-center justify-center">
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                Select a conversation
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );

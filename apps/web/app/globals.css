@@ -1098,9 +1098,9 @@ html.light {
 
   /* Text - clean blacks and grays */
   --text: #1c1b1f;
-  --text-secondary: #888888;
-  --muted: #b1b1b1;
-  --muted-soft: #dadada;
+  --text-secondary: #4a5568; /* gunmetal gray - better contrast */
+  --muted: #6b7280; /* darker gunmetal - more readable */
+  --muted-soft: #9ca3af; /* mid gunmetal - still subtle but visible */
 
   /* Accent - NextRecord orange */
   --accent: #ff6600;

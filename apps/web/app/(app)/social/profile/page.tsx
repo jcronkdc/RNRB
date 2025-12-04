@@ -23,6 +23,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { ProfileSkeleton } from '@/components/loading-skeletons';
 
 interface ProfileData {
   id: string;
@@ -76,12 +77,22 @@ export default function MyProfilePage() {
 
   if (loading) {
     return (
-      <div
-        className="flex min-h-screen flex-col items-center justify-center gap-4"
-        style={{ background: 'var(--bg)' }}
-      >
-        <Loader2 className="h-12 w-12 animate-spin" style={{ color: 'var(--accent)' }} />
-        <p style={{ color: 'var(--muted)' }}>Loading your profile...</p>
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        <div className="mx-auto max-w-6xl px-4 py-8">
+          {/* Logo */}
+          <div className="mb-8 flex justify-center">
+            <Link href="/">
+              <Image
+                src="/logo-dark.png"
+                alt="Rock N' Roll Basement"
+                width={140}
+                height={56}
+                className="transition-opacity hover:opacity-80"
+              />
+            </Link>
+          </div>
+          <ProfileSkeleton />
+        </div>
       </div>
     );
   }
