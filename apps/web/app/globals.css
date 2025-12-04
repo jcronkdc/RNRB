@@ -1998,7 +1998,12 @@ html.light .comparison-table-row:nth-child(even):hover {
 
 /* === DASHBOARD PAGE ANIMATIONS === */
 @layer components {
-  /* Shimmer animation for loading skeletons */
+  /* ========================================
+     ENHANCED SKELETON LOADING ANIMATIONS
+     Premium shimmer and stagger effects
+     ======================================== */
+
+  /* Base shimmer animation - smooth gradient sweep */
   @keyframes shimmer {
     0% {
       transform: translateX(-100%);
@@ -2008,8 +2013,210 @@ html.light .comparison-table-row:nth-child(even):hover {
     }
   }
 
+  /* Advanced shimmer with opacity fade */
+  @keyframes shimmer-advanced {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.4;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  /* Pulse shimmer - more subtle than standard pulse */
+  @keyframes shimmer-pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  /* Wave animation for progressive loading */
+  @keyframes skeleton-wave {
+    0% {
+      opacity: 0.3;
+      transform: translateY(4px);
+    }
+    50% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 0.3;
+      transform: translateY(0);
+    }
+  }
+
+  /* Fade in for skeleton elements */
+  @keyframes skeleton-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Skeleton glow effect */
+  @keyframes skeleton-glow {
+    0%,
+    100% {
+      box-shadow: 0 0 0 rgba(255, 255, 255, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  /* ============ ANIMATION CLASSES ============ */
+
+  /* Basic shimmer */
   .animate-shimmer {
     animation: shimmer 2s infinite;
+  }
+
+  /* Advanced shimmer with better visual effect */
+  .animate-shimmer-advanced {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animate-shimmer-advanced::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    animation: shimmer-advanced 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* Pulse shimmer - very subtle */
+  .animate-shimmer-pulse {
+    animation: shimmer-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Skeleton wave effect */
+  .animate-skeleton-wave {
+    animation: skeleton-wave 1.5s ease-in-out infinite;
+  }
+
+  /* Skeleton glow */
+  .animate-skeleton-glow {
+    animation: skeleton-glow 2s ease-in-out infinite;
+  }
+
+  /* ============ STAGGERED LOADING ============ */
+
+  /* Stagger delays for progressive loading */
+  .skeleton-stagger-1 {
+    animation-delay: 0ms;
+  }
+
+  .skeleton-stagger-2 {
+    animation-delay: 50ms;
+  }
+
+  .skeleton-stagger-3 {
+    animation-delay: 100ms;
+  }
+
+  .skeleton-stagger-4 {
+    animation-delay: 150ms;
+  }
+
+  .skeleton-stagger-5 {
+    animation-delay: 200ms;
+  }
+
+  .skeleton-stagger-6 {
+    animation-delay: 250ms;
+  }
+
+  .skeleton-stagger-7 {
+    animation-delay: 300ms;
+  }
+
+  .skeleton-stagger-8 {
+    animation-delay: 350ms;
+  }
+
+  /* Fade in with stagger */
+  .skeleton-fade-in {
+    animation: skeleton-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* ============ SKELETON CONTAINERS ============ */
+
+  /* Enhanced skeleton base */
+  .skeleton-base {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-pulse 2s ease-in-out infinite;
+  }
+
+  /* Skeleton with shimmer overlay */
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeleton-shimmer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  /* ============ PERFORMANCE OPTIMIZATIONS ============ */
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-shimmer,
+    .animate-shimmer-advanced,
+    .animate-shimmer-pulse,
+    .animate-skeleton-wave,
+    .animate-skeleton-glow,
+    .skeleton-shimmer::before {
+      animation: none !important;
+    }
+
+    .skeleton-base {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  /* GPU acceleration hints */
+  .skeleton-optimized {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
   }
 }
 

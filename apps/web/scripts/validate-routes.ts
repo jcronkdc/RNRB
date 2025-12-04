@@ -23,6 +23,7 @@ const VALID_ROUTE_PATTERNS = [
 
   // Profiles
   '/community/users/[id]',
+  '/community',
   '/social/profile',
   '/social/profile/[id]',
   '/settings/profile',
@@ -54,14 +55,19 @@ const VALID_ROUTE_PATTERNS = [
   // Music & Creative
   '/library',
   '/songs',
+  '/songs/[id]',
   '/songwriting',
+  '/songwriting/[id]',
   '/studio',
   '/studio/recording-guide',
   '/create',
+  '/upload',
 
   // Collaboration
   '/collaboration',
   '/collaboration-needs',
+  '/collaboration-needs/[id]',
+  '/collaboration-needs/new',
   '/opportunities',
   '/opportunities/[id]',
   '/opportunities/post',
@@ -76,6 +82,7 @@ const VALID_ROUTE_PATTERNS = [
   '/marketplace/messages',
   '/marketplace/seller/[id]',
   '/marketplace/review/[id]',
+  '/marketplace/providers/[id]',
 
   // Masterclasses
   '/masterclasses',
@@ -87,12 +94,24 @@ const VALID_ROUTE_PATTERNS = [
   '/masterclasses/become-instructor',
   '/masterclasses/instructor',
   '/masterclasses/instructor/analytics',
+  '/masterclasses/instructor/[id]/edit',
+  '/masterclasses/instructor/setup',
+  '/masterclasses/instructor/settings',
+  '/masterclasses/instructor/new',
+  '/masterclasses/instructors/[id]',
 
   // Tours & Shows
   '/tours',
   '/tours/[slug]',
+  '/tours/[id]/edit',
+  '/tours/[id]/shows/new',
+  '/shows',
   '/shows/calendar',
   '/shows/today',
+  '/shows/new',
+  '/shows/[id]',
+  '/shows/[id]/edit',
+  '/venues',
 
   // Live Streaming
   '/live',
@@ -114,6 +133,7 @@ const VALID_ROUTE_PATTERNS = [
   '/my-merch',
   '/my-merch/create',
   '/my-merch/customize/[productId]',
+  '/my-merch/edit/[id]',
   '/my-merch/earnings',
   '/my-merch/printful-catalog',
 
@@ -128,6 +148,8 @@ const VALID_ROUTE_PATTERNS = [
   // Affiliate & Revenue
   '/affiliate',
   '/affiliate/stream-setup',
+  '/affiliate/referrals',
+  '/affiliate/materials/[id]',
   '/revenue',
   '/credits',
 
@@ -142,28 +164,102 @@ const VALID_ROUTE_PATTERNS = [
   '/sites',
   '/sites/edit',
   '/sites/success',
+  '/s/[id]',
   '/tools',
   '/setlists',
+  '/setlists/new',
+  '/setlists/[id]',
+  '/setlists/[id]/perform',
   '/share',
+  '/share/[token]',
 
   // Help
   '/help',
   '/help/merch',
+  '/assistant',
 
-  // Other
+  // Other App Routes
   '/notifications',
   '/discover',
   '/explore',
   '/network',
 
   // Projects
+  '/projects',
+  '/projects/new',
   '/projects/[slug]',
   '/projects/[slug]/songs/[songSlug]',
+  '/projects/[id]/settings',
+  '/projects/[id]/collaborate',
+  '/projects/[id]/sessions',
+  '/projects/[id]/setlists',
 
-  // Auth (external)
+  // Public User Pages
+  '/u/[username]',
+  '/u/[username]/merch',
+  '/u/[username]/merch/[id]',
+
+  // Auth
+  '/auth',
   '/auth/signin',
   '/auth/signup',
   '/auth/error',
+  '/signin',
+  '/signup',
+  '/login',
+
+  // Legal & Marketing
+  '/terms',
+  '/privacy',
+  '/dmca',
+  '/legal/instructor-terms',
+  '/pricing',
+  '/features',
+  '/features/songwriting',
+  '/features/collaboration',
+  '/features/website-builder',
+  '/features/project-management',
+  '/features/ai-music',
+  '/why-rnrb',
+  '/about',
+  '/contact',
+  '/donate',
+  '/donate/thank-you',
+  '/blog',
+  '/support',
+  '/streamers',
+  '/streamers/terms',
+  '/website-builder',
+  '/website-builder/pricing',
+  '/solutions/songwriters',
+  '/solutions/bands',
+  '/solutions/studios',
+
+  // Admin
+  '/admin',
+  '/admin/users',
+  '/admin/users/[id]',
+  '/admin/analytics',
+  '/admin/reports',
+  '/admin/bugs',
+
+  // API Routes (for debugging/testing)
+  '/api/auth/debug/providers',
+  '/api/social/connect/twitter',
+  '/api/social/connect/facebook',
+
+  // Static Assets (these are valid)
+  '/apple-touch-icon.png',
+  '/favicon-32x32.png',
+  '/favicon-16x16.png',
+  '/manifest.json',
+  '/splash/[file]',
+
+  // Anchors (valid)
+  '/#how',
+
+  // Public setlist/share
+  '/setlist/[token]',
 ];
 
 // Convert route patterns to regex

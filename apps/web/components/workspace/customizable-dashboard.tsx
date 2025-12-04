@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
@@ -22,7 +22,13 @@ import {
   Briefcase,
   Palette,
   Image,
+  Sliders,
+  Sparkles,
+  X,
+  Edit3,
 } from '@/components/ui/custom-icons';
+
+const CUSTOMIZATION_HINT_DISMISSED_KEY = 'workshop-customization-hint-dismissed';
 
 /**
  * CustomizableDashboard
@@ -32,12 +38,36 @@ import {
  */
 export function CustomizableDashboard() {
   const { status } = useSession();
-  const { activeWorkspace, isLoading, isEditMode, preferences } = useWorkspace();
+  const { activeWorkspace, isLoading, isEditMode, toggleEditMode, preferences } = useWorkspace();
 
   // Modal states
   const [isCreatorOpen, setIsCreatorOpen] = useState(false);
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
+
+  // Customization hint state - only show for first-time users
+  const [showCustomizationHint, setShowCustomizationHint] = useState(false);
+
+  // Check localStorage on mount to see if user has dismissed the hint
+  useEffect(() => {
+    const dismissed = localStorage.getItem(CUSTOMIZATION_HINT_DISMISSED_KEY);
+    // Show hint only if not previously dismissed
+    if (!dismissed) {
+      setShowCustomizationHint(true);
+    }
+  }, []);
+
+  // Dismiss the customization hint and save preference
+  const dismissCustomizationHint = () => {
+    setShowCustomizationHint(false);
+    localStorage.setItem(CUSTOMIZATION_HINT_DISMISSED_KEY, 'true');
+  };
+
+  // Start customizing - enter edit mode and dismiss hint
+  const handleStartCustomizing = () => {
+    dismissCustomizationHint();
+    toggleEditMode();
+  };
 
   // Loading state
   if (status === 'loading' || isLoading) {
@@ -174,10 +204,109 @@ export function CustomizableDashboard() {
                 className="flex items-center justify-between px-5 py-4"
                 style={{ borderBottom: '1px solid var(--border)' }}
               >
-                <h2 className="font-semibold" style={{ color: 'var(--text)' }}>
-                  {activeWorkspace?.name || 'Your Toolbox'}
-                </h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="font-semibold" style={{ color: 'var(--text)' }}>
+                    {activeWorkspace?.name || 'Your Toolbox'}
+                  </h2>
+                  {!isEditMode && (
+                    <span
+                      className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+                      style={{ background: 'var(--accent-glow)', color: 'var(--accent)' }}
+                    >
+                      <Sparkles className="h-3 w-3" />
+                      Customizable
+                    </span>
+                  )}
+                </div>
+                {!isEditMode && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setIsCatalogOpen(true)}
+                      className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                      style={{
+                        background: 'var(--surface)',
+                        color: 'var(--text-secondary)',
+                        border: '1px solid var(--border)',
+                      }}
+                    >
+                      <Sliders className="h-4 w-4" />
+                      Add Tools
+                    </button>
+                    <button
+                      onClick={toggleEditMode}
+                      className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                      style={{
+                        background: 'var(--accent)',
+                        color: 'var(--bg)',
+                      }}
+                    >
+                      <Edit3 className="h-4 w-4" />
+                      Edit
+                    </button>
+                  </div>
+                )}
               </div>
+
+              {/* Customization hint for new users - dismissable */}
+              <AnimatePresence>
+                {!isEditMode && showCustomizationHint && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className="flex items-center gap-3 px-5 py-3"
+                      style={{
+                        background: 'var(--surface)',
+                        borderBottom: '1px solid var(--border)',
+                      }}
+                    >
+                      <div
+                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg"
+                        style={{ background: 'var(--accent-glow)' }}
+                      >
+                        <Palette className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                          <span className="font-medium" style={{ color: 'var(--text)' }}>
+                            Make it yours!
+                          </span>{' '}
+                          Add tools, rearrange your workspace, and customize the look—or use the{' '}
+                          <span
+                            className="inline-flex items-center gap-1 font-medium"
+                            style={{ color: 'var(--accent)' }}
+                          >
+                            <Sparkles className="inline h-3 w-3" />
+                            AI Builder
+                          </span>{' '}
+                          (bottom right) to do it for you.
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleStartCustomizing}
+                        className="flex flex-shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                        style={{ background: 'var(--accent)', color: 'var(--bg)' }}
+                      >
+                        <Edit3 className="h-3.5 w-3.5" />
+                        Start Customizing
+                      </button>
+                      <button
+                        onClick={dismissCustomizationHint}
+                        className="flex-shrink-0 rounded-md p-1.5 transition-colors hover:bg-white/10"
+                        style={{ color: 'var(--muted)' }}
+                        aria-label="Dismiss hint"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="p-4">
                 <WorkspaceGrid onOpenCatalog={() => setIsCatalogOpen(true)} />
               </div>

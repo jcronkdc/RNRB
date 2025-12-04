@@ -865,6 +865,8 @@ export function NavBar() {
     pathname?.startsWith('/library') ||
     pathname?.startsWith('/explore') ||
     pathname?.startsWith('/discover') ||
+    pathname?.startsWith('/design') ||
+    pathname?.startsWith('/distribute') ||
     pathname?.startsWith('/messages') ||
     pathname?.startsWith('/notifications') ||
     pathname?.startsWith('/network') ||
@@ -890,6 +892,7 @@ export function NavBar() {
     pathname?.startsWith('/opportunities') ||
     pathname?.startsWith('/affiliate') ||
     pathname?.startsWith('/share') ||
+    pathname?.startsWith('/submit') ||
     pathname?.startsWith('/revenue') ||
     pathname?.startsWith('/admin') || // Admin dashboard has its own layout
     pathname?.startsWith('/help') || // Help pages have app layout

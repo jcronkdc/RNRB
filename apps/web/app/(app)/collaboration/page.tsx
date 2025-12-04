@@ -24,6 +24,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { CollaborationSkeleton } from '@/components/loading-skeletons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 // Dynamically import components
@@ -41,18 +42,7 @@ export default function CollaborationDashboard() {
   const router = useRouter();
 
   if (loading) {
-    return (
-      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-        <div className="flex min-h-[80vh] items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]" />
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>
-              Finding your people...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+    return <CollaborationSkeleton />;
   }
 
   return (

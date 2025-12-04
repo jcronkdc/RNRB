@@ -112,9 +112,32 @@ export function AIWorkspaceChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPreview, setSelectedPreview] = useState<WorkspacePreview | null>(null);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [showPulse, setShowPulse] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Show pulse animation for first-time visitors to draw attention
+  useEffect(() => {
+    const hasSeenAI = localStorage.getItem('ai-workspace-builder-seen');
+    if (!hasSeenAI) {
+      setShowPulse(true);
+      // Stop pulse after 10 seconds or when user opens it
+      const timer = setTimeout(() => {
+        setShowPulse(false);
+        localStorage.setItem('ai-workspace-builder-seen', 'true');
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  // Mark as seen when user opens the AI builder
+  useEffect(() => {
+    if (isOpen && showPulse) {
+      setShowPulse(false);
+      localStorage.setItem('ai-workspace-builder-seen', 'true');
+    }
+  }, [isOpen, showPulse]);
 
   const {
     createWorkspace,
@@ -366,42 +389,57 @@ export function AIWorkspaceChat() {
   // Using SVG text to completely bypass CSS color rules
   if (!isOpen || isMinimized) {
     return (
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleExpand}
-        data-ai-floating-btn="true"
-        className={cn(
-          'fixed bottom-24 right-6 z-40',
-          'flex items-center gap-2 rounded-full',
-          'shadow-lg',
-          'ai-floating-btn',
-          'bg-gradient-to-r from-violet-600 to-purple-600',
-          'hover:shadow-xl hover:shadow-purple-500/30',
-          'transition-shadow duration-300',
-          isMinimized ? 'p-3' : 'px-4 py-3'
+      <div className="relative">
+        {/* Pulse ring animation for first-time users */}
+        {showPulse && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div
+              className="absolute h-16 w-16 animate-ping rounded-full bg-purple-500 opacity-30"
+              style={{ animationDuration: '2s' }}
+            />
+            <div
+              className="absolute h-20 w-20 animate-ping rounded-full bg-purple-400 opacity-20"
+              style={{ animationDuration: '3s', animationDelay: '0.5s' }}
+            />
+          </div>
         )}
-        title="AI Workspace Builder"
-      >
-        <Wand2 className="h-5 w-5 text-white" />
-        {!isMinimized && (
-          <svg width="140" height="20" viewBox="0 0 140 20" className="flex-shrink-0">
-            <text
-              x="0"
-              y="15"
-              fill="#ffffff"
-              fontWeight="600"
-              fontSize="14"
-              fontFamily="system-ui, sans-serif"
-            >
-              AI Workspace Builder
-            </text>
-          </svg>
-        )}
-        <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full border-2 border-white bg-green-400" />
-      </motion.button>
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleExpand}
+          data-ai-floating-btn="true"
+          className={cn(
+            'fixed bottom-24 right-6 z-40',
+            'flex items-center gap-2 rounded-full',
+            'shadow-lg',
+            'ai-floating-btn',
+            'bg-gradient-to-r from-violet-600 to-purple-600',
+            'hover:shadow-xl hover:shadow-purple-500/30',
+            'transition-shadow duration-300',
+            isMinimized ? 'p-3' : 'px-4 py-3'
+          )}
+          title="AI Workspace Builder"
+        >
+          <Wand2 className="h-5 w-5 text-white" />
+          {!isMinimized && (
+            <svg width="140" height="20" viewBox="0 0 140 20" className="flex-shrink-0">
+              <text
+                x="0"
+                y="15"
+                fill="#ffffff"
+                fontWeight="600"
+                fontSize="14"
+                fontFamily="system-ui, sans-serif"
+              >
+                AI Workspace Builder
+              </text>
+            </svg>
+          )}
+          <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full border-2 border-white bg-green-400" />
+        </motion.button>
+      </div>
     );
   }
 

@@ -7,9 +7,30 @@
 
 import { cn } from '@cronkwaters/ui';
 
-// Base skeleton component with shimmer animation
-export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('animate-pulse rounded-lg bg-white/5', className)} {...props} />;
+// Base skeleton component with enhanced shimmer animation
+export function Skeleton({
+  className,
+  shimmer = true,
+  stagger,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
+  shimmer?: boolean;
+  stagger?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+}) {
+  const staggerClass = stagger ? `skeleton-stagger-${stagger} skeleton-fade-in` : '';
+  const shimmerClass = shimmer ? 'animate-shimmer-advanced' : 'animate-pulse';
+
+  return (
+    <div
+      className={cn(
+        'skeleton-optimized rounded-lg bg-white/5',
+        shimmerClass,
+        staggerClass,
+        className
+      )}
+      {...props}
+    />
+  );
 }
 
 // Revenue/Transaction skeleton
@@ -89,7 +110,12 @@ export function FeedSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, i) => (
-        <PostSkeleton key={i} />
+        <div
+          key={i}
+          className={`skeleton-fade-in skeleton-stagger-${Math.min(i + 1, 8) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`}
+        >
+          <PostSkeleton />
+        </div>
       ))}
     </div>
   );
@@ -172,7 +198,12 @@ export function MasterclassSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
-        <CourseCardSkeleton key={i} />
+        <div
+          key={i}
+          className={`skeleton-fade-in skeleton-stagger-${Math.min(i + 1, 8) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`}
+        >
+          <CourseCardSkeleton />
+        </div>
       ))}
     </div>
   );
@@ -193,7 +224,9 @@ export function DashboardStatsSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <StatCardSkeleton key={i} />
+        <div key={i} className={`skeleton-fade-in skeleton-stagger-${(i + 1) as 1 | 2 | 3 | 4}`}>
+          <StatCardSkeleton />
+        </div>
       ))}
     </div>
   );
@@ -227,7 +260,12 @@ export function ProjectsSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
-        <ProjectCardSkeleton key={i} />
+        <div
+          key={i}
+          className={`skeleton-fade-in skeleton-stagger-${Math.min(i + 1, 8) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`}
+        >
+          <ProjectCardSkeleton />
+        </div>
       ))}
     </div>
   );
@@ -387,7 +425,12 @@ export function UsersSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
-        <UserCardSkeleton key={i} />
+        <div
+          key={i}
+          className={`skeleton-fade-in skeleton-stagger-${Math.min(i + 1, 8) as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8}`}
+        >
+          <UserCardSkeleton />
+        </div>
       ))}
     </div>
   );
@@ -1251,6 +1294,219 @@ export function DashboardSkeleton() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ============================================
+// SETLIST SKELETON
+// ============================================
+
+export function SetlistSkeleton() {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+      <div className="mb-4 flex items-start justify-between">
+        <div className="flex-1">
+          <Skeleton className="mb-2 h-6 w-48" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <Skeleton className="h-9 w-24 rounded-lg" />
+      </div>
+      {/* Song list */}
+      <div className="space-y-2">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/[0.02] p-3"
+          >
+            <Skeleton className="h-5 w-5" />
+            <div className="flex-1">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="mt-1 h-3 w-1/2" />
+            </div>
+            <Skeleton className="h-4 w-16" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function SetlistsSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <div className="space-y-6">
+      {Array.from({ length: count }).map((_, i) => (
+        <SetlistSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+// ============================================
+// VIDEO PLAYER SKELETON
+// ============================================
+
+export function VideoPlayerSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]">
+      {/* Video player area */}
+      <div className="relative aspect-video bg-black">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-16 w-16 animate-pulse rounded-full bg-white/10" />
+        </div>
+        {/* Controls overlay */}
+        <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 bg-gradient-to-t from-black/80 to-transparent p-4">
+          <Skeleton className="h-8 w-8 rounded" />
+          <Skeleton className="h-1 flex-1 rounded-full" />
+          <Skeleton className="h-4 w-16" />
+          <Skeleton className="h-8 w-8 rounded" />
+        </div>
+      </div>
+      {/* Video info */}
+      <div className="p-4">
+        <Skeleton className="mb-2 h-6 w-3/4" />
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// ANALYTICS SKELETON
+// ============================================
+
+export function AnalyticsSkeleton() {
+  return (
+    <div className="space-y-6">
+      {/* Time range selector */}
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-10 w-48 rounded-lg" />
+        <Skeleton className="h-10 w-28 rounded-lg" />
+      </div>
+      {/* Stats grid */}
+      <DashboardStatsSkeleton />
+      {/* Charts grid */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+          <Skeleton className="mb-4 h-6 w-40" />
+          <ChartSkeleton />
+        </div>
+        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+          <Skeleton className="mb-4 h-6 w-48" />
+          <ChartSkeleton />
+        </div>
+      </div>
+      {/* Data table */}
+      <div>
+        <Skeleton className="mb-4 h-6 w-32" />
+        <TableSkeleton rows={8} columns={6} />
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// SEARCH RESULTS SKELETON
+// ============================================
+
+export function SearchResultSkeleton() {
+  return (
+    <div className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+      <Skeleton className="h-16 w-16 shrink-0 rounded-lg" />
+      <div className="min-w-0 flex-1">
+        <Skeleton className="mb-2 h-5 w-3/4" />
+        <Skeleton className="mb-1 h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
+        <div className="mt-2 flex gap-2">
+          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-5 w-20 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function SearchResultsSkeleton({ count = 6 }: { count?: number }) {
+  return (
+    <div className="space-y-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <SearchResultSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+// ============================================
+// COMMENT/REVIEW SKELETON
+// ============================================
+
+export function CommentSkeleton() {
+  return (
+    <div className="flex gap-3 py-4">
+      <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1">
+        <div className="mb-2 flex items-center gap-2">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-3 w-16" />
+        </div>
+        <Skeleton className="mb-1 h-4 w-full" />
+        <Skeleton className="h-4 w-5/6" />
+        <div className="mt-2 flex gap-4">
+          <Skeleton className="h-6 w-12" />
+          <Skeleton className="h-6 w-12" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function CommentsSkeleton({ count = 5 }: { count?: number }) {
+  return (
+    <div className="divide-y divide-white/5">
+      {Array.from({ length: count }).map((_, i) => (
+        <CommentSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+// ============================================
+// REVIEW CARD SKELETON
+// ============================================
+
+export function ReviewCardSkeleton() {
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
+      <div className="mb-3 flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-10 w-10 rounded-full" />
+          <div>
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="mt-1 h-3 w-16" />
+          </div>
+        </div>
+        <div className="flex gap-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-4 w-4" />
+          ))}
+        </div>
+      </div>
+      <Skeleton className="mb-1 h-4 w-full" />
+      <Skeleton className="mb-1 h-4 w-full" />
+      <Skeleton className="h-4 w-2/3" />
+    </div>
+  );
+}
+
+export function ReviewsSkeleton({ count = 4 }: { count?: number }) {
+  return (
+    <div className="space-y-4">
+      {Array.from({ length: count }).map((_, i) => (
+        <ReviewCardSkeleton key={i} />
+      ))}
     </div>
   );
 }

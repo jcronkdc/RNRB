@@ -257,6 +257,101 @@ export const ROUTES = {
   // NETWORK
   // ============================================
   network: '/network' as const,
+
+  // ============================================
+  // AUTH
+  // ============================================
+  auth: {
+    main: '/auth' as const,
+    signup: '/auth?signup=true' as const,
+    signin: '/signin' as const,
+    login: '/login' as const,
+  },
+
+  // ============================================
+  // LEGAL & MARKETING
+  // ============================================
+  legal: {
+    terms: '/terms' as const,
+    privacy: '/privacy' as const,
+    dmca: '/dmca' as const,
+    instructorTerms: '/legal/instructor-terms' as const,
+  },
+  marketing: {
+    pricing: '/pricing' as const,
+    features: '/features' as const,
+    whyRnrb: '/why-rnrb' as const,
+    about: '/about' as const,
+    contact: '/contact' as const,
+    donate: '/donate' as const,
+    blog: '/blog' as const,
+    support: '/support' as const,
+  },
+
+  // ============================================
+  // PUBLIC PAGES
+  // ============================================
+  public: {
+    userProfile: (username: string) => `/u/${username}` as const,
+    userMerch: (username: string) => `/u/${username}/merch` as const,
+    sitePreview: (id: string) => `/s/${id}` as const,
+    setlistShare: (token: string) => `/setlist/${token}` as const,
+    shareLink: (token: string) => `/share/${token}` as const,
+  },
+
+  // ============================================
+  // SHOWS & VENUES
+  // ============================================
+  shows: {
+    list: '/shows' as const,
+    calendar: '/shows/calendar' as const,
+    today: '/shows/today' as const,
+    new: '/shows/new' as const,
+    view: (id: string) => `/shows/${id}` as const,
+    edit: (id: string) => `/shows/${id}/edit` as const,
+  },
+  venues: '/venues' as const,
+
+  // ============================================
+  // ADMIN
+  // ============================================
+  admin: {
+    main: '/admin' as const,
+    users: '/admin/users' as const,
+    user: (id: string) => `/admin/users/${id}` as const,
+    analytics: '/admin/analytics' as const,
+    reports: '/admin/reports' as const,
+    bugs: '/admin/bugs' as const,
+  },
+
+  // ============================================
+  // PROJECTS (Extended)
+  // ============================================
+  projects: {
+    list: '/projects' as const,
+    new: '/projects/new' as const,
+    view: (slug: string) => `/projects/${slug}` as const,
+    settings: (slug: string) => `/projects/${slug}/settings` as const,
+    collaborate: (slug: string) => `/projects/${slug}/collaborate` as const,
+    sessions: (slug: string) => `/projects/${slug}/sessions` as const,
+    setlists: (slug: string) => `/projects/${slug}/setlists` as const,
+    song: (slug: string, songId: string) => `/projects/${slug}/songs/${songId}` as const,
+  },
+
+  // ============================================
+  // SETLISTS (Extended)
+  // ============================================
+  setlists: {
+    list: '/setlists' as const,
+    new: '/setlists/new' as const,
+    view: (id: string) => `/setlists/${id}` as const,
+    perform: (id: string) => `/setlists/${id}/perform` as const,
+  },
+
+  // ============================================
+  // ASSISTANT
+  // ============================================
+  assistant: '/assistant' as const,
 } as const;
 
 /**
