@@ -7,6 +7,7 @@ import {
   Clock,
   Users,
   Copy,
+  Calendar,
   CalendarPlus,
   Check,
   Sparkles,
