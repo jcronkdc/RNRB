@@ -125,5 +125,5 @@ export function PartnerIndicator({ tier }: { tier: PartnerTier | null }) {
   const config = tierConfig[tier];
   const Icon = config.icon;
 
-  return <Icon className="h-4 w-4" style={{ color: config.color }} title={config.label} />;
+  return <Icon className={`h-4 w-4`} />;
 }

@@ -29,14 +29,26 @@ export interface OrgSession {
 
 /**
  * Require authentication - throws if not authenticated
- * Returns the authenticated session
+ * Returns the authenticated user with guaranteed id
  */
-export async function requireAuth(): Promise<AppSession> {
+export async function requireAuth(): Promise<AppUser & { id: string }> {
   const session = await getServerSession();
-  if (!session?.user) {
+  if (!session?.user?.id) {
     throw new Error('UNAUTHENTICATED');
   }
-  return session;
+  return session.user as AppUser & { id: string };
+}
+
+/**
+ * Require authentication and return full session
+ * Use this when you need access to orgId as well
+ */
+export async function requireAuthSession(): Promise<AppSession & { user: AppUser }> {
+  const session = await getServerSession();
+  if (!session?.user?.id) {
+    throw new Error('UNAUTHENTICATED');
+  }
+  return session as AppSession & { user: AppUser };
 }
 
 /**

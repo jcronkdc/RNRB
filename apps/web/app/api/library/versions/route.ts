@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
         mimeType: file.type,
         size: file.size,
         url: urlData.publicUrl,
-        storagePath: fileName,
+        path: fileName,
         parentId: rootId, // Link to root file
         version: newVersion,
         hash,

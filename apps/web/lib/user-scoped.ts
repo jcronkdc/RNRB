@@ -28,6 +28,7 @@ import { AppError } from '@/lib/errors';
 
 /**
  * Resource types that have userId ownership
+ * Note: These must match the Prisma model names exactly (camelCase)
  */
 type OwnedResource =
   | 'project'
@@ -36,9 +37,9 @@ type OwnedResource =
   | 'setlistTemplate'
   | 'show'
   | 'tour'
-  | 'site'
-  | 'libraryItem'
-  | 'feedPost'
+  | 'musicianSite'
+  | 'libraryFile'
+  | 'post'
   | 'merchOrder'
   | 'notification';
 
@@ -236,17 +237,18 @@ export async function hasProjectAccess(userId: string, projectId: string): Promi
   const isOwner = await userOwns(userId, 'project', projectId);
   if (isOwner) return true;
 
-  // Check if collaborator
-  const collaborator = await prisma.projectCollaborator.findFirst({
+  // Check if collaborator (project member)
+  const member = await prisma.projectMember.findUnique({
     where: {
-      projectId,
-      userId,
-      status: 'accepted',
+      userId_projectId: {
+        userId,
+        projectId,
+      },
     },
-    select: { id: true },
+    select: { userId: true },
   });
 
-  return !!collaborator;
+  return !!member;
 }
 
 /**
@@ -267,27 +269,24 @@ export async function getProjectRole(
   userId: string,
   projectId: string
 ): Promise<'owner' | 'collaborator' | null> {
-  // Check if owner
-  const project = await prisma.project.findFirst({
-    where: { id: projectId, userId },
-    select: { id: true },
-  });
-
-  if (project) return 'owner';
-
-  // Check if collaborator
-  const collaborator = await prisma.projectCollaborator.findFirst({
+  // Check project membership
+  const member = await prisma.projectMember.findUnique({
     where: {
-      projectId,
-      userId,
-      status: 'accepted',
+      userId_projectId: {
+        userId,
+        projectId,
+      },
     },
-    select: { id: true },
+    select: { role: true },
   });
 
-  if (collaborator) return 'collaborator';
+  if (!member) return null;
 
-  return null;
+  // Owner role
+  if (member.role === 'owner') return 'owner';
+
+  // Any other role is a collaborator
+  return 'collaborator';
 }
 
 // ============================================

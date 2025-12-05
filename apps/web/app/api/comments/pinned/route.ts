@@ -5,12 +5,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
 
 import { auth } from '@/auth';
-import { standardLimiter } from '@/lib/rate-limit';
+import { checkStandardLimit } from '@/lib/rate-limit';
 
 // GET /api/comments/pinned - Get pinned comments for an entity
 export async function GET(request: NextRequest) {
   try {
-    const limitResult = await standardLimiter(request);
+    const limitResult = await checkStandardLimit(request);
     if (limitResult) return limitResult;
 
     const { searchParams } = new URL(request.url);
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 // POST /api/comments/pinned - Create a new pinned comment
 export async function POST(request: NextRequest) {
   try {
-    const limitResult = await standardLimiter(request);
+    const limitResult = await checkStandardLimit(request);
     if (limitResult) return limitResult;
 
     const session = await auth();

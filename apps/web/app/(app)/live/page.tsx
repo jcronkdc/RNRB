@@ -8,8 +8,8 @@ import {
   Clock,
   ArrowRight,
   Sparkles,
+  Radio,
   // Custom musician icons
-  BroadcastTower,
   StageLights,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';

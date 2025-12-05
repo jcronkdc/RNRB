@@ -4,18 +4,17 @@ import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/session';
 
 // GET /api/ecosystem/opportunities/[id] - Get single opportunity
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const opportunity = await db.opportunity.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         postedBy: {
           select: {
             id: true,
             name: true,
             image: true,
-            username: true,
-            bio: true,
           },
         },
         venue: {
@@ -62,16 +61,17 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PATCH /api/ecosystem/opportunities/[id] - Update opportunity
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await requireAuth();
 
-    if (!session?.userId) {
+    if (!session?.id) {
       return NextResponse.json({ error: 'You must be logged in' }, { status: 401 });
     }
 
     const opportunity = await db.opportunity.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { postedById: true },
     });
 
@@ -79,7 +79,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    if (opportunity.postedById !== session.userId) {
+    if (opportunity.postedById !== session.id) {
       return NextResponse.json(
         { error: 'You can only edit your own opportunities' },
         { status: 403 }
@@ -89,7 +89,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const body = await request.json();
 
     const updated = await db.opportunity.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(body.title && { title: body.title }),
         ...(body.description !== undefined && { description: body.description }),
@@ -111,7 +111,6 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
             id: true,
             name: true,
             image: true,
-            username: true,
           },
         },
       },
@@ -125,16 +124,20 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 // DELETE /api/ecosystem/opportunities/[id] - Delete opportunity
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const session = await requireAuth();
 
-    if (!session?.userId) {
+    if (!session?.id) {
       return NextResponse.json({ error: 'You must be logged in' }, { status: 401 });
     }
 
     const opportunity = await db.opportunity.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: { postedById: true },
     });
 
@@ -142,7 +145,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    if (opportunity.postedById !== session.userId) {
+    if (opportunity.postedById !== session.id) {
       return NextResponse.json(
         { error: 'You can only delete your own opportunities' },
         { status: 403 }
@@ -150,7 +153,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     }
 
     await db.opportunity.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });

@@ -66,18 +66,24 @@ export async function savePushSubscription(
   subscription: PushSubscription
 ): Promise<boolean> {
   try {
-    await db.execute(
-      `
-      INSERT INTO push_subscriptions (id, user_id, endpoint, p256dh_key, auth_key, created_at, updated_at)
-      VALUES (gen_random_uuid(), $1, $2, $3, $4, NOW(), NOW())
-      ON CONFLICT (user_id, endpoint) 
-      DO UPDATE SET 
-        p256dh_key = EXCLUDED.p256dh_key,
-        auth_key = EXCLUDED.auth_key,
-        updated_at = NOW()
-    `,
-      [userId, subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth]
-    );
+    await db.pushSubscription.upsert({
+      where: {
+        userId_endpoint: {
+          userId,
+          endpoint: subscription.endpoint,
+        },
+      },
+      update: {
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth,
+      },
+      create: {
+        userId,
+        endpoint: subscription.endpoint,
+        p256dh: subscription.keys.p256dh,
+        auth: subscription.keys.auth,
+      },
+    });
 
     return true;
   } catch (error) {
@@ -91,13 +97,14 @@ export async function savePushSubscription(
  */
 export async function removePushSubscription(userId: string, endpoint: string): Promise<boolean> {
   try {
-    await db.execute(
-      `
-      DELETE FROM push_subscriptions
-      WHERE user_id = $1 AND endpoint = $2
-    `,
-      [userId, endpoint]
-    );
+    await db.pushSubscription.delete({
+      where: {
+        userId_endpoint: {
+          userId,
+          endpoint,
+        },
+      },
+    });
 
     return true;
   } catch (error) {
@@ -111,20 +118,20 @@ export async function removePushSubscription(userId: string, endpoint: string): 
  */
 export async function getUserSubscriptions(userId: string): Promise<PushSubscription[]> {
   try {
-    const result = await db.execute(
-      `
-      SELECT endpoint, p256dh_key, auth_key
-      FROM push_subscriptions
-      WHERE user_id = $1
-    `,
-      [userId]
-    );
+    const subscriptions = await db.pushSubscription.findMany({
+      where: { userId },
+      select: {
+        endpoint: true,
+        p256dh: true,
+        auth: true,
+      },
+    });
 
-    return result.rows.map((row: any) => ({
-      endpoint: row.endpoint,
+    return subscriptions.map((sub) => ({
+      endpoint: sub.endpoint,
       keys: {
-        p256dh: row.p256dh_key,
-        auth: row.auth_key,
+        p256dh: sub.p256dh,
+        auth: sub.auth,
       },
     }));
   } catch (error) {
@@ -187,69 +194,22 @@ export async function sendPushToUser(
 
 /**
  * Send "going live" notification to followers
+ * TODO: Implement when LiveStreamFollow model is added
  */
 export async function sendGoingLiveNotification(
-  streamerId: string,
-  streamerName: string,
-  streamTitle: string,
-  streamId: string,
-  thumbnailUrl?: string
+  _streamerId: string,
+  _streamerName: string,
+  _streamTitle: string,
+  _streamId: string,
+  _thumbnailUrl?: string
 ): Promise<number> {
   if (!isPushConfigured()) return 0;
 
-  try {
-    // Get all followers who have push notifications enabled for this streamer
-    const result = await db.execute(
-      `
-      SELECT DISTINCT ps.endpoint, ps.p256dh_key, ps.auth_key
-      FROM push_subscriptions ps
-      INNER JOIN live_stream_follows lsf ON ps.user_id = lsf.user_id
-      WHERE lsf.streamer_id = $1 AND lsf.push_notifications = true
-    `,
-      [streamerId]
-    );
-
-    const payload: PushNotificationPayload = {
-      title: `🔴 ${streamerName} is LIVE!`,
-      body: streamTitle || 'Started streaming',
-      icon: '/icons/live-icon.png',
-      badge: '/icons/badge-icon.png',
-      image: thumbnailUrl,
-      tag: `live-${streamId}`,
-      data: {
-        type: 'live_start',
-        streamId,
-        streamerId,
-        url: `/live/${streamId}`,
-      },
-      actions: [
-        { action: 'watch', title: 'Watch Now', icon: '/icons/play-icon.png' },
-        { action: 'dismiss', title: 'Dismiss' },
-      ],
-      vibrate: [200, 100, 200],
-      requireInteraction: true,
-    };
-
-    let sentCount = 0;
-    for (const row of result.rows as any[]) {
-      const subscription: PushSubscription = {
-        endpoint: row.endpoint,
-        keys: {
-          p256dh: row.p256dh_key,
-          auth: row.auth_key,
-        },
-      };
-
-      const success = await sendPushNotification(subscription, payload);
-      if (success) sentCount++;
-    }
-
-    console.log(`Sent ${sentCount} going live notifications for stream ${streamId}`);
-    return sentCount;
-  } catch (error) {
-    console.error('Failed to send going live notifications:', error);
-    return 0;
-  }
+  // TODO: Implement when live stream follow feature is added
+  // This requires a LiveStreamFollow model that tracks which users
+  // want push notifications for specific streamers
+  console.log('sendGoingLiveNotification: Feature not yet implemented');
+  return 0;
 }
 
 /**

@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
       await prisma.notification.create({
         data: {
           userId: recipientId,
-          type: 'library_share',
+          type: 'collab_invite',
           title: 'Files shared with you',
           message: `${user.name || user.email} shared ${displayFileNames.join(', ')}${moreFiles} with you`,
           actorId: user.id,

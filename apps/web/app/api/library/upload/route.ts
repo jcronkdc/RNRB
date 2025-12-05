@@ -201,11 +201,12 @@ export async function POST(req: NextRequest) {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const fileHash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 
-    // Check for duplicates
+    // Check for duplicates (using original name and size as proxy for hash)
     const existingFile = await prisma.libraryFile.findFirst({
       where: {
         userId: user.id,
-        hash: fileHash,
+        originalName: file.name,
+        size: BigInt(file.size),
       },
       select: {
         id: true,
@@ -268,8 +269,6 @@ export async function POST(req: NextRequest) {
         mimeType: file.type,
         type: fileType,
         tags: parsedTags,
-        hash: fileHash,
-        version: 1,
       },
     });
 

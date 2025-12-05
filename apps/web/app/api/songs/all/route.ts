@@ -34,10 +34,7 @@ export async function GET(req: NextRequest) {
       archived: false,
     };
 
-    // Filter by favorites
-    if (favorites === 'true') {
-      where.isFavorite = true;
-    }
+    // Note: isFavorite not in schema - favorites feature not available
 
     // Filter by project status
     if (filter === 'standalone') {
@@ -47,8 +44,8 @@ export async function GET(req: NextRequest) {
     }
 
     // Filter by song status
-    if (status) {
-      where.status = status;
+    if (status && ['draft', 'in_progress', 'complete', 'published', 'archived'].includes(status)) {
+      where.status = status as Prisma.EnumSongStatusFilter;
     }
 
     // Search by title
@@ -91,7 +88,6 @@ export async function GET(req: NextRequest) {
           chords: true,
           tags: true,
           projectId: true,
-          isFavorite: true,
           lastSavedAt: true,
           createdAt: true,
           updatedAt: true,
@@ -108,14 +104,12 @@ export async function GET(req: NextRequest) {
       });
 
       // Get stats
-      const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] =
-        await Promise.all([
-          db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
-          db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
-          db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
-          db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
-          db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
-        ]);
+      const [standaloneCount, inProjectCount, draftCount, completeCount] = await Promise.all([
+        db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
+        db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
+        db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
+        db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
+      ]);
 
       stats = {
         total: standaloneCount + inProjectCount,
@@ -123,7 +117,7 @@ export async function GET(req: NextRequest) {
         inProject: inProjectCount,
         drafts: draftCount,
         complete: completeCount,
-        favorites: favoritesCount,
+        favorites: 0, // Not in schema
       };
     } catch (dbError) {
       console.error('[Songs API] Database error:', dbError);

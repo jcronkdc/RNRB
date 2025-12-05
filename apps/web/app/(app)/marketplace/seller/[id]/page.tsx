@@ -202,8 +202,8 @@ export default function SellerProfilePage() {
     voteMutation.mutate({ reviewId, isHelpful });
   };
 
-  const totalReviews = profile?.marketplaceReviewCount || 0;
-  const avgRating = profile?.marketplaceSellerRating ? Number(profile.marketplaceSellerRating) : 0;
+  const totalReviews = profile?.sellerRatingCount || 0;
+  const avgRating = profile?.sellerRating ? Number(profile.sellerRating) : 0;
 
   if (loadingProfile) {
     return (
@@ -304,10 +304,10 @@ export default function SellerProfilePage() {
             <div className="flex-1">
               <div className="mb-2 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
                 <h1 className="text-2xl font-bold text-white">{profile.name}</h1>
-                {profile.isVerified && (
+                {profile.verificationLevel !== 'none' && (
                   <span className="flex items-center gap-1 rounded-full bg-emerald-500/20 px-2.5 py-1 text-xs font-medium text-emerald-400">
                     <Shield className="h-3.5 w-3.5" />
-                    Verified {profile.verificationMethod?.replace('_', ' ')}
+                    Verified Seller
                   </span>
                 )}
               </div>
@@ -322,7 +322,7 @@ export default function SellerProfilePage() {
                 )}
                 <span className="flex items-center gap-1">
                   <Package className="h-4 w-4" />
-                  {profile._count?.marketplaceListings || 0} active listings
+                  {profile.successfulSales || 0} successful sales
                 </span>
                 <span className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />

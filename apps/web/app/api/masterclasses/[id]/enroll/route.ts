@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter } from '@/lib/rate-limit';
+import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 import { createStripeCustomer } from '@/lib/stripe-subscriptions';
 
@@ -14,7 +14,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 // POST - Enroll in masterclass (create checkout session or free enrollment)
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();

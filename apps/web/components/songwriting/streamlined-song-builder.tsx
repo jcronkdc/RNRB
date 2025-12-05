@@ -230,7 +230,7 @@ const SortableBlock = memo(function SortableBlock({
                   chordPlacements={block.chordPlacements || []}
                   onContentChange={onEdit}
                   onChordsChange={onChordsChange}
-                  blockType={block.type}
+                  blockType={block.type as 'verse' | 'chorus' | 'bridge'}
                 />
               </div>
             </motion.div>

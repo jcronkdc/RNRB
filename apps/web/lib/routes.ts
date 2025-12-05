@@ -148,8 +148,12 @@ export const ROUTES = {
     view: (slug: string) => `/tours/${slug}` as const,
   },
   shows: {
+    list: '/shows' as const,
     calendar: '/shows/calendar' as const,
     today: '/shows/today' as const,
+    new: '/shows/new' as const,
+    view: (id: string) => `/shows/${id}` as const,
+    edit: (id: string) => `/shows/${id}/edit` as const,
   },
 
   // ============================================
@@ -231,7 +235,7 @@ export const ROUTES = {
     success: '/sites/success' as const,
   },
   tools: '/tools' as const,
-  setlists: '/setlists' as const,
+  setlistsPage: '/setlists' as const,
   share: '/share' as const,
 
   // ============================================
@@ -300,16 +304,8 @@ export const ROUTES = {
   },
 
   // ============================================
-  // SHOWS & VENUES
+  // VENUES
   // ============================================
-  shows: {
-    list: '/shows' as const,
-    calendar: '/shows/calendar' as const,
-    today: '/shows/today' as const,
-    new: '/shows/new' as const,
-    view: (id: string) => `/shows/${id}` as const,
-    edit: (id: string) => `/shows/${id}/edit` as const,
-  },
   venues: '/venues' as const,
 
   // ============================================

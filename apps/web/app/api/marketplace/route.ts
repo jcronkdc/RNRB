@@ -10,7 +10,7 @@ import { standardLimiter } from '@/lib/rate-limit';
 export async function GET(request: NextRequest) {
   try {
     // Rate limiting
-    const identifier = request.ip ?? 'anonymous';
+    const identifier = request.headers.get('x-forwarded-for') || 'anonymous';
     const { success } = await standardLimiter.check(identifier);
     if (!success) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
@@ -74,7 +74,6 @@ export async function GET(request: NextRequest) {
               id: true,
               name: true,
               image: true,
-              username: true,
             },
           },
           images: {
@@ -144,9 +143,9 @@ export async function POST(request: NextRequest) {
         conditionNotes: data.conditionNotes,
         price: data.price,
         currency: data.currency || 'USD',
-        isNegotiable: data.isNegotiable ?? true,
-        acceptsTrade: data.acceptsTrade ?? false,
-        tradeNotes: data.tradeNotes,
+        acceptsOffers: data.acceptsOffers ?? true,
+        tradeFor: data.tradeFor,
+        tradeValue: data.tradeValue,
         listingType: data.listingType || 'sell',
         location: data.location,
         city: data.city,
@@ -166,7 +165,6 @@ export async function POST(request: NextRequest) {
             id: true,
             name: true,
             image: true,
-            username: true,
           },
         },
       },

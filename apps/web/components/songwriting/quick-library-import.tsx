@@ -33,7 +33,7 @@ export function QuickLibraryImport({ onImport, onOpenFullLibrary }: QuickLibrary
 
   // Fetch lyrics and chord files
   const { files: allFiles, isLoading } = useLibrary({
-    sortBy: 'updatedAt',
+    sortBy: 'createdAt',
     sortOrder: 'desc',
   });
 

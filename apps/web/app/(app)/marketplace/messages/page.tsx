@@ -299,7 +299,11 @@ function MessagesContent() {
               </h2>
 
               {loadingConversations ? (
-                <UserListSkeleton count={4} />
+                <div className="space-y-2 p-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-16 animate-pulse rounded-lg bg-white/5" />
+                  ))}
+                </div>
               ) : conversations?.length === 0 ? (
                 <div className="px-2 py-8">
                   <EmptyState

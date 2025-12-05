@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
@@ -18,9 +18,10 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 // Custom icons to avoid emojis
-const EmailIcon = ({ className }: { className?: string }) => (
+const EmailIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -34,9 +35,10 @@ const EmailIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const AIIcon = ({ className }: { className?: string }) => (
+const AIIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -50,9 +52,10 @@ const AIIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const TicketIcon = ({ className }: { className?: string }) => (
+const TicketIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -66,9 +69,16 @@ const TicketIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const NewsletterIcon = ({ className }: { className?: string }) => (
+const NewsletterIcon = ({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -82,9 +92,16 @@ const NewsletterIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const QuestionIcon = ({ className }: { className?: string }) => (
+const QuestionIcon = ({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -98,9 +115,16 @@ const QuestionIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const BusinessIcon = ({ className }: { className?: string }) => (
+const BusinessIcon = ({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -114,9 +138,10 @@ const BusinessIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const ClockIcon = ({ className }: { className?: string }) => (
+const ClockIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"

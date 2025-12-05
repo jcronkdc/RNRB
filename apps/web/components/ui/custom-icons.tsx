@@ -4306,8 +4306,7 @@ export const GitCompare = createIcon(
   'GitCompare'
 );
 
-// Type alias for LucideIcon compatibility
-export type LucideIcon = typeof Activity;
+// LucideIcon type already exported at top of file
 
 // Export all icons for easy access
 export const Icons = {

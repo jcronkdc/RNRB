@@ -22,7 +22,7 @@ export function ErrorMonitoringProvider({ children }: { children: React.ReactNod
 
   // Update user context when session changes
   useEffect(() => {
-    if (session?.user) {
+    if (session?.user?.id) {
       setUserContextForErrors({
         id: session.user.id,
         email: session.user.email || undefined,

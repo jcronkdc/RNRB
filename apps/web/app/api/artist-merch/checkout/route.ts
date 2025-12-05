@@ -4,7 +4,7 @@ import { prisma } from '@cronkwaters/db';
 import { auth } from '@/auth';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-04-30.basil',
+  apiVersion: '2025-02-24.acacia',
 });
 
 /**
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Find the artist
     const artist = await prisma.user.findFirst({
       where: { username: { equals: artistUsername, mode: 'insensitive' } },
-      select: { id: true, name: true, username: true },
+      select: { id: true, name: true },
     });
 
     if (!artist) {

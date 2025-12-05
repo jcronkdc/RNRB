@@ -12,6 +12,9 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = await createServerSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
+    }
 
     const { data: connections, error } = await supabase
       .from('social_connections')
@@ -60,10 +63,14 @@ export async function DELETE(req: NextRequest) {
     }
 
     const supabase = await createServerSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
+    }
 
     // Soft delete by setting is_active to false
-    const { error } = await supabase
-      .from('social_connections')
+    const { error } = await (
+      supabase.from('social_connections') as ReturnType<typeof supabase.from>
+    )
       .update({ is_active: false, updated_at: new Date().toISOString() })
       .eq('id', connectionId)
       .eq('user_id', session.user.id);

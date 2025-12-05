@@ -34,8 +34,7 @@ import {
   Calendar,
   Radio,
   // Custom musician icons
-  TourCalendar,
-  BroadcastTower,
+  Calendar as TourCalendar,
   StageLights,
 } from '@/components/ui/custom-icons';
 import Image from 'next/image';

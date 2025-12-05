@@ -65,10 +65,10 @@ async function checkDeadlines(userId: string, alerts: ProactiveAlert[]): Promise
   const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
   // Check project milestones
-  const upcomingMilestones = await prisma.milestone.findMany({
+  const upcomingMilestones = await prisma.projectMilestone.findMany({
     where: {
       project: { members: { some: { userId } } },
-      completed: false,
+      status: { not: 'completed' },
       dueDate: { lte: sevenDaysFromNow, gte: now },
     },
     select: {
@@ -79,8 +79,8 @@ async function checkDeadlines(userId: string, alerts: ProactiveAlert[]): Promise
     take: 5,
   });
 
-  upcomingMilestones.forEach((m) => {
-    const daysUntil = Math.ceil((m.dueDate!.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
+  upcomingMilestones.forEach((m: (typeof upcomingMilestones)[0]) => {
+    const daysUntil = Math.ceil((m.dueDate.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
     alerts.push({
       type: 'deadline',
       priority: daysUntil <= 2 ? 'high' : 'medium',
@@ -92,31 +92,7 @@ async function checkDeadlines(userId: string, alerts: ProactiveAlert[]): Promise
     });
   });
 
-  // Check project release dates
-  const upcomingReleases = await prisma.project.findMany({
-    where: {
-      members: { some: { userId } },
-      targetReleaseDate: { lte: sevenDaysFromNow, gte: now },
-      status: { not: 'released' },
-    },
-    select: { id: true, name: true, targetReleaseDate: true },
-    take: 5,
-  });
-
-  upcomingReleases.forEach((p) => {
-    const daysUntil = Math.ceil(
-      (p.targetReleaseDate!.getTime() - now.getTime()) / (24 * 60 * 60 * 1000)
-    );
-    alerts.push({
-      type: 'deadline',
-      priority: 'high',
-      title: `Release Date Approaching`,
-      message: `"${p.name}" is scheduled to release ${daysUntil === 0 ? 'today' : `in ${daysUntil} days`}!`,
-      actionSuggestion: `Let's make sure everything is ready for release.`,
-      relatedId: p.id,
-      relatedType: 'project',
-    });
-  });
+  // Note: Project model doesn't have targetReleaseDate - this feature is not available
 }
 
 /**
@@ -164,7 +140,7 @@ async function checkStaleProjects(userId: string, alerts: ProactiveAlert[]): Pro
   const staleProjects = await prisma.project.findMany({
     where: {
       members: { some: { userId } },
-      status: { in: ['planning', 'in_progress'] },
+      status: { in: ['active', 'draft'] },
       updatedAt: { lt: fourteenDaysAgo },
     },
     select: { id: true, name: true, updatedAt: true },
@@ -267,7 +243,7 @@ async function checkMissingSetlists(userId: string, alerts: ProactiveAlert[]): P
 
   const showsWithoutSetlists = await prisma.show.findMany({
     where: {
-      org: { members: { some: { userId } } },
+      org: { memberships: { some: { userId } } },
       date: { gte: now, lte: fourteenDaysFromNow },
       setlist: null,
       status: { not: 'cancelled' },
@@ -308,14 +284,12 @@ async function checkIncompleteProfile(userId: string, alerts: ProactiveAlert[]):
     select: {
       profileCompleted: true,
       name: true,
-      bio: true,
       image: true,
     },
   });
 
   if (!user?.profileCompleted) {
     const missing: string[] = [];
-    if (!user?.bio) missing.push('bio');
     if (!user?.image) missing.push('profile photo');
 
     if (missing.length > 0) {
@@ -339,7 +313,7 @@ async function checkUpcomingShows(userId: string, alerts: ProactiveAlert[]): Pro
 
   const upcomingShows = await prisma.show.findMany({
     where: {
-      org: { members: { some: { userId } } },
+      org: { memberships: { some: { userId } } },
       date: { gte: now, lte: threeDaysFromNow },
       status: { not: 'cancelled' },
     },

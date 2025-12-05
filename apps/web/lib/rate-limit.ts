@@ -201,7 +201,7 @@ export const ablyTokenLimiter = rateLimit({
 });
 
 // ============================================
-// HELPER FUNCTION
+// HELPER FUNCTIONS
 // ============================================
 
 /**
@@ -217,4 +217,64 @@ export async function checkRateLimit(
     const retryAfter = Math.ceil((result.reset - Date.now()) / 1000);
     throw AppError.rateLimited(retryAfter);
   }
+}
+
+/**
+ * Rate limit middleware helper for Next.js API routes
+ * Returns a Response if rate limited, null otherwise
+ */
+export async function rateLimitRequest(
+  limiter: ReturnType<typeof rateLimit>,
+  request: Request
+): Promise<Response | null> {
+  // Extract identifier from request (IP or auth header)
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const identifier = forwardedFor?.split(',')[0]?.trim() || 'anonymous';
+
+  const result = await limiter.check(identifier);
+
+  if (!result.success) {
+    const retryAfter = Math.ceil((result.reset - Date.now()) / 1000);
+    return new Response(
+      JSON.stringify({
+        error: 'Too many requests',
+        code: 'RATE_LIMITED',
+        retryAfter,
+      }),
+      {
+        status: 429,
+        headers: {
+          'Content-Type': 'application/json',
+          'Retry-After': String(retryAfter),
+        },
+      }
+    );
+  }
+
+  return null;
+}
+
+// Convenience wrappers that work with the existing pattern
+export async function checkStrictLimit(request: Request): Promise<Response | null> {
+  return rateLimitRequest(strictLimiter, request);
+}
+
+export async function checkStandardLimit(request: Request): Promise<Response | null> {
+  return rateLimitRequest(standardLimiter, request);
+}
+
+export async function checkAiLimit(request: Request): Promise<Response | null> {
+  return rateLimitRequest(aiLimiter, request);
+}
+
+export async function checkUploadLimit(request: Request): Promise<Response | null> {
+  return rateLimitRequest(uploadLimiter, request);
+}
+
+export async function checkAuthLimit(request: Request): Promise<Response | null> {
+  return rateLimitRequest(authLimiter, request);
+}
+
+export async function checkPublicLimit(request: Request): Promise<Response | null> {
+  return rateLimitRequest(publicLimiter, request);
 }

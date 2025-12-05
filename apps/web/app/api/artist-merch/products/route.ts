@@ -1,5 +1,5 @@
 import { auth } from '@cronkwaters/auth';
-import { prisma } from '@cronkwaters/db';
+import { prisma, Prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 import { standardLimiter, checkRateLimit } from '@/lib/rate-limit';
 
@@ -187,8 +187,8 @@ export async function POST(request: NextRequest) {
         retailPrice,
         platformFeePercent: PLATFORM_FEE_PERCENT,
         category,
-        colors: colors || null,
-        sizes: sizes || null,
+        colors: (colors || []) as Prisma.InputJsonValue,
+        sizes: (sizes || []) as Prisma.InputJsonValue,
         status: 'DRAFT',
         variants: variants
           ? {

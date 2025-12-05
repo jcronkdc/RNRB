@@ -2,7 +2,7 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter } from '@/lib/rate-limit';
+import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth, getCurrentUser } from '@/lib/session';
 
 // GET - Get lessons for a masterclass
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Check access
     let hasFullAccess = false;
 
-    if (user) {
+    if (user?.id) {
       // Instructor has full access
       if (masterclass.instructor.userId === user.id) {
         hasFullAccess = true;
@@ -91,7 +91,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 // POST - Create a new lesson (instructor only)
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();

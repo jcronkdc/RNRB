@@ -45,7 +45,7 @@ export function LibraryImportModal({
 
   const { files, isLoading, error } = useLibrary({
     search: searchQuery,
-    sortBy: 'updatedAt',
+    sortBy: 'createdAt',
     sortOrder: 'desc',
   });
 

@@ -120,14 +120,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 }
 
 // GET - Get progress for all lessons in a masterclass
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const masterclassId = params.id;
+    const { id: masterclassId } = await params;
 
     // Verify enrollment
     const enrollment = await prisma.masterclassEnrollment.findFirst({

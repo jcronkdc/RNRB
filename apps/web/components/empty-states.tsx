@@ -16,7 +16,9 @@ import {
   Calendar,
   // Using existing icons as musician-themed alternatives
   FolderOpen as SessionFolder,
+  Users,
   Users as BandMembers,
+  Mic2,
   Mic2 as VintageCondenserMic,
   Disc3 as VinylRecord,
   StageLights,

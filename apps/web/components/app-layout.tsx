@@ -11,6 +11,7 @@ import { SidebarNav, MobileMenuProvider } from './sidebar-nav';
 import { TopBar } from './top-bar';
 import { TransportBar } from './transport-bar';
 import { FocusModeProvider, useFocusMode } from '@/hooks/use-focus-mode';
+import { MobileBottomNav } from './mobile-bottom-nav';
 
 // Dynamic imports - load on-demand to reduce initial bundle
 // These components are only needed when user interacts with them
@@ -167,6 +168,7 @@ function AppLayoutContent({
 
         {/* Main Content Area */}
         <main
+          className="pb-20 lg:pb-0"
           style={{
             marginLeft: isFocusMode ? '0' : sidebarCollapsed ? '72px' : '260px',
             marginTop: isFocusMode ? '0' : '56px',
@@ -192,6 +194,9 @@ function AppLayoutContent({
         {showTransport && !isFocusMode && (
           <TransportBar currentTrack={currentTrack} isVisible={true} />
         )}
+
+        {/* Mobile Bottom Navigation - hidden in focus mode */}
+        {!isFocusMode && <MobileBottomNav />}
 
         {/* AI Assistant (Floating Widget) - hidden in focus mode */}
         {!isFocusMode && <AssistantChat />}

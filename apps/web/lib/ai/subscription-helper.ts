@@ -260,8 +260,8 @@ export async function getSubscriptionContext(userId: string): Promise<Subscripti
       },
       videoMinutes: {
         used: videoUsed,
-        limit: videoLimit === -1 ? Infinity : videoLimit,
-        percentage: videoLimit === -1 ? 0 : videoPercentage,
+        limit: videoLimit, // 0 = no access, positive number = limit
+        percentage: videoPercentage,
       },
     },
     daysUntilReset,

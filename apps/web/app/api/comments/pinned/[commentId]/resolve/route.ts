@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@cronkwaters/db';
 
 import { auth } from '@/auth';
-import { standardLimiter } from '@/lib/rate-limit';
+import { checkStandardLimit } from '@/lib/rate-limit';
 
 // POST /api/comments/pinned/[commentId]/resolve - Resolve/unresolve a comment
 export async function POST(
@@ -13,7 +13,7 @@ export async function POST(
   { params }: { params: Promise<{ commentId: string }> }
 ) {
   try {
-    const limitResult = await standardLimiter(request);
+    const limitResult = await checkStandardLimit(request);
     if (limitResult) return limitResult;
 
     const session = await auth();

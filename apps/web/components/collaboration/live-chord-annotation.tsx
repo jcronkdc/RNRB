@@ -12,8 +12,8 @@ import {
   Music2,
   Plus,
   Trash2,
-  Undo2,
-  Redo2,
+  Undo,
+  Redo,
   MessageSquare,
   ThumbsUp,
   Check,
@@ -220,10 +220,10 @@ export function LiveChordAnnotation({
         {/* Undo/Redo */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={undo} disabled={!canUndo} title="Undo">
-            <Undo2 className="h-4 w-4" />
+            <Undo className="h-4 w-4" />
           </Button>
           <Button variant="ghost" size="icon" onClick={redo} disabled={!canRedo} title="Redo">
-            <Redo2 className="h-4 w-4" />
+            <Redo className="h-4 w-4" />
           </Button>
         </div>
       </div>

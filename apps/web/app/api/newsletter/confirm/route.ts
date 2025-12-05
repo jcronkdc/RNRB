@@ -14,13 +14,13 @@ export async function GET(request: NextRequest) {
     const token = request.nextUrl.searchParams.get('token');
 
     if (!token) {
-      throw new AppError('Confirmation token is required', 'INVALID_TOKEN', 400);
+      throw new AppError('Confirmation token is required', 'VALIDATION_ERROR', 400);
     }
 
     const result = await confirmSubscription(token);
 
     if (!result.success) {
-      throw new AppError(result.message, 'CONFIRMATION_FAILED', 400);
+      throw new AppError(result.message, 'INTERNAL_ERROR', 400);
     }
 
     // Redirect to success page

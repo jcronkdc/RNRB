@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     const email = request.nextUrl.searchParams.get('email');
 
     if (!email) {
-      throw new AppError('Email is required', 'INVALID_EMAIL', 400);
+      throw new AppError('Email is required', 'VALIDATION_ERROR', 400);
     }
 
     const result = await unsubscribeFromNewsletter(email);

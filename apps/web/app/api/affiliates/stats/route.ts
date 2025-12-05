@@ -54,8 +54,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Calculate stats
-    const totalEarnings = affiliate.totalEarnings;
-    const pendingEarnings = affiliate.pendingEarnings;
+    const totalEarnings = Number(affiliate.lifetimeEarnings);
+    const pendingEarnings = Number(affiliate.pendingEarnings);
     const totalClicks = affiliate.totalClicks;
     const totalConversions = affiliate.referrals.length;
     const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const activeReferrals = await prisma.affiliateReferral.count({
       where: {
         affiliateId: affiliate.id,
-        status: 'ACTIVE',
+        status: 'converted',
       },
     });
 
@@ -72,12 +72,14 @@ export async function GET(request: NextRequest) {
     const monthlyEarnings = await calculateMonthlyEarnings(affiliate.id, startDate);
 
     // Format recent referrals
-    const recentReferrals = affiliate.referrals.map((ref) => ({
-      email: maskEmail(ref.referredEmail || 'unknown'),
-      date: ref.createdAt.toISOString().split('T')[0],
-      plan: ref.plan || 'Creator',
-      commission: ref.commissionAmount,
-    }));
+    const recentReferrals = affiliate.referrals.map(
+      (ref: (typeof affiliate.referrals)[0] & { referredUser?: { email?: string | null } }) => ({
+        email: maskEmail(ref.referredUser?.email || 'unknown'),
+        date: ref.createdAt.toISOString().split('T')[0],
+        plan: ref.subscriptionTier || 'Creator',
+        commission: Number(ref.commissionEarned || 0),
+      })
+    );
 
     return NextResponse.json({
       totalEarnings,
@@ -104,7 +106,7 @@ async function calculateMonthlyEarnings(affiliateId: string, startDate: Date) {
       createdAt: { gte: startDate },
     },
     select: {
-      commissionAmount: true,
+      commissionEarned: true,
       createdAt: true,
     },
   });
@@ -129,7 +131,7 @@ async function calculateMonthlyEarnings(affiliateId: string, startDate: Date) {
   referrals.forEach((ref) => {
     const month = months[ref.createdAt.getMonth()];
     const current = monthlyMap.get(month) || 0;
-    monthlyMap.set(month, current + ref.commissionAmount);
+    monthlyMap.set(month, current + Number(ref.commissionEarned || 0));
   });
 
   // Return last 5 months

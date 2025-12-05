@@ -38,9 +38,10 @@ const AIIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const TicketIcon = ({ className }: { className?: string }) => (
+const TicketIcon = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -102,9 +103,16 @@ const KeyboardIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const QuestionIcon = ({ className }: { className?: string }) => (
+const QuestionIcon = ({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
   <svg
     className={className}
+    style={style}
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"

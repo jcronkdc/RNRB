@@ -1,4 +1,4 @@
-import reactConfig from '@cronkwaters/config/eslint/react';
+import reactLibraryConfig from '@cronkwaters/config/eslint/react-library';
 
-export default reactConfig;
+export default reactLibraryConfig;
 

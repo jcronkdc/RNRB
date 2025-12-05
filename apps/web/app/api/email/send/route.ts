@@ -230,10 +230,10 @@ export async function POST(req: NextRequest) {
               [
                 'Email/set',
                 {
-                  accountId: emailAccount.stalwartAccountId,
+                  accountId: emailAccount.mailServerId,
                   create: {
                     draft: {
-                      mailboxIds: { [emailAccount.stalwartAccountId + '-sent']: true },
+                      mailboxIds: { [emailAccount.mailServerId + '-sent']: true },
                       from: [
                         {
                           email: emailAccount.emailAddress,
@@ -263,7 +263,7 @@ export async function POST(req: NextRequest) {
               [
                 'EmailSubmission/set',
                 {
-                  accountId: emailAccount.stalwartAccountId,
+                  accountId: emailAccount.mailServerId,
                   create: {
                     sendIt: {
                       emailId: '#draft',

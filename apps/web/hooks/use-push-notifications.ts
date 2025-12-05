@@ -116,7 +116,7 @@ export function usePushNotifications() {
       }
 
       // Convert VAPID key
-      const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey);
+      const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey) as BufferSource;
 
       // Subscribe to push
       const subscription = await registration.pushManager.subscribe({

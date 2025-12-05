@@ -313,7 +313,6 @@ function SidebarLogo({
           alt="Rock N' Roll Basement"
           width={96}
           height={40}
-          fetchpriority="high"
           animate={{
             scale: isHovered ? 1.02 : 1,
           }}
@@ -1151,10 +1150,7 @@ export function SidebarNav() {
                                   }}
                                 >
                                   <item.icon
-                                    className="h-4 w-4"
-                                    style={{
-                                      color: active ? 'white' : 'var(--text-secondary)',
-                                    }}
+                                    className={`h-4 w-4 ${active ? 'text-white' : 'text-muted-foreground'}`}
                                   />
                                   {/* Unread badge for Messages */}
                                   {isMessagesItem && totalUnread > 0 && (
@@ -2034,10 +2030,7 @@ export function SidebarNav() {
                       }}
                     >
                       <item.icon
-                        className="h-4 w-4"
-                        style={{
-                          color: active ? 'white' : 'var(--text-secondary)',
-                        }}
+                        className={`h-4 w-4 ${active ? 'text-white' : 'text-muted-foreground'}`}
                       />
                     </div>
 

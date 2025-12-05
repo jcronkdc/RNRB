@@ -50,7 +50,6 @@ export async function GET(request: NextRequest) {
               id: true,
               name: true,
               image: true,
-              username: true,
             },
           },
           venue: {
@@ -90,7 +89,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await requireAuth();
 
-    if (!session?.userId) {
+    if (!session?.id) {
       return NextResponse.json(
         { error: 'You must be logged in to post opportunities' },
         { status: 401 }
@@ -107,7 +106,7 @@ export async function POST(request: NextRequest) {
     // Create opportunity
     const opportunity = await db.opportunity.create({
       data: {
-        postedById: session.userId,
+        postedById: session.id,
         orgId: body.orgId || null,
         type: body.type,
         title: body.title,
@@ -157,7 +156,6 @@ export async function POST(request: NextRequest) {
             id: true,
             name: true,
             image: true,
-            username: true,
           },
         },
       },
@@ -166,7 +164,7 @@ export async function POST(request: NextRequest) {
     // Create activity event
     await db.activityEvent.create({
       data: {
-        userId: session.userId,
+        userId: session.id,
         type: 'opportunity_posted',
         entityType: 'opportunity',
         entityId: opportunity.id,

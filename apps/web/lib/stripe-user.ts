@@ -205,8 +205,8 @@ export async function getUserInvoices(
       amount: inv.amount_paid / 100,
       currency: inv.currency.toUpperCase(),
       created: new Date(inv.created * 1000),
-      pdfUrl: inv.invoice_pdf,
-      hostedInvoiceUrl: inv.hosted_invoice_url,
+      pdfUrl: inv.invoice_pdf ?? null,
+      hostedInvoiceUrl: inv.hosted_invoice_url ?? null,
     })),
     hasMore,
   };

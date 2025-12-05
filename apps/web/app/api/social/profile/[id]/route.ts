@@ -19,9 +19,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             genres: true,
             availableForCollaboration: true,
             availableForGigs: true,
-            bio: true,
             location: true,
-            website: true,
+            socialLinks: true,
             currentStatus: true,
             statusMessage: true,
           },
@@ -51,9 +50,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           take: 6,
           select: {
             id: true,
-            title: true,
-            playCount: true,
-            likeCount: true,
+            song: { select: { title: true } },
+            genre: true,
             createdAt: true,
           },
         },
@@ -63,6 +61,27 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
+
+    // Type assertion for included relations
+    const userData = user as typeof user & {
+      musicianProfile: {
+        instruments: string[];
+        genres: string[];
+        availableForCollaboration: boolean;
+        availableForGigs: boolean;
+        bio: string | null;
+        location: string | null;
+        website: string | null;
+        currentStatus: string | null;
+        statusMessage: string | null;
+      } | null;
+      _count: {
+        followers: number;
+        following: number;
+        authoredPosts: number;
+        communityTracks: number;
+      };
+    };
 
     // Calculate friends count (mutual follows)
     const friendsCount = await prisma.$queryRaw<[{ count: bigint }]>`
@@ -133,36 +152,36 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     return NextResponse.json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      bio: user.musicianProfile?.bio || null,
-      location: user.musicianProfile?.location || null,
-      website: user.musicianProfile?.website || null,
-      createdAt: user.createdAt.toISOString(),
-      musicianProfile: user.musicianProfile
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      image: userData.image,
+      bio: userData.musicianProfile?.bio || null,
+      location: userData.musicianProfile?.location || null,
+      website: userData.musicianProfile?.website || null,
+      createdAt: userData.createdAt.toISOString(),
+      musicianProfile: userData.musicianProfile
         ? {
-            instruments: user.musicianProfile.instruments,
-            genres: user.musicianProfile.genres,
-            availableForCollaboration: user.musicianProfile.availableForCollaboration,
-            availableForGigs: user.musicianProfile.availableForGigs,
-            currentStatus: user.musicianProfile.currentStatus,
-            statusMessage: user.musicianProfile.statusMessage,
+            instruments: userData.musicianProfile.instruments,
+            genres: userData.musicianProfile.genres,
+            availableForCollaboration: userData.musicianProfile.availableForCollaboration,
+            availableForGigs: userData.musicianProfile.availableForGigs,
+            currentStatus: userData.musicianProfile.currentStatus,
+            statusMessage: userData.musicianProfile.statusMessage,
           }
         : null,
       stats: {
-        followers: user._count.followers,
-        following: user._count.following,
+        followers: userData._count.followers,
+        following: userData._count.following,
         friends: friendsCount,
-        posts: user._count.authoredPosts,
-        tracks: user._count.communityTracks,
+        posts: userData._count.authoredPosts,
+        tracks: userData._count.communityTracks,
       },
       isFollowing,
       isFollowedBy,
       isFriend: isFollowing && isFollowedBy,
-      recentPosts: user.authoredPosts,
-      recentTracks: user.communityTracks,
+      recentPosts: (user as typeof userData).authoredPosts,
+      recentTracks: (user as typeof userData).communityTracks,
       mutualFriends,
     });
   } catch (error) {

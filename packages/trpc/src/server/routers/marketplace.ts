@@ -909,7 +909,7 @@ export const marketplaceRouter = router({
       z.object({
         revieweeId: z.string(),
         listingId: z.string().optional(),
-        transactionType: z.enum(['buyer_to_seller', 'seller_to_buyer']),
+        transactionType: z.enum(['sale', 'purchase', 'trade']),
         overallRating: z.number().min(1).max(5),
         communicationRating: z.number().min(1).max(5).optional(),
         accuracyRating: z.number().min(1).max(5).optional(),
@@ -957,32 +957,48 @@ export const marketplaceRouter = router({
         },
       });
 
-      // Update user's average rating
+      // Update marketplace profile's average rating
       const allReviews = await ctx.prisma.marketplaceReview.findMany({
         where: { revieweeId: input.revieweeId },
-        select: { overallRating: true },
+        select: { overallRating: true, transactionType: true },
       });
 
-      const avgRating = allReviews.reduce((sum, r) => sum + r.overallRating, 0) / allReviews.length;
+      // Calculate separate ratings for seller and buyer roles
+      const sellerReviews = allReviews.filter((r) => r.transactionType === 'sale');
+      const buyerReviews = allReviews.filter((r) => r.transactionType === 'purchase');
 
-      // Update the appropriate rating field based on transaction type
-      if (input.transactionType === 'buyer_to_seller') {
-        await ctx.prisma.user.update({
-          where: { id: input.revieweeId },
-          data: {
-            marketplaceSellerRating: avgRating,
-            marketplaceReviewCount: allReviews.length,
-          },
-        });
-      } else {
-        await ctx.prisma.user.update({
-          where: { id: input.revieweeId },
-          data: {
-            marketplaceBuyerRating: avgRating,
-            marketplaceReviewCount: allReviews.length,
-          },
-        });
-      }
+      const sellerAvg =
+        sellerReviews.length > 0
+          ? Math.round(
+              (sellerReviews.reduce((sum, r) => sum + r.overallRating, 0) / sellerReviews.length) *
+                10
+            )
+          : null;
+
+      const buyerAvg =
+        buyerReviews.length > 0
+          ? Math.round(
+              (buyerReviews.reduce((sum, r) => sum + r.overallRating, 0) / buyerReviews.length) * 10
+            )
+          : null;
+
+      // Update MarketplaceProfile (upsert in case it doesn't exist)
+      await ctx.prisma.marketplaceProfile.upsert({
+        where: { userId: input.revieweeId },
+        create: {
+          userId: input.revieweeId,
+          sellerRating: sellerAvg,
+          sellerRatingCount: sellerReviews.length,
+          buyerRating: buyerAvg,
+          buyerRatingCount: buyerReviews.length,
+        },
+        update: {
+          sellerRating: sellerAvg,
+          sellerRatingCount: sellerReviews.length,
+          buyerRating: buyerAvg,
+          buyerRatingCount: buyerReviews.length,
+        },
+      });
 
       return review;
     }),
@@ -1008,13 +1024,18 @@ export const marketplaceRouter = router({
         cursor: input.cursor ? { id: input.cursor } : undefined,
         include: {
           reviewer: {
-            select: { id: true, name: true, image: true },
+            include: {
+              user: {
+                select: { id: true, name: true, image: true },
+              },
+            },
           },
           reviewee: {
-            select: { id: true, name: true, image: true },
-          },
-          listing: {
-            select: { id: true, title: true },
+            include: {
+              user: {
+                select: { id: true, name: true, image: true },
+              },
+            },
           },
         },
       });
@@ -1032,6 +1053,7 @@ export const marketplaceRouter = router({
   getUserMarketplaceProfile: publicProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
+      // Get user basic info
       const user = await ctx.prisma.user.findUnique({
         where: { id: input.userId },
         select: {
@@ -1039,22 +1061,22 @@ export const marketplaceRouter = router({
           name: true,
           image: true,
           createdAt: true,
-          isVerified: true,
-          verificationMethod: true,
-          marketplaceSellerRating: true,
-          marketplaceBuyerRating: true,
-          marketplaceReviewCount: true,
-          _count: {
-            select: {
-              marketplaceListings: { where: { status: 'active' } },
-            },
-          },
         },
       });
 
       if (!user) {
         throw new TRPCError({ code: 'NOT_FOUND' });
       }
+
+      // Get marketplace profile with ratings
+      const profile = await ctx.prisma.marketplaceProfile.findUnique({
+        where: { userId: input.userId },
+      });
+
+      // Get active listings count
+      const activeListingsCount = await ctx.prisma.marketplaceListing.count({
+        where: { sellerId: input.userId, status: 'active' },
+      });
 
       // Get rating breakdown
       const reviews = await ctx.prisma.marketplaceReview.groupBy({
@@ -1076,6 +1098,13 @@ export const marketplaceRouter = router({
 
       return {
         ...user,
+        sellerRating: profile?.sellerRating ? profile.sellerRating / 10 : null,
+        buyerRating: profile?.buyerRating ? profile.buyerRating / 10 : null,
+        sellerRatingCount: profile?.sellerRatingCount || 0,
+        buyerRatingCount: profile?.buyerRatingCount || 0,
+        verificationLevel: profile?.verificationLevel || 'email',
+        isVerified: profile?.identityVerified || false,
+        activeListingsCount,
         ratingBreakdown,
       };
     }),
@@ -1479,152 +1508,8 @@ export const marketplaceRouter = router({
   }),
 
   // ==========================================
-  // IMAGES
+  // REVIEWS (Rating & Feedback)
   // ==========================================
-
-  // Add image to listing
-  addListingImage: protectedProcedure
-    .input(
-      z.object({
-        listingId: z.string(),
-        url: z.string().url(),
-        isPrimary: z.boolean().default(false),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const listing = await ctx.prisma.marketplaceListing.findUnique({
-        where: { id: input.listingId },
-      });
-
-      if (!listing || listing.sellerId !== ctx.viewerId) {
-        throw new TRPCError({ code: 'FORBIDDEN' });
-      }
-
-      // Get current max sort order
-      const maxOrder = await ctx.prisma.marketplaceImage.aggregate({
-        where: { listingId: input.listingId },
-        _max: { sortOrder: true },
-      });
-
-      // If setting as primary, unset other primaries
-      if (input.isPrimary) {
-        await ctx.prisma.marketplaceImage.updateMany({
-          where: { listingId: input.listingId },
-          data: { isPrimary: false },
-        });
-      }
-
-      return ctx.prisma.marketplaceImage.create({
-        data: {
-          listingId: input.listingId,
-          url: input.url,
-          isPrimary: input.isPrimary,
-          sortOrder: (maxOrder._max.sortOrder || 0) + 1,
-        },
-      });
-    }),
-
-  // Remove image from listing
-  removeListingImage: protectedProcedure
-    .input(
-      z.object({
-        imageId: z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const image = await ctx.prisma.marketplaceImage.findUnique({
-        where: { id: input.imageId },
-        include: { listing: true },
-      });
-
-      if (!image || image.listing.sellerId !== ctx.viewerId) {
-        throw new TRPCError({ code: 'FORBIDDEN' });
-      }
-
-      return ctx.prisma.marketplaceImage.delete({
-        where: { id: input.imageId },
-      });
-    }),
-
-  // Reorder images
-  reorderListingImages: protectedProcedure
-    .input(
-      z.object({
-        listingId: z.string(),
-        imageIds: z.array(z.string()),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const listing = await ctx.prisma.marketplaceListing.findUnique({
-        where: { id: input.listingId },
-      });
-
-      if (!listing || listing.sellerId !== ctx.viewerId) {
-        throw new TRPCError({ code: 'FORBIDDEN' });
-      }
-
-      // Update sort order for each image
-      await Promise.all(
-        input.imageIds.map((imageId, index) =>
-          ctx.prisma.marketplaceImage.update({
-            where: { id: imageId },
-            data: {
-              sortOrder: index,
-              isPrimary: index === 0, // First image is primary
-            },
-          })
-        )
-      );
-
-      return { success: true };
-    }),
-
-  // ==========================================
-  // REVIEWS
-  // ==========================================
-
-  // Get reviews for a user (as seller or buyer)
-  getUserReviews: publicProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-        type: z.enum(['seller', 'buyer', 'all']).default('all'),
-        limit: z.number().default(10),
-        cursor: z.string().optional(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const where: any = { reviewedUserId: input.userId };
-
-      if (input.type === 'seller') {
-        where.type = 'buyer_to_seller';
-      } else if (input.type === 'buyer') {
-        where.type = 'seller_to_buyer';
-      }
-
-      const reviews = await ctx.prisma.marketplaceReview.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        take: input.limit + 1,
-        cursor: input.cursor ? { id: input.cursor } : undefined,
-        include: {
-          reviewer: {
-            select: { id: true, name: true, image: true },
-          },
-          listing: {
-            select: { id: true, title: true },
-          },
-        },
-      });
-
-      let nextCursor: string | undefined;
-      if (reviews.length > input.limit) {
-        const nextItem = reviews.pop();
-        nextCursor = nextItem?.id;
-      }
-
-      return { reviews, nextCursor };
-    }),
 
   // Get seller rating summary
   getSellerRating: publicProcedure
@@ -1632,29 +1517,29 @@ export const marketplaceRouter = router({
     .query(async ({ ctx, input }) => {
       const stats = await ctx.prisma.marketplaceReview.aggregate({
         where: {
-          reviewedUserId: input.userId,
-          type: 'buyer_to_seller',
+          revieweeId: input.userId,
+          transactionType: 'sale',
         },
-        _avg: { rating: true },
+        _avg: { overallRating: true },
         _count: true,
       });
 
       // Get rating distribution
       const distribution = await ctx.prisma.marketplaceReview.groupBy({
-        by: ['rating'],
+        by: ['overallRating'],
         where: {
-          reviewedUserId: input.userId,
-          type: 'buyer_to_seller',
+          revieweeId: input.userId,
+          transactionType: 'sale',
         },
         _count: true,
       });
 
       return {
-        averageRating: stats._avg.rating || 0,
+        averageRating: stats._avg.overallRating || 0,
         totalReviews: stats._count,
         distribution: distribution.reduce(
           (acc, d) => {
-            acc[d.rating] = d._count;
+            acc[d.overallRating] = d._count;
             return acc;
           },
           {} as Record<number, number>
@@ -1666,11 +1551,15 @@ export const marketplaceRouter = router({
   createReview: protectedProcedure
     .input(
       z.object({
-        listingId: z.string(),
-        reviewedUserId: z.string(),
-        rating: z.number().min(1).max(5),
-        comment: z.string().min(10).max(1000).optional(),
-        type: z.enum(['buyer_to_seller', 'seller_to_buyer']),
+        listingId: z.string().optional(),
+        revieweeId: z.string(),
+        overallRating: z.number().min(1).max(5),
+        content: z.string().min(10).max(1000),
+        transactionType: z.enum(['sale', 'purchase', 'trade']),
+        communicationRating: z.number().min(1).max(5).optional(),
+        accuracyRating: z.number().min(1).max(5).optional(),
+        shippingRating: z.number().min(1).max(5).optional(),
+        paymentRating: z.number().min(1).max(5).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -1679,7 +1568,7 @@ export const marketplaceRouter = router({
         where: {
           listingId: input.listingId,
           reviewerId: ctx.viewerId,
-          type: input.type,
+          transactionType: input.transactionType,
         },
       });
 
@@ -1695,32 +1584,57 @@ export const marketplaceRouter = router({
         data: {
           listingId: input.listingId,
           reviewerId: ctx.viewerId,
-          reviewedUserId: input.reviewedUserId,
-          rating: input.rating,
-          comment: input.comment,
-          type: input.type,
+          revieweeId: input.revieweeId,
+          overallRating: input.overallRating,
+          content: input.content,
+          transactionType: input.transactionType,
+          communicationRating: input.communicationRating,
+          accuracyRating: input.accuracyRating,
+          shippingRating: input.shippingRating,
+          paymentRating: input.paymentRating,
         },
       });
 
-      // Update user's average rating
-      const avgRating = await ctx.prisma.marketplaceReview.aggregate({
-        where: {
-          reviewedUserId: input.reviewedUserId,
-          type: input.type === 'buyer_to_seller' ? 'buyer_to_seller' : 'seller_to_buyer',
-        },
-        _avg: { rating: true },
-        _count: true,
+      // Update marketplace profile's average rating
+      const allReviews = await ctx.prisma.marketplaceReview.findMany({
+        where: { revieweeId: input.revieweeId },
+        select: { overallRating: true, transactionType: true },
       });
 
-      // Update user's marketplace rating
-      const updateField =
-        input.type === 'buyer_to_seller' ? 'marketplaceSellerRating' : 'marketplaceBuyerRating';
+      // Calculate separate ratings for seller and buyer roles
+      const sellerReviews = allReviews.filter((r) => r.transactionType === 'sale');
+      const buyerReviews = allReviews.filter((r) => r.transactionType === 'purchase');
 
-      await ctx.prisma.user.update({
-        where: { id: input.reviewedUserId },
-        data: {
-          [updateField]: avgRating._avg.rating,
-          marketplaceReviewCount: { increment: 1 },
+      const sellerAvg =
+        sellerReviews.length > 0
+          ? Math.round(
+              (sellerReviews.reduce((sum, r) => sum + r.overallRating, 0) / sellerReviews.length) *
+                10
+            )
+          : null;
+
+      const buyerAvg =
+        buyerReviews.length > 0
+          ? Math.round(
+              (buyerReviews.reduce((sum, r) => sum + r.overallRating, 0) / buyerReviews.length) * 10
+            )
+          : null;
+
+      // Update MarketplaceProfile (not User)
+      await ctx.prisma.marketplaceProfile.upsert({
+        where: { userId: input.revieweeId },
+        create: {
+          userId: input.revieweeId,
+          sellerRating: sellerAvg,
+          sellerRatingCount: sellerReviews.length,
+          buyerRating: buyerAvg,
+          buyerRatingCount: buyerReviews.length,
+        },
+        update: {
+          sellerRating: sellerAvg,
+          sellerRatingCount: sellerReviews.length,
+          buyerRating: buyerAvg,
+          buyerRatingCount: buyerReviews.length,
         },
       });
 

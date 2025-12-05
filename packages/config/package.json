@@ -13,6 +13,8 @@
     "./tsconfig/react": "./tsconfig/react.json",
     "./tsconfig/next": "./tsconfig/next.json",
     "./eslint/base": "./eslint/base.mjs",
+    "./eslint/library": "./eslint/library.mjs",
+    "./eslint/react-library": "./eslint/react-library.mjs",
     "./eslint/next": "./eslint/next.mjs",
     "./eslint/react": "./eslint/react.mjs",
     "./prettier": "./prettier/index.cjs"

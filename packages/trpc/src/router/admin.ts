@@ -56,21 +56,14 @@ export const adminRouter = router({
     ]);
 
     // Content counts
-    const [
-      totalSongs,
-      totalProjects,
-      totalPosts,
-      totalLiveStreams,
-      activeLiveStreams,
-      totalMeetings,
-    ] = await Promise.all([
-      prisma.song.count(),
-      prisma.explorationProject.count(),
-      prisma.post.count(),
-      prisma.liveStream.count(),
-      prisma.liveStream.count({ where: { status: 'live' } }),
-      prisma.meeting.count(),
-    ]);
+    const [totalSongs, totalProjects, totalPosts, totalTours, totalCollaborationRooms] =
+      await Promise.all([
+        prisma.song.count(),
+        prisma.project.count(),
+        prisma.post.count(),
+        prisma.tour.count(),
+        prisma.collaborationRoom.count(),
+      ]);
 
     // Usage statistics
     const usageStats = await prisma.user.aggregate({
@@ -84,20 +77,6 @@ export const adminRouter = router({
         storageUsedGB: true,
       },
     });
-
-    // MythaCoin statistics
-    const mythaCoinStats = await prisma.mythacoinTransaction.aggregate({
-      _sum: {
-        amount: true,
-      },
-      _count: true,
-    });
-
-    // DAS Campaigns
-    const [totalCampaigns, activeCampaigns] = await Promise.all([
-      prisma.dASCampaign.count(),
-      prisma.dASCampaign.count({ where: { status: 'active' } }),
-    ]);
 
     return {
       users: {
@@ -117,11 +96,8 @@ export const adminRouter = router({
         songs: totalSongs,
         projects: totalProjects,
         posts: totalPosts,
-        liveStreams: {
-          total: totalLiveStreams,
-          active: activeLiveStreams,
-        },
-        meetings: totalMeetings,
+        tours: totalTours,
+        collaborationRooms: totalCollaborationRooms,
       },
       usage: {
         totalAiRequests: usageStats._sum.aiRequestsUsed || 0,
@@ -129,14 +105,6 @@ export const adminRouter = router({
         totalImageCredits: usageStats._sum.imageCreditsUsed || 0,
         totalAssistantConversations: usageStats._sum.assistantConversationsUsed || 0,
         avgStorageGB: Number(usageStats._avg.storageUsedGB || 0),
-      },
-      mythaCoin: {
-        totalTransactions: mythaCoinStats._count,
-        totalVolume: mythaCoinStats._sum.amount || 0,
-      },
-      campaigns: {
-        total: totalCampaigns,
-        active: activeCampaigns,
       },
     };
   }),
@@ -197,8 +165,8 @@ export const adminRouter = router({
             _count: {
               select: {
                 songs: true,
-                posts: true,
-                collaborations: true,
+                authoredPosts: true,
+                projectMemberships: true,
               },
             },
           },
@@ -227,7 +195,7 @@ export const adminRouter = router({
             take: 10,
             orderBy: { createdAt: 'desc' },
           },
-          posts: {
+          authoredPosts: {
             take: 10,
             orderBy: { createdAt: 'desc' },
           },
@@ -236,7 +204,7 @@ export const adminRouter = router({
             take: 5,
             orderBy: { expires: 'desc' },
           },
-          mythacoinTransactions: {
+          creditPurchases: {
             take: 20,
             orderBy: { createdAt: 'desc' },
           },
@@ -367,13 +335,13 @@ export const adminRouter = router({
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    const [songsCreated, projectsCreated, postsCreated, streamsCreated, meetingsCreated] =
+    const [songsCreated, projectsCreated, postsCreated, toursCreated, collaborationRoomsCreated] =
       await Promise.all([
         prisma.song.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
-        prisma.explorationProject.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+        prisma.project.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
         prisma.post.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
-        prisma.liveStream.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
-        prisma.meeting.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+        prisma.tour.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+        prisma.collaborationRoom.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
       ]);
 
     // Top content creators
@@ -388,7 +356,7 @@ export const adminRouter = router({
         email: true,
         image: true,
         _count: {
-          select: { songs: true, posts: true },
+          select: { songs: true, authoredPosts: true },
         },
       },
     });
@@ -398,8 +366,8 @@ export const adminRouter = router({
         songs: songsCreated,
         projects: projectsCreated,
         posts: postsCreated,
-        streams: streamsCreated,
-        meetings: meetingsCreated,
+        tours: toursCreated,
+        collaborationRooms: collaborationRoomsCreated,
       },
       topCreators,
     };
@@ -503,15 +471,15 @@ export const adminRouter = router({
             id: true,
             title: true,
             createdAt: true,
-            creator: { select: { email: true, name: true } },
+            user: { select: { email: true, name: true } },
           },
         });
         activities.push(
           ...recentSongs.map((s) => ({
             type: 'song_created',
-            description: `New song created: "${s.title}" by ${s.creator.email}`,
+            description: `New song created: "${s.title}" by ${s.user.email}`,
             timestamp: s.createdAt,
-            metadata: { title: s.title, creator: s.creator.name },
+            metadata: { title: s.title, creator: s.user.name },
           }))
         );
 
@@ -590,9 +558,9 @@ export const adminRouter = router({
           data = {
             songs: await prisma.song.findMany({
               where: { createdAt: { gte: startDate, lte: endDate } },
-              include: { creator: { select: { email: true } } },
+              include: { user: { select: { email: true } } },
             }),
-            projects: await prisma.explorationProject.findMany({
+            projects: await prisma.project.findMany({
               where: { createdAt: { gte: startDate, lte: endDate } },
             }),
           };
@@ -619,12 +587,11 @@ export const adminRouter = router({
           data = {
             users: await prisma.user.count(),
             songs: await prisma.song.count(),
-            projects: await prisma.explorationProject.count(),
+            projects: await prisma.project.count(),
             posts: await prisma.post.count(),
-            streams: await prisma.liveStream.count(),
-            meetings: await prisma.meeting.count(),
-            campaigns: await prisma.dASCampaign.count(),
-            mythacoinTransactions: await prisma.mythacoinTransaction.count(),
+            tours: await prisma.tour.count(),
+            collaborationRooms: await prisma.collaborationRoom.count(),
+            marketplaceListings: await prisma.marketplaceListing.count(),
           };
           break;
       }
@@ -645,23 +612,30 @@ export const adminRouter = router({
 
   getDatabaseStats: adminProcedure.query(async () => {
     const tables = await Promise.all([
-      prisma.user.count().then((count) => ({ table: 'users', count })),
-      prisma.song.count().then((count) => ({ table: 'songs', count })),
-      prisma.post.count().then((count) => ({ table: 'posts', count })),
-      prisma.explorationProject.count().then((count) => ({ table: 'exploration_projects', count })),
-      prisma.liveStream.count().then((count) => ({ table: 'live_streams', count })),
-      prisma.meeting.count().then((count) => ({ table: 'meetings', count })),
-      prisma.dASCampaign.count().then((count) => ({ table: 'das_campaigns', count })),
-      prisma.mythacoinTransaction
+      prisma.user.count().then((count: number) => ({ table: 'users', count })),
+      prisma.song.count().then((count: number) => ({ table: 'songs', count })),
+      prisma.post.count().then((count: number) => ({ table: 'posts', count })),
+      prisma.project.count().then((count: number) => ({ table: 'projects', count })),
+      prisma.tour.count().then((count: number) => ({ table: 'tours', count })),
+      prisma.collaborationRoom
         .count()
-        .then((count) => ({ table: 'mythacoin_transactions', count })),
-      prisma.collaboration.count().then((count) => ({ table: 'collaborations', count })),
-      prisma.event.count().then((count) => ({ table: 'events', count })),
+        .then((count: number) => ({ table: 'collaboration_rooms', count })),
+      prisma.event.count().then((count: number) => ({ table: 'events', count })),
+      prisma.marketplaceListing
+        .count()
+        .then((count: number) => ({ table: 'marketplace_listings', count })),
+      prisma.libraryFile.count().then((count: number) => ({ table: 'library_files', count })),
+      prisma.assistantConversation
+        .count()
+        .then((count: number) => ({ table: 'assistant_conversations', count })),
     ]);
 
     return {
       tables,
-      totalRecords: tables.reduce((acc, t) => acc + t.count, 0),
+      totalRecords: tables.reduce(
+        (acc: number, t: { table: string; count: number }) => acc + t.count,
+        0
+      ),
     };
   }),
 

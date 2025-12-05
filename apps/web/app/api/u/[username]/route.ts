@@ -135,12 +135,12 @@ export async function GET(
 
     // Get upcoming shows for this user through their organizations
     // Shows are associated with orgs, not directly with users
-    const userOrgs = await prisma.orgMember.findMany({
+    const userOrgs = await prisma.membership.findMany({
       where: { userId: user.id },
       select: { orgId: true },
     });
 
-    const orgIds = userOrgs.map((org) => org.orgId);
+    const orgIds = userOrgs.map((org: { orgId: string }) => org.orgId);
 
     const upcomingShows =
       orgIds.length > 0

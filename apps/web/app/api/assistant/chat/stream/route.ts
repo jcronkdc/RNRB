@@ -6,7 +6,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { prisma } from '@cronkwaters/db';
+import { prisma, Prisma } from '@cronkwaters/db';
 import { type NextRequest } from 'next/server';
 import OpenAI from 'openai';
 
@@ -233,8 +233,14 @@ export async function POST(request: NextRequest) {
 
               // Execute each function
               for (const toolCall of toolCalls) {
-                const functionName = toolCall.function.name;
-                const functionArgs = JSON.parse(toolCall.function.arguments);
+                // Type assertion for OpenAI tool call structure
+                const tc = toolCall as {
+                  type: string;
+                  function: { name: string; arguments: string };
+                  id: string;
+                };
+                const functionName = tc.function.name;
+                const functionArgs = JSON.parse(tc.function.arguments);
 
                 // Send action notification
                 controller.enqueue(
@@ -353,14 +359,20 @@ export async function POST(request: NextRequest) {
                     result = await initiateUpgrade(user.id, functionArgs.targetTier);
                     // Format with clickable link for better UX
                     if (result.success && result.checkoutUrl) {
-                      result.displayMessage = `**Ready to upgrade to ${result.tier?.toUpperCase()}!**\n\n${result.message}\n\n**[Click here to complete your upgrade →](${result.checkoutUrl})**\n\n_You'll be redirected to our secure checkout powered by Stripe._`;
+                      result = {
+                        ...result,
+                        displayMessage: `**Ready to upgrade to ${result.tier?.toUpperCase()}!**\n\n${result.message}\n\n**[Click here to complete your upgrade →](${result.checkoutUrl})**\n\n_You'll be redirected to our secure checkout powered by Stripe._`,
+                      };
                     }
                     break;
                   case 'openBillingPortal':
                     result = await openBillingPortal(user.id);
                     // Format with clickable link
                     if (result.success && result.portalUrl) {
-                      result.displayMessage = `**Billing Portal Ready**\n\n${result.message}\n\n**[Open Billing Portal →](${result.portalUrl})**\n\n_Manage your payment methods, view invoices, or update your subscription._`;
+                      result = {
+                        ...result,
+                        displayMessage: `**Billing Portal Ready**\n\n${result.message}\n\n**[Open Billing Portal →](${result.portalUrl})**\n\n_Manage your payment methods, view invoices, or update your subscription._`,
+                      };
                     }
                     break;
                   // Email & Support Tools - IT genius capabilities
@@ -523,9 +535,9 @@ export async function POST(request: NextRequest) {
                     role: 'assistant',
                     content: fullResponse,
                     timestamp: new Date().toISOString(),
-                    actions: actionsExecuted,
+                    actions: actionsExecuted as unknown[],
                   },
-                ],
+                ] as unknown as Prisma.InputJsonValue,
                 messageCount: 2,
                 tokensUsed: inputTokens + outputTokens,
                 cost,

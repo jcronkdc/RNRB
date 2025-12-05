@@ -11,17 +11,21 @@ import { motion } from 'framer-motion';
 import {
   AlertCircle,
   WifiOff,
-  ShieldAlert,
+  Shield,
   Clock,
   Server,
   RefreshCw,
   HelpCircle,
   Zap,
   Ban,
-  FileQuestion,
+  File,
   Home,
   ArrowLeft,
 } from '@/components/ui/custom-icons';
+
+// Aliases for backwards compatibility
+const ShieldAlert = Shield;
+const FileQuestion = File;
 import Link from 'next/link';
 
 export type ErrorType =

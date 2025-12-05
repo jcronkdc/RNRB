@@ -103,7 +103,7 @@ export async function createProject(
     // First, check if user has a personal org or create one
     let org = await prisma.org.findFirst({
       where: {
-        members: { some: { userId, role: 'owner' } },
+        memberships: { some: { userId, role: 'owner' } },
         type: 'solo',
       },
     });
@@ -116,7 +116,7 @@ export async function createProject(
           name: `${user?.name || 'My'}'s Music`,
           slug: `user-${userId}-${Date.now()}`,
           type: 'solo',
-          members: {
+          memberships: {
             create: { userId, role: 'owner' },
           },
         },
@@ -128,10 +128,8 @@ export async function createProject(
       data: {
         name: input.name,
         slug: `${input.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now()}`,
-        type: input.type || 'album',
-        status: 'planning',
+        status: 'draft',
         description: input.description,
-        genre: input.genre,
         orgId: org.id,
         members: {
           create: { userId, role: 'owner' },
@@ -344,7 +342,7 @@ export async function createShow(userId: string, input: CreateShowInput): Promis
     const tour = await prisma.tour.findFirst({
       where: {
         id: input.tourId,
-        org: { members: { some: { userId } } },
+        org: { memberships: { some: { userId } } },
       },
     });
 
@@ -411,7 +409,7 @@ export async function buildSetlist(
     const show = await prisma.show.findFirst({
       where: {
         id: input.showId,
-        org: { members: { some: { userId } } },
+        org: { memberships: { some: { userId } } },
       },
       include: { setlist: true },
     });

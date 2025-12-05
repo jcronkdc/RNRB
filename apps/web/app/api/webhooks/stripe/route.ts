@@ -457,7 +457,13 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
 
     // Handle credit purchases
     const userId = metadata.userId;
-    const creditType = metadata.creditType as 'ai' | 'video' | 'storage' | undefined;
+    const creditType = metadata.creditType as
+      | 'ai'
+      | 'video'
+      | 'storage'
+      | 'image'
+      | 'stems'
+      | undefined;
     const creditAmount = Number(metadata.creditAmount || 0);
 
     if (!userId || !creditType || !creditAmount) {

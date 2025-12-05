@@ -295,7 +295,6 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                       style={{
                         borderColor: 'var(--border)',
                         background: 'var(--surface)',
-                        ringColor: 'var(--accent)',
                       }}
                     >
                       <X className="h-4 w-4" style={{ color: 'var(--muted)' }} />
@@ -312,7 +311,6 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                         }`}
                         style={{
                           background: gradient.value,
-                          ringColor: 'var(--accent)',
                         }}
                         title={gradient.label}
                       />
@@ -337,7 +335,6 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                         }`}
                         style={{
                           background: accent.value || 'var(--accent)',
-                          ringColor: 'var(--text)',
                         }}
                         title={accent.label}
                       >

@@ -597,23 +597,24 @@ export default function EmailSettingsPage() {
                 <label className="mb-3 block text-sm font-medium text-white/60">
                   Setup on Your Device
                 </label>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {[
-                    { key: 'iphone', label: '📱 iPhone', icon: Smartphone },
-                    { key: 'android', label: '🤖 Android', icon: Smartphone },
-                    { key: 'mac', label: '💻 Mac', icon: Monitor },
-                    { key: 'windows', label: '🖥️ Windows', icon: Monitor },
+                    { key: 'iphone', label: 'iPhone', icon: Smartphone },
+                    { key: 'android', label: 'Android', icon: Smartphone },
+                    { key: 'mac', label: 'Mac', icon: Monitor },
+                    { key: 'windows', label: 'Windows', icon: Monitor },
                   ].map((tab) => (
                     <button
                       key={tab.key}
                       onClick={() => setActiveSetupTab(tab.key as any)}
-                      className={`flex-1 rounded-xl px-3 py-2 text-xs font-medium transition-all ${
+                      className={`min-h-[44px] rounded-xl px-3 py-2 text-xs font-medium transition-all ${
                         activeSetupTab === tab.key
                           ? 'bg-green-500/20 text-green-400'
                           : 'bg-white/5 text-white/50 hover:bg-white/10'
                       }`}
                     >
-                      {tab.label}
+                      <tab.icon className="mx-auto mb-1 h-4 w-4 sm:hidden" />
+                      <span>{tab.label}</span>
                     </button>
                   ))}
                 </div>
@@ -648,7 +649,7 @@ export default function EmailSettingsPage() {
                 }}
               >
                 <h4 className="mb-3 text-sm font-semibold text-white/80">Quick Reference</h4>
-                <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
                   <div>
                     <p className="text-white/40">Incoming (IMAP)</p>
                     <p className="font-mono text-green-400">mail.rnrb.me:993</p>
@@ -663,18 +664,18 @@ export default function EmailSettingsPage() {
                   </div>
                   <div>
                     <p className="text-white/40">Username</p>
-                    <p className="font-mono text-green-400">{createdEmail}</p>
+                    <p className="break-all font-mono text-green-400">{createdEmail}</p>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <a
                   href="https://webmail.rnrb.me"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold text-white transition-all hover:scale-[1.02]"
+                  className="flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl py-3 font-semibold text-white transition-all hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #22c55e, #10b981)',
                     boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
@@ -685,7 +686,7 @@ export default function EmailSettingsPage() {
                 </a>
                 <button
                   onClick={() => setJustCreated(false)}
-                  className="rounded-xl px-6 py-3 font-medium transition-all hover:bg-white/10"
+                  className="min-h-[48px] rounded-xl px-6 py-3 font-medium transition-all hover:bg-white/10"
                   style={{ background: 'rgba(255, 255, 255, 0.05)', color: 'white' }}
                 >
                   Settings
@@ -773,7 +774,7 @@ export default function EmailSettingsPage() {
                 <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--text)' }}>
                   Choose your email address
                 </label>
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative flex-1">
                     <input
                       type="text"
@@ -782,7 +783,7 @@ export default function EmailSettingsPage() {
                         setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, ''))
                       }
                       placeholder="yourname"
-                      className="w-full rounded-xl px-4 py-3 text-lg"
+                      className="min-h-[48px] w-full rounded-xl px-4 py-3 text-base sm:text-lg"
                       style={{
                         background: 'var(--bg)',
                         border: '1px solid var(--border)',
@@ -799,25 +800,27 @@ export default function EmailSettingsPage() {
                       <X className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-red-500" />
                     )}
                   </div>
-                  <span className="flex items-center text-lg" style={{ color: 'var(--muted)' }}>
-                    @
-                  </span>
-                  <select
-                    value={selectedDomain}
-                    onChange={(e) => setSelectedDomain(e.target.value)}
-                    className="rounded-xl px-4 py-3"
-                    style={{
-                      background: 'var(--bg)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                    }}
-                  >
-                    {availableDomains.map((domain) => (
-                      <option key={domain} value={domain}>
-                        {domain}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center text-lg" style={{ color: 'var(--muted)' }}>
+                      @
+                    </span>
+                    <select
+                      value={selectedDomain}
+                      onChange={(e) => setSelectedDomain(e.target.value)}
+                      className="min-h-[48px] flex-1 rounded-xl px-4 py-3 sm:flex-initial"
+                      style={{
+                        background: 'var(--bg)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text)',
+                      }}
+                    >
+                      {availableDomains.map((domain) => (
+                        <option key={domain} value={domain}>
+                          {domain}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
                 {usernameError && <p className="mt-2 text-sm text-red-500">{usernameError}</p>}
                 {usernameAvailable && (
@@ -959,7 +962,7 @@ export default function EmailSettingsPage() {
                   <Zap className="h-5 w-5" />
                   What you get:
                 </h3>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3">
                   {[
                     { icon: Mail, text: 'Professional @rnrb.me address' },
                     { icon: Smartphone, text: 'Works on all devices' },
@@ -970,10 +973,10 @@ export default function EmailSettingsPage() {
                   ].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div
-                        className="flex h-8 w-8 items-center justify-center rounded-lg"
+                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8"
                         style={{ background: 'rgba(255, 99, 71, 0.15)' }}
                       >
-                        <feature.icon className="h-4 w-4 text-orange-400" />
+                        <feature.icon className="h-5 w-5 text-orange-400 sm:h-4 sm:w-4" />
                       </div>
                       <span className="text-sm text-white/80">{feature.text}</span>
                     </div>
@@ -1182,7 +1185,7 @@ export default function EmailSettingsPage() {
         </motion.div>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         {/* Connection Settings */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

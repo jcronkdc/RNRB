@@ -376,7 +376,7 @@ export default function ExplorePage() {
                 Popular Genres
               </h2>
             </div>
-            <Suspense fallback={<TableSkeleton rows={5} cols={3} />}>
+            <Suspense fallback={<TableSkeleton rows={5} columns={3} />}>
               <TrendingGenres />
             </Suspense>
           </section>

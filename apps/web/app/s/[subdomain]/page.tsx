@@ -60,6 +60,7 @@ export default async function PublicSitePage({ params }: Props) {
       },
       user: {
         select: {
+          name: true,
           username: true,
         },
       },

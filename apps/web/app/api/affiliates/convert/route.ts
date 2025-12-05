@@ -54,12 +54,10 @@ export async function POST(request: NextRequest) {
       data: {
         affiliateId: affiliate.id,
         referredUserId: userId,
-        referredEmail: referredUser?.email || null,
-        plan,
-        amount,
-        commissionRate,
-        commissionAmount,
-        status: 'ACTIVE',
+        subscriptionTier: plan,
+        commissionEarned: commissionAmount,
+        status: 'converted',
+        convertedAt: new Date(),
       },
     });
 
@@ -67,9 +65,9 @@ export async function POST(request: NextRequest) {
     await prisma.affiliate.update({
       where: { id: affiliate.id },
       data: {
-        totalEarnings: { increment: commissionAmount },
+        lifetimeEarnings: { increment: commissionAmount },
         pendingEarnings: { increment: commissionAmount },
-        totalConversions: { increment: 1 },
+        totalReferrals: { increment: 1 },
       },
     });
 

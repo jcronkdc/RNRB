@@ -337,9 +337,8 @@ export function PerformerMode() {
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                {currentSong?.bpm} BPM
+                {currentSong?.tempo} BPM
               </span>
-              <span>{currentSong?.duration}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">

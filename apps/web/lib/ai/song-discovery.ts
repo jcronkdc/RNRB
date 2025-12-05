@@ -327,12 +327,11 @@ export async function generateSetlistOptions(
       title: true,
       key: true,
       tempo: true,
-      duration: true,
-      genre: true,
-      mood: true,
+      timeSignature: true,
       tags: true,
       audioUrl: true,
       lyrics: true,
+      description: true,
     },
     orderBy: { updatedAt: 'desc' },
   });
@@ -364,14 +363,17 @@ export async function generateSetlistOptions(
     if (keyMatches.length >= 3) filteredSongs = keyMatches;
   }
 
-  // Acoustic only
+  // Acoustic only (check tags or description for acoustic mentions)
   if (preferences.acousticOnly) {
-    const acoustic = filteredSongs.filter(
-      (s) =>
-        s.genre?.toLowerCase().includes('acoustic') ||
-        s.tags.some((t) => t.toLowerCase().includes('acoustic')) ||
-        s.mood?.toLowerCase().includes('mellow')
-    );
+    const acoustic = filteredSongs.filter((s) => {
+      const tagsLower = s.tags?.toLowerCase() || '';
+      const descLower = s.description?.toLowerCase() || '';
+      return (
+        tagsLower.includes('acoustic') ||
+        descLower.includes('acoustic') ||
+        descLower.includes('mellow')
+      );
+    });
     if (acoustic.length >= 3) filteredSongs = acoustic;
   }
 
@@ -530,7 +532,6 @@ export async function getPlaybackQueue(
       id: true,
       title: true,
       audioUrl: true,
-      duration: true,
       key: true,
       lyrics: true,
     },
@@ -549,7 +550,7 @@ export async function getPlaybackQueue(
       id: s.id,
       title: s.title,
       audioUrl: s.audioUrl,
-      duration: s.duration,
+      duration: null, // Duration not stored - determined at playback
       key: s.key,
       lyrics: s.lyrics,
     })),

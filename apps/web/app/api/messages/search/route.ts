@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
     // Build where clause
     const where: any = {
-      channelType: 'dm',
+      channelType: 'direct',
       channelId: {
         contains: userId,
       },

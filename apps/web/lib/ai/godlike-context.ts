@@ -387,45 +387,31 @@ async function loadCurrentWorkContext(
           key: true,
           tempo: true,
           status: true,
-          genre: true,
-          mood: true,
-          notes: true,
+          tags: true,
+          description: true,
           // Version history
           versions: {
             select: {
               id: true,
-              versionNumber: true,
-              name: true,
+              versionNum: true,
+              label: true,
               createdAt: true,
-              changeNotes: true,
-              lyricsSnapshot: true,
-              chordsSnapshot: true,
-              createdBy: { select: { name: true } },
+              description: true,
+              lyrics: true,
+              chords: true,
             },
-            orderBy: { versionNumber: 'desc' },
+            orderBy: { versionNum: 'desc' },
             take: 20,
           },
           // All tracks/stems
           tracks: {
             select: {
               id: true,
-              name: true,
-              type: true,
-              instrument: true,
+              trackName: true,
+              trackType: true,
               duration: true,
-              isMuted: true,
+              mute: true,
             },
-          },
-          // Comments
-          comments: {
-            select: {
-              content: true,
-              resolved: true,
-              createdAt: true,
-              user: { select: { name: true } },
-            },
-            orderBy: { createdAt: 'desc' },
-            take: 50,
           },
           // Collaborators
           collaborators: {
@@ -433,7 +419,7 @@ async function loadCurrentWorkContext(
               role: true,
               user: { select: { name: true } },
               email: true,
-              createdAt: true,
+              invitedAt: true,
             },
           },
         },
@@ -445,7 +431,7 @@ async function loadCurrentWorkContext(
       const relatedFiles = await prisma.libraryFile.findMany({
         where: {
           userId,
-          OR: [{ name: { contains: song.title, mode: 'insensitive' } }, { songId: song.id }],
+          name: { contains: song.title, mode: 'insensitive' },
         },
         select: { id: true, name: true, type: true },
         take: 10,
@@ -463,34 +449,29 @@ async function loadCurrentWorkContext(
           key: song.key,
           tempo: song.tempo,
           status: song.status,
-          genre: song.genre,
-          mood: song.mood,
-          notes: song.notes,
-          versions: song.versions.map((v) => ({
+          genre: null, // Not in schema
+          mood: null, // Not in schema
+          notes: song.description,
+          versions: song.versions.map((v: (typeof song.versions)[0]) => ({
             id: v.id,
-            versionNumber: v.versionNumber,
-            name: v.name,
+            versionNumber: v.versionNum,
+            name: v.label,
             createdAt: v.createdAt.toISOString(),
-            createdBy: v.createdBy?.name || null,
-            changeNotes: v.changeNotes,
-            lyricsSnapshot: v.lyricsSnapshot,
-            chordsSnapshot: v.chordsSnapshot,
+            createdBy: null,
+            changeNotes: v.description,
+            lyricsSnapshot: v.lyrics,
+            chordsSnapshot: v.chords,
           })),
-          tracks: song.tracks.map((t) => ({
+          tracks: song.tracks.map((t: (typeof song.tracks)[0]) => ({
             id: t.id,
-            name: t.name,
-            type: t.type,
-            instrument: t.instrument,
+            name: t.trackName,
+            type: String(t.trackType),
+            instrument: null,
             duration: t.duration,
-            isMuted: t.isMuted,
+            isMuted: t.mute,
           })),
-          comments: song.comments.map((c) => ({
-            author: c.user?.name || 'Unknown',
-            content: c.content,
-            timestamp: c.createdAt.toISOString(),
-            resolved: c.resolved,
-          })),
-          collaborators: song.collaborators.map((c) => ({
+          comments: [], // Not in schema
+          collaborators: song.collaborators.map((c: (typeof song.collaborators)[0]) => ({
             name: c.user?.name || c.email || 'Unknown',
             role: c.role,
             lastActive: null,
@@ -519,10 +500,9 @@ async function loadCurrentWorkContext(
               id: true,
               title: true,
               status: true,
-              trackNumber: true,
-              duration: true,
+              createdAt: true,
             },
-            orderBy: { trackNumber: 'asc' },
+            orderBy: { createdAt: 'asc' },
           },
           milestones: {
             select: {
@@ -538,19 +518,9 @@ async function loadCurrentWorkContext(
           members: {
             select: {
               role: true,
-              createdAt: true,
+              joinedAt: true,
               user: { select: { name: true } },
             },
-          },
-          views: {
-            select: {
-              action: true,
-              createdAt: true,
-              user: { select: { name: true } },
-              details: true,
-            },
-            orderBy: { createdAt: 'desc' },
-            take: 20,
           },
         },
       });
@@ -569,14 +539,14 @@ async function loadCurrentWorkContext(
           status: project.status,
           genre: null, // Genre not available on Project model
           targetRelease: null, // Target release not available on Project model
-          songs: project.songs.map((s) => ({
+          songs: project.songs.map((s: (typeof project.songs)[0]) => ({
             id: s.id,
             title: s.title,
             status: s.status,
-            trackNumber: s.trackNumber,
-            duration: s.duration,
+            trackNumber: null,
+            duration: null,
           })),
-          milestones: project.milestones.map((m) => ({
+          milestones: project.milestones.map((m: (typeof project.milestones)[0]) => ({
             id: m.id,
             title: m.title,
             description: m.description,
@@ -584,18 +554,12 @@ async function loadCurrentWorkContext(
             completed: m.status === 'completed' || !!m.completedAt,
             completedAt: m.completedAt?.toISOString() || null,
           })),
-          members: project.members.map((m) => ({
+          members: project.members.map((m: (typeof project.members)[0]) => ({
             name: m.user?.name || 'Unknown',
             role: m.role,
-            joinedAt: m.createdAt.toISOString(),
+            joinedAt: m.joinedAt.toISOString(),
           })),
-          activity:
-            project.views?.map((v) => ({
-              action: v.action || 'viewed',
-              by: v.user?.name || 'Unknown',
-              timestamp: v.createdAt.toISOString(),
-              details: typeof v.details === 'string' ? v.details : null,
-            })) || [],
+          activity: [], // Activity tracking not implemented
         },
       };
     }
@@ -604,7 +568,7 @@ async function loadCurrentWorkContext(
       const tour = await prisma.tour.findFirst({
         where: {
           OR: [{ id }, { slug: id }],
-          org: { members: { some: { userId } } }, // Security: must be org member
+          org: { memberships: { some: { userId } } }, // Security: must be org member
         },
         select: {
           id: true,
@@ -612,14 +576,13 @@ async function loadCurrentWorkContext(
           status: true,
           startDate: true,
           endDate: true,
-          budget: true,
           shows: {
             select: {
               id: true,
               name: true,
               date: true,
               status: true,
-              ticketsSold: true,
+              attendance: true,
               venue: {
                 select: { name: true, city: true, state: true, capacity: true },
               },
@@ -652,8 +615,8 @@ async function loadCurrentWorkContext(
           status: tour.status,
           startDate: tour.startDate.toISOString(),
           endDate: tour.endDate?.toISOString() || null,
-          budget: tour.budget ? Number(tour.budget) : null,
-          shows: tour.shows.map((s) => ({
+          budget: null, // Not in schema
+          shows: tour.shows.map((s: (typeof tour.shows)[0]) => ({
             id: s.id,
             name: s.name,
             date: s.date.toISOString(),
@@ -661,17 +624,20 @@ async function loadCurrentWorkContext(
             city: s.venue?.city || null,
             state: s.venue?.state || null,
             status: s.status,
-            ticketsSold: s.ticketsSold,
+            ticketsSold: s.attendance,
             capacity: s.venue?.capacity || null,
             hasSetlist: !!s.setlist,
             setlistId: s.setlist?.id || null,
           })),
           pastSetlists: tour.shows
-            .filter((s) => s.setlist && new Date(s.date) < new Date())
-            .map((s) => ({
+            .filter((s: (typeof tour.shows)[0]) => s.setlist && new Date(s.date) < new Date())
+            .map((s: (typeof tour.shows)[0]) => ({
               showName: s.name,
               date: s.date.toISOString(),
-              songs: s.setlist?.items.map((i) => i.song?.title || 'Unknown') || [],
+              songs:
+                s.setlist?.items.map(
+                  (i: { song?: { title: string } | null }) => i.song?.title || 'Unknown'
+                ) || [],
             })),
         },
       };
@@ -681,48 +647,17 @@ async function loadCurrentWorkContext(
       const show = await prisma.show.findFirst({
         where: {
           OR: [{ id }, { slug: id }],
-          org: { members: { some: { userId } } }, // Security
+          org: { memberships: { some: { userId } } }, // Security
         },
-        select: {
-          id: true,
-          name: true,
-          date: true,
-          status: true,
-          soundcheck: true,
-          loadIn: true,
-          doors: true,
-          setTime: true,
-          venue: {
-            select: {
-              name: true,
-              address: true,
-              city: true,
-              state: true,
-              capacity: true,
-              notes: true,
-            },
-          },
+        include: {
+          venue: true,
           setlist: {
-            select: {
-              id: true,
+            include: {
               items: {
-                select: {
-                  position: true,
-                  isEncore: true,
-                  notes: true,
-                  song: {
-                    select: { title: true, key: true, tempo: true },
-                  },
+                include: {
+                  song: true,
                 },
                 orderBy: { position: 'asc' },
-              },
-              songRequests: {
-                select: {
-                  song: { select: { title: true } },
-                  votes: true,
-                },
-                orderBy: { votes: 'desc' },
-                take: 10,
               },
             },
           },
@@ -731,33 +666,54 @@ async function loadCurrentWorkContext(
 
       if (!show) return null;
 
+      // Type assertion needed due to Prisma type inference limitations with nested includes
+      const showData = show as typeof show & {
+        venue: {
+          name: string;
+          address: string | null;
+          city: string | null;
+          state: string | null;
+          capacity: number | null;
+          notes: string | null;
+        } | null;
+        setlist: {
+          id: string;
+          items: Array<{
+            position: number;
+            isEncore: boolean;
+            notes: string | null;
+            song: { title: string; key: string | null; tempo: number | null } | null;
+          }>;
+        } | null;
+      };
+
       return {
         type: 'show',
-        id: show.id,
-        name: show.name,
+        id: showData.id,
+        name: showData.name,
         show: {
-          id: show.id,
-          name: show.name,
-          date: show.date.toISOString(),
-          venue: show.venue
+          id: showData.id,
+          name: showData.name,
+          date: showData.date.toISOString(),
+          venue: showData.venue
             ? {
-                name: show.venue.name,
-                address: show.venue.address,
-                city: show.venue.city,
-                state: show.venue.state,
-                capacity: show.venue.capacity,
-                notes: show.venue.notes,
+                name: showData.venue.name,
+                address: showData.venue.address,
+                city: showData.venue.city,
+                state: showData.venue.state,
+                capacity: showData.venue.capacity,
+                notes: showData.venue.notes,
               }
             : null,
-          status: show.status,
-          soundcheck: show.soundcheck,
-          loadIn: show.loadIn,
-          doors: show.doors,
-          setTime: show.setTime,
-          setlist: show.setlist
+          status: showData.status,
+          soundcheck: showData.soundcheckTime?.toISOString() || null,
+          loadIn: showData.loadInTime?.toISOString() || null,
+          doors: showData.doorsTime?.toISOString() || null,
+          setTime: showData.setTime?.toISOString() || null,
+          setlist: showData.setlist
             ? {
-                id: show.setlist.id,
-                songs: show.setlist.items.map((i) => ({
+                id: showData.setlist.id,
+                songs: showData.setlist.items.map((i) => ({
                   position: i.position,
                   songTitle: i.song?.title || 'Unknown',
                   songKey: i.song?.key || null,
@@ -767,11 +723,7 @@ async function loadCurrentWorkContext(
                 })),
               }
             : null,
-          songRequests:
-            show.setlist?.songRequests?.map((r) => ({
-              songTitle: r.song?.title || 'Unknown',
-              requestCount: r.votes || 0,
-            })) || [],
+          songRequests: [], // Song requests feature not implemented
         },
       };
     }
@@ -798,8 +750,9 @@ function loadPlatformKnowledge(): string {
     for (const p of possiblePaths) {
       try {
         if (fs.existsSync(p)) {
-          cachedPlatformKnowledge = fs.readFileSync(p, 'utf-8');
-          return cachedPlatformKnowledge;
+          const content = fs.readFileSync(p, 'utf-8') as string;
+          cachedPlatformKnowledge = content;
+          return content;
         }
       } catch {
         // Try next

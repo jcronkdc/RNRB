@@ -129,15 +129,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             id: true,
             title: true,
             description: true,
-            genre: true,
-            mood: true,
-            coverArt: true,
+            tags: true,
+            artworkUrl: true,
             createdAt: true,
-            isPublic: true,
+            visibility: true,
             status: true,
           },
           where: {
-            isPublic: true,
+            visibility: 'public',
           },
           orderBy: { createdAt: 'desc' },
           take: 12,
@@ -151,7 +150,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 name: true,
                 description: true,
                 coverImage: true,
-                genre: true,
                 status: true,
               },
             },
@@ -184,7 +182,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     if (session?.user?.id) {
       isOwnProfile = session.user.id === id;
-      
+
       if (!isOwnProfile) {
         const follow = await prisma.userFollow.findUnique({
           where: {
@@ -206,18 +204,20 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         where: { followerId: session.user.id },
         select: { followingId: true },
       });
-      const currentUserFollowingIds = currentUserFollowing.map(f => f.followingId);
+      const currentUserFollowingIds = currentUserFollowing.map((f) => f.followingId);
 
       // Get IDs of people who follow the profile user
       const profileUserFollowers = await prisma.userFollow.findMany({
         where: { followingId: id },
         select: { followerId: true },
       });
-      const profileUserFollowerIds = profileUserFollowers.map(f => f.followerId);
+      const profileUserFollowerIds = profileUserFollowers.map((f) => f.followerId);
 
       // Find intersection (mutual connections)
-      const mutualIds = currentUserFollowingIds.filter(fId => profileUserFollowerIds.includes(fId));
-      
+      const mutualIds = currentUserFollowingIds.filter((fId) =>
+        profileUserFollowerIds.includes(fId)
+      );
+
       if (mutualIds.length > 0) {
         const mutuals = await prisma.user.findMany({
           where: { id: { in: mutualIds.slice(0, 3) } },
@@ -242,12 +242,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         tracks: user.communityTracks,
         posts: user.authoredPosts,
         songs: user.songs,
-        projects: user.projectMemberships.map(pm => ({
+        projects: user.projectMemberships.map((pm: (typeof user.projectMemberships)[0]) => ({
           ...pm.project,
           role: pm.role,
         })),
-        followers: user.followers.map(f => f.follower),
-        following: user.following.map(f => f.following),
+        followers: user.followers.map((f: (typeof user.followers)[0]) => f.follower),
+        following: user.following.map((f: (typeof user.following)[0]) => f.following),
         followerCount: user._count.followers,
         followingCount: user._count.following,
         trackCount: user._count.communityTracks,

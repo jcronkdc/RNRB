@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!result.success) {
-      throw new AppError(result.message, 'SUBSCRIPTION_FAILED', 400);
+      throw new AppError(result.message, 'INTERNAL_ERROR', 400);
     }
 
     return NextResponse.json(result);

@@ -366,7 +366,7 @@ export async function createClip(
 
   try {
     const clip = await muxClient.video.assets.create({
-      input: [
+      inputs: [
         {
           url: `mux://assets/${assetId}`,
           start_time: startTime,

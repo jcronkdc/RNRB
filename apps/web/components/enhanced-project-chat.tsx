@@ -247,13 +247,7 @@ export function EnhancedChat({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const clearTypingForUser = (userId: string) => {
-    setTypingUsers((prev) => {
-      const newMap = new Map(prev);
-      newMap.delete(userId);
-      return newMap;
-    });
-  };
+  // Note: clearTypingForUser is already defined above
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || !channelRef.current) return;

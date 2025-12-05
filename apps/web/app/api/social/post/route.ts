@@ -243,11 +243,15 @@ export async function POST(req: NextRequest) {
     }
 
     const supabase = await createServerSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
+    }
 
     // If scheduling, store in scheduled_posts table
     if (scheduleFor) {
-      const { data: scheduledPost, error: scheduleError } = await supabase
-        .from('scheduled_posts')
+      const { data: scheduledPost, error: scheduleError } = await (
+        supabase.from('scheduled_posts') as ReturnType<typeof supabase.from>
+      )
         .insert({
           user_id: session.user.id,
           content_type: 'custom',
@@ -268,7 +272,7 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json({
         scheduled: true,
-        postId: scheduledPost.id,
+        postId: (scheduledPost as { id: string })?.id,
         scheduledFor: scheduleFor,
       });
     }
@@ -291,7 +295,17 @@ export async function POST(req: NextRequest) {
     // Post to each platform
     const results: PostResult[] = [];
 
-    for (const connection of connections) {
+    // Type assertion for connections (Supabase type inference)
+    const validConnections = connections as Array<{
+      id: string;
+      platform: string;
+      access_token: string;
+      platform_user_id: string;
+      page_id?: string;
+      page_access_token?: string;
+    }>;
+
+    for (const connection of validConnections) {
       const platformText = platformContent?.[connection.platform]?.text || content.text;
       const postContent = { ...content, text: platformText };
 
@@ -318,14 +332,13 @@ export async function POST(req: NextRequest) {
       results.push(result);
 
       // Update last_used_at
-      await supabase
-        .from('social_connections')
+      await (supabase.from('social_connections') as ReturnType<typeof supabase.from>)
         .update({ last_used_at: new Date().toISOString() })
         .eq('id', connection.id);
 
       // Store analytics for successful posts
       if (result.success && result.postId) {
-        await supabase.from('post_analytics').insert({
+        await (supabase.from('post_analytics') as ReturnType<typeof supabase.from>).insert({
           user_id: session.user.id,
           platform: connection.platform,
           platform_post_id: result.postId,

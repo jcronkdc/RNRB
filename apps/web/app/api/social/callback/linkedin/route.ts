@@ -80,9 +80,14 @@ export async function GET(req: NextRequest) {
     const userData = await userResponse.json();
 
     const supabase = await createServerSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
+    }
 
     // Store LinkedIn connection
-    const { error: dbError } = await supabase.from('social_connections').upsert(
+    const { error: dbError } = await (
+      supabase.from('social_connections') as ReturnType<typeof supabase.from>
+    ).upsert(
       {
         user_id: oauthData.userId,
         platform: 'linkedin',

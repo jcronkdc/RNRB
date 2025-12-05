@@ -177,7 +177,9 @@ const LeadSheetDocument = ({
         {sections.map((section, index) => (
           <View key={section.id || index} style={styles.section}>
             <Text style={styles.sectionTitle}>{section.type.replace(/-/g, ' ').toUpperCase()}</Text>
-            {section.chord && <Text style={styles.chordLine}>{section.chord}</Text>}
+            {'chord' in section && section.chord ? (
+              <Text style={styles.chordLine}>{String(section.chord)}</Text>
+            ) : null}
             <Text style={styles.lyricsText}>{section.content}</Text>
           </View>
         ))}

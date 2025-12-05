@@ -64,9 +64,12 @@ export default function WriteReviewPage() {
 
   const revieweeId = params.userId as string;
   const listingId = searchParams.get('listing') || undefined;
-  const transactionType = (searchParams.get('type') || 'buyer_to_seller') as
+  const urlTransactionType = (searchParams.get('type') || 'buyer_to_seller') as
     | 'buyer_to_seller'
     | 'seller_to_buyer';
+  // Map URL types to Prisma enum values
+  const transactionType: 'sale' | 'purchase' | 'trade' =
+    urlTransactionType === 'buyer_to_seller' ? 'sale' : 'purchase';
 
   const [overallRating, setOverallRating] = useState(0);
   const [communicationRating, setCommunicationRating] = useState(0);
@@ -132,9 +135,10 @@ export default function WriteReviewPage() {
       overallRating,
       communicationRating: communicationRating || undefined,
       accuracyRating:
-        transactionType === 'buyer_to_seller' ? accuracyRating || undefined : undefined,
+        urlTransactionType === 'buyer_to_seller' ? accuracyRating || undefined : undefined,
       shippingRating: shippingRating || undefined,
-      paymentRating: transactionType === 'seller_to_buyer' ? paymentRating || undefined : undefined,
+      paymentRating:
+        urlTransactionType === 'seller_to_buyer' ? paymentRating || undefined : undefined,
       title: title || undefined,
       content,
       pros: pros.length > 0 ? pros : undefined,
@@ -222,7 +226,7 @@ export default function WriteReviewPage() {
         {/* Title */}
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
           <h1 className="text-2xl font-bold text-white">
-            {transactionType === 'buyer_to_seller' ? 'Review Seller' : 'Review Buyer'}
+            {urlTransactionType === 'buyer_to_seller' ? 'Review Seller' : 'Review Buyer'}
           </h1>
           <p className="mt-1 text-white/60">Share your experience to help the community</p>
         </motion.div>
@@ -307,7 +311,7 @@ export default function WriteReviewPage() {
                 onChange={setCommunicationRating}
                 label="Communication"
               />
-              {transactionType === 'buyer_to_seller' && (
+              {urlTransactionType === 'buyer_to_seller' && (
                 <StarInput
                   value={accuracyRating}
                   onChange={setAccuracyRating}
@@ -319,7 +323,7 @@ export default function WriteReviewPage() {
                 onChange={setShippingRating}
                 label="Shipping / Packaging"
               />
-              {transactionType === 'seller_to_buyer' && (
+              {urlTransactionType === 'seller_to_buyer' && (
                 <StarInput
                   value={paymentRating}
                   onChange={setPaymentRating}

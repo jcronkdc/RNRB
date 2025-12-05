@@ -4,16 +4,17 @@ import { db } from '@/lib/db';
 import { requireAuth } from '@/lib/session';
 
 // POST /api/ecosystem/opportunities/[id]/apply - Apply to an opportunity
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await requireAuth();
 
-    if (!session?.userId) {
+    if (!session?.id) {
       return NextResponse.json({ error: 'You must be logged in to apply' }, { status: 401 });
     }
 
     const opportunity = await db.opportunity.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         status: true,
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       );
     }
 
-    if (opportunity.postedById === session.userId) {
+    if (opportunity.postedById === session.id) {
       return NextResponse.json(
         { error: 'You cannot apply to your own opportunity' },
         { status: 400 }
@@ -51,8 +52,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     // Check if already applied
     const existingApplication = await db.opportunityApplication.findFirst({
       where: {
-        opportunityId: params.id,
-        applicantId: session.userId,
+        opportunityId: id,
+        applicantId: session.id,
       },
     });
 
@@ -68,8 +69,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     // Create application
     const application = await db.opportunityApplication.create({
       data: {
-        opportunityId: params.id,
-        applicantId: session.userId,
+        opportunityId: id,
+        applicantId: session.id,
         coverLetter: body.coverLetter || null,
         portfolioUrls: body.portfolioUrls || [],
         audioSamples: body.audioSamples || [],
@@ -83,7 +84,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
             id: true,
             name: true,
             image: true,
-            username: true,
           },
         },
       },
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     // Get user info for notification
     const user = await db.user.findUnique({
-      where: { id: session.userId },
+      where: { id: session.id },
       select: { name: true },
     });
 
@@ -99,14 +99,14 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     await db.notification.create({
       data: {
         userId: opportunity.postedById,
-        type: 'opportunity_application',
+        type: 'collab_invite',
         title: 'New Application',
         message: `${user?.name || 'Someone'} applied to your opportunity: ${opportunity.title}`,
-        link: `/opportunities/${params.id}`,
+        link: `/opportunities/${id}`,
         metadata: {
-          opportunityId: params.id,
+          opportunityId: id,
           applicationId: application.id,
-          applicantId: session.userId,
+          applicantId: session.id,
         },
       },
     });
@@ -114,10 +114,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     // Create activity event
     await db.activityEvent.create({
       data: {
-        userId: session.userId,
+        userId: session.id,
         type: 'opportunity_applied',
-        entityType: 'opportunity',
-        entityId: params.id,
+        title: 'Applied to Opportunity',
+        opportunityId: id,
         metadata: {
           opportunityTitle: opportunity.title,
           applicationId: application.id,
@@ -137,14 +137,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   try {
     const session = await requireAuth().catch(() => null);
 
-    if (!session?.userId) {
+    if (!session?.id) {
       return NextResponse.json({ hasApplied: false });
     }
 
     const application = await db.opportunityApplication.findFirst({
       where: {
         opportunityId: params.id,
-        applicantId: session.userId,
+        applicantId: session.id,
       },
       include: {
         applicant: {
@@ -152,7 +152,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             id: true,
             name: true,
             image: true,
-            username: true,
           },
         },
       },

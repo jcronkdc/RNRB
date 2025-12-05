@@ -284,9 +284,8 @@ export default function BillingPage() {
                       </div>
                       <div className="h-2 overflow-hidden rounded-full bg-white/5">
                         <div
-                          style={{ width: `${percentage}%` }}
+                          style={{ width: `${percentage}%`, background: item.color }}
                           className="h-full rounded-full transition-all duration-500"
-                          style={{ background: item.color }}
                         />
                       </div>
                     </div>

@@ -58,7 +58,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             status: true,
             doorsTime: true,
             attendance: true,
-            grossRevenue: true,
             ...(includeShowDetails
               ? {
                   venue: {

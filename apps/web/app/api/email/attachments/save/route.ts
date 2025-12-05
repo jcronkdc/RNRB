@@ -1,4 +1,4 @@
-import { prisma } from '@cronkwaters/db';
+import { prisma, LibraryFileType } from '@cronkwaters/db';
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
         path: filePath,
         size: BigInt(size),
         mimeType,
-        type: fileType,
+        type: fileType as LibraryFileType,
         tags: tags || [`email-attachment`, `from-${messageId ? 'message' : 'email'}`],
         notes: notes || `Saved from email${messageId ? ` (Message ID: ${messageId})` : ''}`,
         collectionId: collectionId || undefined,

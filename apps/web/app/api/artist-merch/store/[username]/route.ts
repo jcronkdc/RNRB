@@ -33,7 +33,11 @@ export async function GET(
         name: true,
         username: true,
         image: true,
-        bio: true,
+        musicianProfile: {
+          select: {
+            experience: true,
+          },
+        },
       },
     });
 
@@ -80,7 +84,7 @@ export async function GET(
         name: artist.name,
         username: artist.username,
         image: artist.image,
-        bio: artist.bio,
+        bio: artist.musicianProfile?.experience,
       },
       products: products.map((p) => ({
         id: p.id,

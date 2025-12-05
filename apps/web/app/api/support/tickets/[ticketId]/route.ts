@@ -89,7 +89,7 @@ const updateSchema = z.object({
 });
 
 interface Params {
-  params: { ticketId: string };
+  params: Promise<{ ticketId: string }>;
 }
 
 /**
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest, { params }: Params) {
       throw new AppError('Authentication required', 'UNAUTHORIZED', 401);
     }
 
-    const { ticketId } = params;
+    const { ticketId } = await params;
 
     // Try to find by ticket number or ID
     const ticket = await prisma.supportTicket.findFirst({
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     const result = await getTicket(ticket.id, authUser.isAdmin ? undefined : authUser.userId);
 
     if (!result.success) {
-      throw new AppError(result.message || 'Failed to fetch ticket', 'FETCH_FAILED', 400);
+      throw new AppError(result.message || 'Failed to fetch ticket', 'INTERNAL_ERROR', 400);
     }
 
     return NextResponse.json(result.ticket);
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest, { params }: Params) {
       throw new AppError('Authentication required', 'UNAUTHORIZED', 401);
     }
 
-    const { ticketId } = params;
+    const { ticketId } = await params;
     const body = await request.json();
     const validated = replySchema.parse(body);
 
@@ -179,7 +179,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     });
 
     if (!result.success) {
-      throw new AppError(result.message, 'REPLY_FAILED', 400);
+      throw new AppError(result.message, 'INTERNAL_ERROR', 400);
     }
 
     return NextResponse.json(result);
@@ -200,7 +200,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       throw new AppError('Authentication required', 'UNAUTHORIZED', 401);
     }
 
-    const { ticketId } = params;
+    const { ticketId } = await params;
     const body = await request.json();
     const validated = updateSchema.parse(body);
 
@@ -249,7 +249,7 @@ export async function PATCH(request: NextRequest, { params }: Params) {
       );
 
       if (!result.success) {
-        throw new AppError(result.message, 'UPDATE_FAILED', 400);
+        throw new AppError(result.message, 'INTERNAL_ERROR', 400);
       }
     }
 

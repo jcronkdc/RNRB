@@ -23,7 +23,7 @@ if (!STRIPE_SECRET_KEY) {
 const WEBHOOK_URL = process.env.WEBHOOK_URL || 'https://rocknrollbasement.com';
 
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
-  apiVersion: '2025-04-30.basil',
+  apiVersion: '2025-02-24.acacia',
 });
 
 async function setupWebhook() {

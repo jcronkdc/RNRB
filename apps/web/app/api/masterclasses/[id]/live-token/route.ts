@@ -31,12 +31,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       return NextResponse.json({ error: 'Only instructors can create rooms' }, { status: 403 });
     }
 
-    if (masterclass.type !== 'live') {
+    if (masterclass.format !== 'live') {
       return NextResponse.json({ error: 'Not a live masterclass' }, { status: 400 });
     }
 
     // Create Daily.co room if doesn't exist
-    if (!masterclass.liveStreamRoomId) {
+    if (!masterclass.dailyRoomId) {
       const roomName = `mc-${masterclass.id}-${Date.now()}`;
 
       const roomResponse = await fetch('https://api.daily.co/v1/rooms', {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             enable_chat: true,
             enable_screenshare: true,
             enable_recording: 'cloud',
-            max_participants: masterclass.maxParticipants || 100,
+            max_participants: masterclass.maxStudents || 100,
             exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60, // Expires in 24 hours
           },
         }),
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       // Update masterclass with room ID
       await prisma.masterclass.update({
         where: { id: masterclassId },
-        data: { liveStreamRoomId: roomData.name },
+        data: { dailyRoomId: roomData.name },
       });
 
       return NextResponse.json({
@@ -78,8 +78,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     return NextResponse.json({
-      roomName: masterclass.liveStreamRoomId,
-      roomUrl: `https://${DAILY_DOMAIN}/${masterclass.liveStreamRoomId}`,
+      roomName: masterclass.dailyRoomId,
+      roomUrl: `https://${DAILY_DOMAIN}/${masterclass.dailyRoomId}`,
     });
   } catch (error) {
     console.error('Error creating live session:', error);
@@ -88,14 +88,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 }
 
 // GET - Get token to join live session
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const masterclassId = params.id;
+    const { id: masterclassId } = await params;
 
     // Get masterclass
     const masterclass = await prisma.masterclass.findUnique({
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Masterclass not found' }, { status: 404 });
     }
 
-    if (!masterclass.liveStreamRoomId) {
+    if (!masterclass.dailyRoomId) {
       return NextResponse.json({ error: 'No live room available' }, { status: 400 });
     }
 
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       },
       body: JSON.stringify({
         properties: {
-          room_name: masterclass.liveStreamRoomId,
+          room_name: masterclass.dailyRoomId,
           user_name: user?.name || 'Participant',
           is_owner: isInstructor,
           enable_screenshare: isInstructor,
@@ -167,7 +167,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     return NextResponse.json({
       token: tokenData.token,
-      roomUrl: `https://${DAILY_DOMAIN}/${masterclass.liveStreamRoomId}`,
+      roomUrl: `https://${DAILY_DOMAIN}/${masterclass.dailyRoomId}`,
       isInstructor,
     });
   } catch (error) {

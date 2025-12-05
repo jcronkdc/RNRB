@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { prisma } from '@cronkwaters/db';
+import { prisma, Prisma } from '@cronkwaters/db';
 import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-04-30.basil',
+  apiVersion: '2025-02-24.acacia',
 });
 
 const webhookSecret =
@@ -148,7 +148,8 @@ async function handleArtistMerchOrder(session: Stripe.Checkout.Session) {
       stripeSessionId: session.id,
       stripePaymentIntentId: session.payment_intent as string | undefined,
       shippingName: session.shipping_details?.name,
-      shippingAddress: session.shipping_details?.address || null,
+      shippingAddress:
+        (session.shipping_details?.address as unknown as Prisma.InputJsonValue) || null,
       shippingMethod: 'standard',
       shippingCost: session.shipping_cost?.amount_total || 0,
       subtotal: session.amount_subtotal || 0,

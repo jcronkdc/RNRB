@@ -23,9 +23,8 @@ export async function GET() {
             genres: true,
             availableForCollaboration: true,
             availableForGigs: true,
-            bio: true,
             location: true,
-            website: true,
+            socialLinks: true,
           },
         },
         _count: {
@@ -53,9 +52,8 @@ export async function GET() {
           take: 6,
           select: {
             id: true,
-            title: true,
-            playCount: true,
-            likeCount: true,
+            song: { select: { title: true } },
+            _count: { select: { plays: true, likes: true } },
             createdAt: true,
           },
         },
@@ -66,6 +64,40 @@ export async function GET() {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Type assertion for included relations
+    type UserWithIncludes = typeof user & {
+      musicianProfile: {
+        instruments: string[];
+        genres: string[];
+        availableForCollaboration: boolean;
+        availableForGigs: boolean;
+        bio: string | null;
+        location: string | null;
+        website: string | null;
+      } | null;
+      _count: {
+        followers: number;
+        following: number;
+        authoredPosts: number;
+        communityTracks: number;
+      };
+      authoredPosts: {
+        id: string;
+        content: string;
+        likeCount: number;
+        commentCount: number;
+        createdAt: Date;
+      }[];
+      communityTracks: {
+        id: string;
+        title: string;
+        playCount: number;
+        likeCount: number;
+        createdAt: Date;
+      }[];
+    };
+    const userData = user as UserWithIncludes;
+
     // Calculate friends count (mutual follows)
     const friendsCount = await prisma.$queryRaw<[{ count: bigint }]>`
       SELECT COUNT(*) as count
@@ -75,31 +107,31 @@ export async function GET() {
     `.then((result) => Number(result[0]?.count || 0));
 
     return NextResponse.json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      image: user.image,
-      bio: user.musicianProfile?.bio || null,
-      location: user.musicianProfile?.location || null,
-      website: user.musicianProfile?.website || null,
-      createdAt: user.createdAt.toISOString(),
-      musicianProfile: user.musicianProfile
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      image: userData.image,
+      bio: userData.musicianProfile?.bio || null,
+      location: userData.musicianProfile?.location || null,
+      website: userData.musicianProfile?.website || null,
+      createdAt: userData.createdAt.toISOString(),
+      musicianProfile: userData.musicianProfile
         ? {
-            instruments: user.musicianProfile.instruments,
-            genres: user.musicianProfile.genres,
-            availableForCollaboration: user.musicianProfile.availableForCollaboration,
-            availableForGigs: user.musicianProfile.availableForGigs,
+            instruments: userData.musicianProfile.instruments,
+            genres: userData.musicianProfile.genres,
+            availableForCollaboration: userData.musicianProfile.availableForCollaboration,
+            availableForGigs: userData.musicianProfile.availableForGigs,
           }
         : null,
       stats: {
-        followers: user._count.followers,
-        following: user._count.following,
+        followers: userData._count.followers,
+        following: userData._count.following,
         friends: friendsCount,
-        posts: user._count.authoredPosts,
-        tracks: user._count.communityTracks,
+        posts: userData._count.authoredPosts,
+        tracks: userData._count.communityTracks,
       },
-      recentPosts: user.authoredPosts,
-      recentTracks: user.communityTracks,
+      recentPosts: userData.authoredPosts,
+      recentTracks: userData.communityTracks,
     });
   } catch (error) {
     console.error('Error fetching profile:', error);

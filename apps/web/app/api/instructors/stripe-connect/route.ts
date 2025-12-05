@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter } from '@/lib/rate-limit';
+import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 
 // Lazy initialization to avoid build-time errors
@@ -19,7 +19,7 @@ function getStripe() {
 // POST - Create Stripe Connect account and onboarding link
 export async function POST(request: NextRequest) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();

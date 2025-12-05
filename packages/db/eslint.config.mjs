@@ -1,4 +1,4 @@
-import baseConfig from '@cronkwaters/config/eslint/base';
+import libraryConfig from '@cronkwaters/config/eslint/library';
 
-export default baseConfig;
+export default libraryConfig;
 

@@ -2,7 +2,7 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter } from '@/lib/rate-limit';
+import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth, getCurrentUser } from '@/lib/session';
 
 // GET - List masterclasses with filters
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Rate limit
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     // Auth required

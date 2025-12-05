@@ -92,9 +92,10 @@ export function useOfflineStatus(): OfflineStatus {
   const syncPendingActions = useCallback(async () => {
     if (!isOnline) return;
 
-    if ('serviceWorker' in navigator && 'sync' in window.SyncManager.prototype) {
+    if ('serviceWorker' in navigator && 'SyncManager' in window) {
       const registration = await navigator.serviceWorker.ready;
-      await registration.sync.register('sync-pending-actions');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (registration as any).sync?.register('sync-pending-actions');
     }
   }, [isOnline]);
 

@@ -79,9 +79,12 @@ export async function GET(req: NextRequest) {
     const pages = pagesData.data || [];
 
     const supabase = await createServerSupabaseClient();
+    if (!supabase) {
+      return NextResponse.json({ error: 'Storage service unavailable' }, { status: 503 });
+    }
 
     // Store Facebook user connection
-    await supabase.from('social_connections').upsert(
+    await (supabase.from('social_connections') as ReturnType<typeof supabase.from>).upsert(
       {
         user_id: oauthData.userId,
         platform: 'facebook',
@@ -102,7 +105,7 @@ export async function GET(req: NextRequest) {
 
     // Store each Facebook Page as a separate connection (for posting)
     for (const page of pages) {
-      await supabase.from('social_connections').upsert(
+      await (supabase.from('social_connections') as ReturnType<typeof supabase.from>).upsert(
         {
           user_id: oauthData.userId,
           platform: 'facebook',
@@ -129,7 +132,7 @@ export async function GET(req: NextRequest) {
         if (igResponse.ok) {
           const igData = await igResponse.json();
 
-          await supabase.from('social_connections').upsert(
+          await (supabase.from('social_connections') as ReturnType<typeof supabase.from>).upsert(
             {
               user_id: oauthData.userId,
               platform: 'instagram',

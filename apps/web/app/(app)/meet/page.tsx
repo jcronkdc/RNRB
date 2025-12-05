@@ -12,10 +12,10 @@ import {
   Check,
   Sparkles,
   Monitor,
+  Radio,
   // Custom musician icons
-  TourCalendar,
-  BroadcastTower,
-  BandMembers,
+  Calendar as TourCalendar,
+  Users as BandMembers,
 } from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';

@@ -123,15 +123,15 @@ export function TopBar() {
           {/* Search - Facebook-style people search */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
-            className="group flex items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-black/5 dark:hover:bg-white/5 lg:px-4"
+            className="group flex min-h-[44px] items-center gap-2 rounded-xl px-3 py-2 transition-all hover:bg-black/5 dark:hover:bg-white/5 lg:px-4"
             style={{ border: '1px solid var(--border)' }}
             aria-label="Find people (Ctrl+Shift+F)"
           >
             <Users
-              className="h-4 w-4 group-hover:text-orange-400"
+              className="h-5 w-5 group-hover:text-orange-400 lg:h-4 lg:w-4"
               style={{ color: 'var(--muted)' }}
             />
-            <span className="hidden text-sm sm:inline" style={{ color: 'var(--muted)' }}>
+            <span className="hidden text-sm md:inline" style={{ color: 'var(--muted)' }}>
               Find People
             </span>
             <div
@@ -143,12 +143,12 @@ export function TopBar() {
             </div>
           </button>
 
-          {/* Quick Create Button - Primary action, keeps brand color */}
+          {/* Quick Create Button - Hidden on mobile (in bottom nav instead) */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/create')}
-            className="gradient-btn gradient-btn-orange flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="gradient-btn gradient-btn-orange hidden items-center gap-1.5 rounded-xl px-3 py-2 font-medium md:flex lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #FF6347 0%, #FF4500 100%)',
               boxShadow: '0 4px 12px rgba(255, 99, 71, 0.3)',
@@ -156,16 +156,16 @@ export function TopBar() {
             aria-label="Create new track"
           >
             <Plus className="h-4 w-4" />
-            <span className="hidden text-sm sm:inline">New</span>
-            <Sparkles className="hidden h-3 w-3 lg:block" />
+            <span className="hidden text-sm lg:inline">New</span>
+            <Sparkles className="hidden h-3 w-3 xl:block" />
           </motion.button>
 
-          {/* Go Live Button - Subdued charcoal */}
+          {/* Go Live Button - Hidden on mobile/tablet */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/live/go')}
-            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn hidden items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:flex lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
               boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
@@ -174,17 +174,17 @@ export function TopBar() {
             aria-label="Go live - Start streaming"
           >
             <Radio className="h-4 w-4" style={{ color: '#ffffff' }} />
-            <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
+            <span className="hidden text-sm xl:inline" style={{ color: '#ffffff' }}>
               Live
             </span>
           </motion.button>
 
-          {/* Meet Button - Subdued charcoal */}
+          {/* Meet Button - Hidden on mobile/tablet */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/meet')}
-            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn hidden items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:flex lg:gap-2 lg:px-4"
             style={{
               background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
               boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
@@ -193,17 +193,17 @@ export function TopBar() {
             aria-label="Start video meeting"
           >
             <Video className="h-4 w-4" style={{ color: '#ffffff' }} />
-            <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
+            <span className="hidden text-sm xl:inline" style={{ color: '#ffffff' }}>
               Meet
             </span>
           </motion.button>
 
-          {/* Sell Merch Button - Subdued charcoal */}
+          {/* Sell Merch Button - Hidden on mobile/tablet */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/my-merch')}
-            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn hidden items-center gap-1.5 rounded-xl px-3 py-2 font-medium xl:flex xl:gap-2 xl:px-4"
             style={{
               background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
               boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
@@ -213,17 +213,17 @@ export function TopBar() {
             aria-label="Design and sell your own merchandise"
           >
             <ShoppingBag className="h-4 w-4" style={{ color: '#ffffff' }} />
-            <span className="hidden text-sm sm:inline" style={{ color: '#ffffff' }}>
+            <span className="hidden text-sm 2xl:inline" style={{ color: '#ffffff' }}>
               Merch
             </span>
           </motion.button>
 
-          {/* Email Button - Subdued charcoal */}
+          {/* Email Button - Hidden on mobile/tablet */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/mail')}
-            className="topbar-btn flex items-center gap-1.5 rounded-xl px-3 py-2 font-medium lg:gap-2 lg:px-4"
+            className="topbar-btn hidden items-center gap-1.5 rounded-xl px-3 py-2 font-medium xl:flex xl:gap-2 xl:px-4"
             style={{
               background: 'linear-gradient(135deg, #4a5568 0%, #2d3748 100%)',
               boxShadow: '0 2px 8px rgba(45, 55, 72, 0.3)',
@@ -233,7 +233,7 @@ export function TopBar() {
             aria-label="Open email - Your professional @rnrb.me email"
           >
             <Mail className="h-4 w-4" />
-            <span className="hidden text-sm sm:inline">Mail</span>
+            <span className="hidden text-sm 2xl:inline">Mail</span>
           </motion.button>
         </div>
 

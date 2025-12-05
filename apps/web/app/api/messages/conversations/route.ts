@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     try {
       messages = await prisma.chatMessage.findMany({
         where: {
-          channelType: 'dm',
+          channelType: 'direct',
           channelId: {
             contains: userId,
           },
@@ -209,7 +209,7 @@ export async function GET(request: NextRequest) {
     console.error('[Conversations API] Error details:', {
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
-      userId: session?.user?.id,
+      userId: 'unknown',
     });
     return NextResponse.json(
       {

@@ -211,7 +211,10 @@ export function ReferenceTracks({
                     {platform && (
                       <span
                         className="rounded px-1.5 py-0.5 text-xs font-medium"
-                        style={{ background: `${platformColor}20`, color: platformColor }}
+                        style={{
+                          background: `${platformColor || 'var(--muted)'}20`,
+                          color: platformColor || 'var(--muted)',
+                        }}
                       >
                         {platform}
                       </span>

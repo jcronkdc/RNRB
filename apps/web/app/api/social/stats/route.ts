@@ -48,13 +48,8 @@ export async function GET() {
       prisma.message
         .count({
           where: {
-            conversation: {
-              participants: {
-                some: { userId },
-              },
-            },
-            senderId: { not: userId },
-            readAt: null,
+            recipientId: userId,
+            isRead: false,
           },
         })
         .catch(() => 0), // Handle if Message model doesn't exist

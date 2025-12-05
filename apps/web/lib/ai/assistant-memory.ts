@@ -82,7 +82,7 @@ export interface AIMemory {
   computedPreferences: {
     favoriteKeys: string[];
     averageTempo: number;
-    preferredGenres: string[];
+    preferredTags: string[];
     writingStyle: string | null;
     frequentCollaborators: string[];
     peakProductivityDays: string[];
@@ -439,7 +439,7 @@ async function computePreferencesFromSongs(userId: string) {
     select: {
       key: true,
       tempo: true,
-      genre: true,
+      tags: true,
       createdAt: true,
     },
   });
@@ -457,13 +457,17 @@ async function computePreferencesFromSongs(userId: string) {
 
   // Analyze keys
   const keyCount: Record<string, number> = {};
-  const genreCount: Record<string, number> = {};
+  const tagCount: Record<string, number> = {};
   let tempoSum = 0;
   let tempoCount = 0;
 
   songs.forEach((s) => {
     if (s.key) keyCount[s.key] = (keyCount[s.key] || 0) + 1;
-    if (s.genre) genreCount[s.genre] = (genreCount[s.genre] || 0) + 1;
+    // Parse tags as JSON array if it's a string
+    const tags = typeof s.tags === 'string' ? JSON.parse(s.tags || '[]') : [];
+    tags.forEach((tag: string) => {
+      tagCount[tag] = (tagCount[tag] || 0) + 1;
+    });
     if (s.tempo) {
       tempoSum += s.tempo;
       tempoCount++;
@@ -475,10 +479,10 @@ async function computePreferencesFromSongs(userId: string) {
     .slice(0, 3)
     .map(([key]) => key);
 
-  const preferredGenres = Object.entries(genreCount)
+  const preferredTags = Object.entries(tagCount)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3)
-    .map(([genre]) => genre);
+    .map(([tag]) => tag);
 
   // Analyze productivity patterns
   const creationDays: Record<string, number> = {};
@@ -521,8 +525,8 @@ async function computePreferencesFromSongs(userId: string) {
   return {
     favoriteKeys,
     averageTempo: tempoCount > 0 ? Math.round(tempoSum / tempoCount) : 120,
-    preferredGenres,
-    writingStyle: preferredGenres[0] || null,
+    preferredTags,
+    writingStyle: preferredTags[0] || null,
     frequentCollaborators,
     peakProductivityDays,
     peakProductivityHours,
@@ -648,8 +652,8 @@ export function formatMemoryForAI(memory: AIMemory): string {
     section += `- Favorite Keys: ${prefs.favoriteKeys.join(', ')}\n`;
   }
   section += `- Average Tempo: ${prefs.averageTempo} BPM\n`;
-  if (prefs.preferredGenres.length > 0) {
-    section += `- Preferred Genres: ${prefs.preferredGenres.join(', ')}\n`;
+  if (prefs.preferredTags.length > 0) {
+    section += `- Preferred Genres: ${prefs.preferredTags.join(', ')}\n`;
   }
   if (prefs.frequentCollaborators.length > 0) {
     section += `- Frequent Collaborators: ${prefs.frequentCollaborators.join(', ')}\n`;

@@ -6,9 +6,12 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { nanoid } from 'nanoid';
+import { randomBytes } from 'crypto';
 
 import { auth } from '@cronkwaters/auth';
+
+// Generate a URL-safe random string
+const nanoid = (size = 21) => randomBytes(size).toString('base64url').slice(0, size);
 import { prisma } from '@cronkwaters/db';
 
 /**
@@ -44,7 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Check user has access to this setlist's org
-    const membership = await prisma.orgMembership.findFirst({
+    const membership = await prisma.membership.findFirst({
       where: {
         orgId: setlist.show.orgId,
         userId: session.user.id,
@@ -107,7 +110,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     // Check user has access
-    const membership = await prisma.orgMembership.findFirst({
+    const membership = await prisma.membership.findFirst({
       where: {
         orgId: setlist.show.orgId,
         userId: session.user.id,
@@ -181,7 +184,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Setlist not found' }, { status: 404 });
     }
 
-    const membership = await prisma.orgMembership.findFirst({
+    const membership = await prisma.membership.findFirst({
       where: {
         orgId: setlist.show.orgId,
         userId: session.user.id,

@@ -102,7 +102,7 @@ export function NotificationSettings() {
           // This is a placeholder VAPID key - in production, use your real one
           process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ||
             'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U'
-        ),
+        ) as BufferSource,
       });
 
       setIsSubscribed(true);
@@ -154,8 +154,7 @@ export function NotificationSettings() {
         icon: '/icon-192.png',
         badge: '/icon-192.png',
         tag: 'test',
-        vibrate: [200, 100, 200],
-      });
+      } as NotificationOptions);
 
       setShowTestSuccess(true);
       setTimeout(() => setShowTestSuccess(false), 3000);

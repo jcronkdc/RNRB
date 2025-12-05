@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       message = await prisma.chatMessage.create({
         data: {
           channelId: resolvedChannelId,
-          channelType: 'dm',
+          channelType: 'direct',
           senderId,
           senderName: sender?.name || sender?.email || 'Unknown',
           senderEmail: sender?.email || '',

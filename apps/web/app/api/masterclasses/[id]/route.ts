@@ -2,7 +2,7 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter } from '@/lib/rate-limit';
+import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth, getCurrentUser } from '@/lib/session';
 
 // GET - Get single masterclass by ID or slug
@@ -21,7 +21,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             userId: true,
             displayName: true,
             headline: true,
-            bio: true,
             profileImage: true,
             coverImage: true,
             credentials: true,
@@ -102,7 +101,6 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
               userId: true,
               displayName: true,
               headline: true,
-              bio: true,
               profileImage: true,
               coverImage: true,
               credentials: true,
@@ -186,7 +184,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     // Check if user is enrolled
     let enrollment = null;
-    if (user) {
+    if (user?.id) {
       enrollment = await prisma.masterclassEnrollment.findUnique({
         where: {
           masterclassId_userId: {
@@ -222,7 +220,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 // PATCH - Update masterclass (instructor only)
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();
@@ -315,7 +313,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();

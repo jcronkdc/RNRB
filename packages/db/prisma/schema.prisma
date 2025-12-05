@@ -71,6 +71,7 @@ model User {
   emailVerified           DateTime?
   password                String? // For password-based authentication
   name                    String?
+  username                String?   @unique // Public username for profile URLs
   image                   String?
   pro                     String?
   isOwner                 Boolean   @default(false) // Platform owner - bypasses ALL limits
@@ -458,6 +459,7 @@ model Song {
   tags          String?    @db.Text // JSON array of tags (Setlist, Open Mic, etc.)
   album         String? // Legacy/optional grouping
   archived      Boolean    @default(false)
+  isFavorite    Boolean    @default(false) // Quick access favorites
   visibility    Visibility @default(private)
   key           String?
   tempo         Int?

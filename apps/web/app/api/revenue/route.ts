@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
           show: {
             select: {
               id: true,
-              title: true,
+              name: true,
               date: true,
             },
           },
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        orderBy: { date: 'desc' },
+        orderBy: { earnedDate: 'desc' },
         skip,
         take: limit,
       }),
@@ -138,15 +138,10 @@ export async function POST(request: NextRequest) {
         projectId: data.projectId,
         opportunityId: data.opportunityId,
         description: data.description,
-        date: data.date ? new Date(data.date) : new Date(),
-        paidAt: data.paidAt ? new Date(data.paidAt) : null,
-        status: data.status || 'paid',
-        paymentMethod: data.paymentMethod,
-        transactionId: data.transactionId,
-        taxDeducted: data.taxDeducted,
-        feeDeducted: data.feeDeducted,
+        earnedDate: data.date ? new Date(data.date) : new Date(),
+        receivedDate: data.paidAt ? new Date(data.paidAt) : null,
+        status: data.status || 'received',
         notes: data.notes,
-        tags: data.tags || [],
       },
       include: {
         song: {
@@ -158,7 +153,7 @@ export async function POST(request: NextRequest) {
         show: {
           select: {
             id: true,
-            title: true,
+            name: true,
             date: true,
           },
         },

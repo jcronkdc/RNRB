@@ -94,6 +94,14 @@ export class AppError extends Error {
       retryAfter ? { retryAfter } : undefined
     );
   }
+
+  static internal(message = 'An internal error occurred'): AppError {
+    return new AppError(message, 'INTERNAL_ERROR', 500);
+  }
+
+  static serviceUnavailable(message = 'Service temporarily unavailable'): AppError {
+    return new AppError(message, 'SERVICE_UNAVAILABLE', 503);
+  }
 }
 
 /**

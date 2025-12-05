@@ -7,12 +7,12 @@ import { standardLimiter } from '@/lib/rate-limit';
  * GET /api/marketplace/[id]
  * Fetch a single marketplace listing
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // Rate limiting
-    const identifier = request.ip ?? 'anonymous';
+    const identifier = request.headers.get('x-forwarded-for') ?? 'anonymous';
     const { success } = await standardLimiter.check(identifier);
     if (!success) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
@@ -26,7 +26,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             id: true,
             name: true,
             image: true,
-            username: true,
             createdAt: true,
           },
         },
@@ -37,7 +36,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           select: {
             favorites: true,
             offers: true,
-            views: true,
           },
         },
       },
@@ -50,7 +48,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     // Increment view count
     await db.marketplaceListing.update({
       where: { id },
-      data: { views: { increment: 1 } },
+      data: { viewCount: { increment: 1 } },
     });
 
     return NextResponse.json({ listing });
@@ -64,14 +62,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/marketplace/[id]
  * Update a marketplace listing
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
     const data = await request.json();
 
     // Rate limiting
@@ -104,10 +102,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         price: data.price,
         condition: data.condition,
         conditionNotes: data.conditionNotes,
-        isNegotiable: data.isNegotiable,
-        acceptsTrade: data.acceptsTrade,
-        tradeNotes: data.tradeNotes,
-        shippingAvailable: data.shippingAvailable,
+        acceptsOffers: data.isNegotiable,
+        listingType: data.acceptsTrade ? 'both' : 'sell',
+        tradeFor: data.tradeNotes,
         shippingCost: data.shippingCost,
         localPickup: data.localPickup,
         status: data.status,
@@ -118,7 +115,6 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
             id: true,
             name: true,
             image: true,
-            username: true,
           },
         },
         images: true,
@@ -136,14 +132,17 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/marketplace/[id]
  * Delete a marketplace listing
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { id } = params;
+    const { id } = await params;
 
     // Check ownership
     const existing = await db.marketplaceListing.findUnique({

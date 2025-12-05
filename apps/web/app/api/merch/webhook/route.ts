@@ -1,10 +1,10 @@
 import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
-import { prisma } from '@cronkwaters/db';
+import { prisma, Prisma } from '@cronkwaters/db';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-04-30.basil',
+  apiVersion: '2025-02-24.acacia',
 });
 
 const webhookSecret = process.env.STRIPE_MERCH_WEBHOOK_SECRET || '';
@@ -169,7 +169,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
         customerName: session.customer_details?.name || undefined,
         shippingName: session.shipping_details?.name || undefined,
         shippingAddress: session.shipping_details?.address
-          ? session.shipping_details.address
+          ? (session.shipping_details.address as unknown as Prisma.InputJsonValue)
           : undefined,
         shippingMethod: session.shipping_cost?.shipping_rate ? 'standard' : undefined,
         items: items,

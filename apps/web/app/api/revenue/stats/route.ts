@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       by: ['source'],
       where: {
         userId: session.user.id,
-        date: { gte: startDate },
+        earnedDate: { gte: startDate },
       },
       _sum: {
         amount: true,
@@ -63,20 +63,20 @@ export async function GET(request: NextRequest) {
     const revenues = await db.revenue.findMany({
       where: {
         userId: session.user.id,
-        date: { gte: startDate },
+        earnedDate: { gte: startDate },
       },
       select: {
-        date: true,
+        earnedDate: true,
         amount: true,
         netAmount: true,
         source: true,
       },
-      orderBy: { date: 'asc' },
+      orderBy: { earnedDate: 'asc' },
     });
 
     // Group by month
     const monthlyRevenue = revenues.reduce((acc: any, rev) => {
-      const month = rev.date.toISOString().slice(0, 7); // YYYY-MM
+      const month = rev.earnedDate.toISOString().slice(0, 7); // YYYY-MM
       if (!acc[month]) {
         acc[month] = {
           month,
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
     const totalRevenue = await db.revenue.aggregate({
       where: {
         userId: session.user.id,
-        date: { gte: startDate },
+        earnedDate: { gte: startDate },
       },
       _sum: {
         amount: true,
@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       where: {
         userId: session.user.id,
         songId: { not: null },
-        date: { gte: startDate },
+        earnedDate: { gte: startDate },
       },
       _sum: {
         amount: true,

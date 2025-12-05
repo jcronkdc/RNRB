@@ -31,7 +31,7 @@ export async function GET() {
         channelId: {
           contains: userId,
         },
-        channelType: 'dm',
+        channelType: 'direct',
         senderId: {
           not: userId,
         },
@@ -91,7 +91,7 @@ export async function GET() {
             channelId: {
               contains: userId,
             },
-            channelType: 'dm',
+            channelType: 'direct',
             senderId,
             isDeleted: false,
           },
@@ -109,7 +109,7 @@ export async function GET() {
         const messageCount = await prisma.chatMessage.count({
           where: {
             channelId: latestMessage?.channelId,
-            channelType: 'dm',
+            channelType: 'direct',
             senderId,
             isDeleted: false,
           },

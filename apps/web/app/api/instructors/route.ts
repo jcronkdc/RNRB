@@ -2,7 +2,7 @@ import { prisma } from '@cronkwaters/db';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter } from '@/lib/rate-limit';
+import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth, getCurrentUser } from '@/lib/session';
 
 // GET - List instructors or get current user's instructor profile
@@ -115,7 +115,7 @@ export async function GET(request: NextRequest) {
 // POST - Become an instructor
 export async function POST(request: NextRequest) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
 // PATCH - Update instructor profile
 export async function PATCH(request: NextRequest) {
   try {
-    const rateLimitResult = await strictLimiter(request);
+    const rateLimitResult = await checkStrictLimit(request);
     if (rateLimitResult) return rateLimitResult;
 
     const user = await requireAuth();

@@ -108,10 +108,8 @@ async function searchProjects(userId: string, query: string, limit: number): Pro
   const projects = await prisma.project.findMany({
     where: {
       OR: [
-        // User's own projects
-        { ownerId: userId },
-        // Collaborating projects
-        { collaborators: { some: { userId } } },
+        // User's projects (member of)
+        { members: { some: { userId } } },
         // Public projects matching query
         { visibility: 'public' },
       ],
@@ -130,11 +128,10 @@ async function searchProjects(userId: string, query: string, limit: number): Pro
       visibility: true,
       coverImage: true,
       updatedAt: true,
-      owner: {
+      org: {
         select: {
           id: true,
           name: true,
-          image: true,
         },
       },
       _count: {
@@ -155,7 +152,7 @@ async function searchProjects(userId: string, query: string, limit: number): Pro
     href: `/projects/${p.slug}`,
     image: p.coverImage,
     visibility: p.visibility,
-    owner: p.owner,
+    owner: p.org ? { id: p.org.id, name: p.org.name, image: null } : null,
     updatedAt: p.updatedAt.toISOString(),
   }));
 }
@@ -170,9 +167,7 @@ async function searchSongs(userId: string, query: string, limit: number): Promis
         // User's own songs
         { userId },
         // Songs in user's projects
-        { project: { ownerId: userId } },
-        // Songs in collaborating projects
-        { project: { collaborators: { some: { userId } } } },
+        { project: { members: { some: { userId } } } },
         // Public project songs
         { project: { visibility: 'public' } },
       ],
@@ -187,7 +182,6 @@ async function searchSongs(userId: string, query: string, limit: number): Promis
       id: true,
       title: true,
       status: true,
-      isFavorite: true,
       updatedAt: true,
       projectId: true,
       project: {
@@ -216,7 +210,7 @@ async function searchSongs(userId: string, query: string, limit: number): Promis
     subtitle: s.project ? `in ${s.project.name}` : 'Standalone song',
     href: s.project ? `/projects/${s.project.slug}/songs/${s.id}` : `/songwriting?song=${s.id}`,
     status: s.status,
-    isFavorite: s.isFavorite,
+    isFavorite: false, // Not in schema
     owner: s.user,
     updatedAt: s.updatedAt.toISOString(),
   }));
@@ -276,7 +270,7 @@ async function searchUsers(userId: string, query: string, limit: number): Promis
 async function searchMessages(userId: string, query: string, limit: number): Promise<any[]> {
   const messages = await prisma.chatMessage.findMany({
     where: {
-      channelType: 'dm',
+      channelType: 'direct',
       channelId: { contains: userId },
       isDeleted: false,
       content: { contains: query, mode: 'insensitive' },
@@ -358,7 +352,7 @@ async function searchFiles(userId: string, query: string, limit: number): Promis
     id: f.id,
     type: 'file' as const,
     title: f.name,
-    subtitle: formatFileInfo(f.type, f.size, f.duration),
+    subtitle: formatFileInfo(f.type, Number(f.size), f.duration),
     href: `/library?file=${f.id}`,
     fileType: f.type,
     isFavorite: f.isFavorite,
@@ -373,10 +367,11 @@ async function searchFiles(userId: string, query: string, limit: number): Promis
 async function searchShows(userId: string, query: string, limit: number): Promise<any[]> {
   const shows = await prisma.show.findMany({
     where: {
-      userId,
+      org: { memberships: { some: { userId } } },
       OR: [
-        { venue: { contains: query, mode: 'insensitive' } },
-        { city: { contains: query, mode: 'insensitive' } },
+        { name: { contains: query, mode: 'insensitive' } },
+        { venue: { name: { contains: query, mode: 'insensitive' } } },
+        { venue: { city: { contains: query, mode: 'insensitive' } } },
         { notes: { contains: query, mode: 'insensitive' } },
       ],
     },
@@ -384,13 +379,18 @@ async function searchShows(userId: string, query: string, limit: number): Promis
     take: limit,
     select: {
       id: true,
-      venue: true,
-      city: true,
-      state: true,
-      country: true,
+      name: true,
       date: true,
       status: true,
       tourId: true,
+      venue: {
+        select: {
+          name: true,
+          city: true,
+          state: true,
+          country: true,
+        },
+      },
       tour: {
         select: {
           id: true,
@@ -403,8 +403,8 @@ async function searchShows(userId: string, query: string, limit: number): Promis
   return shows.map((s) => ({
     id: s.id,
     type: 'show' as const,
-    title: s.venue,
-    subtitle: formatShowLocation(s.city, s.state, s.country),
+    title: s.venue?.name || s.name,
+    subtitle: formatShowLocation(s.venue?.city, s.venue?.state, s.venue?.country),
     href: `/tours${s.tourId ? `/${s.tourId}` : ''}?show=${s.id}`,
     date: s.date.toISOString(),
     status: s.status,
@@ -462,9 +462,9 @@ function formatFileInfo(type: string, size: number | null, duration: number | nu
 }
 
 function formatShowLocation(
-  city: string | null,
-  state: string | null,
-  country: string | null
+  city?: string | null,
+  state?: string | null,
+  country?: string | null
 ): string {
   return [city, state, country].filter(Boolean).join(', ');
 }

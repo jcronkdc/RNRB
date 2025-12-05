@@ -80,7 +80,7 @@ export async function PATCH(request: Request) {
           username: username || null,
           bio: bio || null,
         },
-        portfolio: null,
+        portfolio: undefined,
       },
       update: {
         instruments: instruments || [],
