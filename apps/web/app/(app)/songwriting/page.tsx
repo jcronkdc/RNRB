@@ -5,6 +5,9 @@ import { useSession } from 'next-auth/react';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { SongEditor, type SongSection } from '@/components/songwriting/song-editor';
+import { TalkbackStrip } from '@/components/songwriting/talkback-strip';
+import { InviteCollaborator } from '@/components/songwriting/invite-collaborator';
+import { UserPlus } from '@/components/ui/custom-icons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 export default function SongwritingPage() {
@@ -17,7 +20,8 @@ export default function SongwritingPage() {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string>('');
-  const [collaborators, setCollaborators] = useState<Array<{ name: string; color: string }>>([]);
+  const [collaborators, setCollaborators] = useState<Array<{ userId: string; userName: string; userColor: string }>>([]);
+  const [showInvite, setShowInvite] = useState(false);
 
   // Create or load a song on first load
   useEffect(() => {
@@ -150,20 +154,44 @@ export default function SongwritingPage() {
           )}
         </div>
 
-        {/* Collaborator presence — shown when others are in the song */}
-        {collaborators.length > 0 && (
-          <div className="fixed right-6 top-28 z-10 flex items-center gap-1">
+        {/* Invite button — always available */}
+        {songId && (
+          <div className="fixed right-6 top-28 z-10 flex items-center gap-2">
+            {/* Collaborator avatars */}
             {collaborators.map((c, i) => (
               <div
                 key={i}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium text-white"
-                style={{ backgroundColor: c.color }}
-                title={c.name}
+                style={{ backgroundColor: c.userColor }}
+                title={c.userName}
               >
-                {c.name.charAt(0).toUpperCase()}
+                {c.userName.charAt(0).toUpperCase()}
               </div>
             ))}
+
+            {/* Invite button */}
+            <button
+              onClick={() => setShowInvite(true)}
+              className="flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-all hover:bg-white/5"
+              style={{
+                border: '1px dashed var(--border)',
+                color: 'var(--muted)',
+              }}
+            >
+              <UserPlus className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Invite</span>
+            </button>
           </div>
+        )}
+
+        {/* Invite panel */}
+        {songId && (
+          <InviteCollaborator
+            songId={songId}
+            songTitle={initialTitle}
+            isOpen={showInvite}
+            onClose={() => setShowInvite(false)}
+          />
         )}
 
         {/* The writing surface */}
@@ -171,6 +199,8 @@ export default function SongwritingPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
+          // Add bottom padding when talkback strip is visible
+          style={{ paddingBottom: collaborators.length > 0 ? '72px' : '0' }}
         >
           <SongEditor
             title={initialTitle}
@@ -180,6 +210,17 @@ export default function SongwritingPage() {
           />
         </motion.div>
       </div>
+
+      {/* The Room — talkback strip */}
+      {songId && user && (
+        <TalkbackStrip
+          songId={songId}
+          userId={user.id}
+          userName={user.name || user.email?.split('@')[0] || 'You'}
+          userColor="#e85d3b"
+          collaborators={collaborators}
+        />
+      )}
     </div>
   );
 }
