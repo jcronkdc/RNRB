@@ -93,7 +93,7 @@ function DeploymentSuccessContent() {
   const [siteHealth, setSiteHealth] = useState<SiteHealth>({
     ssl: 'pending',
     cdn: 'pending',
-    dns: 'pending',
+    dns: 'propagating',
     uptime: 100,
     responseTime: 0,
     lastChecked: new Date(),

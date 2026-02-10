@@ -4308,6 +4308,12 @@ export const GitCompare = createIcon(
 
 // LucideIcon type already exported at top of file
 
+
+// Semantic aliases (used across the app)
+export const SongManuscript = Music4;
+export const VinylRecord = Disc3;
+export const VintageCondenserMic = Mic2;
+
 // Export all icons for easy access
 export const Icons = {
   Activity,
@@ -4457,6 +4463,9 @@ export const Icons = {
   Mic,
   Mic2,
   MicOff,
+  SongManuscript,
+  VinylRecord,
+  VintageCondenserMic,
   MixingConsole,
   Minimize2,
   Minus,
@@ -4602,3 +4611,4 @@ export const Icons = {
 } as const;
 
 export default Icons;
+

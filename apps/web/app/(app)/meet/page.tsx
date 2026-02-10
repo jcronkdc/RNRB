@@ -602,7 +602,7 @@ export default function MeetPage() {
             title="No meetings yet"
             description="Start an instant meeting or schedule one for later"
             actionLabel="Start Instant Meeting"
-            onAction={handleInstantMeeting}
+            onAction={createInstantMeeting}
           />
         )}
 
