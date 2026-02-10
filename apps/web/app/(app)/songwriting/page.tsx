@@ -10,38 +10,70 @@ import { useRequireAuth } from '@/hooks/use-require-auth';
 export default function SongwritingPage() {
   useRequireAuth();
   const { data: session } = useSession();
+  const user = session?.user;
   const [songId, setSongId] = useState<string | null>(null);
+  const [initialTitle, setInitialTitle] = useState('Untitled Song');
+  const [initialSections, setInitialSections] = useState<SongSection[] | undefined>(undefined);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string>('');
+  const [collaborators, setCollaborators] = useState<Array<{ name: string; color: string }>>([]);
 
-  // Create a song on first load
+  // Create or load a song on first load
   useEffect(() => {
-    if (!session?.user?.id || songId) return;
+    if (!user?.id || songId) return;
 
-    const createSong = async () => {
-      try {
-        const response = await fetch('/api/songs', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            title: 'Untitled Song',
-            status: 'draft',
-            visibility: 'private',
-          }),
-        });
+    // Check URL for a song ID (e.g., /songwriting?id=xxx)
+    const params = new URLSearchParams(window.location.search);
+    const existingSongId = params.get('id');
 
-        if (response.ok) {
-          const { song } = await response.json();
-          setSongId(song.id);
+    if (existingSongId) {
+      // Load existing song
+      const loadSong = async () => {
+        try {
+          const response = await fetch(`/api/songs/${existingSongId}`);
+          if (response.ok) {
+            const { song } = await response.json();
+            setSongId(song.id);
+            setInitialTitle(song.title || 'Untitled Song');
+            // Parse lyrics into sections if they exist
+            if (song.lyrics) {
+              const sections = parseLyricsToSections(song.lyrics);
+              setInitialSections(sections);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to load song:', error);
         }
-      } catch (error) {
-        console.error('Failed to create song:', error);
-      }
-    };
+      };
+      loadSong();
+    } else {
+      // Create new song
+      const createSong = async () => {
+        try {
+          const response = await fetch('/api/songs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: 'Untitled Song',
+              status: 'draft',
+              visibility: 'private',
+            }),
+          });
 
-    createSong();
-  }, [session?.user?.id, songId]);
+          if (response.ok) {
+            const { song } = await response.json();
+            setSongId(song.id);
+            // Update URL without full navigation
+            window.history.replaceState({}, '', `/songwriting?id=${song.id}`);
+          }
+        } catch (error) {
+          console.error('Failed to create song:', error);
+        }
+      };
+      createSong();
+    }
+  }, [user?.id, songId]);
 
   // Debounced auto-save
   const autoSave = useCallback(
@@ -79,16 +111,7 @@ export default function SongwritingPage() {
     (sections: SongSection[]) => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
 
-      // Convert sections to lyrics string
-      const lyrics = sections
-        .map((s) => {
-          const label = s.type !== 'freeform'
-            ? `[${s.type.charAt(0).toUpperCase() + s.type.slice(1)}]\n`
-            : '';
-          return `${label}${s.content}`;
-        })
-        .join('\n\n');
-
+      const lyrics = sectionsToLyrics(sections);
       saveTimerRef.current = setTimeout(() => autoSave({ lyrics }), 2000);
     },
     [autoSave]
@@ -127,6 +150,22 @@ export default function SongwritingPage() {
           )}
         </div>
 
+        {/* Collaborator presence — shown when others are in the song */}
+        {collaborators.length > 0 && (
+          <div className="fixed right-6 top-28 z-10 flex items-center gap-1">
+            {collaborators.map((c, i) => (
+              <div
+                key={i}
+                className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium text-white"
+                style={{ backgroundColor: c.color }}
+                title={c.name}
+              >
+                {c.name.charAt(0).toUpperCase()}
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* The writing surface */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -134,7 +173,8 @@ export default function SongwritingPage() {
           transition={{ duration: 0.3 }}
         >
           <SongEditor
-            title="Untitled Song"
+            title={initialTitle}
+            initialSections={initialSections}
             onTitleChange={handleTitleChange}
             onSectionsChange={handleSectionsChange}
           />
@@ -142,4 +182,56 @@ export default function SongwritingPage() {
       </div>
     </div>
   );
+}
+
+// ============================================
+// Helpers: parse lyrics <-> sections
+// ============================================
+
+function parseLyricsToSections(lyrics: string): SongSection[] {
+  const sections: SongSection[] = [];
+  // Split on section headers like [Verse], [Chorus], etc.
+  const parts = lyrics.split(/\n*(\[[^\]]+\])\n*/);
+
+  let currentType: SongSection['type'] = 'freeform';
+
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+
+    // Check if this part is a section header
+    const headerMatch = trimmed.match(/^\[([^\]]+)\]$/);
+    if (headerMatch) {
+      const label = headerMatch[1].toLowerCase().trim();
+      if (label.startsWith('verse')) currentType = 'verse';
+      else if (label.startsWith('chorus')) currentType = 'chorus';
+      else if (label.startsWith('bridge')) currentType = 'bridge';
+      else if (label.startsWith('pre-chorus') || label.startsWith('pre chorus')) currentType = 'pre-chorus';
+      else if (label.startsWith('intro')) currentType = 'intro';
+      else if (label.startsWith('outro')) currentType = 'outro';
+      else currentType = 'freeform';
+      continue;
+    }
+
+    // This is content — create a section
+    sections.push({
+      id: Math.random().toString(36).substring(2, 10),
+      type: currentType,
+      content: trimmed,
+    });
+    currentType = 'freeform'; // Reset after using
+  }
+
+  return sections.length > 0 ? sections : [{ id: Math.random().toString(36).substring(2, 10), type: 'freeform', content: '' }];
+}
+
+function sectionsToLyrics(sections: SongSection[]): string {
+  return sections
+    .map((s) => {
+      const label = s.type !== 'freeform'
+        ? `[${s.type.charAt(0).toUpperCase() + s.type.slice(1)}]\n`
+        : '';
+      return `${label}${s.content}`;
+    })
+    .join('\n\n');
 }
