@@ -72,8 +72,43 @@ function createPrismaClient(): PrismaClient {
   return client;
 }
 
+// Build-time stub: returns a proxy that allows module-level setup ($extends, $use)
+// but throws a clear error if any actual DB operation is attempted.
+function createBuildTimeStub(): PrismaClient {
+  const handler: ProxyHandler<object> = {
+    get(_target, prop) {
+      // Allow promise-like checks (Next.js internals)
+      if (prop === 'then' || prop === Symbol.toPrimitive || prop === Symbol.toStringTag) return undefined;
+      // Allow lifecycle methods as no-ops
+      if (prop === '$connect' || prop === '$disconnect') return () => Promise.resolve();
+      // Allow $use (middleware registration) as a no-op
+      if (prop === '$use') return () => {};
+      // Allow $extends to return another proxy (chainable)
+      if (prop === '$extends') return () => new Proxy({}, handler);
+      // Allow $queryRaw (used in dev connection test) as a no-op
+      if (prop === '$queryRaw') return () => Promise.resolve([]);
+      // Any actual model access throws a clear error
+      return new Proxy(() => {}, {
+        get() {
+          throw new Error(
+            `DATABASE_URL is not set — cannot perform DB operations at build time.`
+          );
+        },
+        apply() {
+          throw new Error(
+            `DATABASE_URL is not set — cannot perform DB operations at build time.`
+          );
+        },
+      });
+    },
+  };
+  return new Proxy({} as PrismaClient, handler);
+}
+
 // Check global cache first, then create new instance if needed (singleton pattern)
-const basePrisma = globalForPrisma.__cronkwatersPrisma ?? createPrismaClient();
+const basePrisma: PrismaClient =
+  globalForPrisma.__cronkwatersPrisma ??
+  (process.env.DATABASE_URL ? createPrismaClient() : createBuildTimeStub());
 
 // Store in global to prevent multiple instances in development (hot reload)
 if (process.env.NODE_ENV !== 'production') {
