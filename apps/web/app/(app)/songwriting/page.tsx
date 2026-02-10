@@ -7,7 +7,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { SongEditor, type SongSection } from '@/components/songwriting/song-editor';
 import { TalkbackStrip } from '@/components/songwriting/talkback-strip';
 import { InviteCollaborator } from '@/components/songwriting/invite-collaborator';
-import { UserPlus } from '@/components/ui/custom-icons';
+import { ToolsDrawer } from '@/components/songwriting/tools-drawer';
+import { UserPlus, Wrench } from '@/components/ui/custom-icons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
 
 export default function SongwritingPage() {
@@ -22,6 +23,7 @@ export default function SongwritingPage() {
   const lastSavedRef = useRef<string>('');
   const [collaborators, setCollaborators] = useState<Array<{ userId: string; userName: string; userColor: string }>>([]);
   const [showInvite, setShowInvite] = useState(false);
+  const [showTools, setShowTools] = useState(false);
 
   // Create or load a song on first load
   useEffect(() => {
@@ -169,6 +171,19 @@ export default function SongwritingPage() {
               </div>
             ))}
 
+            {/* Tools button */}
+            <button
+              onClick={() => setShowTools(true)}
+              className="flex h-8 w-8 items-center justify-center rounded-full transition-all hover:bg-white/5"
+              style={{
+                border: '1px solid var(--border)',
+                color: 'var(--muted)',
+              }}
+              title="Tools & Splits"
+            >
+              <Wrench className="h-3.5 w-3.5" />
+            </button>
+
             {/* Invite button */}
             <button
               onClick={() => setShowInvite(true)}
@@ -210,6 +225,17 @@ export default function SongwritingPage() {
           />
         </motion.div>
       </div>
+
+      {/* Tools drawer */}
+      {songId && (
+        <ToolsDrawer
+          isOpen={showTools}
+          onClose={() => setShowTools(false)}
+          songId={songId}
+          songTitle={initialTitle}
+          ownerName={user?.name || user?.email?.split('@')[0]}
+        />
+      )}
 
       {/* The Room — talkback strip */}
       {songId && user && (

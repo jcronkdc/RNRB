@@ -64,12 +64,23 @@ export type CopyrightInfo = {
   registrationNumber?: string;
 };
 
+type Collaborator = {
+  userId: string;
+  name: string;
+  email: string;
+  role?: string;
+};
+
 type CopyrightManagerProps = {
   songId?: string;
   songTitle?: string;
   audioUrl?: string;
   audioPath?: string;
   initialData?: CopyrightInfo;
+  /** Collaborators on this song — used to auto-populate splits */
+  collaborators?: Collaborator[];
+  /** The song owner */
+  ownerName?: string;
   onUpdate: (info: CopyrightInfo) => void;
   onAudioUpdate?: (url: string, path: string) => void;
   onAudioRemove?: () => void;
@@ -99,6 +110,8 @@ export function CopyrightManager({
   audioUrl,
   audioPath,
   initialData,
+  collaborators,
+  ownerName,
   onUpdate,
   onAudioUpdate,
   onAudioRemove,
@@ -117,6 +130,38 @@ export function CopyrightManager({
     role: 'writer',
     percentage: 0,
   });
+
+  // Auto-populate splits from collaborators when splits are empty
+  useEffect(() => {
+    if (copyrightInfo.splits.length > 0) return; // Don't overwrite existing splits
+    if (!collaborators?.length && !ownerName) return;
+
+    const people: string[] = [];
+    if (ownerName) people.push(ownerName);
+    if (collaborators) {
+      for (const c of collaborators) {
+        const name = c.name || c.email.split('@')[0];
+        if (!people.includes(name)) people.push(name);
+      }
+    }
+
+    if (people.length === 0) return;
+
+    // Equal split among all people
+    const equalShare = Math.floor(100 / people.length);
+    const remainder = 100 - equalShare * people.length;
+
+    const autoSplits: SongSplit[] = people.map((name, i) => ({
+      contributorName: name,
+      role: 'writer' as const,
+      percentage: equalShare + (i === 0 ? remainder : 0), // Give remainder to first person
+    }));
+
+    setCopyrightInfo((prev) => ({
+      ...prev,
+      splits: autoSplits,
+    }));
+  }, [collaborators, ownerName]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Calculate total split percentage
   const totalSplitPercentage = copyrightInfo.splits.reduce(
