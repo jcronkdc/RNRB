@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import { handleApiError, AppError } from '@/lib/errors';
 import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
+import { canReadSong, canEditSong, isSongOwner } from '@/lib/song-access';
 
 type RouteContext = {
   params: Promise<{
@@ -23,16 +24,23 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
     // Rate limit: 100 requests per minute for reads
     await checkRateLimit(standardLimiter, `song-read:${user.id}`);
 
+    // Check access: owner, collaborator, project member, or public
+    const hasAccess = await canReadSong(songId, user.id);
+    if (!hasAccess) {
+      throw AppError.forbidden('You do not have access to this song');
+    }
+
     const song = await db.song.findUnique({
-      where: {
-        id: songId,
-      },
+      where: { id: songId },
       include: {
         user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
+          select: { id: true, name: true, email: true },
+        },
+        collaborators: {
+          include: {
+            user: {
+              select: { id: true, name: true, email: true, image: true },
+            },
           },
         },
       },
@@ -40,11 +48,6 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
 
     if (!song) {
       throw AppError.notFound('Song');
-    }
-
-    // Check access: owner or public song
-    if (song.userId !== user.id && song.visibility !== 'public') {
-      throw AppError.forbidden('You do not have access to this song');
     }
 
     return NextResponse.json({ song });
@@ -65,17 +68,9 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     // Rate limit: 60 updates per minute (allows fast auto-save)
     await checkRateLimit(standardLimiter, `song-update:${user.id}`);
 
-    // Verify ownership
-    const existing = await db.song.findUnique({
-      where: { id: songId },
-      select: { userId: true },
-    });
-
-    if (!existing) {
-      throw AppError.notFound('Song');
-    }
-
-    if (existing.userId !== user.id) {
+    // Check edit access: owner, collaborator, or project member
+    const hasEditAccess = await canEditSong(songId, user.id);
+    if (!hasEditAccess) {
       throw AppError.forbidden('You do not have permission to edit this song');
     }
 
@@ -140,18 +135,10 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
     // Rate limit: 10 deletes per minute
     await checkRateLimit(strictLimiter, `song-delete:${user.id}`);
 
-    // Verify ownership
-    const existing = await db.song.findUnique({
-      where: { id: songId },
-      select: { userId: true },
-    });
-
-    if (!existing) {
-      throw AppError.notFound('Song');
-    }
-
-    if (existing.userId !== user.id) {
-      throw AppError.forbidden('You do not have permission to delete this song');
+    // Only the owner can delete a song
+    const isOwner = await isSongOwner(songId, user.id);
+    if (!isOwner) {
+      throw AppError.forbidden('Only the song owner can delete this song');
     }
 
     // Soft delete by archiving
