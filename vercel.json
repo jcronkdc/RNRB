@@ -1,7 +1,7 @@
 {
   "framework": "nextjs",
   "outputDirectory": "apps/web/.next",
-  "ignoreCommand": "git diff HEAD^ HEAD --quiet -- apps/web/ packages/",
+  "buildCommand": "cd apps/web && pnpm run build",
   "functions": {
     "apps/web/app/api/**/*.ts": {
       "memory": 1024,
