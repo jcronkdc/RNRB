@@ -251,9 +251,19 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'File path required' }, { status: 400 });
     }
 
+    // Security: Prevent path traversal and ensure user owns the file
+    // Files are stored as: userId/filename or similar user-scoped paths
+    const normalizedPath = filePath.replace(/\.\./g, '').replace(/\/\//g, '/');
+    if (normalizedPath !== filePath || !filePath.startsWith(userId + '/')) {
+      return NextResponse.json(
+        { error: 'Access denied: you can only delete your own files' },
+        { status: 403 }
+      );
+    }
+
     // Delete from Supabase Storage
     const supabase = getSupabaseStorageClient();
-    const { error: deleteError } = await supabase.storage.from('audio-files').remove([filePath]);
+    const { error: deleteError } = await supabase.storage.from('audio-files').remove([normalizedPath]);
 
     if (deleteError) {
       console.error('Delete error:', deleteError);

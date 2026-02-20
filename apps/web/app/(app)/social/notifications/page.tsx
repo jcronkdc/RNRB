@@ -173,7 +173,7 @@ export default function NotificationsPage() {
       case 'like':
       case 'comment':
       case 'mention':
-        return notification.data?.postId ? `/social/post/${notification.data.postId}` : '/social';
+        return notification.data?.postId ? `/feed/post/${notification.data.postId}` : '/social';
       case 'track_like':
         return notification.data?.trackId
           ? `/library/track/${notification.data.trackId}`

@@ -449,6 +449,48 @@ export function SongEditor({
   const [showAddMenu, setShowAddMenu] = useState(false);
   const addMenuRef = useRef<HTMLDivElement>(null);
 
+  // Undo/redo history
+  const undoStackRef = useRef<string[]>([]);
+  const redoStackRef = useRef<string[]>([]);
+  const lastSnapshotRef = useRef<string>(JSON.stringify(initialSections || []));
+
+  const pushUndoState = useCallback(() => {
+    const snapshot = JSON.stringify(sections);
+    if (snapshot !== lastSnapshotRef.current) {
+      undoStackRef.current.push(lastSnapshotRef.current);
+      if (undoStackRef.current.length > 50) undoStackRef.current.shift();
+      redoStackRef.current = [];
+      lastSnapshotRef.current = snapshot;
+    }
+  }, [sections]);
+
+  // Keyboard shortcuts: Cmd+Z / Cmd+Shift+Z
+  useEffect(() => {
+    if (readOnly) return;
+    const handleKeyDown = (e: globalThis.KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
+        if (undoStackRef.current.length > 0) {
+          e.preventDefault();
+          redoStackRef.current.push(JSON.stringify(sections));
+          const previous = undoStackRef.current.pop()!;
+          lastSnapshotRef.current = previous;
+          setSections(JSON.parse(previous));
+        }
+      }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
+        if (redoStackRef.current.length > 0) {
+          e.preventDefault();
+          undoStackRef.current.push(JSON.stringify(sections));
+          const next = redoStackRef.current.pop()!;
+          lastSnapshotRef.current = next;
+          setSections(JSON.parse(next));
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [sections, readOnly]);
+
   // Notify parent of changes
   useEffect(() => {
     onSectionsChange?.(sections);
@@ -474,13 +516,15 @@ export function SongEditor({
 
   // Change section type
   const changeSectionType = useCallback((id: string, type: SectionType) => {
+    pushUndoState();
     setSections((prev) =>
       prev.map((s) => (s.id === id ? { ...s, type } : s))
     );
-  }, []);
+  }, [pushUndoState]);
 
   // Remove a section
   const removeSection = useCallback((id: string) => {
+    pushUndoState();
     setSections((prev) => {
       const filtered = prev.filter((s) => s.id !== id);
       // Always keep at least one section
@@ -492,6 +536,7 @@ export function SongEditor({
 
   // Add a new section after a specific index
   const addSection = useCallback((afterIndex: number, type: SectionType = 'freeform') => {
+    pushUndoState();
     const newId = generateId();
     setSections((prev) => {
       const next = [...prev];

@@ -50,8 +50,8 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: dark)', color: '#1c1915' },
-    { media: '(prefers-color-scheme: light)', color: '#FFFFFF' },
+    { media: '(prefers-color-scheme: dark)', color: '#0c0a09' },
+    { media: '(prefers-color-scheme: light)', color: '#fafaf9' },
   ],
 };
 

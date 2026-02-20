@@ -267,7 +267,7 @@ export default function CollaborationDashboard() {
                   Start Video Meeting
                 </button>
                 <button
-                  onClick={() => router.push('/live')}
+                  onClick={() => router.push('/meet')}
                   className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold text-white transition-all hover:scale-[1.02]"
                   style={{
                     background: 'linear-gradient(135deg, #ef4444 0%, #ec4899 100%)',

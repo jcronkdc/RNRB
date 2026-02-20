@@ -125,7 +125,8 @@ export async function createCreditCheckout(productKey: CreditProductKey) {
   }
 
   const customerId = await getOrCreateStripeCustomer();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const { getBaseUrl } = await import('@/lib/get-base-url');
+  const appUrl = getBaseUrl();
 
   const metadata: Record<string, string> = {
     userId: user.id,

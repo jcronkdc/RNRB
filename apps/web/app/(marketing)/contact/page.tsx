@@ -235,7 +235,7 @@ export default function ContactPage() {
             <div className="card">
               <div
                 className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
-                style={{ background: 'rgba(139, 92, 246, 0.2)', color: '#8b5cf6' }}
+                style={{ background: 'var(--violet-muted)', color: 'var(--violet)' }}
               >
                 <EmailIcon className="h-7 w-7" />
               </div>
@@ -247,10 +247,10 @@ export default function ContactPage() {
               <div className="mb-6 space-y-3">
                 <a
                   href="mailto:support@rnrb.me"
-                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-purple-500/50"
+                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
                   style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
                 >
-                  <TicketIcon className="h-5 w-5 flex-shrink-0" style={{ color: '#8b5cf6' }} />
+                  <TicketIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--violet)' }} />
                   <div>
                     <div className="font-medium">support@rnrb.me</div>
                     <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -260,10 +260,10 @@ export default function ContactPage() {
                 </a>
                 <a
                   href="mailto:info@rnrb.me"
-                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-purple-500/50"
+                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
                   style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
                 >
-                  <QuestionIcon className="h-5 w-5 flex-shrink-0" style={{ color: '#8b5cf6' }} />
+                  <QuestionIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--violet)' }} />
                   <div>
                     <div className="font-medium">info@rnrb.me</div>
                     <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -282,7 +282,7 @@ export default function ContactPage() {
             <div className="card">
               <div
                 className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
-                style={{ background: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' }}
+                style={{ background: 'var(--sage-muted)', color: 'var(--sage)' }}
               >
                 <BusinessIcon className="h-7 w-7" />
               </div>
@@ -293,10 +293,10 @@ export default function ContactPage() {
               </p>
               <a
                 href="mailto:business@rnrb.me"
-                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-green-500/50"
+                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
                 style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
               >
-                <EmailIcon className="h-5 w-5 flex-shrink-0" style={{ color: '#22c55e' }} />
+                <EmailIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--sage)' }} />
                 <div>
                   <div className="font-medium">business@rnrb.me</div>
                   <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -310,7 +310,7 @@ export default function ContactPage() {
             <div className="card">
               <div
                 className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl"
-                style={{ background: 'rgba(236, 72, 153, 0.2)', color: '#ec4899' }}
+                style={{ background: 'var(--accent-muted)', color: 'var(--accent)' }}
               >
                 <NewsletterIcon className="h-7 w-7" />
               </div>
@@ -320,10 +320,10 @@ export default function ContactPage() {
               </p>
               <a
                 href="mailto:newsletter@rnrb.me"
-                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-pink-500/50"
+                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
                 style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
               >
-                <NewsletterIcon className="h-5 w-5 flex-shrink-0" style={{ color: '#ec4899' }} />
+                <NewsletterIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
                 <div>
                   <div className="font-medium">newsletter@rnrb.me</div>
                   <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -501,24 +501,12 @@ export default function ContactPage() {
             className="flex flex-wrap items-center justify-center gap-6 text-sm"
             style={{ color: 'var(--muted)' }}
           >
-            <Link href="/" className="hover:text-white">
-              Home
-            </Link>
-            <Link href="/features" className="hover:text-white">
-              Features
-            </Link>
-            <Link href="/pricing" className="hover:text-white">
-              Pricing
-            </Link>
-            <Link href="/privacy" className="hover:text-white">
-              Privacy
-            </Link>
-            <Link href="/terms" className="hover:text-white">
-              Terms
-            </Link>
-            <Link href="/dmca" className="hover:text-white">
-              DMCA
-            </Link>
+            <Link href="/" className="nav-link">Home</Link>
+            <Link href="/features" className="nav-link">Features</Link>
+            <Link href="/pricing" className="nav-link">Pricing</Link>
+            <Link href="/privacy" className="nav-link">Privacy</Link>
+            <Link href="/terms" className="nav-link">Terms</Link>
+            <Link href="/dmca" className="nav-link">DMCA</Link>
           </div>
           <p className="mt-4 text-center text-xs" style={{ color: 'var(--muted)' }}>
             © {new Date().getFullYear()} Rock N' Roll Basement. All rights reserved.

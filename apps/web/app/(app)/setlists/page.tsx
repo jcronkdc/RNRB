@@ -54,12 +54,35 @@ export default function SetlistsPage() {
 
   useEffect(() => {
     if (!user) return;
-    // Fetch user's setlists if they have access
     if (hasAccess) {
-      // TODO: Fetch actual setlists from API
-      setSetlists([]);
+      const fetchSetlists = async () => {
+        try {
+          const response = await fetch('/api/setlists');
+          if (response.ok) {
+            const data = await response.json();
+            const mapped = (data.setlists || []).map((s: any) => ({
+              id: s.id,
+              name: s.name || s.show?.name || 'Untitled Setlist',
+              showName: s.show?.name,
+              showDate: s.show?.date ? new Date(s.show.date) : undefined,
+              venue: s.show?.venue?.name,
+              songCount: s._count?.items || s.items?.length || 0,
+              totalDuration: 0,
+              energyLevel: 'mixed' as const,
+              createdAt: new Date(s.createdAt),
+            }));
+            setSetlists(mapped);
+          }
+        } catch (error) {
+          console.error('Failed to fetch setlists:', error);
+        } finally {
+          setIsLoadingSetlists(false);
+        }
+      };
+      fetchSetlists();
+    } else {
+      setIsLoadingSetlists(false);
     }
-    setIsLoadingSetlists(false);
   }, [user, hasAccess]);
 
   // Mock data for preview

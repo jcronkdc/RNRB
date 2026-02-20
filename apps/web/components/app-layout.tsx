@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { Suspense, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
-// Eager imports - needed immediately
+// Eager imports — needed immediately
 import { Breadcrumbs } from './breadcrumbs';
 import { SidebarNav, MobileMenuProvider } from './sidebar-nav';
 import { TopBar } from './top-bar';
@@ -13,62 +13,41 @@ import { TransportBar } from './transport-bar';
 import { FocusModeProvider, useFocusMode } from '@/hooks/use-focus-mode';
 import { MobileBottomNav } from './mobile-bottom-nav';
 
-// Dynamic imports - load on-demand to reduce initial bundle
-// These components are only needed when user interacts with them
+// Dynamic imports — load on demand
 const CommandPalette = dynamic(
   () => import('./command-palette').then((mod) => ({ default: mod.CommandPalette })),
-  {
-    ssr: false,
-    loading: () => null, // No loading UI needed - component handles its own visibility
-  }
+  { ssr: false, loading: () => null }
 );
 
 const KeyboardShortcutsHelp = dynamic(
   () => import('./keyboard-shortcuts-help').then((mod) => ({ default: mod.KeyboardShortcutsHelp })),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
 const AssistantChat = dynamic(
   () => import('./ai-assistant/assistant-chat').then((mod) => ({ default: mod.AssistantChat })),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
 const FocusModeOverlay = dynamic(
   () => import('./focus-mode-overlay').then((mod) => ({ default: mod.FocusModeOverlay })),
-  {
-    ssr: false,
-    loading: () => null,
-  }
+  { ssr: false, loading: () => null }
 );
 
-// Can load after initial render since they're not immediately visible
 const AppVersionChecker = dynamic(
   () => import('./app-version-checker').then((mod) => ({ default: mod.AppVersionChecker })),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
 
 const UsageAlerts = dynamic(
   () => import('./billing/UsageAlerts').then((mod) => ({ default: mod.UsageAlerts })),
-  {
-    ssr: false,
-  }
+  { ssr: false }
 );
-
-// NOTE: AblyProvider removed - it's already provided in app/layout.tsx
-// Having nested AblyProviders caused duplicate connections and ERR_INSUFFICIENT_RESOURCES
 
 interface AppLayoutProps {
   children: React.ReactNode;
   showBreadcrumbs?: boolean;
-  currentTrack?: any; // Track type from transport-bar
+  currentTrack?: any;
 }
 
 function AppLayoutContent({
@@ -83,47 +62,33 @@ function AppLayoutContent({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { isFocusMode } = useFocusMode();
 
-  // Listen to sidebar collapse state from localStorage
   useEffect(() => {
     const checkSidebarState = () => {
       if (typeof window !== 'undefined') {
-        const collapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-        setSidebarCollapsed(collapsed);
+        setSidebarCollapsed(localStorage.getItem('sidebar-collapsed') === 'true');
       }
     };
-
-    // Check initial state
     checkSidebarState();
-
-    // Listen for storage changes (when sidebar is toggled)
     window.addEventListener('storage', checkSidebarState);
-
-    // Also listen for custom event for same-tab changes
-    const handleSidebarToggle = () => checkSidebarState();
-    window.addEventListener('sidebar-toggle', handleSidebarToggle);
-
+    window.addEventListener('sidebar-toggle', checkSidebarState);
     return () => {
       window.removeEventListener('storage', checkSidebarState);
-      window.removeEventListener('sidebar-toggle', handleSidebarToggle);
+      window.removeEventListener('sidebar-toggle', checkSidebarState);
     };
   }, []);
 
-  // Don't use app layout for marketing pages
+  // Marketing pages bypass app layout
   const isMarketingPage =
     pathname === '/' ||
-    pathname.startsWith('/auth') ||
-    pathname.startsWith('/pricing') ||
-    pathname.startsWith('/about') ||
-    pathname.startsWith('/contact');
+    pathname?.startsWith('/auth') ||
+    pathname?.startsWith('/pricing') ||
+    pathname?.startsWith('/about') ||
+    pathname?.startsWith('/contact');
 
-  // Check if this is the profile setup flow (minimal UI needed)
   const isProfileSetup = pathname === '/settings/profile' && searchParams.get('setup') === 'true';
 
-  if (isMarketingPage) {
-    return <>{children}</>;
-  }
+  if (isMarketingPage) return <>{children}</>;
 
-  // Minimal layout for profile setup - clean, focused, no distractions
   if (isProfileSetup) {
     return (
       <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
@@ -132,87 +97,65 @@ function AppLayoutContent({
     );
   }
 
-  // Show loading skeleton while session is loading to prevent errors
   if (status === 'loading') {
     return (
-      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
-            <p className="text-lg" style={{ color: 'var(--muted)' }}>
-              Loading...
-            </p>
-          </div>
-        </div>
+      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <div
+          className="h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"
+          style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+        />
       </div>
     );
   }
 
+  const sidebarWidth = isFocusMode ? '0px' : sidebarCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)';
+
   return (
     <MobileMenuProvider>
       <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
-        {/* Command Palette (Global) */}
         <CommandPalette />
-
-        {/* Keyboard Shortcuts Help (Global) */}
         <KeyboardShortcutsHelp />
-
-        {/* Focus Mode Overlay */}
         <FocusModeOverlay />
 
-        {/* Sidebar - hidden in focus mode */}
         {!isFocusMode && <SidebarNav />}
-
-        {/* Top Bar - hidden in focus mode */}
         {!isFocusMode && <TopBar />}
 
-        {/* Main Content Area */}
+        {/* Main content */}
         <main
-          className="pb-20 lg:pb-0"
+          className="pb-20 transition-[margin] duration-200 lg:pb-0"
           style={{
-            marginLeft: isFocusMode ? '0' : sidebarCollapsed ? '72px' : '260px',
-            marginTop: isFocusMode ? '0' : '56px',
-            marginBottom: showTransport && !isFocusMode ? '72px' : '0',
-            minHeight: isFocusMode ? '100vh' : 'calc(100vh - 56px)',
-            transition: 'all 0.3s ease',
+            marginLeft: sidebarWidth,
+            marginTop: isFocusMode ? '0' : 'var(--topbar-height)',
+            minHeight: isFocusMode ? '100vh' : 'calc(100vh - var(--topbar-height))',
           }}
         >
-          {/* Breadcrumbs - hidden in focus mode */}
+          {/* Breadcrumbs */}
           {!isFocusMode && showBreadcrumbs && pathname !== '/dashboard' && (
-            <div style={{ borderBottom: '1px solid var(--border)' }}>
-              <div className="px-6 py-3">
-                <Breadcrumbs />
-              </div>
+            <div className="border-b px-5 py-2.5 lg:px-6" style={{ borderColor: 'var(--border)' }}>
+              <Breadcrumbs />
             </div>
           )}
 
-          {/* Page Content - full screen in focus mode */}
-          <div className={isFocusMode ? 'p-4' : 'p-6 lg:p-8'}>{children}</div>
+          {/* Page content */}
+          <div className={isFocusMode ? 'p-4' : 'p-5 lg:p-7'}>
+            {children}
+          </div>
         </main>
 
-        {/* Transport Bar - hidden in focus mode */}
         {showTransport && !isFocusMode && (
           <TransportBar currentTrack={currentTrack} isVisible={true} />
         )}
 
-        {/* Mobile Bottom Navigation - hidden in focus mode */}
         {!isFocusMode && <MobileBottomNav />}
-
-        {/* AI Assistant (Floating Widget) - hidden in focus mode */}
         {!isFocusMode && <AssistantChat />}
 
-        {/* Usage Alerts (Low credit warnings) */}
         <UsageAlerts />
-
-        {/* App Version Checker (Update notifications) */}
         <AppVersionChecker />
 
-        {/* Mobile Overlay for Sidebar */}
+        {/* Mobile sidebar override */}
         <style jsx global>{`
           @media (max-width: 1024px) {
-            main {
-              margin-left: 0 !important;
-            }
+            main { margin-left: 0 !important; }
           }
         `}</style>
       </div>
@@ -220,7 +163,6 @@ function AppLayoutContent({
   );
 }
 
-// Wrap in Suspense to handle useSearchParams() boundary
 export function AppLayout(props: AppLayoutProps) {
   return (
     <FocusModeProvider>
@@ -230,12 +172,10 @@ export function AppLayout(props: AppLayoutProps) {
             className="flex min-h-screen items-center justify-center"
             style={{ background: 'var(--bg)' }}
           >
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
-              <p className="text-lg" style={{ color: 'var(--muted)' }}>
-                Loading...
-              </p>
-            </div>
+            <div
+              className="h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"
+              style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+            />
           </div>
         }
       >

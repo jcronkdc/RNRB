@@ -274,19 +274,6 @@ export function useCommandPalette() {
         },
       },
       {
-        id: 'nav-live',
-        title: 'Go Live',
-        description: 'Stream to your fans',
-        icon: '📺',
-        action: 'navigate',
-        keywords: ['live', 'stream', 'streaming', 'broadcast', 'twitch', 'fans'],
-        category: 'navigation',
-        handler: () => {
-          router.push('/live');
-          setIsOpen(false);
-        },
-      },
-      {
         id: 'nav-masterclasses',
         title: 'Masterclasses',
         description: 'Learn from industry pros',
@@ -392,19 +379,6 @@ export function useCommandPalette() {
         category: 'actions',
         handler: () => {
           router.push('/meet');
-          setIsOpen(false);
-        },
-      },
-      {
-        id: 'action-go-live',
-        title: 'Go Live Now',
-        description: 'Start streaming to your fans',
-        icon: '🔴',
-        action: 'start',
-        keywords: ['live', 'stream', 'broadcast', 'go live'],
-        category: 'actions',
-        handler: () => {
-          router.push('/live/go');
           setIsOpen(false);
         },
       },

@@ -91,7 +91,7 @@ export function UserProfileCard({
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      router.push(ROUTES.mail.compose(id));
+      router.push('/messages');
     },
     [id, router]
   );

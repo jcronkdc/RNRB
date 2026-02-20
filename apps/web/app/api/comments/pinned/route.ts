@@ -25,8 +25,8 @@ export async function GET(request: NextRequest) {
     const comments = await prisma.pinnedComment.findMany({
       where: {
         entityId,
-        entityType,
-        ...(includeResolved ? {} : {}), // Include all by default, UI can filter
+        entityType: entityType as any,
+        ...(includeResolved ? {} : {}),
       },
       orderBy: [
         { timestamp: 'asc' }, // Sort by timestamp first (for audio comments)

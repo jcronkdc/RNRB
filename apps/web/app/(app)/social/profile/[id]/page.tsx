@@ -171,13 +171,15 @@ export default function PublicProfilePage({ params }: { params: Promise<{ id: st
 
   // Redirect to own profile page if viewing self
   if (isOwnProfile) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/social/profile';
+    }
     return (
       <div
         className="flex min-h-screen flex-col items-center justify-center"
         style={{ background: 'var(--bg)' }}
       >
         <p style={{ color: 'var(--muted)' }}>Redirecting to your profile...</p>
-        <script dangerouslySetInnerHTML={{ __html: `window.location.href = '/social/profile'` }} />
       </div>
     );
   }

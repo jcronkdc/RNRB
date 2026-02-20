@@ -322,7 +322,7 @@ function ShowCard({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Link href={`/shows/${show.id}/edit`}>
+            <Link href={`/shows/calendar`}>
               <Button
                 variant="ghost"
                 size="sm"
@@ -372,7 +372,7 @@ function ShowCard({
             <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
               <Music className="h-4 w-4 shrink-0" />
               <Link
-                href={`/projects/${show.setlist.id}`}
+                href={`/setlists`}
                 className="transition hover:text-[color:var(--accent)]"
               >
                 {show.setlist.name}

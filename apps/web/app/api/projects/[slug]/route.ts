@@ -196,3 +196,48 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'Failed to update project' }, { status: 500 });
   }
 }
+
+/**
+ * DELETE /api/projects/[slug]
+ * Delete a project (owner only)
+ */
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    const { slug } = await params;
+
+    // Find the project
+    const project = await db.project.findFirst({
+      where: { OR: [{ slug }, { id: slug }] },
+      include: {
+        members: { where: { userId: session.user.id } },
+      },
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    // Only owners can delete
+    const membership = project.members[0];
+    if (!membership || membership.role !== 'owner') {
+      return NextResponse.json({ error: 'Only the project owner can delete it' }, { status: 403 });
+    }
+
+    // Delete in transaction: members first, then project
+    await db.$transaction([
+      db.projectMember.deleteMany({ where: { projectId: project.id } }),
+      db.song.updateMany({ where: { projectId: project.id }, data: { projectId: null } }),
+      db.project.delete({ where: { id: project.id } }),
+    ]);
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('DELETE /api/projects/[slug] error:', error);
+    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 });
+  }
+}

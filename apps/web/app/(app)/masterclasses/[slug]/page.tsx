@@ -552,7 +552,6 @@ function MasterclassDetailContent() {
                         isCompleted={completedLessons.includes(lesson.id)}
                         onPlay={() => {
                           // TODO: Open video player
-                          console.log('Play lesson:', lesson.id);
                         }}
                       />
                     ))}

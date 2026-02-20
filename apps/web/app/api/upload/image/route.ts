@@ -2,6 +2,8 @@ import { auth } from '@cronkwaters/auth';
 import { createClient } from '@supabase/supabase-js';
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { uploadLimiter, checkRateLimit } from '@/lib/rate-limit';
+
 // Lazy initialization to avoid build-time errors
 function getSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -22,6 +24,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Rate limit: 10 uploads per minute
+    try {
+      await checkRateLimit(uploadLimiter, `image-upload:${session.user.id}`);
+    } catch {
+      return NextResponse.json(
+        { error: 'Too many uploads. Please wait a moment.' },
+        { status: 429 }
+      );
+    }
+
     // Validate Supabase configuration
     if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
       console.error('[IMAGE-UPLOAD] Supabase configuration missing');
@@ -35,7 +47,11 @@ export async function POST(request: NextRequest) {
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const bucket = (formData.get('bucket') as string) || 'site-images';
+    const requestedBucket = (formData.get('bucket') as string) || 'site-images';
+
+    // Restrict to allowed buckets only
+    const ALLOWED_BUCKETS = ['site-images', 'profile-images', 'merch-designs', 'project-covers'];
+    const bucket = ALLOWED_BUCKETS.includes(requestedBucket) ? requestedBucket : 'site-images';
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });

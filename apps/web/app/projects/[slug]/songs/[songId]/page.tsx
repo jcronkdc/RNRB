@@ -18,11 +18,11 @@ import {
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 import { useAudioUpload } from '@/hooks/use-audio-upload';
 import { formatDateLong } from '@/lib/format-date';
-import { supabase } from '@/lib/supabase';
 
 // Dynamically import chat for song-level collaboration
 const ChatRoom = dynamic(() => import('@/components/ably/chat-room').then((m) => m.ChatRoom), {
@@ -101,35 +101,50 @@ export default function SongDetailPage() {
   const [showPublishModal, setShowPublishModal] = useState(false);
   const { upload, uploading, progress, error: uploadError } = useAudioUpload();
 
+  const { data: session, status: authStatus } = useSession();
+
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
 
-      setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
+    setUser(session.user);
 
-      if (!foundProject) {
-        router.push('/projects');
-        return;
-      }
+    const loadData = async () => {
+      try {
+        const [projectRes, songRes] = await Promise.all([
+          fetch(`/api/projects/${slug}`),
+          fetch(`/api/songs/${songId}`),
+        ]);
 
-      const foundSong = foundProject.songs?.find((s: any) => s.id === songId);
-      if (!foundSong) {
+        if (!projectRes.ok) {
+          router.push('/projects');
+          return;
+        }
+
+        const projectData = await projectRes.json();
+        setProject(projectData);
+
+        if (!songRes.ok) {
+          router.push(`/projects/${slug}`);
+          return;
+        }
+
+        const songData = await songRes.json();
+        setSong(songData.song || songData);
+        setAudioFiles(songData.song?.audioFiles || []);
+      } catch (error) {
+        console.error('Error loading song:', error);
         router.push(`/projects/${slug}`);
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setProject(foundProject);
-      setSong(foundSong);
-      // Load audio files from song metadata
-      setAudioFiles(foundSong.audioFiles || []);
-      setLoading(false);
-    });
-  }, [router, slug, songId]);
+    loadData();
+  }, [router, slug, songId, session, authStatus]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -152,30 +167,7 @@ export default function SongDetailPage() {
       const updatedAudioFiles = [...audioFiles, newAudioFile];
       setAudioFiles(updatedAudioFiles);
 
-      // Save to song metadata
-      const allProjects = user.user_metadata?.projects || [];
-      const updatedProjects = allProjects.map((p: any) => {
-        if (p.slug === slug) {
-          return {
-            ...p,
-            songs: (p.songs || []).map((s: any) => {
-              if (s.id === songId) {
-                return { ...s, audioFiles: updatedAudioFiles };
-              }
-              return s;
-            }),
-            updated_at: new Date().toISOString(),
-          };
-        }
-        return p;
-      });
-
-      await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          projects: updatedProjects,
-        },
-      });
+      // Audio file tracked via upload API — no additional metadata write needed
     }
 
     // Reset file input
@@ -264,7 +256,7 @@ export default function SongDetailPage() {
               channelName={`song:${slug}:${songId}`}
               currentUser={{
                 userId: user.id,
-                userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                userName: user?.name || user?.email?.split('@')[0] || 'User',
                 userEmail: user.email || '',
                 avatar: user.image,
               }}
@@ -592,9 +584,9 @@ export default function SongDetailPage() {
                             entityType="audio_track"
                             currentUserId={user?.id || ''}
                             currentUserName={
-                              user?.user_metadata?.name || user?.email?.split('@')[0] || 'User'
+                              user?.name || user?.email?.split('@')[0] || 'User'
                             }
-                            currentUserAvatar={user?.user_metadata?.avatar_url}
+                            currentUserAvatar={user?.image}
                           />
                         </motion.div>
                       ))}
@@ -632,7 +624,7 @@ export default function SongDetailPage() {
                 <ArtworkGenerator
                   songId={songId}
                   songTitle={song.title}
-                  artistName={user?.user_metadata?.name || user?.email?.split('@')[0]}
+                  artistName={user?.name || user?.email?.split('@')[0]}
                   genre={song.genre || project?.genre}
                   mood={song.mood}
                   currentArtwork={song.artworkUrl}
@@ -669,9 +661,13 @@ export default function SongDetailPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <VersionHistory
                 songId={songId}
-                onRestore={async (versionId) => {
-                  // Reload song data after restore
-                  window.location.reload();
+                onRestore={async () => {
+                  // Reload song data from API after restore
+                  const res = await fetch(`/api/songs/${songId}`);
+                  if (res.ok) {
+                    const data = await res.json();
+                    setSong(data.song || data);
+                  }
                 }}
               />
             </motion.div>
@@ -813,7 +809,7 @@ export default function SongDetailPage() {
             </div>
             <div>
               <p className="font-medium">
-                {user?.user_metadata?.name || user?.email?.split('@')[0] || 'You'}
+                {user?.name || user?.email?.split('@')[0] || 'You'}
               </p>
               <p className="text-xs text-[color:var(--muted)]">Creator • Full Access</p>
             </div>

@@ -90,8 +90,8 @@ export function OptimizedChat({
   const { observeMessage, syncReceipts } = useReadReceipts({
     channelId,
     userId: currentUserId,
-    onMarkAsRead: (messageIds) => {
-      console.log('Marked as read:', messageIds);
+    onMarkAsRead: () => {
+      // Read receipts synced
     },
   });
 

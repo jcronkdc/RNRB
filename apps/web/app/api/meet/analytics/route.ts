@@ -1,99 +1,76 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@cronkwaters/auth';
+
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { handleApiError } from '@/lib/errors';
 
 /**
  * GET /api/meet/analytics
- * Get meeting analytics for the authenticated user
+ * Get real meeting analytics from the meetings table (raw SQL)
  */
 export async function GET(request: NextRequest) {
   try {
-    const user = await requireAuth();
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    const userId = session.user.id;
     const { searchParams } = new URL(request.url);
     const range = searchParams.get('range') || '30d';
 
-    // Calculate date range
     let daysBack = 30;
     switch (range) {
-      case '7d':
-        daysBack = 7;
-        break;
-      case '30d':
-        daysBack = 30;
-        break;
-      case '90d':
-        daysBack = 90;
-        break;
-      case 'all':
-        daysBack = 365 * 10; // 10 years
-        break;
+      case '7d': daysBack = 7; break;
+      case '30d': daysBack = 30; break;
+      case '90d': daysBack = 90; break;
+      case 'all': daysBack = 365 * 10; break;
     }
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - daysBack);
 
-    // Meeting model not yet implemented - return placeholder analytics
-    // TODO: Implement when Meeting model is added to schema
-    const meetings: {
-      id: string;
-      title: string | null;
-      startedAt: Date;
-      endedAt: Date | null;
-      participantCount: number;
-      recordingUrl: string | null;
-      _count: { participants: number };
-    }[] = [];
+    // Fetch meetings where user was organizer or participant
+    let meetings: any[] = [];
+    try {
+      meetings = await db.$queryRaw`
+        SELECT 
+          m.id,
+          m.title,
+          m.type,
+          m.status,
+          m.actual_start_at,
+          m.actual_end_at,
+          m.created_at,
+          (SELECT COUNT(*) FROM meeting_participants mp WHERE mp.meeting_id = m.id) as participant_count
+        FROM meetings m
+        WHERE m.created_at >= ${startDate}
+          AND (
+            m.organizer_id = ${userId}
+            OR m.id IN (SELECT mp.meeting_id FROM meeting_participants mp WHERE mp.user_id = ${userId})
+          )
+        ORDER BY m.created_at DESC
+        LIMIT 50
+      `;
+    } catch {
+      // meetings table might not exist — return zeros
+    }
 
-    // Placeholder for future implementation
-    const _unusedQuery = {
-      where: {
-        createdAt: { gte: startDate },
-        status: { in: ['ended', 'active'] },
-        OR: [
-          { hostId: user.id },
-          // { participants: { some: { id: user.id } } },
-        ],
-      },
-      select: {
-        id: true,
-        title: true,
-        startedAt: true,
-        endedAt: true,
-        participantCount: true,
-        recordingUrl: true,
-      },
-      orderBy: { startedAt: 'desc' },
-      take: 20,
-    };
-    void _unusedQuery; // Suppress unused variable warning
-
-    // Calculate aggregates
     const totalMeetings = meetings.length;
     const totalParticipants = meetings.reduce(
-      (sum: number, m: (typeof meetings)[0]) => sum + (m._count?.participants || 0),
-      0
+      (sum: number, m: any) => sum + (Number(m.participant_count) || 0), 0
     );
 
-    // Calculate total minutes
-    const totalMinutes = meetings.reduce((sum: number, m: (typeof meetings)[0]) => {
-      if (m.startedAt && m.endedAt) {
-        const minutes = (m.endedAt.getTime() - m.startedAt.getTime()) / (1000 * 60);
-        return sum + minutes;
+    const totalMinutes = meetings.reduce((sum: number, m: any) => {
+      if (m.actual_start_at && m.actual_end_at) {
+        const mins = (new Date(m.actual_end_at).getTime() - new Date(m.actual_start_at).getTime()) / (1000 * 60);
+        return sum + Math.max(0, mins);
       }
       return sum;
     }, 0);
 
     const avgParticipants = totalMeetings > 0 ? totalParticipants / totalMeetings : 0;
     const avgDuration = totalMeetings > 0 ? Math.round(totalMinutes / totalMeetings) : 0;
-    const recordingsCount = meetings.filter((m: (typeof meetings)[0]) => m.recordingUrl).length;
-
-    // Estimate screen share time (assume 30% of meeting time)
-    const screenShareMinutes = Math.round(totalMinutes * 0.3);
-
-    // Placeholder for files shared and participation rate
-    const filesShared = 0;
-    const participationRate = 94.2;
 
     return NextResponse.json({
       analytics: {
@@ -102,22 +79,14 @@ export async function GET(request: NextRequest) {
         totalMinutes: Math.round(totalMinutes),
         averageParticipants: parseFloat(avgParticipants.toFixed(1)),
         averageDuration: avgDuration,
-        screenShareMinutes,
-        filesShared,
-        recordingsCount,
-        participationRate,
-        meetings: meetings.map((meeting: (typeof meetings)[0]) => ({
-          id: meeting.id,
-          title: meeting.title || 'Untitled Meeting',
-          date: meeting.startedAt,
-          duration:
-            meeting.startedAt && meeting.endedAt
-              ? Math.round((meeting.endedAt.getTime() - meeting.startedAt.getTime()) / (1000 * 60))
-              : 0,
-          participants: meeting.participantCount || 0,
-          hadScreenShare: true, // Placeholder
-          hadRecording: !!meeting.recordingUrl,
-          filesShared: 0,
+        meetings: meetings.map((m: any) => ({
+          id: m.id,
+          title: m.title || 'Untitled Meeting',
+          date: m.actual_start_at || m.created_at,
+          duration: m.actual_start_at && m.actual_end_at
+            ? Math.round((new Date(m.actual_end_at).getTime() - new Date(m.actual_start_at).getTime()) / (1000 * 60))
+            : 0,
+          participants: Number(m.participant_count) || 0,
         })),
       },
       range,

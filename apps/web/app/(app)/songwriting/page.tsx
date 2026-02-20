@@ -25,13 +25,32 @@ export default function SongwritingPage() {
   const [showInvite, setShowInvite] = useState(false);
   const [showTools, setShowTools] = useState(false);
 
+  // Fetch collaborators for a song
+  const fetchCollaborators = useCallback(async (id: string) => {
+    try {
+      const response = await fetch(`/api/songs/${id}/collaborators`);
+      if (response.ok) {
+        const data = await response.json();
+        const colors = ['#dc4a2c', '#d97706', '#65a30d', '#0ea5e9', '#8b5cf6', '#ec4899'];
+        const mapped = (data.collaborators || []).map((c: any, i: number) => ({
+          userId: c.user?.id || c.userId || c.id,
+          userName: c.user?.name || c.name || c.email || 'Collaborator',
+          userColor: colors[i % colors.length],
+        }));
+        setCollaborators(mapped);
+      }
+    } catch {
+      // Collaborators are optional — don't block the editor
+    }
+  }, []);
+
   // Create or load a song on first load
   useEffect(() => {
     if (!user?.id || songId) return;
 
-    // Check URL for a song ID (e.g., /songwriting?id=xxx)
+    // Check URL for a song ID (supports both ?id= and ?song= for backward compat)
     const params = new URLSearchParams(window.location.search);
-    const existingSongId = params.get('id');
+    const existingSongId = params.get('id') || params.get('song');
 
     if (existingSongId) {
       // Load existing song
@@ -42,11 +61,12 @@ export default function SongwritingPage() {
             const { song } = await response.json();
             setSongId(song.id);
             setInitialTitle(song.title || 'Untitled Song');
-            // Parse lyrics into sections if they exist
             if (song.lyrics) {
               const sections = parseLyricsToSections(song.lyrics);
               setInitialSections(sections);
             }
+            // Fetch collaborators for this song
+            fetchCollaborators(song.id);
           }
         } catch (error) {
           console.error('Failed to load song:', error);
@@ -70,7 +90,6 @@ export default function SongwritingPage() {
           if (response.ok) {
             const { song } = await response.json();
             setSongId(song.id);
-            // Update URL without full navigation
             window.history.replaceState({}, '', `/songwriting?id=${song.id}`);
           }
         } catch (error) {
@@ -79,7 +98,7 @@ export default function SongwritingPage() {
       };
       createSong();
     }
-  }, [user?.id, songId]);
+  }, [user?.id, songId, fetchCollaborators]);
 
   // Debounced auto-save
   const autoSave = useCallback(
@@ -131,6 +150,28 @@ export default function SongwritingPage() {
     [autoSave]
   );
 
+  // Save a named version snapshot
+  const handleSaveVersion = useCallback(async () => {
+    if (!songId) return;
+
+    try {
+      const response = await fetch(`/api/songs/${songId}/versions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label: `Version ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}`,
+        }),
+      });
+
+      if (response.ok) {
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      }
+    } catch (error) {
+      console.error('Failed to save version:', error);
+    }
+  }, [songId]);
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       <div className="px-6 py-12">
@@ -160,9 +201,9 @@ export default function SongwritingPage() {
         {songId && (
           <div className="fixed right-6 top-28 z-10 flex items-center gap-2">
             {/* Collaborator avatars */}
-            {collaborators.map((c, i) => (
+            {collaborators.map((c) => (
               <div
-                key={i}
+                key={c.userId}
                 className="flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium text-white"
                 style={{ backgroundColor: c.userColor }}
                 title={c.userName}
@@ -205,7 +246,11 @@ export default function SongwritingPage() {
             songId={songId}
             songTitle={initialTitle}
             isOpen={showInvite}
-            onClose={() => setShowInvite(false)}
+            onClose={() => {
+              setShowInvite(false);
+              // Refetch collaborators after invite panel closes
+              fetchCollaborators(songId);
+            }}
           />
         )}
 
@@ -233,15 +278,16 @@ export default function SongwritingPage() {
           onClose={() => setShowTools(false)}
           songId={songId}
           songTitle={initialTitle}
-          ownerName={user?.name || user?.email?.split('@')[0]}
+          ownerName={user?.name || user?.email?.split('@')[0] || 'You'}
+          onSaveVersion={handleSaveVersion}
         />
       )}
 
       {/* The Room — talkback strip */}
-      {songId && user && (
+      {songId && user?.id && (
         <TalkbackStrip
           songId={songId}
-          userId={user.id}
+          userId={user.id as string}
           userName={user.name || user.email?.split('@')[0] || 'You'}
           userColor="#e85d3b"
           collaborators={collaborators}

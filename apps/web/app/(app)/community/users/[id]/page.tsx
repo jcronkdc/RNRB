@@ -1052,10 +1052,10 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                           <TrackCard
                             key={track.id}
                             {...track}
-                            onPlay={() => console.log('Play', track.id)}
-                            onExtend={() => console.log('Extend', track.id)}
-                            onRemix={() => console.log('Remix', track.id)}
-                            onDownload={() => console.log('Download', track.id)}
+                            onPlay={() => {}}
+                            onExtend={() => {}}
+                            onRemix={() => {}}
+                            onDownload={() => {}}
                           />
                         ))}
                       </div>

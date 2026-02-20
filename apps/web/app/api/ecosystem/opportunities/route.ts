@@ -166,11 +166,10 @@ export async function POST(request: NextRequest) {
       data: {
         userId: session.id,
         type: 'opportunity_posted',
-        entityType: 'opportunity',
-        entityId: opportunity.id,
+        title: `Posted opportunity: ${opportunity.title}`,
+        opportunityId: opportunity.id,
         metadata: {
           opportunityType: opportunity.type,
-          title: opportunity.title,
         },
       },
     });

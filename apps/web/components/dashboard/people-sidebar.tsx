@@ -41,7 +41,7 @@ export function PeopleSidebar() {
   const handleMessage = (userId: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/mail/compose?to=${userId}`);
+    router.push(`/messages`);
   };
 
   const loadSuggestions = async () => {

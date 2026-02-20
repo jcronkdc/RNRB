@@ -5,7 +5,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { nanoid } from 'nanoid';
+import crypto from 'crypto';
+const nanoid = (size = 12) => crypto.randomBytes(size).toString('base64url').slice(0, size);
 
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';

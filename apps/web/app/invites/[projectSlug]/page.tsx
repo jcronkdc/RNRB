@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense, useRef } from 'react';
 
-import { supabase } from '@/lib/supabase';
+import { useSession } from 'next-auth/react';
 
 function InviteAcceptContent() {
   const params = useParams();
@@ -16,6 +16,7 @@ function InviteAcceptContent() {
   const projectSlug = params?.projectSlug as string;
   const inviteEmail = searchParams?.get('email');
 
+  const { data: authSession, status: authStatus } = useSession();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
@@ -33,24 +34,18 @@ function InviteAcceptContent() {
     let cancelled = false;
     isMountedRef.current = true;
 
-    supabase?.auth
-      .getUser()
-      .then(({ data: { user } }) => {
-        // Only update state if this specific effect instance hasn't been cancelled
-        if (!cancelled) {
-          setUser(user);
-          setLoading(false);
-        }
-      })
-      .catch((error) => {
-        // Handle auth errors (network failure, invalid session, etc.)
-        console.warn('Failed to get user session:', error);
-        // Only update state if this specific effect instance hasn't been cancelled
-        if (!cancelled) {
-          setUser(null);
-          setLoading(false);
-        }
-      });
+    // Auth is handled by useSession
+    if (authSession?.user) {
+      if (!cancelled) {
+        setUser(authSession.user);
+        setLoading(false);
+      }
+    } else if (authStatus !== 'loading') {
+      if (!cancelled) {
+        setUser(null);
+        setLoading(false);
+      }
+    }
 
     return () => {
       // Cancel this specific effect instance's pending operations
@@ -63,7 +58,7 @@ function InviteAcceptContent() {
         navigationTimeoutRef.current = null;
       }
     };
-  }, []);
+  }, [authSession, authStatus]);
 
   const handleAccept = async () => {
     if (!user) {
@@ -96,18 +91,19 @@ function InviteAcceptContent() {
     setAccepting(true);
 
     try {
-      // Find the project in user's accessible projects
-      const allProjects = user.user_metadata?.projects || [];
-      const projectExists = allProjects.find((p: any) => p.slug === projectSlug);
+      // Accept invite via API — creates a ProjectMember record in the database
+      const acceptRes = await fetch(`/api/projects/${projectSlug}/members`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: 'member' }),
+      });
 
-      if (projectExists) {
-        // Already a member - check mount before state updates
+      if (acceptRes.status === 409) {
+        // Already a member
         if (!isMountedRef.current) return;
         setStatus('accepted');
         setMessage("You're already a member of this project!");
-        if (navigationTimeoutRef.current) {
-          clearTimeout(navigationTimeoutRef.current);
-        }
+        if (navigationTimeoutRef.current) clearTimeout(navigationTimeoutRef.current);
         navigationTimeoutRef.current = setTimeout(() => {
           navigationTimeoutRef.current = null;
           router.push(`/projects/${projectSlug}`);
@@ -115,30 +111,10 @@ function InviteAcceptContent() {
         return;
       }
 
-      // Create a placeholder project entry (in real implementation, would fetch from database)
-      const newProject = {
-        id: `proj_${Date.now()}`,
-        slug: projectSlug,
-        name: projectSlug.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
-        description: 'Collaborative music project',
-        visibility: 'private',
-        role: 'member',
-        joined_at: new Date().toISOString(),
-        song_count: 0,
-        collaborator_count: 1,
-        session_count: 0,
-      };
-
-      const updatedProjects = [...allProjects, newProject];
-
-      const { error } = await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          projects: updatedProjects,
-        },
-      });
-
-      if (error) throw error;
+      if (!acceptRes.ok) {
+        const data = await acceptRes.json();
+        throw new Error(data.error || 'Failed to accept invite');
+      }
 
       // Check mount status after async operation before updating state
       if (!isMountedRef.current) return;

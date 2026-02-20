@@ -5,9 +5,8 @@ import { Plus, Music, Edit, Play, Users, FileText } from '@/components/ui/custom
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-
-import { supabase } from '@/lib/supabase';
 
 type Song = {
   id: string;
@@ -24,33 +23,49 @@ type Song = {
 export default function ProjectSongsPage() {
   const params = useParams();
   const router = useRouter();
+  const { data: session, status: authStatus } = useSession();
   const slug = params?.slug as string;
-  const [user, setUser] = useState<any>(null);
   const [project, setProject] = useState<any>(null);
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
 
-      setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
+    const loadData = async () => {
+      try {
+        // Fetch project and its songs from the API
+        const [projectRes, songsRes] = await Promise.all([
+          fetch(`/api/projects/${slug}`),
+          fetch(`/api/projects/${slug}/songs`),
+        ]);
 
-      if (!foundProject) {
+        if (!projectRes.ok) {
+          router.push('/projects');
+          return;
+        }
+
+        const projectData = await projectRes.json();
+        setProject(projectData);
+
+        if (songsRes.ok) {
+          const songsData = await songsRes.json();
+          setSongs(songsData.songs || songsData || []);
+        }
+      } catch (error) {
+        console.error('Error loading project songs:', error);
         router.push('/projects');
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setProject(foundProject);
-      setSongs(foundProject.songs || []);
-      setLoading(false);
-    });
-  }, [router, slug]);
+    loadData();
+  }, [router, slug, session, authStatus]);
 
   if (loading) {
     return (

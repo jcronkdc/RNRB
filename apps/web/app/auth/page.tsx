@@ -1,12 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Eye, EyeOff } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { Suspense, useState, useEffect } from 'react';
+
+// ─── Auth Form ───────────────────────────────────────────────────────────────
 
 function AuthForm() {
   const searchParams = useSearchParams();
@@ -19,18 +21,15 @@ function AuthForm() {
 
   const isSignup = searchParams.get('signup') === 'true';
   const errorParam = searchParams.get('error');
-  const redirectParam = searchParams.get('redirect');
+  // Middleware sends ?from=, direct links use ?redirect= — support both
+  const redirectParam = searchParams.get('redirect') || searchParams.get('from') || null;
   const forgotPasswordHref = `/auth/reset${
     redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''
   }`;
 
   const sanitizeRedirect = (value?: string | null) => {
-    if (!value) {
-      return '/dashboard';
-    }
-    if (!value.startsWith('/') || value.startsWith('//')) {
-      return '/dashboard';
-    }
+    if (!value) return '/dashboard';
+    if (!value.startsWith('/') || value.startsWith('//')) return '/dashboard';
     return value;
   };
 
@@ -54,9 +53,7 @@ function AuthForm() {
       redirectTo: redirectTarget,
     });
 
-    if (!result) {
-      throw new Error('Sign in failed');
-    }
+    if (!result) throw new Error('Sign in failed');
 
     if (result.error) {
       if (result.error === 'CredentialsSignin' || result.error === 'CallbackRouteError') {
@@ -80,6 +77,8 @@ function AuthForm() {
         AccessDenied: 'Access denied. Please try again.',
         Verification: 'Verification failed. Please try again.',
         CredentialsSignin: 'Invalid email or password. Please try again.',
+        CallbackRouteError: 'Invalid email or password. Please try again.',
+        OAuthAccountNotLinked: 'This email is already associated with another sign-in method.',
         Default: 'An error occurred during sign-in. Please try again.',
       };
       setMessage({
@@ -108,207 +107,184 @@ function AuthForm() {
           throw new Error(data.error || 'Registration failed');
         }
 
-        setMessage({
-          type: 'success',
-          text: 'Account created! Signing you in...',
-        });
-
+        setMessage({ type: 'success', text: 'Account created! Signing you in...' });
         await completeCredentialsSignIn(true);
       } else {
         await completeCredentialsSignIn(false);
       }
     } catch (error) {
-      // Handle actual errors
       console.error('[AUTH] Password auth error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Authentication failed';
-      setMessage({
-        type: 'error',
-        text: errorMessage,
-      });
+      setMessage({ type: 'error', text: errorMessage });
       setLoading(false);
     }
   };
 
+  const inputClass =
+    'w-full rounded-lg border px-4 py-3 text-sm transition-all duration-200 focus:outline-none focus:ring-2 disabled:opacity-50';
+
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-zinc-950">
-      {/* Full-screen animated background */}
-      <div className="absolute inset-0">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950" />
+    <div className="relative flex min-h-screen" style={{ background: 'var(--bg)' }}>
+      {/* Background glow */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2"
+        style={{
+          width: '600px',
+          height: '600px',
+          background: 'radial-gradient(ellipse at center, var(--accent-muted) 0%, transparent 70%)',
+          filter: 'blur(100px)',
+        }}
+      />
 
-        {/* Accent glow - top left */}
+      {/* Left — Branding (desktop) */}
+      <div className="relative hidden w-1/2 flex-col items-center justify-center p-16 lg:flex">
         <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full bg-orange-600/20 blur-[120px]"
-        />
-
-        {/* Accent glow - bottom right */}
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -bottom-32 -right-32 h-[600px] w-[600px] rounded-full bg-red-600/15 blur-[150px]"
-        />
-
-        {/* Subtle grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '64px 64px',
-          }}
-        />
-      </div>
-
-      {/* LEFT SIDE - HERO BRANDING */}
-      <div className="relative z-10 hidden w-1/2 flex-col items-center justify-center p-16 lg:flex">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className="flex flex-col items-center"
+          transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+          className="flex flex-col items-center text-center"
         >
-          {/* MASSIVE LOGO - No container, no background */}
-          <motion.div
-            initial={{ y: 20 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative mb-8"
-          >
-            {/* Glow behind logo */}
-            <div className="absolute inset-0 scale-110 blur-3xl">
-              <Image
-                src="/rnrdark.png"
-                alt=""
-                width={320}
-                height={320}
-                className="h-full w-full object-contain opacity-50"
-              />
+          {/* Logo */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 scale-125 blur-3xl opacity-30">
+              <Image src="/rnrdark.png" alt="" width={280} height={280} className="h-full w-full object-contain" />
             </div>
-
-            {/* Main logo */}
             <Image
               src="/rnrdark.png"
               alt="Rock N' Roll Basement"
-              width={320}
-              height={320}
-              className="relative h-64 w-64 object-contain drop-shadow-2xl"
+              width={280}
+              height={280}
+              className="relative h-52 w-52 object-contain"
               priority
             />
-          </motion.div>
+          </div>
 
-          {/* Brand name - dramatic typography */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center"
+          <h1 className="text-5xl font-black tracking-tight" style={{ color: 'var(--text)' }}>
+            ROCK N&apos; ROLL
+          </h1>
+          <h1 className="text-5xl font-black tracking-tight" style={{ color: 'var(--accent)' }}>
+            BASEMENT
+          </h1>
+
+          <p className="mt-6 text-lg font-light" style={{ color: 'var(--muted)' }}>
+            Where musicians create together
+          </p>
+
+          {/* Stats */}
+          <div
+            className="mt-14 flex items-center gap-10"
+            style={{ color: 'var(--muted-soft)' }}
           >
-            <h1 className="font-black tracking-tight text-white">
-              <span className="block text-7xl">ROCK N' ROLL</span>
-              <span className="block text-7xl text-orange-500">BASEMENT</span>
-            </h1>
-
-            <p className="mt-6 text-xl font-light tracking-wide text-zinc-400">
-              Where musicians create together
-            </p>
-          </motion.div>
-
-          {/* Stats - minimal, clean */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="mt-16 flex items-center gap-12 text-zinc-500"
-          >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">50+</div>
-              <div className="text-xs uppercase tracking-widest">Participants</div>
-            </div>
-            <div className="h-8 w-px bg-zinc-800" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">HD</div>
-              <div className="text-xs uppercase tracking-widest">Video</div>
-            </div>
-            <div className="h-8 w-px bg-zinc-800" />
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">AI</div>
-              <div className="text-xs uppercase tracking-widest">Powered</div>
-            </div>
-          </motion.div>
+            {[
+              { value: '50+', label: 'Participants' },
+              { value: 'HD', label: 'Video' },
+              { value: 'AI', label: 'Powered' },
+            ].map((stat, i) => (
+              <div key={stat.label} className="flex items-center gap-10">
+                {i > 0 && <div className="h-8 w-px" style={{ background: 'var(--border)' }} />}
+                <div className="text-center">
+                  <div className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{stat.value}</div>
+                  <div className="text-[10px] uppercase tracking-widest">{stat.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
 
-      {/* RIGHT SIDE - AUTH FORM */}
-      <div className="relative z-10 flex w-full items-center justify-center p-8 lg:w-1/2">
+      {/* Right — Form */}
+      <div className="relative z-10 flex w-full items-center justify-center p-6 sm:p-8 lg:w-1/2">
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
           className="w-full max-w-md"
         >
           {/* Mobile Logo */}
-          <div className="mb-12 text-center lg:hidden">
+          <div className="mb-10 text-center lg:hidden">
             <Image
               src="/rnrdark.png"
               alt="Rock N' Roll Basement"
-              width={120}
-              height={120}
-              className="mx-auto mb-6 h-24 w-24 object-contain"
+              width={100}
+              height={100}
+              className="mx-auto mb-4 h-20 w-20 object-contain"
               priority
             />
-            <h1 className="text-3xl font-black tracking-tight text-white">
-              ROCK N' ROLL <span className="text-orange-500">BASEMENT</span>
+            <h1 className="text-2xl font-black tracking-tight" style={{ color: 'var(--text)' }}>
+              ROCK N&apos; ROLL <span style={{ color: 'var(--accent)' }}>BASEMENT</span>
             </h1>
           </div>
 
-          {/* Form Card */}
-          <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/50 p-8">
-            <div className="mb-8 text-center">
-              <h2 className="text-3xl font-bold text-white">
-                {isSignup ? 'Create Account' : 'Welcome Back'}
-              </h2>
-              <p className="mt-2 text-zinc-500">
-                {isSignup ? 'Start your music journey' : 'Sign in to continue'}
-              </p>
+          {/* Form card */}
+          <div
+            className="rounded-xl border p-7 sm:p-8"
+            style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
+          >
+            <div className="mb-7 text-center">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={isSignup ? 'signup' : 'signin'}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                    {isSignup ? 'Create account' : 'Welcome back'}
+                  </h2>
+                  <p className="mt-1.5 text-sm" style={{ color: 'var(--muted)' }}>
+                    {isSignup ? 'Start your music journey' : 'Sign in to continue'}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
-            {message && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className={`mb-6 rounded-lg border p-4 ${
-                  message.type === 'success'
-                    ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400'
-                    : 'border-red-500/30 bg-red-500/10 text-red-400'
-                }`}
-              >
-                <p className="text-sm">{message.text}</p>
-              </motion.div>
-            )}
+            {/* Message */}
+            <AnimatePresence>
+              {message && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: 'auto' }}
+                  exit={{ opacity: 0, y: -8, height: 0 }}
+                  className={`mb-5 overflow-hidden rounded-lg border p-3.5 ${
+                    message.type === 'success'
+                      ? 'border-[var(--sage)]/30 bg-[var(--sage-muted)]'
+                      : 'border-red-500/30 bg-red-500/10'
+                  }`}
+                >
+                  <p
+                    className="text-sm"
+                    style={{ color: message.type === 'success' ? 'var(--sage)' : '#ef4444' }}
+                  >
+                    {message.text}
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
+            {/* Free plan badge on signup */}
             {isSignup && (
-              <div className="mb-6 rounded-lg border border-zinc-700/50 bg-zinc-800/30 p-4">
-                <p className="text-sm font-medium text-zinc-300">Free Plan Included</p>
-                <p className="mt-1 text-xs text-zinc-500">
+              <div
+                className="mb-5 rounded-lg border p-3.5"
+                style={{ borderColor: 'var(--border)', background: 'var(--bg)' }}
+              >
+                <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  Free plan included
+                </p>
+                <p className="mt-0.5 text-xs" style={{ color: 'var(--muted)' }}>
                   3 projects, 1 collaborator, all basic tools
                 </p>
               </div>
             )}
 
+            {/* Form */}
             <form onSubmit={handlePasswordAuth} className="space-y-4">
               {isSignup && (
                 <div>
                   <label
                     htmlFor="auth-name"
-                    className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                    className="mb-1.5 block text-xs font-medium"
+                    style={{ color: 'var(--muted)' }}
                   >
                     Name
                   </label>
@@ -319,7 +295,12 @@ function AuthForm() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Your name (optional)"
                     disabled={loading}
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                    className={inputClass}
+                    style={{
+                      borderColor: 'var(--border)',
+                      background: 'var(--bg)',
+                      color: 'var(--text)',
+                    }}
                   />
                 </div>
               )}
@@ -327,7 +308,8 @@ function AuthForm() {
               <div>
                 <label
                   htmlFor="auth-email"
-                  className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                  className="mb-1.5 block text-xs font-medium"
+                  style={{ color: 'var(--muted)' }}
                 >
                   Email
                 </label>
@@ -339,14 +321,20 @@ function AuthForm() {
                   placeholder="you@example.com"
                   required
                   disabled={loading}
-                  className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                  className={inputClass}
+                  style={{
+                    borderColor: 'var(--border)',
+                    background: 'var(--bg)',
+                    color: 'var(--text)',
+                  }}
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="auth-password"
-                  className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-zinc-500"
+                  className="mb-1.5 block text-xs font-medium"
+                  style={{ color: 'var(--muted)' }}
                 >
                   Password
                 </label>
@@ -360,16 +348,22 @@ function AuthForm() {
                     required
                     minLength={8}
                     disabled={loading}
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-50"
+                    className={`${inputClass} pr-12`}
+                    style={{
+                      borderColor: 'var(--border)',
+                      background: 'var(--bg)',
+                      color: 'var(--text)',
+                    }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 transition-colors hover:bg-white/5"
+                    style={{ color: 'var(--muted)' }}
                     tabIndex={-1}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
                   </button>
                 </div>
               </div>
@@ -378,7 +372,8 @@ function AuthForm() {
                 <div className="flex justify-end">
                   <Link
                     href={forgotPasswordHref}
-                    className="text-sm font-medium text-orange-500 transition-colors hover:text-orange-400"
+                    className="text-sm font-medium transition-colors hover:opacity-80"
+                    style={{ color: 'var(--accent)' }}
                   >
                     Forgot password?
                   </Link>
@@ -388,21 +383,25 @@ function AuthForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 w-full rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-500/40 disabled:opacity-50"
+                className="mt-2 w-full rounded-lg px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:opacity-90 disabled:opacity-50"
+                style={{
+                  background: 'var(--accent)',
+                  boxShadow: '0 4px 16px var(--accent-glow)',
+                }}
               >
                 {loading ? (
                   <span className="inline-flex items-center justify-center gap-2">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    {isSignup ? 'Creating Account...' : 'Signing In...'}
+                    {isSignup ? 'Creating account...' : 'Signing in...'}
                   </span>
                 ) : isSignup ? (
-                  'Create Account'
+                  'Create account'
                 ) : (
-                  'Sign In'
+                  'Sign in'
                 )}
               </button>
 
-              <p className="pt-4 text-center text-sm text-zinc-500">
+              <p className="pt-3 text-center text-sm" style={{ color: 'var(--muted)' }}>
                 {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
                 <Link
                   href={
@@ -410,7 +409,8 @@ function AuthForm() {
                       ? `/auth${redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''}`
                       : `/auth?signup=true${redirectParam ? `&redirect=${encodeURIComponent(redirectParam)}` : ''}`
                   }
-                  className="font-medium text-orange-500 transition-colors hover:text-orange-400"
+                  className="font-medium transition-colors hover:opacity-80"
+                  style={{ color: 'var(--accent)' }}
                 >
                   {isSignup ? 'Sign in' : 'Create one'}
                 </Link>
@@ -418,13 +418,13 @@ function AuthForm() {
             </form>
           </div>
 
-          <p className="mt-8 text-center text-xs text-zinc-600">
+          <p className="mt-6 text-center text-xs" style={{ color: 'var(--muted-soft)' }}>
             By continuing, you agree to our{' '}
-            <Link href="/terms" className="text-zinc-500 hover:text-zinc-400">
+            <Link href="/terms" className="transition-colors hover:text-[var(--muted)]" style={{ color: 'var(--muted-soft)' }}>
               Terms
             </Link>{' '}
             and{' '}
-            <Link href="/privacy" className="text-zinc-500 hover:text-zinc-400">
+            <Link href="/privacy" className="transition-colors hover:text-[var(--muted)]" style={{ color: 'var(--muted-soft)' }}>
               Privacy Policy
             </Link>
           </p>
@@ -434,12 +434,20 @@ function AuthForm() {
   );
 }
 
+// ─── Page ────────────────────────────────────────────────────────────────────
+
 export default function SignInPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center bg-zinc-950">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+        <div
+          className="flex min-h-screen items-center justify-center"
+          style={{ background: 'var(--bg)' }}
+        >
+          <div
+            className="h-7 w-7 animate-spin rounded-full border-2 border-t-transparent"
+            style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
+          />
         </div>
       }
     >

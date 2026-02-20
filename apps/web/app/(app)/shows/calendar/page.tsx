@@ -142,8 +142,7 @@ function CalendarPageContent() {
   };
 
   const handleDateSelect = (date: Date) => {
-    // Optional: Navigate to new show form with pre-filled date
-    console.log('Date selected:', date);
+    // TODO: Navigate to new show form with pre-filled date
   };
 
   const handleReschedule = async (showId: string, newDate: Date) => {

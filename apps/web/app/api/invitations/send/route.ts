@@ -161,7 +161,7 @@ export async function POST(request: Request) {
     });
 
     // Send invitation email
-    const inviteUrl = `${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/invite/${token}`;
+    const inviteUrl = `${process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/invite/${token}`;
 
     const emailOptions = emailTemplates.invitation({
       email,

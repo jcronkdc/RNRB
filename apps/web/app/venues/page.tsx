@@ -70,7 +70,7 @@ export default function VenuesPage() {
       const response = await fetch('/api/venues');
       if (response.ok) {
         const data = await response.json();
-        setVenues(data);
+        setVenues(data.venues || data);
       } else if (response.status === 401) {
         error('Please sign in to view venues');
       } else {

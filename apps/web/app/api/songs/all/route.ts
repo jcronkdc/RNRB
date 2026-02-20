@@ -34,7 +34,10 @@ export async function GET(req: NextRequest) {
       archived: false,
     };
 
-    // Note: isFavorite not in schema - favorites feature not available
+    // Filter by favorites
+    if (favorites === 'true') {
+      where.isFavorite = true;
+    }
 
     // Filter by project status
     if (filter === 'standalone') {
@@ -44,7 +47,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Filter by song status
-    if (status && ['draft', 'in_progress', 'complete', 'published', 'archived'].includes(status)) {
+    if (status && ['draft', 'in_progress', 'needs_review', 'complete', 'published', 'archived'].includes(status)) {
       where.status = status as Prisma.EnumSongStatusFilter;
     }
 
@@ -88,10 +91,10 @@ export async function GET(req: NextRequest) {
           chords: true,
           tags: true,
           projectId: true,
+          isFavorite: true,
           lastSavedAt: true,
           createdAt: true,
           updatedAt: true,
-          // Include project info if song is in a project
           project: {
             select: {
               id: true,
@@ -104,11 +107,12 @@ export async function GET(req: NextRequest) {
       });
 
       // Get stats
-      const [standaloneCount, inProjectCount, draftCount, completeCount] = await Promise.all([
+      const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] = await Promise.all([
         db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
         db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
         db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
         db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
+        db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
       ]);
 
       stats = {
@@ -117,7 +121,7 @@ export async function GET(req: NextRequest) {
         inProject: inProjectCount,
         drafts: draftCount,
         complete: completeCount,
-        favorites: 0, // Not in schema
+        favorites: favoritesCount,
       };
     } catch (dbError) {
       console.error('[Songs API] Database error:', dbError);

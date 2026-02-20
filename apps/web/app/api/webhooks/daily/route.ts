@@ -27,16 +27,35 @@ const DAILY_WEBHOOK_SECRET = process.env.DAILY_WEBHOOK_SECRET;
  */
 export async function POST(request: NextRequest) {
   try {
-    // Verify webhook signature (if configured)
+    let event: { type: string; [key: string]: unknown };
+
+    // Verify webhook signature
     if (DAILY_WEBHOOK_SECRET) {
       const signature = request.headers.get('x-daily-signature');
-      // TODO: Implement signature verification
-      // For now, proceed if secret exists in env
+      if (!signature) {
+        console.warn('[Daily Webhook] Missing signature header');
+        return NextResponse.json({ error: 'Missing signature' }, { status: 401 });
+      }
+
+      const body = await request.text();
+      const { createHmac } = await import('crypto');
+      const expectedSignature = createHmac('sha256', DAILY_WEBHOOK_SECRET)
+        .update(body)
+        .digest('hex');
+
+      if (signature !== expectedSignature) {
+        console.warn('[Daily Webhook] Invalid signature');
+        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
+      }
+
+      event = JSON.parse(body);
+    } else {
+      if (process.env.NODE_ENV === 'production') {
+        console.error('[Daily Webhook] DAILY_WEBHOOK_SECRET not configured — rejecting in production');
+        return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
+      }
+      event = await request.json();
     }
-
-    const event = await request.json();
-
-    console.log('[Daily Webhook]', event.type, event);
 
     // Handle different event types
     switch (event.type) {

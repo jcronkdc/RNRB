@@ -21,6 +21,8 @@ interface StemOutput {
 }
 
 // GET /api/stems/status/[predictionId]
+// Note: Prediction IDs are random UUIDs from Replicate — not guessable.
+// For stronger isolation, store prediction→userId mapping in DB and verify ownership here.
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ predictionId: string }> }

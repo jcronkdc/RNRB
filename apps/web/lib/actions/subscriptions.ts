@@ -118,7 +118,8 @@ export async function createSubscriptionCheckout(tier: 'creator' | 'studio'): Pr
       throw new Error(`Price ID for ${tier} tier is not configured`);
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const { getBaseUrl } = await import('@/lib/get-base-url');
+    const appUrl = getBaseUrl();
 
     const session = await createCheckoutSession(
       customerId,
@@ -159,7 +160,8 @@ export async function createBillingPortalSession(): Promise<string> {
       throw new Error('No Stripe customer found. Please subscribe first.');
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const { getBaseUrl } = await import('@/lib/get-base-url');
+    const appUrl = getBaseUrl();
 
     const session = await createCustomerPortalSession(
       dbUser.stripeCustomerId,

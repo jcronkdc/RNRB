@@ -44,7 +44,7 @@ function getBaseUrl(): string {
     return vercelUrl.replace(/\/$/, '');
   }
 
-  return 'http://localhost:3000';
+  return 'http://localhost:3001';
 }
 
 function buildEmailHtml(name: string | null, resetUrl: string): string {

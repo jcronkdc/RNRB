@@ -170,8 +170,8 @@ export function AssistantChat() {
     onError: (err) => {
       console.error('Assistant error:', err);
     },
-    onAction: (action) => {
-      console.log('AI action:', action);
+    onAction: () => {
+      // Action handled by assistant
     },
   });
 

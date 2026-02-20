@@ -115,7 +115,7 @@ export function TalkbackStrip({
           videoSource: false, // Audio-only by default
           dailyConfig: {
             experimentalChromeVideoMuteLightOff: true,
-          },
+          } as any,
         });
 
         callObjectRef.current = callObject;

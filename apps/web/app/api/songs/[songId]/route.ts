@@ -34,7 +34,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
       where: { id: songId },
       include: {
         user: {
-          select: { id: true, name: true, email: true },
+          select: { id: true, name: true, image: true },
         },
         collaborators: {
           include: {

@@ -1,13 +1,19 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
 /**
  * GET /api/song-requests
- * List song requests for a setlist
+ * List song requests for a setlist (requires auth + setlist ownership)
  */
 export async function GET(request: NextRequest) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const setlistId = searchParams.get('setlistId');
 
@@ -15,32 +21,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Setlist ID required' }, { status: 400 });
     }
 
-    // Debug: Log available models
-    console.log(
-      '🔍 Available db models:',
-      Object.keys(db).filter((k) => !k.startsWith('_') && !k.startsWith('$'))
-    );
-    console.log('🔍 Checking songRequest accessor:', typeof db.songRequest);
-
     const requests = await db.songRequest.findMany({
       where: { setlistId },
       orderBy: [
-        { status: 'asc' }, // Pending first
+        { status: 'asc' },
         { createdAt: 'desc' },
       ],
     });
 
     return NextResponse.json({ requests });
   } catch (error) {
-    console.error('Song requests GET error:', error);
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack');
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Song requests GET error:', error instanceof Error ? error.message : error);
     return NextResponse.json(
-      {
-        error: 'Failed to fetch song requests',
-        details: errorMessage,
-        availableModels: Object.keys(db).filter((k) => !k.startsWith('_') && !k.startsWith('$')),
-      },
+      { error: 'Failed to fetch song requests' },
       { status: 500 }
     );
   }

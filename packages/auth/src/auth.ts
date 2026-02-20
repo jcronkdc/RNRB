@@ -49,41 +49,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log('[AUTH] Authorize called with email:', credentials?.email);
-
-        // Validate credentials presence
         if (!credentials?.email || !credentials?.password) {
-          console.log('[AUTH] Missing credentials');
           return null;
         }
 
         try {
-          // Find user by email
-          console.log('[AUTH] Looking up user...');
+          // Normalize email to match register route
+          const email = (credentials.email as string).trim().toLowerCase();
+
           const user = await prisma.user.findUnique({
-            where: { email: credentials.email as string },
+            where: { email },
           });
 
-          console.log('[AUTH] User found:', !!user, 'Has password:', !!user?.password);
-
-          // Check if user exists and has a password set
+          // User must exist and have a password (OAuth-only users can't use credentials)
           if (!user || !user.password) {
-            console.log('[AUTH] User not found or no password');
             return null;
           }
 
-          // Verify password
-          console.log('[AUTH] Verifying password...');
           const isValid = await bcrypt.compare(credentials.password as string, user.password);
-          console.log('[AUTH] Password valid:', isValid);
-
           if (!isValid) {
-            console.log('[AUTH] Invalid password');
             return null;
           }
 
-          // Return user object
-          console.log('[AUTH] Login successful for:', user.email);
           return {
             id: user.id,
             email: user.email,
@@ -91,7 +78,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             image: user.image,
           };
         } catch (error) {
-          console.error('[AUTH] Authorization error:', error);
+          console.error('[AUTH] Authorization error:', error instanceof Error ? error.message : error);
           return null;
         }
       },
@@ -127,12 +114,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // Check if user has completed profile (for new user redirect)
         if (user.id) {
-          const dbUser = await prisma.user.findUnique({
-            where: { id: user.id },
-            select: { profileCompleted: true },
-          });
-          (token as JWT & { profileCompleted?: boolean }).profileCompleted =
-            dbUser?.profileCompleted ?? false;
+          try {
+            const dbUser = await prisma.user.findUnique({
+              where: { id: user.id },
+              select: { profileCompleted: true },
+            });
+            (token as JWT & { profileCompleted?: boolean }).profileCompleted =
+              dbUser?.profileCompleted ?? false;
+          } catch (error) {
+            console.error('[AUTH] Failed to check profile completion:', error instanceof Error ? error.message : error);
+            (token as JWT & { profileCompleted?: boolean }).profileCompleted = false;
+          }
         }
 
         // Generate new session token ID to prevent session fixation
@@ -180,18 +172,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       if (tokenWithExtras.userId && (!tokenWithExtras.organizationIds || trigger === 'update')) {
-        const memberships = await prisma.membership.findMany({
-          where: { userId: tokenWithExtras.userId as string },
-          include: { org: true },
-        });
+        try {
+          const memberships = await prisma.membership.findMany({
+            where: { userId: tokenWithExtras.userId as string },
+            include: { org: true },
+          });
 
-        tokenWithExtras.organizationIds = memberships.map(
-          (membership: { orgId: string }) => membership.orgId
-        );
-        tokenWithExtras.activeOrganizationId =
-          (session?.activeOrganizationId as string | undefined) ||
-          (tokenWithExtras.activeOrganizationId as string | undefined) ||
-          memberships[0]?.orgId;
+          tokenWithExtras.organizationIds = memberships.map(
+            (membership: { orgId: string }) => membership.orgId
+          );
+          tokenWithExtras.activeOrganizationId =
+            (session?.activeOrganizationId as string | undefined) ||
+            (tokenWithExtras.activeOrganizationId as string | undefined) ||
+            memberships[0]?.orgId;
+        } catch (error) {
+          console.error('[AUTH] Failed to fetch memberships:', error instanceof Error ? error.message : error);
+          tokenWithExtras.organizationIds = tokenWithExtras.organizationIds || [];
+        }
       }
 
       return tokenWithExtras;

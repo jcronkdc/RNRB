@@ -61,9 +61,17 @@ export async function POST(request: NextRequest) {
         start_audio_off: !audioEnabled,
         exp: scheduledEndAt
           ? Math.floor(new Date(scheduledEndAt).getTime() / 1000) + 3600
-          : undefined, // Expire 1 hour after scheduled end
+          : undefined,
       },
     });
+
+    // Fail early if Daily.co room creation failed (no API key or service error)
+    if (!dailyRoom) {
+      return NextResponse.json(
+        { error: 'Video service is not configured. Please contact support.' },
+        { status: 503 }
+      );
+    }
 
     // Create meeting in database
     const meetings = await db.$queryRaw<any[]>`

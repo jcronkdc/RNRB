@@ -7,6 +7,9 @@ import {
   FolderOpen,
   Library,
   Video,
+  Calendar,
+  Activity,
+  Globe,
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -22,9 +25,7 @@ import { useState, useEffect, createContext, useContext } from 'react';
 
 import { useThemeSafe } from '@/components/theme';
 
-// ============================================
-// Mobile Menu Context
-// ============================================
+// ─── Mobile Menu Context ─────────────────────────────────────────────────────
 
 interface MobileMenuContextType {
   isOpen: boolean;
@@ -43,7 +44,6 @@ export const useMobileMenu = () => useContext(MobileMenuContext);
 export function MobileMenuProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-
   return (
     <MobileMenuContext.Provider value={{ isOpen, setIsOpen, toggle }}>
       {children}
@@ -51,134 +51,92 @@ export function MobileMenuProvider({ children }: { children: React.ReactNode }) 
   );
 }
 
-// ============================================
-// Navigation — focused, minimal, soulful
-// ============================================
+// ─── Nav Items ───────────────────────────────────────────────────────────────
 
 interface NavItem {
   label: string;
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  description: string;
 }
 
 const navItems: NavItem[] = [
-  {
-    label: 'Home',
-    href: '/dashboard',
-    icon: Home,
-    description: 'Your workspace',
-  },
-  {
-    label: 'Songs',
-    href: '/songwriting',
-    icon: Music2,
-    description: 'Write & create',
-  },
-  {
-    label: 'Projects',
-    href: '/projects',
-    icon: FolderOpen,
-    description: 'Collaborate',
-  },
-  {
-    label: 'Library',
-    href: '/library',
-    icon: Library,
-    description: 'Your files',
-  },
-  {
-    label: 'Sessions',
-    href: '/meet',
-    icon: Video,
-    description: 'Meet & play',
-  },
+  { label: 'Home', href: '/dashboard', icon: Home },
+  { label: 'Songs', href: '/songwriting', icon: Music2 },
+  { label: 'Projects', href: '/projects', icon: FolderOpen },
+  { label: 'Shows', href: '/shows', icon: Calendar },
+  { label: 'Library', href: '/library', icon: Library },
+  { label: 'Sessions', href: '/meet', icon: Video },
+  { label: 'Feed', href: '/social', icon: Activity },
+  { label: 'My Site', href: '/sites', icon: Globe },
 ];
 
-// ============================================
-// Theme-Aware Sidebar Logo
-// ============================================
+// ─── Sidebar Logo ────────────────────────────────────────────────────────────
 
 function SidebarLogo({
   isCollapsed,
   isMobile,
   onClose,
-  onToggleCollapse,
+  onToggle,
 }: {
   isCollapsed: boolean;
   isMobile: boolean;
   onClose: () => void;
-  onToggleCollapse: () => void;
+  onToggle: () => void;
 }) {
   const { resolvedTheme } = useThemeSafe();
   const logoSrc = resolvedTheme === 'dark' ? '/logo-dark.png' : '/logo-light.png';
 
   return (
     <div
-      className="flex h-16 items-center justify-between px-4"
-      style={{ borderBottom: '1px solid var(--border)' }}
+      className="flex h-[var(--topbar-height)] shrink-0 items-center justify-between border-b px-3"
+      style={{ borderColor: 'var(--border)' }}
     >
-      <Link href="/" className="flex items-center">
+      <Link href="/" className="flex items-center overflow-hidden">
         <img
           src={logoSrc}
-          alt="Rock N' Roll Basement"
-          width={96}
-          height={40}
-          className="h-10 w-auto"
-          style={{
-            maxWidth: isCollapsed && !isMobile ? '40px' : '160px',
-            transition: 'max-width 0.3s ease',
-          }}
+          alt="RNRB"
+          className="h-7 w-auto transition-all duration-200"
+          style={{ maxWidth: isCollapsed && !isMobile ? '28px' : '120px' }}
         />
       </Link>
 
       {isMobile ? (
         <button
           onClick={onClose}
-          className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:bg-white/10"
+          className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-white/5"
           style={{ color: 'var(--muted)' }}
           aria-label="Close menu"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
       ) : (
         <button
-          onClick={onToggleCollapse}
-          className="flex h-8 w-8 items-center justify-center rounded-lg transition-all hover:bg-white/10"
+          onClick={onToggle}
+          className="flex h-7 w-7 items-center justify-center rounded-md transition-colors hover:bg-white/5"
           style={{ color: 'var(--muted)' }}
-          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          title={isCollapsed ? 'Expand' : 'Collapse'}
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <ChevronLeft className="h-4 w-4" />
-          )}
+          {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
         </button>
       )}
     </div>
   );
 }
 
-// ============================================
-// Sidebar Navigation
-// ============================================
+// ─── Sidebar ─────────────────────────────────────────────────────────────────
 
 export function SidebarNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('sidebar-collapsed');
-      return saved === 'true';
-    }
+    if (typeof window !== 'undefined') return localStorage.getItem('sidebar-collapsed') === 'true';
     return false;
   });
   const [signingOut, setSigningOut] = useState(false);
-  const { isOpen: mobileMenuOpen, setIsOpen: setMobileMenuOpen } = useMobileMenu();
+  const { isOpen: mobileOpen, setIsOpen: setMobileOpen } = useMobileMenu();
   const [isMobile, setIsMobile] = useState(false);
 
-  // Responsive check
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
     check();
@@ -186,7 +144,6 @@ export function SidebarNav() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Persist collapsed state
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('sidebar-collapsed', String(isCollapsed));
@@ -194,7 +151,6 @@ export function SidebarNav() {
     }
   }, [isCollapsed]);
 
-  // Keyboard shortcut: Cmd+B to toggle
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
@@ -206,9 +162,8 @@ export function SidebarNav() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isMobile]);
 
-  // Close mobile menu on navigation
   useEffect(() => {
-    if (mobileMenuOpen) setMobileMenuOpen(false);
+    if (mobileOpen) setMobileOpen(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
@@ -224,24 +179,25 @@ export function SidebarNav() {
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard';
-    return pathname.startsWith(href);
+    return pathname?.startsWith(href);
   };
 
-  const showSidebar = !isMobile || mobileMenuOpen;
-  const effectiveCollapsed = isMobile ? false : isCollapsed;
+  const showSidebar = !isMobile || mobileOpen;
+  const collapsed = isMobile ? false : isCollapsed;
+  const sidebarWidth = collapsed ? 64 : 240;
 
   return (
     <>
       {/* Mobile backdrop */}
       <AnimatePresence>
-        {isMobile && mobileMenuOpen && (
+        {isMobile && mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
           />
         )}
       </AnimatePresence>
@@ -250,146 +206,108 @@ export function SidebarNav() {
       <motion.aside
         initial={false}
         animate={{
-          width: isMobile ? 280 : effectiveCollapsed ? 72 : 240,
-          x: showSidebar ? 0 : isMobile ? -280 : 0,
+          width: isMobile ? 260 : sidebarWidth,
+          x: showSidebar ? 0 : isMobile ? -260 : 0,
         }}
-        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-        className={`fixed left-0 top-0 z-50 flex h-screen flex-col ${
-          isMobile ? '' : 'relative'
-        }`}
-        style={{
-          background: 'var(--bg)',
-          borderRight: '1px solid var(--border)',
-        }}
+        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+        className={`fixed left-0 top-0 z-50 flex h-screen flex-col border-r ${isMobile ? '' : ''}`}
+        style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
       >
-        {/* Logo */}
         <SidebarLogo
-          isCollapsed={effectiveCollapsed}
+          isCollapsed={collapsed}
           isMobile={isMobile}
-          onClose={() => setMobileMenuOpen(false)}
-          onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
+          onClose={() => setMobileOpen(false)}
+          onToggle={() => setIsCollapsed(!isCollapsed)}
         />
 
-        {/* Quick create button */}
-        <div className="px-3 pt-4 pb-2">
-          <motion.button
+        {/* New Song button */}
+        <div className="shrink-0 px-2.5 pt-3 pb-1">
+          <button
             onClick={() => router.push('/songwriting')}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-medium text-white transition-all"
+            className="flex w-full items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
             style={{ background: 'var(--accent)' }}
           >
             <Plus className="h-4 w-4" />
-            {!effectiveCollapsed && <span>New Song</span>}
-          </motion.button>
+            {!collapsed && <span>New Song</span>}
+          </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto px-3 py-2">
-          <div className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-2.5 py-2">
+          <div className="space-y-0.5">
             {navItems.map((item) => {
               const active = isActive(item.href);
               return (
                 <Link key={item.href} href={item.href}>
-                  <motion.div
-                    whileHover={{ x: 2 }}
-                    className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 ${
-                      active ? 'bg-white/10' : 'hover:bg-white/5'
+                  <div
+                    className={`group flex items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 ${
+                      active ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
                     }`}
                   >
+                    {/* Active indicator bar */}
+                    {active && (
+                      <div
+                        className="absolute left-0 h-5 w-[3px] rounded-r-full"
+                        style={{ background: 'var(--accent)' }}
+                      />
+                    )}
+
                     <div
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md transition-colors"
                       style={{
-                        background: active ? 'var(--accent)' : 'var(--surface)',
-                        color: active ? 'white' : 'var(--muted)',
+                        color: active ? 'var(--accent)' : 'var(--muted)',
                       }}
                     >
                       <item.icon className="h-[18px] w-[18px]" />
                     </div>
 
-                    <AnimatePresence>
-                      {!effectiveCollapsed && (
-                        <motion.div
-                          initial={{ opacity: 0, x: -8 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -8 }}
-                          transition={{ duration: 0.15 }}
-                          className="min-w-0 flex-1"
-                        >
-                          <span
-                            className="block text-sm font-medium"
-                            style={{
-                              color: active ? 'var(--text)' : 'var(--text-secondary)',
-                            }}
-                          >
-                            {item.label}
-                          </span>
-                          <span
-                            className="block text-xs"
-                            style={{ color: 'var(--muted)' }}
-                          >
-                            {item.description}
-                          </span>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
+                    {!collapsed && (
+                      <span
+                        className="truncate text-[13px] font-medium transition-colors"
+                        style={{ color: active ? 'var(--text)' : 'var(--text-tertiary)' }}
+                      >
+                        {item.label}
+                      </span>
+                    )}
+                  </div>
                 </Link>
               );
             })}
           </div>
         </nav>
 
-        {/* Bottom section */}
-        <div
-          className="space-y-1 px-3 pb-4 pt-2"
-          style={{ borderTop: '1px solid var(--border)' }}
-        >
-          {/* Settings */}
+        {/* Bottom — Settings & Sign Out */}
+        <div className="shrink-0 border-t px-2.5 py-2.5" style={{ borderColor: 'var(--border)' }}>
           <Link href="/settings">
-            <motion.div
-              whileHover={{ x: 2 }}
-              className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 ${
-                pathname.startsWith('/settings') ? 'bg-white/10' : 'hover:bg-white/5'
+            <div
+              className={`group flex items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 ${
+                pathname?.startsWith('/settings') ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
               }`}
             >
               <div
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md"
                 style={{
-                  background: pathname.startsWith('/settings')
-                    ? 'var(--accent)'
-                    : 'var(--surface)',
-                  color: pathname.startsWith('/settings') ? 'white' : 'var(--muted)',
+                  color: pathname?.startsWith('/settings') ? 'var(--accent)' : 'var(--muted)',
                 }}
               >
                 <Settings className="h-[18px] w-[18px]" />
               </div>
-              <AnimatePresence>
-                {!effectiveCollapsed && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -8 }}
-                    className="text-sm font-medium"
-                    style={{ color: 'var(--text-secondary)' }}
-                  >
-                    Settings
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </motion.div>
+              {!collapsed && (
+                <span className="text-[13px] font-medium" style={{ color: 'var(--text-tertiary)' }}>
+                  Settings
+                </span>
+              )}
+            </div>
           </Link>
 
-          {/* Sign out */}
-          <motion.button
+          <button
             onClick={handleSignOut}
             disabled={signingOut}
-            whileHover={{ x: 2 }}
-            className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 hover:bg-white/5"
+            className="group flex w-full items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 hover:bg-white/[0.03]"
           >
             <div
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-              style={{ background: 'var(--surface)', color: 'var(--muted)' }}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md"
+              style={{ color: 'var(--muted)' }}
             >
               {signingOut ? (
                 <Loader2 className="h-[18px] w-[18px] animate-spin" />
@@ -397,29 +315,19 @@ export function SidebarNav() {
                 <LogOut className="h-[18px] w-[18px]" />
               )}
             </div>
-            <AnimatePresence>
-              {!effectiveCollapsed && (
-                <motion.span
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -8 }}
-                  className="text-sm font-medium"
-                  style={{ color: 'var(--muted)' }}
-                >
-                  {signingOut ? 'Signing out...' : 'Sign out'}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+            {!collapsed && (
+              <span className="text-[13px] font-medium" style={{ color: 'var(--muted)' }}>
+                {signingOut ? 'Signing out...' : 'Sign out'}
+              </span>
+            )}
+          </button>
         </div>
       </motion.aside>
     </>
   );
 }
 
-// ============================================
-// Mobile Menu Button
-// ============================================
+// ─── Mobile Menu Button (used by TopBar) ─────────────────────────────────────
 
 export function MobileMenuButton() {
   const { toggle, isOpen } = useMobileMenu();
@@ -437,39 +345,29 @@ export function MobileMenuButton() {
   return (
     <button
       onClick={toggle}
-      className="flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-white/10"
-      style={{ border: '1px solid var(--border)' }}
+      className="flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-white/5"
       aria-label={isOpen ? 'Close menu' : 'Open menu'}
     >
-      <motion.div
-        animate={isOpen ? 'open' : 'closed'}
-        className="flex flex-col items-center justify-center gap-1"
-      >
-        <motion.span
-          variants={{
-            closed: { rotate: 0, y: 0 },
-            open: { rotate: 45, y: 5 },
-          }}
-          className="block h-0.5 w-5"
+      <div className="flex flex-col items-center justify-center gap-[5px]">
+        <span
+          className={`block h-[1.5px] w-4 rounded-full transition-all duration-200 ${
+            isOpen ? 'translate-y-[6.5px] rotate-45' : ''
+          }`}
           style={{ background: 'var(--text)' }}
         />
-        <motion.span
-          variants={{
-            closed: { opacity: 1 },
-            open: { opacity: 0 },
-          }}
-          className="block h-0.5 w-5"
+        <span
+          className={`block h-[1.5px] w-4 rounded-full transition-all duration-200 ${
+            isOpen ? 'opacity-0' : ''
+          }`}
           style={{ background: 'var(--text)' }}
         />
-        <motion.span
-          variants={{
-            closed: { rotate: 0, y: 0 },
-            open: { rotate: -45, y: -5 },
-          }}
-          className="block h-0.5 w-5"
+        <span
+          className={`block h-[1.5px] w-4 rounded-full transition-all duration-200 ${
+            isOpen ? '-translate-y-[6.5px] -rotate-45' : ''
+          }`}
           style={{ background: 'var(--text)' }}
         />
-      </motion.div>
+      </div>
     </button>
   );
 }

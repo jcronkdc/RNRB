@@ -33,7 +33,7 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { useRequireAuth } from '@/hooks/use-require-auth';
-import { createBrowserClient } from '@/lib/supabase';
+
 import { EmptyStateInline } from '@/components/workshop';
 import { useAblyClient } from '@/hooks/use-ably-client';
 import { formatRelativeTime } from '@/lib/format-date';
@@ -123,29 +123,37 @@ export default function MessagesPage() {
   useEffect(() => {
     if (!user) return;
 
-    // Load DM conversations from user metadata
-    const dmConversations = user.user_metadata?.dm_conversations || [];
-    const formattedDMConversations: Conversation[] = dmConversations.map((conv: any) => ({
-      id: conv.id,
-      type: 'direct' as ConversationType,
-      name: conv.otherUserName || conv.otherUserEmail?.split('@')[0] || 'Unknown',
-      channelName: conv.channelName,
-      lastMessage: conv.lastMessage || 'Start chatting...',
-      lastMessageTime: conv.lastMessageTime || new Date().toISOString(),
-      unreadCount: conv.unreadCount || 0,
-      isPinned: conv.isPinned || false,
-      isMuted: conv.isMuted || false,
-      participants: [
-        {
-          id: conv.otherUserId || conv.id,
-          name: conv.otherUserName || conv.otherUserEmail?.split('@')[0] || 'Unknown',
-          email: conv.otherUserEmail,
-          avatarUrl: conv.otherUserAvatar,
-        },
-      ],
-    }));
+    // Load DM conversations from API
+    const loadConversations = async () => {
+      try {
+        const res = await fetch('/api/messages/conversations');
+        if (res.ok) {
+          const data = await res.json();
+          const apiConversations: Conversation[] = (data.conversations || []).map((conv: any) => ({
+            id: conv.id,
+            type: 'direct' as ConversationType,
+            name: conv.participant?.name || 'Unknown',
+            channelName: conv.id,
+            lastMessage: conv.lastMessage?.content || 'Start chatting...',
+            lastMessageTime: conv.lastMessage?.createdAt || conv.updatedAt || new Date().toISOString(),
+            unreadCount: conv.unreadCount || 0,
+            isPinned: conv.isPinned || false,
+            isMuted: conv.isMuted || false,
+            participants: conv.participant ? [{
+              id: conv.participant.id,
+              name: conv.participant.name || 'Unknown',
+              email: '',
+              avatarUrl: conv.participant.image,
+            }] : [],
+          }));
+          setConversations(apiConversations);
+        }
+      } catch (error) {
+        console.error('Failed to load conversations:', error);
+      }
+    };
 
-    setConversations(formattedDMConversations);
+    loadConversations();
 
     // Load user's projects for group chats
     fetchProjects();
@@ -280,28 +288,7 @@ export default function MessagesPage() {
       ],
     };
 
-    // Save to user metadata
-    const supabase = createBrowserClient();
-    if (supabase) {
-      const existingConvs = user.user_metadata?.dm_conversations || [];
-      await supabase.auth.updateUser({
-        data: {
-          ...(user.user_metadata || {}),
-          dm_conversations: [
-            ...existingConvs,
-            {
-              id: newConversation.id,
-              otherUserEmail: newUserEmail.toLowerCase(),
-              otherUserName: newUserEmail.split('@')[0],
-              channelName,
-              lastMessage: 'Start chatting...',
-              lastMessageTime: new Date().toISOString(),
-            },
-          ],
-        },
-      });
-    }
-
+    // Add to local state — conversation persists when first message is sent via Ably/API
     setConversations((prev) => [newConversation, ...prev]);
     setSelectedConversation(newConversation);
     setShowNewConversation(false);
@@ -335,20 +322,7 @@ export default function MessagesPage() {
       }
       setContextMenuConversation(null);
 
-      // Also remove from user metadata if it's a DM
-      const conv = conversations.find((c) => c.id === convId);
-      if (conv?.type === 'direct') {
-        const supabase = createBrowserClient();
-        if (supabase && user) {
-          const existingConvs = user.user_metadata?.dm_conversations || [];
-          await supabase.auth.updateUser({
-            data: {
-              ...(user.user_metadata || {}),
-              dm_conversations: existingConvs.filter((c: any) => c.id !== convId),
-            },
-          });
-        }
-      }
+      // Conversation removed from local state — messages are managed by the API
     },
     [conversations, selectedConversation, user]
   );
@@ -370,7 +344,7 @@ export default function MessagesPage() {
     }
 
     if (conv.type === 'band') {
-      return <Users className="h-5 w-5" style={{ color: '#ffd700' }} />;
+      return <Users className="h-5 w-5" style={{ color: 'var(--gold)' }} />;
     }
 
     // For direct messages, show initial
@@ -385,7 +359,7 @@ export default function MessagesPage() {
       case 'project':
         return <Folder className="h-3 w-3" style={{ color: 'var(--accent)' }} />;
       case 'band':
-        return <Users className="h-3 w-3" style={{ color: '#ffd700' }} />;
+        return <Users className="h-3 w-3" style={{ color: 'var(--gold)' }} />;
       case 'group':
         return <Hash className="h-3 w-3" style={{ color: 'var(--sage)' }} />;
       default:
@@ -887,7 +861,7 @@ export default function MessagesPage() {
                   Real-time messaging powered by Ably • Messages sync instantly
                   {selectedConversation.type === 'project' && (
                     <span className="ml-auto">
-                      <Sparkles className="mr-1 inline h-3 w-3" style={{ color: '#a855f7' }} />
+                      <Sparkles className="mr-1 inline h-3 w-3" style={{ color: 'var(--violet)' }} />
                       AI Assistant available
                     </span>
                   )}

@@ -53,7 +53,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ song
           select: {
             id: true,
             name: true,
-            email: true,
             image: true,
           },
         },
@@ -164,7 +163,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ son
           select: {
             id: true,
             name: true,
-            email: true,
             image: true,
           },
         },

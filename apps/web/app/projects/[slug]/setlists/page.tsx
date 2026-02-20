@@ -20,7 +20,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { formatDateLong, formatDateWithDay } from '@/lib/format-date';
-import { supabase } from '@/lib/supabase';
+import { useSession } from 'next-auth/react';
 
 // Dynamically import setlist builder
 const CollaborativeSetlistBuilder = dynamic(
@@ -105,27 +105,47 @@ export default function SetlistsPage() {
   const [linkingShow, setLinkingShow] = useState(false);
   const [showRequestManager, setShowRequestManager] = useState(false);
 
+  const { data: session, status: authStatus } = useSession();
+
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
 
-      setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
+    setUser(session.user);
 
-      if (!foundProject) {
+    const loadData = async () => {
+      try {
+        const response = await fetch(`/api/projects/${slug}`);
+        if (!response.ok) {
+          router.push('/projects');
+          return;
+        }
+        const projectData = await response.json();
+        setProject(projectData);
+
+        // Fetch setlists for this project
+        try {
+          const setlistRes = await fetch(`/api/setlists?projectId=${projectData.id}`);
+          if (setlistRes.ok) {
+            const setlistData = await setlistRes.json();
+            setSetlists(setlistData.setlists || setlistData || []);
+          }
+        } catch {
+          // Setlists may not exist yet — that's fine
+        }
+      } catch (error) {
+        console.error('Error loading project:', error);
         router.push('/projects');
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setProject(foundProject);
-      setSetlists(foundProject.setlists || []);
-      setLoading(false);
-    });
-  }, [router, slug]);
+    loadData();
+  }, [router, slug, session, authStatus]);
 
   if (loading) {
     return (
@@ -158,23 +178,19 @@ export default function SetlistsPage() {
   };
 
   const saveSetlist = async (songs: any[]) => {
-    // Would save to Supabase in production
-    console.log('Saving setlist with songs:', songs);
+    // TODO: Save to API
   };
 
   const handleSpotifyImport = (importedCount: number) => {
-    console.log(`Imported ${importedCount} songs from Spotify`);
-    // Would refresh project songs list
+    // TODO: Refresh project songs list after import
   };
 
   const handleGenerateSetlist = (generatedSongs: any[]) => {
-    console.log('Generated setlist:', generatedSongs);
-    // Would create new setlist with generated songs
+    // TODO: Create new setlist with generated songs
   };
 
   const handleApplyTemplate = (songs: any[], template: any) => {
-    console.log(`Applied template "${template.name}" with ${songs.length} songs`);
-    // Would create new setlist with template songs
+    // TODO: Create new setlist with template songs
     setShowTemplates(false);
   };
 
@@ -324,7 +340,7 @@ export default function SetlistsPage() {
                   channelName={`setlist:${slug}:${selectedSetlist.id}`}
                   currentUser={{
                     userId: user.id,
-                    userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                    userName: user?.name || user?.email?.split('@')[0] || 'User',
                     userEmail: user.email || '',
                     avatar: user.image,
                   }}
@@ -372,7 +388,7 @@ export default function SetlistsPage() {
             onUpdate={saveSetlist}
             currentUser={{
               userId: user?.id || 'anonymous',
-              userName: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+              userName: user?.name || user?.email?.split('@')[0] || 'User',
             }}
           />
         </div>

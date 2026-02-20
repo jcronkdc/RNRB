@@ -144,35 +144,39 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Create the project
-    const project = await db.project.create({
-      data: {
-        name: validated.name,
-        slug: finalSlug,
-        description: validated.description || null,
-        tagline: validated.tagline || null,
-        coverImage: validated.coverImage || null,
-        visibility: validated.visibility,
-        orgId: finalOrgId,
-      },
-      include: {
-        _count: {
-          select: {
-            songs: true,
-            members: true,
-            studioSessions: true,
+    // Create project and add creator as owner atomically
+    const project = await db.$transaction(async (tx) => {
+      const newProject = await tx.project.create({
+        data: {
+          name: validated.name,
+          slug: finalSlug,
+          description: validated.description || null,
+          tagline: validated.tagline || null,
+          coverImage: validated.coverImage || null,
+          visibility: validated.visibility,
+          orgId: finalOrgId,
+        },
+        include: {
+          _count: {
+            select: {
+              songs: true,
+              members: true,
+              studioSessions: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    // Add creator as owner
-    await db.projectMember.create({
-      data: {
-        projectId: project.id,
-        userId: user.id,
-        role: 'owner',
-      },
+      // Add creator as owner in the same transaction
+      await tx.projectMember.create({
+        data: {
+          projectId: newProject.id,
+          userId: user.id,
+          role: 'owner',
+        },
+      });
+
+      return newProject;
     });
 
     // Transform response
@@ -187,7 +191,7 @@ export async function POST(req: NextRequest) {
       created_at: project.createdAt.toISOString(),
       updated_at: project.updatedAt.toISOString(),
       song_count: project._count.songs,
-      collaborator_count: project._count.members + 1, // +1 for creator
+      collaborator_count: project._count.members + 1,
       session_count: project._count.studioSessions,
     };
 

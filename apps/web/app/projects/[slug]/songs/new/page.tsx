@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { supabase } from '@/lib/supabase';
+import { useSession } from 'next-auth/react';
 
 // Dynamically import collaborative visual builder
 const CollaborativeVisualBuilder = dynamic(
@@ -32,21 +32,20 @@ export default function NewSongPage() {
     songStructure: [] as any[],
   });
 
+  const { data: session, status: authStatus } = useSession();
+
   useEffect(() => {
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
+
+    setUser(session.user);
+
     const loadProject = async () => {
-      const {
-        data: { user },
-      } = await supabase!.auth.getUser();
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
-
-      setUser(user);
-
-      // Load project from API
       try {
-        const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
+        const response = await fetch(`/api/projects/${slug}`);
         if (!response.ok) {
           router.push('/projects');
           return;
@@ -61,7 +60,7 @@ export default function NewSongPage() {
     };
 
     loadProject();
-  }, [router, slug]);
+  }, [router, slug, session, authStatus]);
 
   const handleSave = async () => {
     if (!songData.title.trim()) {
@@ -218,7 +217,7 @@ export default function NewSongPage() {
             onSongChange={(blocks) => setSongData({ ...songData, songStructure: blocks })}
             currentUser={{
               userId: user.id,
-              userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+              userName: user?.name || user?.email?.split('@')[0] || 'User',
             }}
           />
         )}

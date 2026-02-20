@@ -57,11 +57,12 @@ const CRONKWATERS_ORIGIN =
 
 // Routes that require authentication
 const protectedPaths = [
-  '/admin', // Admin dashboard - additional owner check in layout
+  '/admin',
   '/dashboard',
   '/projects',
   '/library',
   '/collaboration',
+  '/collaboration-needs',
   '/messages',
   '/analytics',
   '/settings',
@@ -74,20 +75,31 @@ const protectedPaths = [
   '/invite',
   '/invites',
   '/request',
-  // NOTE: '/u' (public profiles) is intentionally NOT protected - anyone can view profiles
+  // NOTE: '/u' (public profiles) is intentionally NOT protected
   '/discover',
-  '/feed', // Social feed requires auth
+  '/feed',
   '/auth-test',
   '/posthog-test',
-  '/sites', // Website builder
-  '/labs', // R&R Labs
-  '/studio', // Recording studio
-  '/explore', // Explore community
-  '/create', // Create track
-  '/songs', // Songs management
-  '/credits', // Credits page
-  '/onboarding', // Onboarding flow
-  '/community', // Community pages
+  '/sites',
+  '/studio',
+  '/explore',
+  '/create',
+  '/songs',
+  '/credits',
+  '/onboarding',
+  '/community',
+  '/marketplace',
+  '/my-merch',
+  '/merch',
+  '/meet',
+  '/masterclasses',
+  '/network',
+  '/notifications',
+  '/opportunities',
+  '/social',
+  '/tools',
+  '/help',
+  '/revenue',
 ];
 
 // Routes that should redirect to dashboard if already authenticated

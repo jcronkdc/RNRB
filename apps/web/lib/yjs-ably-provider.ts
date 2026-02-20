@@ -16,7 +16,7 @@
  *   Late joiner -> HTTP GET /api/songs/:id/yjs -> applies full state -> then subscribes to Ably
  */
 
-import type { RealtimeChannel, Types } from 'ably';
+import type { RealtimeChannel, Realtime } from 'ably';
 import * as Y from 'yjs';
 import { Awareness, encodeAwarenessUpdate, applyAwarenessUpdate, removeAwarenessStates } from 'y-protocols/awareness';
 
@@ -24,7 +24,7 @@ export interface YjsAblyProviderOptions {
   /** The Yjs document to sync */
   doc: Y.Doc;
   /** Ably Realtime client instance */
-  ablyClient: Types.RealtimePromise;
+  ablyClient: Realtime;
   /** Channel name for this document (e.g., "song:abc123") */
   channelName: string;
   /** Song ID for HTTP state persistence */
@@ -40,7 +40,7 @@ export class YjsAblyProvider {
   doc: Y.Doc;
   awareness: Awareness;
 
-  private ablyClient: Types.RealtimePromise;
+  private ablyClient: Realtime;
   private channel: RealtimeChannel;
   private songId: string;
   private persistInterval: number;

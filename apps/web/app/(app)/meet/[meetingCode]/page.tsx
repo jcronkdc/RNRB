@@ -197,6 +197,25 @@ export default function MeetingRoomPage() {
         setError(event.errorMsg || 'Connection error');
       });
 
+      // Listen for incoming chat messages from other participants
+      callFrame.on('app-message', (event: any) => {
+        if (event?.data?.type === 'chat' && event?.data?.message) {
+          const participantName = event.fromId
+            ? callFrame.participants()?.[event.fromId]?.user_name || 'Participant'
+            : 'Participant';
+
+          const incomingMessage: ChatMessage = {
+            id: `${Date.now()}-${event.fromId}`,
+            senderId: event.fromId || 'unknown',
+            senderName: participantName,
+            message: event.data.message,
+            timestamp: new Date(),
+            type: 'text',
+          };
+          setChatMessages((prev) => [...prev, incomingMessage]);
+        }
+      });
+
       // Join the room
       await callFrame.join({
         url: meeting.dailyRoomUrl,
@@ -269,7 +288,9 @@ export default function MeetingRoomPage() {
 
     try {
       await fetch(`/api/meet/${meetingCode}/leave`, { method: 'POST' });
-    } catch {}
+    } catch {
+      // Best-effort leave — navigate away regardless
+    }
 
     router.push('/meet');
   }, [meetingCode, router]);

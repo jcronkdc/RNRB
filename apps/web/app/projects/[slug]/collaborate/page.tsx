@@ -25,7 +25,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { formatDateLong } from '@/lib/format-date';
-import { supabase } from '@/lib/supabase';
+import { useSession } from 'next-auth/react';
 
 // Dynamically import collaboration components
 const ProjectChat = dynamic(() => import('@/components/project-chat').then((m) => m.ProjectChat), {
@@ -64,26 +64,36 @@ export default function ProjectCollaboratePage() {
     'team'
   );
 
+  const { data: session, status: authStatus } = useSession();
+
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
 
-      setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
+    setUser(session.user);
 
-      if (!foundProject) {
+    const loadData = async () => {
+      try {
+        const response = await fetch(`/api/projects/${slug}`);
+        if (!response.ok) {
+          router.push('/projects');
+          return;
+        }
+        const projectData = await response.json();
+        setProject(projectData);
+      } catch (error) {
+        console.error('Error loading project:', error);
         router.push('/projects');
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setProject(foundProject);
-      setLoading(false);
-    });
-  }, [router, slug]);
+    loadData();
+  }, [router, slug, session, authStatus]);
 
   const handleInvite = async () => {
     if (!inviteEmail.trim()) {
@@ -114,39 +124,7 @@ export default function ProjectCollaboratePage() {
         throw new Error(data.error || 'Failed to send invite');
       }
 
-      // Store invitation in project metadata
-      const newInvite = {
-        id: `invite_${Date.now()}`,
-        email: inviteEmail,
-        role: 'member',
-        status: 'pending',
-        invited_by: user.email,
-        invited_at: new Date().toISOString(),
-        invite_link: data.inviteLink,
-      };
-
-      const allProjects = user.user_metadata?.projects || [];
-      const updatedProjects = allProjects.map((p: any) => {
-        if (p.slug === slug) {
-          return {
-            ...p,
-            invites: [...(p.invites || []), newInvite],
-            updated_at: new Date().toISOString(),
-          };
-        }
-        return p;
-      });
-
-      const { error } = await supabase!.auth.updateUser({
-        data: {
-          ...user.user_metadata,
-          projects: updatedProjects,
-        },
-      });
-
-      if (error) throw error;
-
-      // Show success with invite link
+      // Invite was sent via API — show success
       const linkMessage = data.emailSent
         ? `Invitation email sent to ${inviteEmail}!`
         : `Invitation created! Email not sent (EMAIL_SERVER_URL not configured). Share this link: ${data.inviteLink}`;
@@ -157,9 +135,16 @@ export default function ProjectCollaboratePage() {
       });
       setInviteEmail('');
 
-      // Reload project data
-      const updated = updatedProjects.find((p: any) => p.slug === slug);
-      setProject(updated);
+      // Reload project data from API
+      try {
+        const refreshRes = await fetch(`/api/projects/${slug}`);
+        if (refreshRes.ok) {
+          const refreshedProject = await refreshRes.json();
+          setProject(refreshedProject);
+        }
+      } catch {
+        // Non-critical — invite was already sent
+      }
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message });
     } finally {
@@ -259,7 +244,7 @@ export default function ProjectCollaboratePage() {
               channelName={`project:${slug}`}
               currentUser={{
                 userId: user.id,
-                userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                userName: user?.name || user?.email?.split('@')[0] || 'User',
                 userEmail: user.email || '',
                 avatar: user.image,
               }}
@@ -505,7 +490,7 @@ export default function ProjectCollaboratePage() {
                     channelName={`whiteboard:project:${slug}`}
                     currentUser={{
                       userId: user.id,
-                      userName: user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                      userName: user?.name || user?.email?.split('@')[0] || 'User',
                     }}
                     width={800}
                     height={500}

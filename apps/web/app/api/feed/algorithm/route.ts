@@ -215,29 +215,31 @@ export async function GET(request: NextRequest) {
       .map((id: string) => fullPosts.find((p) => p.id === id))
       .filter(Boolean);
 
-    // Check user's interactions with each post
-    const postsWithUserData = await Promise.all(
-      sortedPosts.map(async (post: any) => {
-        const [userReaction, userBookmark, userShare] = await Promise.all([
-          prisma.postReaction.findFirst({
-            where: { postId: post.id, userId },
-          }),
-          prisma.postBookmark.findFirst({
-            where: { postId: post.id, userId },
-          }),
-          prisma.postShare.findFirst({
-            where: { postId: post.id, userId },
-          }),
-        ]);
+    // Batch-fetch user interactions (replaces N+1 pattern)
+    const sortedPostIds = sortedPosts.map((p: any) => p.id);
 
-        return {
-          ...post,
-          currentUserReaction: userReaction?.emoji || null,
-          currentUserBookmarked: !!userBookmark,
-          currentUserShared: !!userShare,
-        };
-      })
-    );
+    const [userReactions, userBookmarks, userShares] = await Promise.all([
+      prisma.postReaction.findMany({
+        where: { postId: { in: sortedPostIds }, userId },
+      }),
+      prisma.postBookmark.findMany({
+        where: { postId: { in: sortedPostIds }, userId },
+      }),
+      prisma.postShare.findMany({
+        where: { postId: { in: sortedPostIds }, userId },
+      }),
+    ]);
+
+    const reactionMap = new Map(userReactions.map((r: any) => [r.postId, r.emoji]));
+    const bookmarkSet = new Set(userBookmarks.map((b: any) => b.postId));
+    const shareSet = new Set(userShares.map((s: any) => s.postId));
+
+    const postsWithUserData = sortedPosts.map((post: any) => ({
+      ...post,
+      currentUserReaction: reactionMap.get(post.id) || null,
+      currentUserBookmarked: bookmarkSet.has(post.id),
+      currentUserShared: shareSet.has(post.id),
+    }));
 
     const nextCursor =
       sortedPosts.length === limit ? sortedPosts[sortedPosts.length - 1]?.id : null;

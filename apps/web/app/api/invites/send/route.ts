@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000'}/invites/${projectSlug}?email=${encodeURIComponent(inviteEmail)}`;
+    const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3001'}/invites/${projectSlug}?email=${encodeURIComponent(inviteEmail)}`;
 
     // Send invitation email
     const emailOptions = emailTemplates.projectInvite({

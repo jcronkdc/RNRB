@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Send email notification to the musician
-    const siteUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000'}/sites/${subdomain}`;
+    const siteUrl = `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3001'}/sites/${subdomain}`;
 
     const emailOptions = emailTemplates.bookingRequest({
       musicianEmail: site.user.email,

@@ -32,7 +32,8 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { trpc as api } from '@cronkwaters/trpc/client/react';
 
-function formatPrice(price: number | null | undefined, currency: string = 'USD'): string {
+function formatPrice(price: number | { toNumber?: () => number } | null | undefined, currency: string = 'USD'): string {
+  if (price && typeof price === 'object' && 'toNumber' in price) price = price.toNumber?.() ?? null;
   if (price === null || price === undefined) return 'Trade Only';
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -466,7 +467,7 @@ export default function ListingDetailPage() {
                   ) : (
                     <User className="h-7 w-7 text-white" />
                   )}
-                  {listing.seller?.isVerified && (
+                  {(listing.seller as any)?.isVerified && (
                     <div className="absolute -bottom-1 -right-1 rounded-full bg-emerald-500 p-1">
                       <Check className="h-3 w-3 text-white" />
                     </div>
@@ -477,19 +478,19 @@ export default function ListingDetailPage() {
                     <span className="font-semibold text-white">
                       {listing.seller?.name || 'Anonymous'}
                     </span>
-                    {listing.seller?.isVerified && (
+                    {(listing.seller as any)?.isVerified && (
                       <span className="rounded bg-emerald-500/20 px-1.5 py-0.5 text-xs font-medium text-emerald-400">
                         Verified
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-white/60">
-                    {listing.seller?.marketplaceSellerRating && (
+                    {(listing.seller as any)?.marketplaceSellerRating && (
                       <span className="flex items-center gap-1 text-amber-400">
                         <Star className="h-3.5 w-3.5 fill-current" />
-                        {Number(listing.seller.marketplaceSellerRating).toFixed(1)}
+                        {Number((listing.seller as any).marketplaceSellerRating).toFixed(1)}
                         <span className="text-white/40">
-                          ({listing.seller.marketplaceReviewCount || 0})
+                          ({(listing.seller as any).marketplaceReviewCount || 0})
                         </span>
                       </span>
                     )}
@@ -645,7 +646,7 @@ export default function ListingDetailPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#1a1a2e] p-6"
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--surface)] p-6"
           >
             <h3 className="mb-4 text-xl font-semibold text-white">Make an Offer</h3>
 
@@ -741,7 +742,7 @@ export default function ListingDetailPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[#1a1a2e] p-6"
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--surface)] p-6"
           >
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-xl font-semibold text-white">Report Listing</h3>

@@ -19,7 +19,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { formatDateLong } from '@/lib/format-date';
-import { supabase } from '@/lib/supabase';
+import { useSession } from 'next-auth/react';
 
 type Session = {
   id: string;
@@ -44,27 +44,37 @@ export default function ProjectSessionsPage() {
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
 
+  const { data: session, status: authStatus } = useSession();
+
   useEffect(() => {
-    supabase?.auth.getUser().then(({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
 
-      setUser(user);
-      const projects = user.user_metadata?.projects || [];
-      const foundProject = projects.find((p: any) => p.slug === slug);
+    setUser(session.user);
 
-      if (!foundProject) {
+    const loadData = async () => {
+      try {
+        const response = await fetch(`/api/projects/${slug}`);
+        if (!response.ok) {
+          router.push('/projects');
+          return;
+        }
+        const projectData = await response.json();
+        setProject(projectData);
+        setSessions(projectData.sessions || projectData.studioSessions || []);
+      } catch (error) {
+        console.error('Error loading sessions:', error);
         router.push('/projects');
-        return;
+      } finally {
+        setLoading(false);
       }
+    };
 
-      setProject(foundProject);
-      setSessions(foundProject.sessions || []);
-      setLoading(false);
-    });
-  }, [router, slug]);
+    loadData();
+  }, [router, slug, session, authStatus]);
 
   if (loading) {
     return (

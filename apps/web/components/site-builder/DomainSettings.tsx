@@ -48,7 +48,8 @@ export function DomainSettings() {
   const [error, setError] = useState<string | null>(null);
   const [verifyResult, setVerifyResult] = useState<{
     success: boolean;
-    message: string;
+    message?: string;
+    error?: string;
     nextSteps?: unknown;
   } | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
@@ -319,7 +320,7 @@ export function DomainSettings() {
                     )}
                     <div>
                       <p className={verifyResult.success ? 'text-green-400' : 'text-yellow-400'}>
-                        {verifyResult.message}
+                        {verifyResult.message || verifyResult.error || (verifyResult.success ? 'Domain verified!' : 'Verification failed')}
                       </p>
                       {!verifyResult.success && (
                         <p className="mt-2 text-sm" style={{ color: 'var(--muted)' }}>

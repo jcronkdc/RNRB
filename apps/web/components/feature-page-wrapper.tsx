@@ -82,14 +82,13 @@ export function FeaturePageWrapper({
                 priority
                 className="transition-all duration-300 group-hover:scale-105"
                 style={{
-                  filter:
-                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)) drop-shadow(0 0 40px rgba(255, 99, 71, 0.3))',
+                  filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.15)) drop-shadow(0 0 40px var(--accent-glow))',
                 }}
               />
               {/* Subtle glow on hover */}
               <div
                 className="absolute inset-0 -z-10 rounded-full opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
-                style={{ background: 'rgba(255, 99, 71, 0.2)' }}
+                style={{ background: 'var(--accent-muted)' }}
               />
             </Link>
             <h1 className="hero-title mt-4 text-center">
@@ -122,7 +121,7 @@ export function AccentBar({ width = 60, delay = 0.2 }: { width?: number; delay?:
       animate={{ width }}
       transition={{ duration: 0.8, delay }}
       className="mb-4 h-1 rounded-full"
-      style={{ background: 'linear-gradient(90deg, var(--accent), #ffd700)' }}
+      style={{ background: 'linear-gradient(90deg, var(--accent), var(--gold))' }}
     />
   );
 }
@@ -147,7 +146,7 @@ export function PageTitle({
         <div
           className="flex h-14 w-14 items-center justify-center rounded-2xl"
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 99, 71, 0.2), rgba(255, 215, 0, 0.1))',
+            background: 'linear-gradient(135deg, var(--accent-muted), var(--gold-muted))',
           }}
         >
           <Icon className="h-7 w-7" style={{ color: 'var(--accent)' }} />

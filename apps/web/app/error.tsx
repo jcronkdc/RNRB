@@ -17,41 +17,54 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div
+      className="flex min-h-screen items-center justify-center p-6"
+      style={{ background: 'var(--bg)' }}
+    >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md text-center"
+        transition={{ duration: 0.4, ease: [0.25, 0.4, 0.25, 1] }}
+        className="w-full max-w-sm text-center"
       >
         <div className="mb-6 flex justify-center">
-          <div className="rounded-full bg-red-500/10 p-4">
-            <AlertTriangle className="h-12 w-12 text-red-500" />
+          <div
+            className="flex h-14 w-14 items-center justify-center rounded-full"
+            style={{ background: 'rgba(220, 38, 38, 0.1)' }}
+          >
+            <AlertTriangle className="h-7 w-7" style={{ color: 'var(--error)' }} />
           </div>
         </div>
 
-        <h1 className="mb-2 text-2xl font-bold">Something went wrong</h1>
-        <p className="mb-6 text-[color:var(--muted)]">
+        <h1 className="mb-2 text-xl font-bold" style={{ color: 'var(--text)' }}>
+          Something went wrong
+        </h1>
+        <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
           An unexpected error occurred. Please try again.
         </p>
 
         {error.digest && (
-          <p className="mb-4 text-xs text-[color:var(--muted)]">Error ID: {error.digest}</p>
+          <p className="mb-4 text-xs" style={{ color: 'var(--muted-soft)' }}>
+            Error ID: {error.digest}
+          </p>
         )}
 
         <div className="flex justify-center gap-3">
           <button
             onClick={reset}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium"
+            className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            style={{ background: 'var(--accent)' }}
           >
             <RefreshCw className="h-4 w-4" />
-            Try Again
+            Try again
           </button>
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 rounded-lg border border-[color:var(--border)] px-4 py-2 text-sm font-medium hover:bg-muted"
+            className="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/[0.03]"
+            style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
           >
             <Home className="h-4 w-4" />
-            Go Home
+            Go home
           </Link>
         </div>
       </motion.div>

@@ -154,9 +154,7 @@ export default function EmailSettingsPage() {
 
   async function fetchAccount() {
     try {
-      console.log('[EMAIL-SETTINGS] Fetching account...');
       const response = await fetch('/api/email/account');
-      console.log('[EMAIL-SETTINGS] Response status:', response.status);
 
       if (!response.ok) {
         console.error(
@@ -170,7 +168,6 @@ export default function EmailSettingsPage() {
       }
 
       const data = await response.json();
-      console.log('[EMAIL-SETTINGS] Account data:', data);
 
       setHasAccount(data.hasAccount);
       setEmailTier(data.emailTier || 'NONE');

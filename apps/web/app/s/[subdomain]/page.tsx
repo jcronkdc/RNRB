@@ -2,10 +2,12 @@ import { prisma } from '@cronkwaters/db';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { auth } from '@/auth';
 import { SiteRenderer } from '@/components/site-builder/SiteRenderer';
 
 interface Props {
   params: Promise<{ subdomain: string }>;
+  searchParams: Promise<{ preview?: string }>;
 }
 
 // Generate metadata for SEO
@@ -45,8 +47,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function PublicSitePage({ params }: Props) {
+export default async function PublicSitePage({ params, searchParams }: Props) {
   const { subdomain } = await params;
+  const { preview } = await searchParams;
 
   // Fetch the site with all sections and user info
   const site = await prisma.musicianSite.findUnique({
@@ -67,9 +70,21 @@ export default async function PublicSitePage({ params }: Props) {
     },
   });
 
-  // Check if site exists and is published
-  if (!site || site.status !== 'published') {
+  if (!site) {
     notFound();
+  }
+
+  // Allow draft preview for site owners (used by the editor's LivePreview iframe)
+  if (site.status !== 'published') {
+    if (preview === 'true') {
+      const session = await auth();
+      if (!session?.user?.id || session.user.id !== site.userId) {
+        notFound(); // Not the owner — don't reveal draft
+      }
+      // Owner previewing their draft — continue rendering
+    } else {
+      notFound();
+    }
   }
 
   // Track page view (fire and forget)
@@ -110,6 +125,16 @@ async function trackPageView(siteId: string) {
       data: { totalViews: { increment: 1 } },
     });
 
+    // Create a SitePageView record (used by analytics dashboard)
+    await prisma.sitePageView.create({
+      data: {
+        siteId,
+        path: '/',
+        visitorId: `anon-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        deviceType: 'desktop', // Would need user-agent parsing for accuracy
+      },
+    }).catch(() => {}); // Non-critical, don't fail the page load
+
     // Upsert daily analytics
     await prisma.siteAnalytics.upsert({
       where: {
@@ -120,7 +145,7 @@ async function trackPageView(siteId: string) {
       },
       update: {
         pageViews: { increment: 1 },
-        uniqueVisitors: { increment: 1 }, // Would need cookie/IP tracking for accuracy
+        uniqueVisitors: { increment: 1 },
       },
       create: {
         siteId,

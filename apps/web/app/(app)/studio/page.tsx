@@ -334,9 +334,7 @@ export default function StudioPage() {
                   {recordingId && (
                     <ProjectSelector
                       songId={recordingId}
-                      onProjectAdded={(slug) => {
-                        console.log('Recording added to project:', slug);
-                      }}
+                      onProjectAdded={() => {}}
                     />
                   )}
                   <Button variant="secondary" onClick={endSession}>
@@ -350,7 +348,6 @@ export default function StudioPage() {
                 token={roomData.token}
                 onRecordingComplete={(id) => {
                   setRecordingId(id);
-                  console.log('Recording complete:', id);
                 }}
               />
             </div>

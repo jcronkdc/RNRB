@@ -70,10 +70,57 @@ export async function GET(request: NextRequest) {
     // Get unique channel IDs
     const channelIds = [...new Set(messages.map((m) => m.channelId))];
 
+    // Extract other user IDs from channel names
+    const channelUserMap = new Map<string, string>();
+    for (const channelId of channelIds) {
+      const parts = channelId.split(':');
+      const otherUserId = parts[1] === userId ? parts[2] : parts[1];
+      if (otherUserId) channelUserMap.set(channelId, otherUserId);
+    }
+
+    const otherUserIds = [...new Set(channelUserMap.values())];
+
+    // Batch-fetch all other users at once (replaces N queries)
+    const otherUsers = await prisma.user.findMany({
+      where: { id: { in: otherUserIds } },
+      select: { id: true, name: true, image: true },
+    });
+    const userMap = new Map(otherUsers.map((u) => [u.id, u]));
+
+    // Batch-fetch latest message per channel and unread counts
+    // These still need per-channel queries but we parallelize them
+    const [latestMessages, unreadCounts, blocks] = await Promise.all([
+      // Latest messages - one query with grouping
+      Promise.all(
+        channelIds.map((channelId) =>
+          prisma.chatMessage.findFirst({
+            where: { channelId, isDeleted: false },
+            orderBy: { createdAt: 'desc' },
+            select: { id: true, content: true, senderId: true, createdAt: true, messageType: true, channelId: true },
+          }).then((msg) => ({ channelId, message: msg }))
+        )
+      ),
+      // Unread counts
+      Promise.all(
+        channelIds.map((channelId) =>
+          prisma.chatMessage.count({
+            where: { channelId, senderId: { not: userId }, isDeleted: false },
+          }).then((count) => ({ channelId, count }))
+        )
+      ),
+      // Blocked users
+      prisma.userBlock.findMany({
+        where: { blockerId: userId, blockedId: { in: otherUserIds } },
+        select: { blockedId: true },
+      }),
+    ]);
+
+    const latestMessageMap = new Map(latestMessages.map((m) => [m.channelId, m.message]));
+    const unreadCountMap = new Map(unreadCounts.map((u) => [u.channelId, u.count]));
+    const blockedSet = new Set(blocks.map((b) => b.blockedId));
+
     // Build conversations list
-    const conversations = await Promise.all(
-      channelIds.map(async (channelId) => {
-        // Get conversation settings
+    const conversations = channelIds.map((channelId) => {
         const settings = settingsMap.get(channelId) || {
           isArchived: false,
           isDeleted: false,
@@ -81,78 +128,22 @@ export async function GET(request: NextRequest) {
           isPinned: false,
         };
 
-        // Apply filter
         if (filter === 'archived' && !settings.isArchived) return null;
         if (filter === 'trash' && !settings.isDeleted) return null;
         if (filter === 'all' && (settings.isArchived || settings.isDeleted)) return null;
 
-        // Extract other user ID from channel
-        const parts = channelId.split(':');
-        const otherUserId = parts[1] === userId ? parts[2] : parts[1];
-
-        // Get other user info
-        const otherUser = await prisma.user.findUnique({
-          where: { id: otherUserId },
-          select: {
-            id: true,
-            name: true,
-            image: true,
-            email: true,
-          },
-        });
-
+        const otherUserId = channelUserMap.get(channelId);
+        const otherUser = otherUserId ? userMap.get(otherUserId) : null;
         if (!otherUser) return null;
 
-        // Apply search filter
         if (search) {
           const searchLower = search.toLowerCase();
           const nameMatch = otherUser.name?.toLowerCase().includes(searchLower);
-          const emailMatch = otherUser.email?.toLowerCase().includes(searchLower);
-          if (!nameMatch && !emailMatch) return null;
+          if (!nameMatch) return null;
         }
 
-        // Get latest message
-        const latestMessage = await prisma.chatMessage.findFirst({
-          where: {
-            channelId,
-            isDeleted: false,
-          },
-          orderBy: { createdAt: 'desc' },
-          select: {
-            id: true,
-            content: true,
-            senderId: true,
-            createdAt: true,
-            messageType: true,
-          },
-        });
-
-        // Get unread count
-        const unreadCount = await prisma.chatMessage.count({
-          where: {
-            channelId,
-            senderId: { not: userId },
-            isDeleted: false,
-            // Would need readAt field on messages or a separate read receipts table
-          },
-        });
-
-        // Check if blocked
-        let isBlocked = false;
-        try {
-          const block = await prisma.userBlock.findFirst({
-            where: {
-              OR: [
-                { blockerId: userId, blockedId: otherUserId },
-                { blockerId: otherUserId, blockedId: userId },
-              ],
-            },
-          });
-          isBlocked = !!block;
-        } catch (error) {
-          // Model might not exist - this is okay, assume not blocked
-          console.log('[Conversations API] UserBlock table not available:', error);
-        }
+        const latestMessage = latestMessageMap.get(channelId) || null;
+        const unreadCount = unreadCountMap.get(channelId) || 0;
 
         return {
           id: channelId,
@@ -161,7 +152,6 @@ export async function GET(request: NextRequest) {
             id: otherUser.id,
             name: otherUser.name,
             image: otherUser.image,
-            email: otherUser.email,
           },
           lastMessage: latestMessage
             ? {
@@ -177,11 +167,10 @@ export async function GET(request: NextRequest) {
           isDeleted: settings.isDeleted || false,
           isMuted: settings.isMuted || false,
           isPinned: settings.isPinned || false,
-          isBlocked,
+          isBlocked: otherUserId ? blockedSet.has(otherUserId) : false,
           updatedAt: latestMessage?.createdAt.toISOString() || new Date().toISOString(),
         };
-      })
-    );
+      });
 
     // Filter out nulls and sort
     const validConversations = conversations

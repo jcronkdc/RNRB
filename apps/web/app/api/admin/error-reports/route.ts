@@ -214,16 +214,36 @@ export async function GET(request: NextRequest) {
     const severity = searchParams.get('severity');
     const category = searchParams.get('category');
     const resolved = searchParams.get('resolved');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 200);
-    const offset = parseInt(searchParams.get('offset') || '0', 10);
+    const limit = Math.min(Math.max(parseInt(searchParams.get('limit') || '50', 10), 1), 200);
+    const offset = Math.max(parseInt(searchParams.get('offset') || '0', 10), 0);
 
-    // Build query
-    let whereClause = 'WHERE 1=1';
-    if (severity) whereClause += ` AND severity = '${severity}'`;
-    if (category) whereClause += ` AND category = '${category}'`;
-    if (resolved !== null && resolved !== undefined) {
-      whereClause += ` AND resolved = ${resolved === 'true'}`;
+    // Validate enum inputs to prevent SQL injection
+    const validSeverities = ['critical', 'high', 'medium', 'low'];
+    const validCategories = ['runtime', 'network', 'render', 'auth', 'api', 'other'];
+
+    const safeSeverity = severity && validSeverities.includes(severity) ? severity : null;
+    const safeCategory = category && validCategories.includes(category) ? category : null;
+    const safeResolved = resolved === 'true' ? true : resolved === 'false' ? false : null;
+
+    // Build parameterized query
+    const conditions: string[] = ['1=1'];
+    const params: unknown[] = [];
+    let paramIdx = 1;
+
+    if (safeSeverity) {
+      conditions.push(`severity = $${paramIdx++}`);
+      params.push(safeSeverity);
     }
+    if (safeCategory) {
+      conditions.push(`category = $${paramIdx++}`);
+      params.push(safeCategory);
+    }
+    if (safeResolved !== null) {
+      conditions.push(`resolved = $${paramIdx++}`);
+      params.push(safeResolved);
+    }
+
+    params.push(limit, offset);
 
     const reports = await prisma.$queryRawUnsafe(`
       SELECT 
@@ -251,7 +271,7 @@ export async function GET(request: NextRequest) {
         "lastOccurredAt",
         "createdAt"
       FROM "ErrorReport"
-      ${whereClause}
+      WHERE ${conditions.join(' AND ')}
       ORDER BY 
         CASE severity
           WHEN 'critical' THEN 1
@@ -261,9 +281,9 @@ export async function GET(request: NextRequest) {
           ELSE 5
         END,
         "lastOccurredAt" DESC
-      LIMIT ${limit}
-      OFFSET ${offset}
-    `);
+      LIMIT $${paramIdx++}
+      OFFSET $${paramIdx}
+    `, ...params);
 
     // Get counts
     const counts = (await prisma.$queryRaw`

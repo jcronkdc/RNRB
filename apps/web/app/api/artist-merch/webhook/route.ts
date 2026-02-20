@@ -3,9 +3,9 @@ import Stripe from 'stripe';
 import { prisma, Prisma } from '@cronkwaters/db';
 import { fetchWithTimeout, TIMEOUTS } from '@/lib/fetch-utils';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-02-24.acacia',
-});
+const stripe = process.env.STRIPE_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: '2025-02-24.acacia' })
+  : null;
 
 const webhookSecret =
   process.env.STRIPE_MERCH_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || '';
@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
 
-  if (!signature) {
-    return NextResponse.json({ error: 'No signature' }, { status: 400 });
+  if (!signature || !stripe) {
+    return NextResponse.json({ error: !stripe ? 'Payment service not configured' : 'No signature' }, { status: !stripe ? 503 : 400 });
   }
 
   let event: Stripe.Event;
@@ -149,7 +149,9 @@ async function handleArtistMerchOrder(session: Stripe.Checkout.Session) {
       stripePaymentIntentId: session.payment_intent as string | undefined,
       shippingName: session.shipping_details?.name,
       shippingAddress:
-        (session.shipping_details?.address as unknown as Prisma.InputJsonValue) || null,
+        session.shipping_details?.address
+          ? (JSON.parse(JSON.stringify(session.shipping_details.address)) as Prisma.InputJsonValue)
+          : undefined,
       shippingMethod: 'standard',
       shippingCost: session.shipping_cost?.amount_total || 0,
       subtotal: session.amount_subtotal || 0,

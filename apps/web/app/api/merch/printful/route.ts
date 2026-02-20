@@ -452,12 +452,14 @@ export async function POST(request: NextRequest) {
           recipient,
           items,
           externalId,
-          retailCosts,
           confirmOrder = false,
+          ...rest
         } = body as CreateOrderRequest & {
           externalId?: string;
           confirmOrder?: boolean;
+          retailCosts?: any;
         };
+        const retailCosts = (rest as any).retailCosts;
 
         if (!recipient || !items?.length) {
           return NextResponse.json(

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { auth } from '@/auth';
+import { getBaseUrl } from '@/lib/get-base-url';
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
@@ -70,8 +71,8 @@ export async function POST(request: NextRequest) {
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/merch/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/merch/checkout`,
+      success_url: `${getBaseUrl()}/merch/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${getBaseUrl()}/merch/checkout`,
       customer_email: session.user.email || undefined,
       metadata: {
         userId: session.user.id,

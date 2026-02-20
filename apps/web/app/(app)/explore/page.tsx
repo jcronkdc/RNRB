@@ -319,8 +319,8 @@ export default function ExplorePage() {
                     isLiked={track.isLikedByCurrentUser}
                     onPlay={() => setSelectedTrack(track)}
                     onLike={() => handleLike(track.id)}
-                    onExtend={() => console.log('Extend', track.id)}
-                    onRemix={() => console.log('Remix', track.id)}
+                    onExtend={() => {}}
+                    onRemix={() => {}}
                     onDownload={() => window.open(track.audioUrl, '_blank')}
                   />
                 </motion.div>

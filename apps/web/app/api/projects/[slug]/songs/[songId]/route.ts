@@ -1,23 +1,23 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
 /**
  * GET /api/projects/[slug]/songs/[songId]
- * Get a single song
+ * Get a single song (requires auth)
  */
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string; songId: string }> }
 ) {
   try {
-    const { slug, songId } = await params;
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
+
+    const { slug, songId } = await params;
 
     const song = await db.song.findUnique({
       where: {
@@ -28,7 +28,6 @@ export async function GET(
           select: {
             id: true,
             name: true,
-            email: true,
             image: true,
           },
         },

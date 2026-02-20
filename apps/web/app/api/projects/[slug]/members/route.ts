@@ -80,3 +80,54 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: 'Failed to load team members' }, { status: 500 });
   }
 }
+
+/**
+ * POST /api/projects/[slug]/members
+ * Add the authenticated user as a member of a project (invite accept)
+ */
+export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  try {
+    const { slug } = await params;
+    const user = await getCurrentUser();
+    if (!user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    await checkRateLimit(standardLimiter, `project-member-add:${user.id}`);
+
+    const body = await request.json().catch(() => ({}));
+    const role = body.role || 'member';
+
+    // Find the project
+    const project = await db.project.findFirst({
+      where: { OR: [{ slug }, { id: slug }] },
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+
+    // Check if already a member
+    const existing = await db.projectMember.findFirst({
+      where: { projectId: project.id, userId: user.id },
+    });
+
+    if (existing) {
+      return NextResponse.json({ error: 'Already a member' }, { status: 409 });
+    }
+
+    // Add as member
+    const member = await db.projectMember.create({
+      data: {
+        projectId: project.id,
+        userId: user.id,
+        role,
+      },
+    });
+
+    return NextResponse.json({ success: true, member }, { status: 201 });
+  } catch (error) {
+    console.error('Error adding member:', error);
+    return NextResponse.json({ error: 'Failed to join project' }, { status: 500 });
+  }
+}

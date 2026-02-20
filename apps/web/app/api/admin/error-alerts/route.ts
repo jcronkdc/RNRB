@@ -13,9 +13,26 @@ import { prisma } from '@cronkwaters/db';
 /**
  * POST /api/admin/error-alerts
  * Create a real-time alert (called from error monitoring)
+ * Requires admin authentication to prevent abuse.
  */
 export async function POST(request: NextRequest) {
   try {
+    // Require admin authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    // Verify admin/owner status
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { isOwner: true },
+    });
+
+    if (!user?.isOwner) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+
     const body = await request.json();
 
     const { type, title, message, url, timestamp } = body;
@@ -89,31 +106,34 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const acknowledged = searchParams.get('acknowledged');
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20', 10), 100);
+    const limit = Math.min(Math.max(parseInt(searchParams.get('limit') || '20', 10), 1), 100);
 
-    let whereClause = '';
+    // Use parameterized queries to prevent SQL injection
+    let alerts;
     if (acknowledged === 'false') {
-      whereClause = 'WHERE acknowledged = false';
+      alerts = await prisma.$queryRaw`
+        SELECT id, "errorReportId", type, title, message, url, acknowledged, "acknowledgedAt", "createdAt"
+        FROM "AdminErrorAlert"
+        WHERE acknowledged = false
+        ORDER BY "createdAt" DESC
+        LIMIT ${limit}
+      `;
     } else if (acknowledged === 'true') {
-      whereClause = 'WHERE acknowledged = true';
+      alerts = await prisma.$queryRaw`
+        SELECT id, "errorReportId", type, title, message, url, acknowledged, "acknowledgedAt", "createdAt"
+        FROM "AdminErrorAlert"
+        WHERE acknowledged = true
+        ORDER BY "createdAt" DESC
+        LIMIT ${limit}
+      `;
+    } else {
+      alerts = await prisma.$queryRaw`
+        SELECT id, "errorReportId", type, title, message, url, acknowledged, "acknowledgedAt", "createdAt"
+        FROM "AdminErrorAlert"
+        ORDER BY "createdAt" DESC
+        LIMIT ${limit}
+      `;
     }
-
-    const alerts = await prisma.$queryRawUnsafe(`
-      SELECT 
-        id,
-        "errorReportId",
-        type,
-        title,
-        message,
-        url,
-        acknowledged,
-        "acknowledgedAt",
-        "createdAt"
-      FROM "AdminErrorAlert"
-      ${whereClause}
-      ORDER BY "createdAt" DESC
-      LIMIT ${limit}
-    `);
 
     // Get unacknowledged count
     const counts = (await prisma.$queryRaw`

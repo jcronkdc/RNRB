@@ -141,8 +141,7 @@ export function PinnedCommentThread({
       if (hasReacted) {
         await addReaction(commentId, emoji);
       } else {
-        // Would need removeReaction implementation
-        console.log('Remove reaction:', emoji);
+        // TODO: Implement removeReaction
       }
     } catch (error) {
       console.error('Failed to react:', error);

@@ -322,7 +322,7 @@ export default function SellerProfilePage() {
                 )}
                 <span className="flex items-center gap-1">
                   <Package className="h-4 w-4" />
-                  {profile.successfulSales || 0} successful sales
+                  {(profile as any).successfulSales || 0} successful sales
                 </span>
                 <span className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />

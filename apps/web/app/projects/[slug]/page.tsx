@@ -20,9 +20,8 @@ import {
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
-
-import { supabase } from '@/lib/supabase';
 
 const MilestoneTimeline = dynamic(
   () => import('@/components/milestone-timeline').then((m) => m.MilestoneTimeline),
@@ -37,38 +36,38 @@ const ArtworkGenerator = dynamic(
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { data: session, status } = useSession();
   const slug = params?.slug as string;
-  const [user, setUser] = useState<any>(null);
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showArtworkModal, setShowArtworkModal] = useState(false);
 
   useEffect(() => {
-    supabase?.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
+    if (status === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
 
-      setUser(user);
-
-      // Load project from API
+    const loadProject = async () => {
       try {
-        const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
+        const response = await fetch(`/api/projects/${slug}`);
         if (!response.ok) {
           router.push('/projects');
           return;
         }
-
         const foundProject = await response.json();
         setProject(foundProject);
-        setLoading(false);
       } catch (error) {
         console.error('Error loading project:', error);
         router.push('/projects');
+      } finally {
+        setLoading(false);
       }
-    });
-  }, [router, slug]);
+    };
+
+    loadProject();
+  }, [router, slug, session, status]);
 
   if (loading) {
     return (
@@ -326,8 +325,7 @@ export default function ProjectDetailPage() {
               <MilestoneTimeline
                 projectSlug={slug}
                 onMilestoneClick={(milestoneId) => {
-                  // Could navigate to milestone detail or open modal
-                  console.log('Milestone clicked:', milestoneId);
+                  // TODO: Navigate to milestone detail or open modal
                 }}
               />
             </Card>
@@ -349,7 +347,7 @@ export default function ProjectDetailPage() {
               <div className="space-y-3">
                 <div className="bg-[color:var(--surface)]-muted flex items-center gap-3 rounded-lg border border-[color:var(--border)] p-3">
                   <div className="bg-[color:var(--accent)]/20 flex h-10 w-10 items-center justify-center rounded-full font-semibold text-[color:var(--text)]">
-                    {user?.email?.[0].toUpperCase()}
+                    {session?.user?.email?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div>
                     <p className="text-sm font-medium text-[color:var(--text)]">You</p>
@@ -469,7 +467,7 @@ export default function ProjectDetailPage() {
             </div>
             <ArtworkGenerator
               songTitle={project.name}
-              artistName={user?.user_metadata?.name || user?.email?.split('@')[0]}
+              artistName={session?.user?.name || session?.user?.email?.split('@')[0]}
               genre={project.genre}
               currentArtwork={project.cover_image}
               onArtworkSelect={async (url, prompt, style) => {

@@ -812,7 +812,7 @@ export default function CreatePage() {
                     <ProjectSelector
                       songId={generatedSongId}
                       onProjectAdded={(slug) => {
-                        console.log('Added to project:', slug);
+                        // Track added to project
                       }}
                       className="w-full sm:w-auto"
                     />

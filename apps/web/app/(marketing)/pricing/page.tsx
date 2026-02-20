@@ -1,4 +1,4 @@
-import { Check, X, Zap, Crown, Music } from '@/components/ui/custom-icons';
+import { Check, X } from '@/components/ui/custom-icons';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -7,7 +7,7 @@ import { generateMetadata as generateSEOMetadata, generateProductSchema, JsonLd 
 export const metadata: Metadata = generateSEOMetadata({
   title: "Pricing - Rock N' Roll Basement Music Platform Plans",
   description:
-    'Simple, affordable pricing for musicians. Free plan available. Creator plan $14.99/mo. Studio plan $29.99/mo with unlimited projects & HD video. Start your 14-day free trial.',
+    'Simple, affordable pricing for musicians. Free plan available. Creator plan $17.99/mo. Studio plan $34.99/mo with unlimited projects & HD video.',
   keywords: [
     'music software pricing',
     'band management software cost',
@@ -21,581 +21,377 @@ export const metadata: Metadata = generateSEOMetadata({
 const pricingSchemas = [
   generateProductSchema({
     name: "Rock N' Roll Basement - Free Plan",
-    description:
-      'Free music collaboration platform with 3 projects, 1GB storage, and basic songwriting tools.',
+    description: 'Free music collaboration platform with 3 projects, 1GB storage, and basic songwriting tools.',
     price: '0',
   }),
   generateProductSchema({
     name: "Rock N' Roll Basement - Creator Plan",
-    description:
-      'Music collaboration platform for serious musicians with AI assists, tour management, and copyright tools.',
+    description: 'Music collaboration platform with AI assists, tour management, and copyright tools.',
     price: '17.99',
   }),
   generateProductSchema({
     name: "Rock N' Roll Basement - Studio Plan",
-    description:
-      'Professional music platform with unlimited projects, HD video collaboration, and 100GB storage.',
+    description: 'Professional music platform with unlimited projects, HD video, and 100GB storage.',
     price: '34.99',
   }),
 ];
+
+// ─── Feature Row ─────────────────────────────────────────────────────────────
+
+function FeatureRow({
+  feature,
+  explorer,
+  creator,
+  studio,
+}: {
+  feature: string;
+  explorer: React.ReactNode;
+  creator: React.ReactNode;
+  studio: React.ReactNode;
+}) {
+  return (
+    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
+      <td className="py-3 pr-6 text-sm" style={{ color: 'var(--text-secondary)' }}>{feature}</td>
+      <td className="px-4 py-3 text-center text-sm" style={{ color: 'var(--muted)' }}>{explorer}</td>
+      <td className="px-4 py-3 text-center text-sm" style={{ color: 'var(--muted)' }}>{creator}</td>
+      <td className="py-3 pl-4 text-center text-sm" style={{ color: 'var(--muted)' }}>{studio}</td>
+    </tr>
+  );
+}
+
+function CheckIcon({ color = 'var(--sage)' }: { color?: string }) {
+  return <Check className="mx-auto h-4 w-4" style={{ color }} aria-hidden="true" />;
+}
+
+// ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function PricingPage() {
   return (
     <>
       <JsonLd data={pricingSchemas} />
-      <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
-        <section className="page-section" itemScope itemType="https://schema.org/Product">
-          <div className="container">
-            <div className="section-header">
-              <h1 className="mb-4 text-5xl font-bold">Simple, Transparent Pricing</h1>
-              <p className="section-subtitle">
-                Everything you need to create, collaborate, and manage your music career
-              </p>
-            </div>
+      <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
+        {/* Header */}
+        <section className="px-5 pb-16 pt-28 text-center sm:px-8 sm:pb-20 sm:pt-32">
+          <div className="mx-auto max-w-2xl">
+            <h1
+              className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
+              style={{ color: 'var(--text)' }}
+            >
+              Simple, honest pricing
+            </h1>
+            <p className="mt-4 text-base leading-relaxed sm:text-lg" style={{ color: 'var(--muted)' }}>
+              Everything you need to create, collaborate, and manage your music career.
+              Start free, upgrade when you&apos;re ready.
+            </p>
+          </div>
+        </section>
 
-            <div className="feature-grid mx-auto max-w-5xl">
-              {/* FREE TIER */}
-              <article className="card text-center" itemScope itemType="https://schema.org/Offer">
-                <div className="mb-4 flex items-center justify-center gap-2">
-                  <Music className="h-6 w-6" style={{ color: 'var(--muted)' }} />
-                  <h2 className="text-2xl font-semibold" itemProp="name">
-                    Explorer
-                  </h2>
-                </div>
-                <p className="mb-6" style={{ color: 'var(--muted)' }} itemProp="description">
+        {/* Pricing Tiers */}
+        <section className="px-5 pb-20 sm:px-8">
+          <div className="mx-auto grid max-w-5xl gap-5 lg:grid-cols-3">
+            {/* Explorer — Free */}
+            <div
+              className="flex flex-col rounded-xl border p-6"
+              style={{ borderColor: 'var(--border)' }}
+              itemScope
+              itemType="https://schema.org/Offer"
+            >
+              <div className="mb-5">
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                  Explorer
+                </h2>
+                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }} itemProp="description">
                   Perfect for getting started
                 </p>
-                <div className="mb-2 text-4xl font-bold" itemProp="price" content="0">
-                  $0
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-4xl font-bold" style={{ color: 'var(--text)' }} itemProp="price" content="0">$0</span>
+                  <span className="text-sm" style={{ color: 'var(--muted)' }}>forever</span>
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
-                <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
-                  Free forever
-                </p>
-                <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>3 active projects</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>1 GB storage</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>Basic songwriting tools</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>Community access (view only)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>1 collaborator per project</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <X className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-500" aria-hidden="true" />
-                    <span className="text-gray-500">No AI features</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <X className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-500" aria-hidden="true" />
-                    <span className="text-gray-500">No video collaboration</span>
-                  </li>
-                </ul>
-                <Link href="/auth?signup=true" className="button secondary w-full">
-                  Start Free
-                </Link>
-              </article>
+              </div>
 
-              {/* CREATOR TIER - MOST POPULAR */}
-              <article
-                className="card relative text-center"
-                style={{
-                  borderColor: 'var(--accent)',
-                  borderWidth: '2px',
-                }}
-                itemScope
-                itemType="https://schema.org/Offer"
+              <ul className="mb-6 flex-1 space-y-3">
+                {[
+                  '3 active projects',
+                  '1 GB storage',
+                  'Basic songwriting tools',
+                  'Community access',
+                  '1 collaborator per project',
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--sage)' }} />
+                    {f}
+                  </li>
+                ))}
+                {['No AI features', 'No video collaboration'].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--muted-soft)' }}>
+                    <X className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--muted-soft)' }} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/auth?signup=true"
+                className="rounded-lg border px-4 py-2.5 text-center text-sm font-semibold transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+                style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
               >
-                <div
-                  className="absolute -top-3 left-1/2 -translate-x-1/2 transform rounded-full px-4 py-1 text-sm font-semibold"
-                  style={{
-                    background: 'var(--accent)',
-                    color: '#0B0B0C',
-                  }}
-                >
-                  MOST POPULAR
-                </div>
-                <div className="mb-4 flex items-center justify-center gap-2">
-                  <Zap className="h-6 w-6" style={{ color: 'var(--accent)' }} aria-hidden="true" />
-                  <h2 className="text-2xl font-semibold" itemProp="name">
-                    Creator
-                  </h2>
-                </div>
-                <p className="mb-6" style={{ color: 'var(--muted)' }} itemProp="description">
+                Get started free
+              </Link>
+            </div>
+
+            {/* Creator — Popular */}
+            <div
+              className="relative flex flex-col rounded-xl border-2 p-6"
+              style={{ borderColor: 'var(--accent)', background: 'var(--surface)' }}
+              itemScope
+              itemType="https://schema.org/Offer"
+            >
+              <span
+                className="absolute -top-3 left-6 rounded-full px-3 py-0.5 text-xs font-semibold text-white"
+                style={{ background: 'var(--accent)' }}
+              >
+                Most popular
+              </span>
+
+              <div className="mb-5">
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                  Creator
+                </h2>
+                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }} itemProp="description">
                   For serious musicians & songwriters
                 </p>
-                <div className="mb-2 text-4xl font-bold" itemProp="price" content="17.99">
-                  $17.99
-                  <span className="text-base font-normal" style={{ color: 'var(--muted)' }}>
-                    /month
-                  </span>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-4xl font-bold" style={{ color: 'var(--text)' }} itemProp="price" content="17.99">$17.99</span>
+                  <span className="text-sm" style={{ color: 'var(--muted)' }}>/month</span>
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
-                <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
-                  Less than 3 lattes
-                </p>
-                <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>10 active projects</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>10 GB storage</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>
-                      <strong>100 AI assists/month</strong>
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>Copyright split sheets (PDF)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>Tour & gig management</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>5 collaborators per project</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>Community publishing</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0"
-                      style={{ color: 'var(--accent)' }}
-                      aria-hidden="true"
-                    />
-                    <span>Version control for music</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <X className="mt-0.5 h-4 w-4 flex-shrink-0 text-gray-500" aria-hidden="true" />
-                    <span className="text-gray-500">No video collaboration</span>
-                  </li>
-                </ul>
-                <Link href="/auth?signup=true" className="button w-full">
-                  Start Free Trial
-                </Link>
-              </article>
+              </div>
 
-              {/* STUDIO TIER */}
-              <article className="card text-center" itemScope itemType="https://schema.org/Offer">
-                <div className="mb-4 flex items-center justify-center gap-2">
-                  <Crown className="h-6 w-6 text-purple-500" aria-hidden="true" />
-                  <h2 className="text-2xl font-semibold" itemProp="name">
-                    Studio
-                  </h2>
-                </div>
-                <p className="mb-6" style={{ color: 'var(--muted)' }} itemProp="description">
+              <ul className="mb-6 flex-1 space-y-3">
+                {[
+                  '10 active projects',
+                  '10 GB storage',
+                  { text: '100 AI assists/month', bold: true },
+                  'Copyright split sheets',
+                  'Tour & gig management',
+                  '5 collaborators per project',
+                  'Community publishing',
+                  'Version control',
+                ].map((f) => {
+                  const text = typeof f === 'string' ? f : f.text;
+                  const bold = typeof f === 'object' && f.bold;
+                  return (
+                    <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--sage)' }} />
+                      {bold ? <strong>{text}</strong> : text}
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <Link
+                href="/auth?signup=true"
+                className="rounded-lg px-4 py-2.5 text-center text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: 'var(--accent)' }}
+              >
+                Start free trial
+              </Link>
+            </div>
+
+            {/* Studio */}
+            <div
+              className="flex flex-col rounded-xl border p-6"
+              style={{ borderColor: 'var(--border)' }}
+              itemScope
+              itemType="https://schema.org/Offer"
+            >
+              <div className="mb-5">
+                <h2 className="text-lg font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                  Studio
+                </h2>
+                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }} itemProp="description">
                   For bands, studios & professionals
                 </p>
-                <div className="mb-2 text-4xl font-bold" itemProp="price" content="34.99">
-                  $34.99
-                  <span className="text-base font-normal" style={{ color: 'var(--muted)' }}>
-                    /month
-                  </span>
+                <div className="mt-4 flex items-baseline gap-1">
+                  <span className="text-4xl font-bold" style={{ color: 'var(--text)' }} itemProp="price" content="34.99">$34.99</span>
+                  <span className="text-sm" style={{ color: 'var(--muted)' }}>/month</span>
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
-                <p className="mb-6 text-sm" style={{ color: 'var(--muted)' }}>
-                  Price of 1 pizza
-                </p>
-                <ul className="mb-8 space-y-3 text-left" style={{ color: 'var(--text)' }}>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      <strong>Unlimited projects</strong>
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      <strong>100 GB storage</strong>
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      <strong>500 AI assists/month</strong> (5×)
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      <strong>20+ hours HD video/month</strong>
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>Real-time collaboration</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>Unlimited collaborators</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>Advanced analytics</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>Priority support</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Check
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    <span>API access (coming soon)</span>
-                  </li>
-                </ul>
-                <Link
-                  href="/auth?signup=true"
-                  className="button w-full"
-                  style={{ background: 'linear-gradient(to right, #8b5cf6, #ec4899)' }}
-                >
-                  Start Free Trial
-                </Link>
-              </article>
-            </div>
-
-            {/* Feature Comparison */}
-            <div className="mt-20">
-              <h2 className="mb-8 text-center text-3xl font-semibold">Feature Comparison</h2>
-              <div className="mx-auto max-w-4xl overflow-x-auto">
-                <table className="w-full text-left">
-                  <thead>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <th className="pb-4 pr-8 font-semibold">Feature</th>
-                      <th className="px-4 pb-4 text-center font-semibold">Explorer</th>
-                      <th
-                        className="px-4 pb-4 text-center font-semibold"
-                        style={{ color: 'var(--accent)' }}
-                      >
-                        Creator
-                      </th>
-                      <th className="pb-4 pl-4 text-center font-semibold text-purple-500">
-                        Studio
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-sm" style={{ color: 'var(--muted)' }}>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Projects</td>
-                      <td className="px-4 py-3 text-center">3</td>
-                      <td className="px-4 py-3 text-center">10</td>
-                      <td className="py-3 pl-4 text-center">Unlimited</td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Storage</td>
-                      <td className="px-4 py-3 text-center">1 GB</td>
-                      <td className="px-4 py-3 text-center">10 GB</td>
-                      <td className="py-3 pl-4 text-center">100 GB</td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">AI Assists</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">100/mo</td>
-                      <td className="py-3 pl-4 text-center">500/mo</td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Video Collaboration</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="py-3 pl-4 text-center">3,600 min†</td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Collaborators</td>
-                      <td className="px-4 py-3 text-center">1</td>
-                      <td className="px-4 py-3 text-center">5</td>
-                      <td className="py-3 pl-4 text-center">Unlimited</td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Copyright Split Sheets</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">
-                        <Check
-                          className="mx-auto h-4 w-4"
-                          style={{ color: 'var(--accent)' }}
-                          aria-hidden="true"
-                        />
-                      </td>
-                      <td className="py-3 pl-4 text-center">
-                        <Check className="mx-auto h-4 w-4 text-purple-500" aria-hidden="true" />
-                      </td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Tour Management</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">
-                        <Check
-                          className="mx-auto h-4 w-4"
-                          style={{ color: 'var(--accent)' }}
-                          aria-hidden="true"
-                        />
-                      </td>
-                      <td className="py-3 pl-4 text-center">
-                        <Check className="mx-auto h-4 w-4 text-purple-500" aria-hidden="true" />
-                      </td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Real-time Collaboration</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="py-3 pl-4 text-center">
-                        <Check className="mx-auto h-4 w-4 text-purple-500" aria-hidden="true" />
-                      </td>
-                    </tr>
-                    <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                      <td className="py-3 pr-8">Priority Support</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="px-4 py-3 text-center">—</td>
-                      <td className="py-3 pl-4 text-center">
-                        <Check className="mx-auto h-4 w-4 text-purple-500" aria-hidden="true" />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
-            </div>
 
-            {/* All Plans Include */}
-            <div className="mt-16 text-center">
-              <h2 className="mb-8 text-3xl font-semibold">All plans include</h2>
-              <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold">🔒 Secure Storage</h3>
-                  <p style={{ color: 'var(--muted)' }}>
-                    Your music is encrypted and backed up automatically
+              <ul className="mb-6 flex-1 space-y-3">
+                {[
+                  { text: 'Unlimited projects', bold: true },
+                  { text: '100 GB storage', bold: true },
+                  { text: '500 AI assists/month', bold: true },
+                  { text: '20+ hours HD video/month', bold: true },
+                  'Real-time collaboration',
+                  'Unlimited collaborators',
+                  'Advanced analytics',
+                  'Priority support',
+                ].map((f) => {
+                  const text = typeof f === 'string' ? f : f.text;
+                  const bold = typeof f === 'object' && f.bold;
+                  return (
+                    <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--violet)' }} />
+                      {bold ? <strong>{text}</strong> : text}
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <Link
+                href="/auth?signup=true"
+                className="rounded-lg px-4 py-2.5 text-center text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ background: 'var(--violet)' }}
+              >
+                Start free trial
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Feature Comparison Table */}
+        <section className="px-5 pb-20 sm:px-8">
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-8 text-center text-2xl font-bold" style={{ color: 'var(--text)' }}>
+              Feature comparison
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
+                    <th className="pb-3 pr-6 text-sm font-semibold" style={{ color: 'var(--text)' }}>Feature</th>
+                    <th className="px-4 pb-3 text-center text-sm font-semibold" style={{ color: 'var(--muted)' }}>Explorer</th>
+                    <th className="px-4 pb-3 text-center text-sm font-semibold" style={{ color: 'var(--accent)' }}>Creator</th>
+                    <th className="pb-3 pl-4 text-center text-sm font-semibold" style={{ color: 'var(--violet)' }}>Studio</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <FeatureRow feature="Projects" explorer="3" creator="10" studio="Unlimited" />
+                  <FeatureRow feature="Storage" explorer="1 GB" creator="10 GB" studio="100 GB" />
+                  <FeatureRow feature="AI Assists" explorer="—" creator="100/mo" studio="500/mo" />
+                  <FeatureRow feature="Video Collaboration" explorer="—" creator="—" studio="3,600 min" />
+                  <FeatureRow feature="Collaborators" explorer="1" creator="5" studio="Unlimited" />
+                  <FeatureRow feature="Copyright Sheets" explorer="—" creator={<CheckIcon />} studio={<CheckIcon color="var(--violet)" />} />
+                  <FeatureRow feature="Tour Management" explorer="—" creator={<CheckIcon />} studio={<CheckIcon color="var(--violet)" />} />
+                  <FeatureRow feature="Real-time Collab" explorer="—" creator="—" studio={<CheckIcon color="var(--violet)" />} />
+                  <FeatureRow feature="Priority Support" explorer="—" creator="—" studio={<CheckIcon color="var(--violet)" />} />
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        {/* All Plans Include */}
+        <section className="border-t px-5 py-16 sm:px-8 sm:py-20" style={{ borderColor: 'var(--border)' }}>
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-10 text-center text-2xl font-bold" style={{ color: 'var(--text)' }}>
+              Every plan includes
+            </h2>
+            <div className="grid gap-8 sm:grid-cols-3">
+              {[
+                {
+                  title: 'Secure storage',
+                  desc: 'Your music is encrypted and backed up automatically.',
+                },
+                {
+                  title: 'Full ownership',
+                  desc: 'You retain 100% rights to all your creative work. Always.',
+                },
+                {
+                  title: 'Export anytime',
+                  desc: 'Download your projects in standard formats. No lock-in.',
+                },
+              ].map((item) => (
+                <div key={item.title} className="text-center">
+                  <h3 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text)' }}>
+                    {item.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+                    {item.desc}
                   </p>
                 </div>
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold">📝 Full Ownership</h3>
-                  <p style={{ color: 'var(--muted)' }}>
-                    You retain 100% rights to all your creative work
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-2 text-xl font-semibold">📤 Export Anytime</h3>
-                  <p style={{ color: 'var(--muted)' }}>
-                    Download your projects in industry-standard formats
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
+          </div>
+        </section>
 
-            {/* FAQ Section */}
-            <div className="mt-20" itemScope itemType="https://schema.org/FAQPage">
-              <h2 className="mb-8 text-center text-3xl font-semibold">
-                Frequently Asked Questions
-              </h2>
-              <div className="mx-auto max-w-3xl space-y-6">
+        {/* FAQ */}
+        <section
+          className="border-t px-5 py-16 sm:px-8 sm:py-20"
+          style={{ borderColor: 'var(--border)' }}
+          itemScope
+          itemType="https://schema.org/FAQPage"
+        >
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-10 text-center text-2xl font-bold" style={{ color: 'var(--text)' }}>
+              Frequently asked questions
+            </h2>
+            <div className="space-y-6">
+              {[
+                {
+                  q: 'Can I switch plans anytime?',
+                  a: "Yes! Upgrade or downgrade at any time. When you upgrade, you get immediate access. When you downgrade, you keep features until the end of your billing period.",
+                },
+                {
+                  q: 'What happens to my projects if I downgrade?',
+                  a: "Your projects are safe. If you exceed the new plan's limits, you'll need to archive some projects before creating new ones, but nothing is ever deleted.",
+                },
+                {
+                  q: 'Is there a free trial?',
+                  a: 'Yes! All paid plans come with a 14-day free trial. No credit card required.',
+                },
+                {
+                  q: 'What payment methods do you accept?',
+                  a: 'We accept all major credit cards through Stripe. Annual billing coming soon with 2 months free.',
+                },
+                {
+                  q: 'How does video time work?',
+                  a: 'Video time is measured in participant-minutes. A 60-minute call with 3 people uses 180 minutes. Studio tier includes 3,600 participant-minutes/month — enough for 20+ hours of band rehearsals.',
+                },
+              ].map((faq) => (
                 <div
-                  className="card"
+                  key={faq.q}
+                  className="rounded-lg border p-5"
+                  style={{ borderColor: 'var(--border)' }}
                   itemScope
                   itemProp="mainEntity"
                   itemType="https://schema.org/Question"
                 >
-                  <h3 className="mb-2 font-semibold" itemProp="name">
-                    Can I switch plans anytime?
+                  <h3 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                    {faq.q}
                   </h3>
                   <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                    <p style={{ color: 'var(--muted)' }} itemProp="text">
-                      Yes! Upgrade or downgrade at any time. When you upgrade, you'll get immediate
-                      access to new features. When you downgrade, you'll keep your current features
-                      until the end of your billing period.
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }} itemProp="text">
+                      {faq.a}
                     </p>
                   </div>
                 </div>
-                <div
-                  className="card"
-                  itemScope
-                  itemProp="mainEntity"
-                  itemType="https://schema.org/Question"
-                >
-                  <h3 className="mb-2 font-semibold" itemProp="name">
-                    What happens to my projects if I downgrade?
-                  </h3>
-                  <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                    <p style={{ color: 'var(--muted)' }} itemProp="text">
-                      Your projects are safe. If you exceed the new plan's limits, you'll need to
-                      archive some projects before creating new ones, but nothing is deleted.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="card"
-                  itemScope
-                  itemProp="mainEntity"
-                  itemType="https://schema.org/Question"
-                >
-                  <h3 className="mb-2 font-semibold" itemProp="name">
-                    Is there a free trial?
-                  </h3>
-                  <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                    <p style={{ color: 'var(--muted)' }} itemProp="text">
-                      Yes! All paid plans come with a 14-day free trial. No credit card required to
-                      start exploring.
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="card"
-                  itemScope
-                  itemProp="mainEntity"
-                  itemType="https://schema.org/Question"
-                >
-                  <h3 className="mb-2 font-semibold" itemProp="name">
-                    What payment methods do you accept?
-                  </h3>
-                  <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                    <p style={{ color: 'var(--muted)' }} itemProp="text">
-                      We accept all major credit cards through Stripe. Annual billing options coming
-                      soon with 2 months free!
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="card"
-                  itemScope
-                  itemProp="mainEntity"
-                  itemType="https://schema.org/Question"
-                >
-                  <h3 className="mb-2 font-semibold" itemProp="name">
-                    † How does video time work?
-                  </h3>
-                  <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                    <p style={{ color: 'var(--muted)' }} itemProp="text">
-                      Video time is measured in participant-minutes. A 60-minute call with 3 people
-                      uses 180 minutes. Studio tier includes 3,600 participant-minutes/month —
-                      enough for 20+ hours of band rehearsals or 60 hours of 1-on-1 sessions. Need
-                      more? Contact us for custom plans.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer
-          style={{ borderTop: '1px solid var(--border)', padding: 'var(--space-6) 0' }}
-          role="contentinfo"
-        >
-          <div className="container">
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-              <div className="text-sm" style={{ color: 'var(--muted)' }}>
-                © 2024 Rock N' Roll Basement. All rights reserved.
-              </div>
-              <nav className="flex gap-6 text-sm" aria-label="Footer navigation">
-                <Link href="/about" className="nav-link">
-                  About
+        <footer className="border-t px-5 py-8 sm:px-8" style={{ borderColor: 'var(--border)' }}>
+          <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-xs" style={{ color: 'var(--muted-soft)' }}>
+              &copy; {new Date().getFullYear()} Rock N&apos; Roll Basement. All rights reserved.
+            </p>
+            <nav className="flex flex-wrap gap-5 text-xs" style={{ color: 'var(--muted)' }}>
+              {['About', 'Terms', 'Privacy', 'DMCA', 'Contact'].map((link) => (
+                <Link
+                  key={link}
+                  href={`/${link.toLowerCase()}`}
+                  className="transition-colors hover:text-[var(--text)]"
+                >
+                  {link}
                 </Link>
-                <Link href="/terms" className="nav-link">
-                  Terms
-                </Link>
-                <Link href="/privacy" className="nav-link">
-                  Privacy
-                </Link>
-                <Link href="/dmca" className="nav-link">
-                  DMCA
-                </Link>
-                <Link href="/contact" className="nav-link">
-                  Contact
-                </Link>
-                <Link href="/donate" className="nav-link" style={{ color: '#a855f7' }}>
-                  Kids Instruments Fund
-                </Link>
-              </nav>
-            </div>
+              ))}
+            </nav>
           </div>
         </footer>
       </div>

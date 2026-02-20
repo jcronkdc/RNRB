@@ -147,16 +147,9 @@ export async function POST(request: NextRequest) {
         tradeFor: data.tradeFor,
         tradeValue: data.tradeValue,
         listingType: data.listingType || 'sell',
-        location: data.location,
-        city: data.city,
-        state: data.state,
-        country: data.country || 'US',
-        zipCode: data.zipCode,
-        shippingAvailable: data.shippingAvailable ?? false,
+        location: [data.city, data.state, data.country].filter(Boolean).join(', ') || data.location,
         shippingCost: data.shippingCost,
         localPickup: data.localPickup ?? true,
-        quantity: data.quantity || 1,
-        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
         status: 'active',
       },
       include: {

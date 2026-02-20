@@ -37,7 +37,7 @@ const tools = [
   {
     icon: FlaskConical,
     label: 'RNRB Labs',
-    href: '/labs',
+    href: '/tools',
     color: 'from-emerald-500 to-green-500',
     badge: 'NEW',
   },

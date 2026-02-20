@@ -277,7 +277,7 @@ export const emptyStates = {
     message: "Labs is where we test new ideas. Some will become features. Some won't.",
     subtext: 'Want early access? Join our beta program.',
     action: 'Join Beta',
-    actionHref: '/labs/volunteer',
+    actionHref: '/tools',
   },
 
   // Files/Uploads

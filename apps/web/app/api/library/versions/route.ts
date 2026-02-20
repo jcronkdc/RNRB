@@ -149,9 +149,8 @@ export async function POST(req: NextRequest) {
         size: file.size,
         url: urlData.publicUrl,
         path: fileName,
-        parentId: rootId, // Link to root file
+        parentId: rootId,
         version: newVersion,
-        hash,
         notes: notes || `Version ${newVersion}`,
         // Copy other metadata from original
         collectionId: originalFile.collectionId,

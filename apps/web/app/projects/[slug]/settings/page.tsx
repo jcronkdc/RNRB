@@ -1,6 +1,6 @@
 'use client';
 
-import { supabase } from '@/lib/supabase';
+import { useSession } from 'next-auth/react';
 
 import { Card, Button } from '@cronkwaters/ui';
 import {
@@ -48,7 +48,7 @@ export default function ProjectSettingsPage() {
   } = useCollaborativeSettings({
     channelName: `project-settings:${slug}`,
     userId: user?.id || 'anonymous',
-    userName: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+    userName: user?.name || user?.email?.split('@')[0] || 'User',
     initialSettings: {
       name: project?.name || '',
       description: project?.description || '',
@@ -80,25 +80,24 @@ export default function ProjectSettingsPage() {
   const { remoteCursors } = useCollaborativeCursors({
     channelName: `project-settings:${slug}-cursors`,
     userId: user?.id || 'anonymous',
-    userName: user?.user_metadata?.name || user?.email?.split('@')[0] || 'User',
+    userName: user?.name || user?.email?.split('@')[0] || 'User',
     enabled: !!user,
   });
 
+  const { data: session, status: authStatus } = useSession();
+
   useEffect(() => {
+    if (authStatus === 'loading') return;
+    if (!session?.user?.id) {
+      router.push('/auth');
+      return;
+    }
+
+    setUser(session.user);
+
     const loadProject = async () => {
-      const {
-        data: { user },
-      } = await supabase!.auth.getUser();
-      if (!user) {
-        router.push('/auth');
-        return;
-      }
-
-      setUser(user);
-
-      // Load project from API
       try {
-        const response = await fetch(`/api/projects/${slug}?userId=${user.id}`);
+        const response = await fetch(`/api/projects/${slug}`);
         if (!response.ok) {
           router.push('/projects');
           return;

@@ -163,29 +163,32 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Check if user has reacted/bookmarked each post
-    const postsWithUserData = await Promise.all(
-      posts.map(async (post) => {
-        const [userReaction, userBookmark, userShare] = await Promise.all([
-          prisma.postReaction.findFirst({
-            where: { postId: post.id, userId },
-          }),
-          prisma.postBookmark.findFirst({
-            where: { postId: post.id, userId },
-          }),
-          prisma.postShare.findFirst({
-            where: { postId: post.id, userId },
-          }),
-        ]);
+    // Batch-fetch user interactions for all posts at once (replaces N+1 pattern)
+    const postIds = posts.map((p) => p.id);
 
-        return {
-          ...post,
-          currentUserReaction: userReaction?.emoji || null,
-          currentUserBookmarked: !!userBookmark,
-          currentUserShared: !!userShare,
-        };
-      })
-    );
+    const [userReactions, userBookmarks, userShares] = await Promise.all([
+      prisma.postReaction.findMany({
+        where: { postId: { in: postIds }, userId },
+      }),
+      prisma.postBookmark.findMany({
+        where: { postId: { in: postIds }, userId },
+      }),
+      prisma.postShare.findMany({
+        where: { postId: { in: postIds }, userId },
+      }),
+    ]);
+
+    // Build lookup maps for O(1) access
+    const reactionMap = new Map(userReactions.map((r) => [r.postId, r.emoji]));
+    const bookmarkSet = new Set(userBookmarks.map((b) => b.postId));
+    const shareSet = new Set(userShares.map((s) => s.postId));
+
+    const postsWithUserData = posts.map((post) => ({
+      ...post,
+      currentUserReaction: reactionMap.get(post.id) || null,
+      currentUserBookmarked: bookmarkSet.has(post.id),
+      currentUserShared: shareSet.has(post.id),
+    }));
 
     const nextCursor = posts.length === limit ? posts[posts.length - 1].id : null;
 

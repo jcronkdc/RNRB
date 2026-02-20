@@ -36,65 +36,66 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
 
-    const { email, password, name } = body;
-
-    console.log('[REGISTER] Request received:', {
-      email:
-        typeof email === 'string'
-          ? email.substring(0, Math.min(3, email.length)) + '***'
-          : undefined,
-      hasPassword: !!password,
-      hasName: !!name,
-    });
-    console.log('[REGISTER] Environment check:', {
-      hasDatabaseUrl: !!process.env.DATABASE_URL,
-      nodeEnv: process.env.NODE_ENV,
-      prismaImported: !!prisma,
-    });
+    const { email: rawEmail, password, name } = body;
 
     // Validation
-    if (!email || typeof email !== 'string' || !password || typeof password !== 'string') {
-      console.log('[REGISTER] Validation failed: missing email or password, or invalid types');
+    if (!rawEmail || typeof rawEmail !== 'string' || !password || typeof password !== 'string') {
       return NextResponse.json(
-        { error: 'Email and password are required and must be strings' },
+        { error: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    // Normalize email: trim whitespace and lowercase
+    const email = rawEmail.trim().toLowerCase();
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || email.length > 254) {
+      return NextResponse.json(
+        { error: 'Please enter a valid email address' },
         { status: 400 }
       );
     }
 
     if (password.length < 8) {
-      console.log('[REGISTER] Validation failed: password too short');
       return NextResponse.json(
         { error: 'Password must be at least 8 characters' },
         { status: 400 }
       );
     }
 
-    console.log('[REGISTER] Checking for existing user...');
+    if (password.length > 128) {
+      return NextResponse.json(
+        { error: 'Password is too long' },
+        { status: 400 }
+      );
+    }
+
+    // Sanitize name
+    const sanitizedName = name && typeof name === 'string' ? name.trim().substring(0, 100) : null;
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
-      console.log('[REGISTER] User already exists');
       return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
 
-    console.log('[REGISTER] Hashing password...');
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('[REGISTER] Password hashed successfully');
+    // Hash password with bcrypt (cost factor 12 for better security)
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-    console.log('[REGISTER] Creating user in database...');
     // Create user
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        name: name || null,
-        subscriptionTier: 'free', // Start with free tier
+        name: sanitizedName,
+        subscriptionTier: 'free',
         subscriptionStatus: 'active',
-        profileCompleted: false, // New users need to complete profile setup
+        profileCompleted: false,
       },
       select: {
         id: true,
@@ -104,37 +105,18 @@ export async function POST(request: Request) {
       },
     });
 
-    console.log('[REGISTER] User created successfully:', user.id);
     return NextResponse.json(
-      {
-        message: 'Account created successfully',
-        user,
-      },
+      { message: 'Account created successfully', user },
       { status: 201 }
     );
   } catch (error) {
-    console.error('[REGISTER] ERROR:', error);
-    console.error(
-      '[REGISTER] Error type:',
-      error instanceof Error ? error.constructor.name : typeof error
-    );
-    console.error(
-      '[REGISTER] Error message:',
-      error instanceof Error ? error.message : String(error)
-    );
-    console.error(
-      '[REGISTER] Error stack:',
-      error instanceof Error ? error.stack : 'No stack trace'
-    );
+    console.error('[REGISTER] Error:', error instanceof Error ? error.message : error);
     return NextResponse.json(
       {
-        error: 'Failed to create account',
-        details:
-          process.env.NODE_ENV === 'development'
-            ? error instanceof Error
-              ? error.message
-              : String(error)
-            : undefined,
+        error: 'Failed to create account. Please try again.',
+        ...(process.env.NODE_ENV === 'development' && {
+          details: error instanceof Error ? error.message : String(error),
+        }),
       },
       { status: 500 }
     );

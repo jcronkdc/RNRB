@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit';
 
@@ -9,13 +10,14 @@ import { standardLimiter, strictLimiter, checkRateLimit } from '@/lib/rate-limit
  */
 export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await params;
-    const { searchParams } = new URL(req.url);
-    const userId = searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
+
+    const { slug } = await params;
+    // Use authenticated user's ID instead of trusting query params
+    const userId = session.user.id;
 
     // Rate limit: 100 requests per minute for reads
     await checkRateLimit(standardLimiter, `project-songs-read:${userId}`);
@@ -78,13 +80,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
  */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const { slug } = await params;
     const body = await req.json();
-    const { userId, title, key, tempo, timeSignature, lyrics, chords, songStructure } = body;
-
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID required' }, { status: 400 });
-    }
+    const { title, key, tempo, timeSignature, lyrics, chords, songStructure } = body;
+    const userId = session.user.id;
 
     // Rate limit: 10 songs per minute
     await checkRateLimit(strictLimiter, `project-songs-write:${userId}`);

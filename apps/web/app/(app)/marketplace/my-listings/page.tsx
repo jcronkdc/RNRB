@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { formatDate } from '@/lib/format-date';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -59,13 +60,7 @@ function formatPrice(price: number | null | undefined, currency: string = 'USD')
   }).format(Number(price));
 }
 
-function formatDate(date: Date | string): string {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
+// Uses shared formatDate from @/lib/format-date (imported below if not already)
 
 function ListingCard({
   listing,

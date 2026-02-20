@@ -1,114 +1,56 @@
-import { useState, useCallback, useEffect } from 'react';
+'use client';
+
+import { useCallback, useRef } from 'react';
 
 /**
- * Undo/Redo Hook
- * Tracks action history for any data type
- * Supports keyboard shortcuts (Ctrl+Z, Ctrl+Y)
+ * Simple undo/redo stack for any serializable state.
+ * Stores snapshots as JSON strings for deep comparison.
  */
+export function useUndoRedo<T>(
+  currentState: T,
+  setState: (state: T) => void,
+  maxHistory = 50
+) {
+  const undoStack = useRef<string[]>([]);
+  const redoStack = useRef<string[]>([]);
+  const lastSnapshot = useRef<string>(JSON.stringify(currentState));
 
-interface UseUndoRedoOptions<T> {
-  initialState: T;
-  maxHistory?: number; // Max history items to keep (default: 50)
-  onSave?: (state: T) => void; // Auto-save on change
-}
+  const pushState = useCallback(() => {
+    const snapshot = JSON.stringify(currentState);
+    if (snapshot === lastSnapshot.current) return;
 
-export function useUndoRedo<T>({ initialState, maxHistory = 50, onSave }: UseUndoRedoOptions<T>) {
-  const [history, setHistory] = useState<T[]>([initialState]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+    undoStack.current.push(lastSnapshot.current);
+    if (undoStack.current.length > maxHistory) {
+      undoStack.current.shift();
+    }
+    redoStack.current = [];
+    lastSnapshot.current = snapshot;
+  }, [currentState, maxHistory]);
 
-  const currentState = history[currentIndex];
-
-  // Set new state and add to history
-  const setState = useCallback(
-    (newState: T | ((prev: T) => T)) => {
-      setHistory((prevHistory) => {
-        const current = prevHistory[currentIndex];
-        const next =
-          typeof newState === 'function' ? (newState as (prev: T) => T)(current) : newState;
-
-        // Don't add if same as current
-        if (JSON.stringify(next) === JSON.stringify(current)) {
-          return prevHistory;
-        }
-
-        // Remove any future history (user made change after undo)
-        const newHistory = prevHistory.slice(0, currentIndex + 1);
-
-        // Add new state
-        newHistory.push(next);
-
-        // Limit history size
-        if (newHistory.length > maxHistory) {
-          newHistory.shift();
-          setCurrentIndex(newHistory.length - 1);
-        } else {
-          setCurrentIndex(newHistory.length - 1);
-        }
-
-        return newHistory;
-      });
-    },
-    [currentIndex, maxHistory]
-  );
-
-  // Undo
   const undo = useCallback(() => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  }, [currentIndex]);
+    if (undoStack.current.length === 0) return;
 
-  // Redo
+    const current = JSON.stringify(currentState);
+    redoStack.current.push(current);
+
+    const previous = undoStack.current.pop()!;
+    lastSnapshot.current = previous;
+    setState(JSON.parse(previous));
+  }, [currentState, setState]);
+
   const redo = useCallback(() => {
-    if (currentIndex < history.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  }, [currentIndex, history.length]);
+    if (redoStack.current.length === 0) return;
 
-  // Can undo/redo?
-  const canUndo = currentIndex > 0;
-  const canRedo = currentIndex < history.length - 1;
+    const current = JSON.stringify(currentState);
+    undoStack.current.push(current);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
-        e.preventDefault();
-        if (e.shiftKey) {
-          redo();
-        } else {
-          undo();
-        }
-      }
-      if ((e.metaKey || e.ctrlKey) && e.key === 'y') {
-        e.preventDefault();
-        redo();
-      }
-    };
+    const next = redoStack.current.pop()!;
+    lastSnapshot.current = next;
+    setState(JSON.parse(next));
+  }, [currentState, setState]);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undo, redo]);
+  const canUndo = undoStack.current.length > 0;
+  const canRedo = redoStack.current.length > 0;
 
-  // Auto-save when state changes
-  useEffect(() => {
-    if (onSave && currentIndex > 0) {
-      const timeout = setTimeout(() => {
-        onSave(currentState);
-      }, 1000); // Debounce 1 second
-
-      return () => clearTimeout(timeout);
-    }
-  }, [currentState, currentIndex, onSave]);
-
-  return {
-    state: currentState,
-    setState,
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    history,
-    currentIndex,
-  };
+  return { pushState, undo, redo, canUndo, canRedo };
 }

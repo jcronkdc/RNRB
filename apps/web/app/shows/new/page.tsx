@@ -111,19 +111,46 @@ export default function NewShowPage() {
     setSubmitting(true);
 
     try {
+      // Get user's orgId (API requires it for membership check)
+      let orgId: string | undefined;
+      try {
+        const profileRes = await fetch('/api/profile');
+        if (profileRes.ok) {
+          const profile = await profileRes.json();
+          // Use first org membership, or fall back to creating one via the projects flow
+          orgId = profile.organizationIds?.[0] || profile.activeOrganizationId;
+        }
+      } catch {
+        // Will be caught by the orgId check below
+      }
+
+      // If no org, try to get it from session
+      if (!orgId) {
+        // Create a personal org automatically (same pattern as project creation)
+        try {
+          const orgRes = await fetch('/api/projects', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: 'My Workspace', visibility: 'private' }),
+          });
+          if (orgRes.ok) {
+            const proj = await orgRes.json();
+            orgId = proj.orgId;
+          }
+        } catch {
+          // Fall through
+        }
+      }
+
       const payload = {
+        orgId,
         name: formData.name,
         date: formData.date,
         venueId: formData.venueId || undefined,
         tourId: formData.tourId || undefined,
-        doors_time: formData.doors_time || undefined,
-        soundcheck_time: formData.soundcheck_time || undefined,
-        show_time: formData.show_time || undefined,
-        capacity: formData.capacity ? parseInt(formData.capacity) : undefined,
-        expected_attendance: formData.expected_attendance
-          ? parseInt(formData.expected_attendance)
-          : undefined,
-        guarantee: formData.guarantee ? parseFloat(formData.guarantee) : undefined,
+        doorsTime: formData.doors_time || undefined,
+        soundcheckTime: formData.soundcheck_time || undefined,
+        setTime: formData.show_time || undefined,
         notes: formData.notes || undefined,
         status: formData.status,
       };

@@ -98,12 +98,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Create notification for opportunity poster
     await db.notification.create({
       data: {
-        userId: opportunity.postedById,
+        userId: opportunity.postedById!,
         type: 'collab_invite',
         title: 'New Application',
         message: `${user?.name || 'Someone'} applied to your opportunity: ${opportunity.title}`,
-        link: `/opportunities/${id}`,
-        metadata: {
+        actionUrl: `/opportunities/${id}`,
+        data: {
           opportunityId: id,
           applicationId: application.id,
           applicantId: session.id,
@@ -133,8 +133,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 }
 
 // GET /api/ecosystem/opportunities/[id]/apply - Get user's application status
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const session = await requireAuth().catch(() => null);
 
     if (!session?.id) {
@@ -143,7 +144,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const application = await db.opportunityApplication.findFirst({
       where: {
-        opportunityId: params.id,
+        opportunityId: id,
         applicantId: session.id,
       },
       include: {

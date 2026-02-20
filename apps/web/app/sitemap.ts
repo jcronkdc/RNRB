@@ -1,7 +1,7 @@
 import { type MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://cronkwaters.com';
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://cronkwaters.com').replace(/\/$/, '');
   const currentDate = new Date();
 
   // Static pages with priority and change frequency
