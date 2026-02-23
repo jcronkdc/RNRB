@@ -639,7 +639,7 @@ export function SocialShareHub() {
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       placeholder="What's the headline?"
-                      className="w-full rounded-none p-4 text-lg font-medium transition focus:outline-none"
+                      className="w-full rounded-none p-4 text-lg font-medium transition focus:outline-hidden"
                       style={{
                         background: 'var(--card)',
                         border: '1px solid var(--border)',
@@ -659,7 +659,7 @@ export function SocialShareHub() {
                       onChange={(e) => setCaption(e.target.value)}
                       placeholder="Tell your story..."
                       rows={5}
-                      className="w-full rounded-none p-4 transition focus:outline-none"
+                      className="w-full rounded-none p-4 transition focus:outline-hidden"
                       style={{
                         background: 'var(--card)',
                         border: '1px solid var(--border)',
@@ -713,7 +713,7 @@ export function SocialShareHub() {
                             value={link}
                             onChange={(e) => setLink(e.target.value)}
                             placeholder="https://..."
-                            className="w-full rounded-none p-3 font-mono text-sm transition focus:outline-none"
+                            className="w-full rounded-none p-3 font-mono text-sm transition focus:outline-hidden"
                             style={{
                               background: 'var(--card)',
                               border: '1px solid var(--border)',
@@ -733,7 +733,7 @@ export function SocialShareHub() {
                             value={hashtags}
                             onChange={(e) => setHashtags(e.target.value)}
                             placeholder="#newmusic #indie..."
-                            className="w-full rounded-none p-3 font-mono text-sm transition focus:outline-none"
+                            className="w-full rounded-none p-3 font-mono text-sm transition focus:outline-hidden"
                             style={{
                               background: 'var(--card)',
                               border: '1px solid var(--border)',
@@ -911,7 +911,7 @@ export function SocialShareHub() {
                 <button
                   onClick={generateContent}
                   disabled={generating || selectedPlatforms.length === 0}
-                  className="flex flex-[2] items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest transition disabled:opacity-30"
+                  className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest transition disabled:opacity-30"
                   style={{
                     background: 'white',
                     color: 'black',
@@ -1134,7 +1134,7 @@ export function SocialShareHub() {
                   <button
                     onClick={postToAllPlatforms}
                     disabled={posting}
-                    className="flex flex-[2] items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest text-white transition disabled:opacity-50"
+                    className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest text-white transition disabled:opacity-50"
                     style={{ background: '#22c55e' }}
                   >
                     {posting ? (
@@ -1160,7 +1160,7 @@ export function SocialShareHub() {
                         }
                       });
                     }}
-                    className="flex flex-[2] items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest transition"
+                    className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest transition"
                     style={{
                       background: 'var(--card)',
                       border: '1px solid var(--border)',

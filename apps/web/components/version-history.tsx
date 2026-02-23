@@ -194,7 +194,7 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
                 <div className="flex items-start justify-between gap-4">
                   {/* Left: Version Info */}
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/10">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-primary/10">
                       <span className="font-semibold text-brand-primary">
                         v{version.versionNum}
                       </span>

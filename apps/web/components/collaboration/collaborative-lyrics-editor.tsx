@@ -221,7 +221,7 @@ export function CollaborativeLyricsEditor({
           onKeyUp={handleSelectionChange}
           onClick={handleSelectionChange}
           placeholder={placeholder}
-          className="min-h-[400px] w-full resize-none p-6 font-mono text-base leading-relaxed focus:outline-none"
+          className="min-h-[400px] w-full resize-none p-6 font-mono text-base leading-relaxed focus:outline-hidden"
           style={{
             background: 'transparent',
             color: 'var(--text)',

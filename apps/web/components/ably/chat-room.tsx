@@ -167,7 +167,7 @@ export function ChatRoom({ channelName, userName: providedUserName }: ChatRoomPr
               value={aiQuery}
               onChange={(e) => setAiQuery(e.target.value)}
               placeholder="What chord goes after Am in this progression?"
-              className="mb-3 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+              className="mb-3 w-full resize-none rounded border border-border bg-surface px-3 py-2 text-sm text-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
               rows={2}
             />
             <div className="flex gap-2">
@@ -209,7 +209,7 @@ export function ChatRoom({ channelName, userName: providedUserName }: ChatRoomPr
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
-            className="flex-1 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground transition focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+            className="flex-1 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground transition focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
           />
           <button
             onClick={() => setShowAIHelper(!showAIHelper)}

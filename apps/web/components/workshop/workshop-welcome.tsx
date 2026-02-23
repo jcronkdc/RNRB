@@ -116,7 +116,7 @@ export function WorkshopWelcome({ className = '', showActions = true }: Workshop
           <div className="flex items-center gap-3">
             {/* Search */}
             <button
-              className="hidden h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-[var(--panel-hover)] sm:flex"
+              className="hidden h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-(--panel-hover) sm:flex"
               style={{
                 border: '1px solid var(--border)',
                 color: 'var(--muted)',
@@ -129,7 +129,7 @@ export function WorkshopWelcome({ className = '', showActions = true }: Workshop
             {/* Notifications */}
             <Link
               href="/notifications"
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-[var(--panel-hover)]"
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl transition-colors hover:bg-(--panel-hover)"
               style={{
                 border: '1px solid var(--border)',
                 color: 'var(--muted)',

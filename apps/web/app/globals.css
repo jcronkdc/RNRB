@@ -1,6 +1,151 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@source '../../../packages/ui/src/**/*.{ts,tsx}';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-xs: 375px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  --color-background: hsl(var(--sf-color-background));
+
+  --color-foreground: hsl(var(--sf-color-foreground));
+  --color-foreground-muted: hsl(var(--sf-color-muted-foreground));
+  --color-foreground-subtle: hsl(var(--color-foreground-subtle));
+
+  --color-border: hsl(var(--sf-color-border));
+  --color-border-strong: hsl(var(--color-border-strong));
+
+  --color-ring: hsl(var(--sf-color-brand-primary));
+
+  --color-surface: hsl(var(--sf-color-surface));
+  --color-surface-muted: hsl(var(--sf-color-surface-muted));
+  --color-surface-elevated: hsl(var(--sf-color-surface-elevated));
+  --color-surface-hover: hsl(var(--sf-color-surface-hover));
+
+  --color-brand-foreground: hsl(var(--sf-color-brand-foreground));
+  --color-brand-primary: hsl(var(--sf-color-brand-primary));
+  --color-brand-primary-foreground: hsl(
+    var(--sf-color-brand-primary-foreground)
+  );
+  --color-brand-secondary: hsl(var(--sf-color-brand-secondary));
+  --color-brand-secondary-foreground: hsl(
+    var(--sf-color-brand-secondary-foreground)
+  );
+  --color-brand-muted: hsl(var(--sf-color-brand-muted));
+  --color-brand-muted-foreground: hsl(var(--sf-color-brand-muted-foreground));
+
+  --color-accent: hsl(var(--sf-color-accent));
+  --color-accent-foreground: hsl(var(--sf-color-accent-foreground));
+  --color-accent-subtle: hsl(var(--sf-color-accent-subtle));
+
+  --color-muted: hsl(var(--sf-color-muted));
+  --color-muted-foreground: hsl(var(--sf-color-muted-foreground));
+
+  --color-card: hsl(var(--sf-color-surface));
+  --color-card-foreground: hsl(var(--sf-color-foreground));
+
+  --color-popover: hsl(var(--sf-color-surface));
+  --color-popover-foreground: hsl(var(--sf-color-foreground));
+
+  --color-success: hsl(var(--color-success));
+  --color-warning: hsl(var(--color-warning));
+  --color-error: hsl(var(--color-error));
+  --color-info: hsl(var(--color-info));
+
+  --color-waveform-inactive: hsl(var(--color-waveform-inactive));
+  --color-waveform-active: hsl(var(--color-waveform-active));
+  --color-waveform-progress: hsl(var(--color-waveform-progress));
+
+  --radius-none: var(--sf-radius-none);
+  --radius-xs: var(--sf-radius-xs);
+  --radius-sm: var(--sf-radius-sm);
+  --radius-md: var(--sf-radius-md);
+  --radius-lg: var(--sf-radius-lg);
+  --radius-xl: var(--sf-radius-xl);
+  --radius-full: var(--sf-radius-full);
+
+  --shadow-soft: var(--sf-shadow-soft);
+  --shadow-elevated: var(--sf-shadow-elevated);
+  --shadow-outline: var(--sf-shadow-outline);
+  --shadow-glow: var(--sf-shadow-glow);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-sidebar-collapsed: var(--sidebar-collapsed-width);
+  --spacing-topbar: var(--topbar-height);
+
+  --container-narrow: var(--maxw-narrow);
+  --container-content: var(--maxw);
+  --container-wide: var(--maxw-wide);
+
+  --transition-duration-fast: var(--duration-fast);
+  --transition-duration-normal: var(--duration-normal);
+  --transition-duration-slow: var(--duration-slow);
+
+  --ease-default: var(--ease-default);
+  --ease-bounce: var(--ease-bounce);
+
+  --animate-fade-in: fade-in var(--duration-normal) var(--ease-out);
+  --animate-fade-up: fade-up var(--duration-slow) var(--ease-out);
+  --animate-scale-in: scale-in var(--duration-normal) var(--ease-out);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* ============================================================
    RNRB Design System — The Studio

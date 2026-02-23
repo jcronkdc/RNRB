@@ -30,7 +30,7 @@ function TableRow({
   const percentage = (table.count / maxCount) * 100;
 
   return (
-    <tr className="border-b border-white/5 hover:bg-white/[0.02]">
+    <tr className="border-b border-white/5 hover:bg-white/2">
       <td className="px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/20">
@@ -49,7 +49,7 @@ function TableRow({
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/5">
             <div
               style={{ width: `${percentage}%` }}
-              className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500"
+              className="h-full rounded-full bg-linear-to-r from-purple-500 to-pink-500 transition-all duration-500"
             />
           </div>
           <span className="w-12 text-right text-xs text-zinc-500">{percentage.toFixed(1)}%</span>

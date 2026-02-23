@@ -222,7 +222,7 @@ function CalendarPageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[color:var(--bg)] p-6">
+      <div className="min-h-screen bg-(--bg) p-6">
         <CalendarSkeleton />
       </div>
     );
@@ -288,7 +288,7 @@ function CalendarPageContent() {
               </Button>
 
               <Link href="/shows/new">
-                <Button className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 hover:from-blue-600 hover:to-purple-600">
+                <Button className="flex items-center gap-2 rounded-xl bg-linear-to-r from-blue-500 to-purple-500 px-6 py-3 font-semibold text-white shadow-lg shadow-blue-500/25 hover:from-blue-600 hover:to-purple-600">
                   <Plus className="h-5 w-5" />
                   New Show
                 </Button>
@@ -304,13 +304,13 @@ function CalendarPageContent() {
         <Card className="rnrb-card mb-6 p-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4 text-[color:var(--muted)]" />
+              <Filter className="h-4 w-4 text-(--muted)" />
               <span className="text-sm font-medium">Filters:</span>
             </div>
 
             {/* Status Filter */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-[color:var(--muted)]">Status:</span>
+              <span className="text-xs text-(--muted)">Status:</span>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
@@ -327,7 +327,7 @@ function CalendarPageContent() {
             {/* Tour Filter */}
             {tours.length > 0 && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-[color:var(--muted)]">Tour:</span>
+                <span className="text-xs text-(--muted)">Tour:</span>
                 <select
                   value={tourFilter}
                   onChange={(e) => setTourFilter(e.target.value)}
@@ -464,7 +464,7 @@ export default function CalendarPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[color:var(--bg)] p-6">
+        <div className="min-h-screen bg-(--bg) p-6">
           <CalendarSkeleton />
         </div>
       }
@@ -528,15 +528,15 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-[color:var(--muted)]">
+            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
               Shows This Year
             </div>
             <div className="text-3xl font-bold">{stats.thisYear}</div>
-            <div className="mt-1 text-xs text-[color:var(--muted)]">
+            <div className="mt-1 text-xs text-(--muted)">
               {stats.lastMonth} last month
             </div>
           </div>
-          <div className="rounded-lg bg-brand-primary/10 p-2 text-[color:var(--accent)]">
+          <div className="rounded-lg bg-brand-primary/10 p-2 text-(--accent)">
             <Calendar className="h-5 w-5" />
           </div>
         </div>
@@ -546,7 +546,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-[color:var(--muted)]">
+            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
               Upcoming Shows
             </div>
             <div className="text-3xl font-bold">{stats.upcoming}</div>
@@ -562,7 +562,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-[color:var(--muted)]">
+            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
               Total Revenue
             </div>
             <div className="text-3xl font-bold">
@@ -573,7 +573,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
                 maximumFractionDigits: 0,
               }).format(stats.totalRevenue)}
             </div>
-            <div className="mt-1 text-xs text-[color:var(--muted)]">{stats.thisYear} shows</div>
+            <div className="mt-1 text-xs text-(--muted)">{stats.thisYear} shows</div>
           </div>
           <div className="rounded-lg bg-yellow-500/10 p-2 text-yellow-500">
             <DollarSign className="h-5 w-5" />
@@ -585,11 +585,11 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-[color:var(--muted)]">
+            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
               Total Attendance
             </div>
             <div className="text-3xl font-bold">{stats.totalAttendance.toLocaleString()}</div>
-            <div className="mt-1 text-xs text-[color:var(--muted)]">
+            <div className="mt-1 text-xs text-(--muted)">
               Avg: {Math.round(stats.avgAttendance)} per show
             </div>
           </div>
@@ -603,14 +603,14 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       {stats.topCities.length > 0 && (
         <Card className="rnrb-card p-4 sm:col-span-2 lg:col-span-4">
           <div className="mb-3 flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-[color:var(--accent)]" />
+            <MapPin className="h-5 w-5 text-(--accent)" />
             <span className="font-semibold">Top Cities This Year</span>
           </div>
           <div className="flex flex-wrap gap-3">
             {stats.topCities.map(([city, count]) => (
               <div key={city} className="flex items-center gap-2 rounded-lg bg-muted/30 px-4 py-2">
                 <span className="font-medium">{city}</span>
-                <span className="text-sm font-semibold text-[color:var(--accent)]">
+                <span className="text-sm font-semibold text-(--accent)">
                   {count} {count === 1 ? 'show' : 'shows'}
                 </span>
               </div>
@@ -636,12 +636,12 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-[color:var(--bg)] shadow-2xl"
+        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-(--bg) shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <Card className="rnrb-card border-0 shadow-none">
           {/* Header */}
-          <div className="flex items-start justify-between border-b border-[color:var(--border)] p-6">
+          <div className="flex items-start justify-between border-b border-(--border) p-6">
             <div className="min-w-0 flex-1">
               <h2 className="font-display mb-2 text-2xl font-bold">{show.name}</h2>
               <div className="flex flex-wrap items-center gap-2">
@@ -655,7 +655,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
                 {show.tour && (
                   <Link
                     href={`/tours/${show.tour.slug}`}
-                    className="text-xs text-[color:var(--accent)] hover:underline"
+                    className="text-xs text-(--accent) hover:underline"
                   >
                     {show.tour.name}
                   </Link>
@@ -672,15 +672,15 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
             <div className="space-y-4">
               {/* Date & Time */}
               <div>
-                <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                   Date & Time
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-[color:var(--muted)]" />
+                  <Calendar className="h-4 w-4 text-(--muted)" />
                   <span className="font-medium">{formatDateWithDay(show.date)}</span>
                 </div>
                 {(show.soundcheckTime || show.doorsTime) && (
-                  <div className="mt-2 flex items-center gap-2 text-sm text-[color:var(--muted)]">
+                  <div className="mt-2 flex items-center gap-2 text-sm text-(--muted)">
                     <Clock className="h-4 w-4" />
                     <span>
                       {show.soundcheckTime && `Soundcheck: ${formatTime(show.soundcheckTime)}`}
@@ -694,22 +694,22 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Venue */}
               {show.venue && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                     Venue
                   </div>
                   <div className="flex items-start gap-2 text-sm">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[color:var(--muted)]" />
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-(--muted)" />
                     <div>
                       <div className="font-medium">{show.venue.name}</div>
                       {(show.venue.city || show.venue.state) && (
-                        <div className="text-[color:var(--muted)]">
+                        <div className="text-(--muted)">
                           {show.venue.city}
                           {show.venue.city && show.venue.state && ', '}
                           {show.venue.state}
                         </div>
                       )}
                       {show.venue.capacity && (
-                        <div className="text-xs text-[color:var(--muted)]">
+                        <div className="text-xs text-(--muted)">
                           Capacity: {show.venue.capacity.toLocaleString()}
                         </div>
                       )}
@@ -721,14 +721,14 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Setlist */}
               {show.setlist && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                     Setlist
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Music className="h-4 w-4 text-[color:var(--muted)]" />
+                    <Music className="h-4 w-4 text-(--muted)" />
                     <Link
                       href={`/setlists/${show.setlist.id}`}
-                      className="font-medium text-[color:var(--accent)] hover:underline"
+                      className="font-medium text-(--accent) hover:underline"
                     >
                       {show.setlist.name || 'View Setlist'}
                     </Link>
@@ -739,16 +739,16 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Stats */}
               {(show.attendance || show.grossRevenue) && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                     Statistics
                   </div>
                   <div className="flex flex-wrap gap-4">
                     {show.attendance && (
                       <div className="flex items-center gap-2">
-                        <Users className="h-4 w-4 text-[color:var(--muted)]" />
+                        <Users className="h-4 w-4 text-(--muted)" />
                         <span className="text-sm">
                           <span className="font-semibold">{show.attendance.toLocaleString()}</span>{' '}
-                          <span className="text-[color:var(--muted)]">attendees</span>
+                          <span className="text-(--muted)">attendees</span>
                         </span>
                       </div>
                     )}
@@ -763,7 +763,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
                               minimumFractionDigits: 0,
                             }).format(Number(show.grossRevenue))}
                           </span>{' '}
-                          <span className="text-[color:var(--muted)]">revenue</span>
+                          <span className="text-(--muted)">revenue</span>
                         </span>
                       </div>
                     )}
@@ -774,7 +774,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Description */}
               {show.description && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                     Description
                   </div>
                   <p className="text-sm">{show.description}</p>
@@ -784,7 +784,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Notes */}
               {show.notes && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                     Notes
                   </div>
                   <div className="rounded-lg bg-muted/30 p-3 text-sm">{show.notes}</div>
@@ -794,14 +794,14 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Tickets */}
               {show.ticketUrl && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-[color:var(--muted)]">
+                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
                     Tickets
                   </div>
                   <a
                     href={show.ticketUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-[color:var(--accent)] hover:underline"
+                    className="flex items-center gap-2 text-sm text-(--accent) hover:underline"
                   >
                     <ExternalLink className="h-4 w-4" />
                     View Tickets
@@ -812,7 +812,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-between border-t border-[color:var(--border)] p-6">
+          <div className="flex items-center justify-between border-t border-(--border) p-6">
             <Button
               onClick={onDelete}
               variant="ghost"

@@ -290,7 +290,7 @@ export function SetlistShareModal({
                     value={customTitle}
                     onChange={(e) => setCustomTitle(e.target.value)}
                     placeholder="e.g. Friday Night at The Roxy"
-                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
                   />
                 </div>
 

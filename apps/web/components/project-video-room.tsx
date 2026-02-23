@@ -114,7 +114,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
     return (
       <div className="p-8">
         <div className="mx-auto max-w-2xl text-center">
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500 to-purple-600 shadow-lg">
             <Video className="h-10 w-10 text-white" />
           </div>
 
@@ -130,38 +130,38 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
             <h4 className="mb-3 font-semibold text-foreground">Studio Tier Includes:</h4>
             <ul className="space-y-2 text-left text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
-                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
                 <span>
                   <strong>Unlimited Video Calls:</strong> Collaborate face-to-face with your team
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
                 <span>
                   <strong>Screen Sharing + Cursor Control:</strong> Show your DAW, and collaborators
                   see your cursor in real-time
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
                 <span>
                   <strong>Recording:</strong> Save your sessions for later review
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
                 <span>
                   <strong>Unlimited Projects:</strong> No limits on your creativity
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
                 <span>
                   <strong>Unlimited Collaborators:</strong> Bring your whole team
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-primary" />
+                <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
                 <span>
                   <strong>100 GB Storage:</strong> Store all your audio files
                 </span>
@@ -171,7 +171,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
 
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Button
-              className="rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-8 py-4 font-semibold text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-600 hover:shadow-xl"
+              className="rounded-xl bg-linear-to-r from-purple-600 to-purple-500 px-8 py-4 font-semibold text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-600 hover:shadow-xl"
               onClick={() => (window.location.href = '/settings/subscription')}
             >
               <Sparkles className="mr-2 h-5 w-5" />
@@ -259,7 +259,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
       <div className="flex items-center justify-center gap-3 rounded-xl border border-border bg-surface-muted p-4">
         <Button
           onClick={() => setShowCursors(!showCursors)}
-          variant={showCursors ? 'solid' : 'outline'}
+          variant={showCursors ? 'solid' : 'outline-solid'}
           className="gap-2"
         >
           <MousePointer2 className="h-4 w-4" />

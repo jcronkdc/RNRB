@@ -170,7 +170,7 @@ export function CommandPalette() {
                     placeholder="Search everything... projects, songs, people, messages"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 bg-transparent text-foreground outline-none placeholder:text-muted-foreground"
+                    className="flex-1 bg-transparent text-foreground outline-hidden placeholder:text-muted-foreground"
                   />
                   <div className="flex items-center gap-1 rounded bg-muted/50 px-2 py-1 text-xs text-muted-foreground">
                     <CommandIcon className="h-3 w-3" />

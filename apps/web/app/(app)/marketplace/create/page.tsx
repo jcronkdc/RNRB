@@ -189,8 +189,8 @@ export default function CreateListingPage() {
     <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-emerald-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-emerald-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -300,7 +300,7 @@ export default function CreateListingPage() {
                   value={formData.title}
                   onChange={(e) => updateField('title', e.target.value)}
                   placeholder="e.g., 1965 Fender Stratocaster Sunburst"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
 
@@ -313,7 +313,7 @@ export default function CreateListingPage() {
                       updateField('category', e.target.value);
                       updateField('subcategory', '');
                     }}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-brand-primary/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-brand-primary/50"
                   >
                     <option value="" className="bg-gray-900">
                       Select category
@@ -332,7 +332,7 @@ export default function CreateListingPage() {
                     <select
                       value={formData.subcategory}
                       onChange={(e) => updateField('subcategory', e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-brand-primary/50"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-brand-primary/50"
                     >
                       <option value="" className="bg-gray-900">
                         Select subcategory
@@ -355,7 +355,7 @@ export default function CreateListingPage() {
                     value={formData.brand}
                     onChange={(e) => updateField('brand', e.target.value)}
                     placeholder="e.g., Fender"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                   />
                 </div>
                 <div>
@@ -365,7 +365,7 @@ export default function CreateListingPage() {
                     value={formData.model}
                     onChange={(e) => updateField('model', e.target.value)}
                     placeholder="e.g., Stratocaster"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                   />
                 </div>
                 <div>
@@ -375,7 +375,7 @@ export default function CreateListingPage() {
                     value={formData.year}
                     onChange={(e) => updateField('year', e.target.value)}
                     placeholder="e.g., 1965"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                   />
                 </div>
               </div>
@@ -412,7 +412,7 @@ export default function CreateListingPage() {
                   onChange={(e) => updateField('description', e.target.value)}
                   placeholder="Describe your item in detail. Include any modifications, history, or issues..."
                   rows={5}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                 />
               </div>
             </div>
@@ -470,7 +470,7 @@ export default function CreateListingPage() {
 
               <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
                 <div className="flex items-start gap-3">
-                  <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
+                  <Info className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
                   <div className="text-sm text-white/70">
                     <p className="mb-1 font-medium text-blue-400">Photo Tips</p>
                     <ul className="list-disc space-y-1 pl-4 text-white/60">
@@ -533,7 +533,7 @@ export default function CreateListingPage() {
                         value={formData.price}
                         onChange={(e) => updateField('price', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                       />
                     </div>
                   </div>
@@ -562,7 +562,7 @@ export default function CreateListingPage() {
                     onChange={(e) => updateField('tradeFor', e.target.value)}
                     placeholder="Describe what you're looking for in a trade..."
                     rows={3}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                   />
                 </div>
               )}
@@ -580,7 +580,7 @@ export default function CreateListingPage() {
                         value={formData.location}
                         onChange={(e) => updateField('location', e.target.value)}
                         placeholder="City, State"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                       />
                     </div>
                   </div>
@@ -596,7 +596,7 @@ export default function CreateListingPage() {
                         value={formData.shippingCost}
                         onChange={(e) => updateField('shippingCost', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                       />
                     </div>
                   </div>
@@ -703,7 +703,7 @@ export default function CreateListingPage() {
 
               <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
                 <div className="flex items-start gap-3">
-                  <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-emerald-400" />
+                  <Check className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
                   <div className="text-sm">
                     <p className="font-medium text-emerald-400">Ready to publish!</p>
                     <p className="text-white/60">
@@ -733,7 +733,7 @@ export default function CreateListingPage() {
               <button
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed()}
-                className="rounded-xl bg-gradient-to-r from-brand-primary to-orange-500 px-6 py-3 font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-xl bg-linear-to-r from-brand-primary to-orange-500 px-6 py-3 font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Continue
               </button>
@@ -741,7 +741,7 @@ export default function CreateListingPage() {
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-teal-500 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

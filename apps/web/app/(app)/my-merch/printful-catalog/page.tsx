@@ -250,9 +250,9 @@ export default function PrintfulCatalogPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-gradient-to-br from-cyan-500/5 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-cyan-500/5 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -289,7 +289,7 @@ export default function PrintfulCatalogPage() {
               Back to Create
             </Link>
             <div className="mb-4 flex items-center justify-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-orange-500/20">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500/20 to-orange-500/20">
                 <Package className="h-7 w-7 text-purple-400" />
               </div>
             </div>
@@ -314,7 +314,7 @@ export default function PrintfulCatalogPage() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-none"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
               />
             </div>
 
@@ -323,7 +323,7 @@ export default function PrintfulCatalogPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-purple-500/50 focus:outline-none"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white focus:border-purple-500/50 focus:outline-hidden"
               >
                 <option value="popular">Most Variants</option>
                 <option value="name">Name A-Z</option>
@@ -369,7 +369,7 @@ export default function PrintfulCatalogPage() {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all ${
                     selectedCategory === cat.id
-                      ? 'bg-gradient-to-r from-purple-500 to-orange-500 text-white shadow-lg'
+                      ? 'bg-linear-to-r from-purple-500 to-orange-500 text-white shadow-lg'
                       : 'border border-white/10 bg-white/5 text-white/70 hover:border-white/20 hover:bg-white/10'
                   }`}
                 >
@@ -414,14 +414,14 @@ export default function PrintfulCatalogPage() {
                 >
                   <Link
                     href={`/my-merch/customize/${product.id}`}
-                    className={`group block overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 ${
+                    className={`group block overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10 ${
                       viewMode === 'list' ? 'flex items-center gap-6 p-4' : ''
                     }`}
                   >
                     {/* Product Image */}
                     <div
-                      className={`relative overflow-hidden bg-gradient-to-br from-zinc-800 to-zinc-900 ${
-                        viewMode === 'grid' ? 'aspect-square' : 'h-24 w-24 flex-shrink-0 rounded-xl'
+                      className={`relative overflow-hidden bg-linear-to-br from-zinc-800 to-zinc-900 ${
+                        viewMode === 'grid' ? 'aspect-square' : 'h-24 w-24 shrink-0 rounded-xl'
                       }`}
                     >
                       {product.image ? (
@@ -492,7 +492,7 @@ export default function PrintfulCatalogPage() {
 
                     {/* Arrow for list view */}
                     {viewMode === 'list' && (
-                      <ChevronRight className="h-5 w-5 flex-shrink-0 text-white/30 group-hover:text-purple-400" />
+                      <ChevronRight className="h-5 w-5 shrink-0 text-white/30 group-hover:text-purple-400" />
                     )}
                   </Link>
                 </motion.div>

@@ -324,7 +324,7 @@ export function AISectionWizard({
                   }}
                 >
                   <div
-                    className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl"
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
                     style={{
                       background: selectedGoals.includes(goal.id) ? 'var(--accent)' : 'var(--bg)',
                     }}
@@ -420,7 +420,7 @@ export function AISectionWizard({
                   style={{ background: 'var(--panel)' }}
                 >
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-orange-500 to-pink-500 transition-all duration-500"
+                    className="h-full rounded-full bg-linear-to-r from-orange-500 to-pink-500 transition-all duration-500"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -509,7 +509,7 @@ export function AISectionWizard({
           style={{ borderBottom: '1px solid var(--border)' }}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
               <Wand2 size={24} className="text-white" />
             </div>
             <div>

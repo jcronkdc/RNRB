@@ -233,7 +233,7 @@ export function LibraryImportModal({
                 placeholder="Search your library..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border-0 py-2.5 pl-10 pr-4 text-sm outline-none transition focus:ring-2"
+                className="w-full rounded-xl border-0 py-2.5 pl-10 pr-4 text-sm outline-hidden transition focus:ring-2"
                 style={{
                   background: 'var(--background)',
                   color: 'var(--text)',

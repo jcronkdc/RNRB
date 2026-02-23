@@ -138,7 +138,7 @@ export function VoiceMessagePlayer({
       {/* Player controls */}
       <div className="flex items-center gap-3">
         {/* Play/Pause button */}
-        <Button onClick={togglePlayPause} variant="secondary" size="sm" className="flex-shrink-0">
+        <Button onClick={togglePlayPause} variant="secondary" size="sm" className="shrink-0">
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4 fill-current" />}
         </Button>
 
@@ -167,7 +167,7 @@ export function VoiceMessagePlayer({
         </div>
 
         {/* Time display */}
-        <div className="flex-shrink-0 font-mono text-xs text-muted-foreground">
+        <div className="shrink-0 font-mono text-xs text-muted-foreground">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
 
@@ -176,7 +176,7 @@ export function VoiceMessagePlayer({
           onClick={cyclePlaybackSpeed}
           variant="secondary"
           size="sm"
-          className="flex-shrink-0 gap-1"
+          className="shrink-0 gap-1"
           title="Playback speed"
         >
           <Gauge className="h-3 w-3" />
@@ -188,7 +188,7 @@ export function VoiceMessagePlayer({
           onClick={handleDownload}
           variant="secondary"
           size="sm"
-          className="flex-shrink-0"
+          className="shrink-0"
           title="Download"
         >
           <Download className="h-3 w-3" />

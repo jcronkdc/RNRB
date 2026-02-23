@@ -285,7 +285,7 @@ export function WebsiteAIAssistant({
       {/* Header */}
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */}
       <div
-        className="flex flex-shrink-0 cursor-pointer items-center justify-between px-4 py-3"
+        className="flex shrink-0 cursor-pointer items-center justify-between px-4 py-3"
         style={{
           background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
         }}
@@ -440,7 +440,7 @@ export function WebsiteAIAssistant({
           {/* Quick Prompts */}
           {showQuickPrompts && (
             <div
-              className="flex-shrink-0 border-t px-4 py-3"
+              className="shrink-0 border-t px-4 py-3"
               style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
             >
               <div className="mb-2 flex items-center gap-2">
@@ -471,7 +471,7 @@ export function WebsiteAIAssistant({
 
           {/* Input */}
           <div
-            className="flex flex-shrink-0 items-end gap-2 border-t p-4"
+            className="flex shrink-0 items-end gap-2 border-t p-4"
             style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
           >
             <textarea
@@ -491,7 +491,7 @@ export function WebsiteAIAssistant({
             <button
               onClick={() => handleSend()}
               disabled={!input.trim() || isLoading}
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl transition-all hover:scale-105 disabled:opacity-50"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all hover:scale-105 disabled:opacity-50"
               style={{
                 background: input.trim()
                   ? 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)'

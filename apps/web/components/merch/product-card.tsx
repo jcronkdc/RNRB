@@ -54,11 +54,11 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] transition-all duration-300 hover:border-white/20"
+      className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 transition-all duration-300 hover:border-white/20"
     >
       {/* Product Image */}
       <div
-        className={`relative aspect-square overflow-hidden bg-gradient-to-br ${getCategoryColor(product.category)}`}
+        className={`relative aspect-square overflow-hidden bg-linear-to-br ${getCategoryColor(product.category)}`}
       >
         {product.image ? (
           <Image

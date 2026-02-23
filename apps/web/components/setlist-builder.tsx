@@ -197,7 +197,7 @@ function SortableSong({
     <div
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition }}
-      className="rnrb-card group mb-3 border-2 border-border bg-gradient-to-r from-surface to-surface-muted p-4 transition-all hover:border-brand-primary/30"
+      className="rnrb-card group mb-3 border-2 border-border bg-linear-to-r from-surface to-surface-muted p-4 transition-all hover:border-brand-primary/30"
     >
       <div className="flex items-center gap-3">
         {/* Drag Handle */}
@@ -235,7 +235,7 @@ function SortableSong({
               value={song.notes || ''}
               onChange={(e) => onUpdateNotes(e.target.value)}
               placeholder="Add notes (key changes, tempo shifts, etc.)"
-              className="mt-2 w-full resize-none rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="mt-2 w-full resize-none rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={2}
             />
           )}
@@ -431,7 +431,7 @@ export function CollaborativeSetlistBuilder({
   return (
     <div className="space-y-6">
       {/* Header Stats */}
-      <Card className="rnrb-card border-brand-primary/30 bg-gradient-to-r from-brand-primary/10 to-transparent p-6">
+      <Card className="rnrb-card border-brand-primary/30 bg-linear-to-r from-brand-primary/10 to-transparent p-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           <div>
             <div className="mb-1 text-sm text-muted-foreground">Total Songs</div>

@@ -163,7 +163,7 @@ export function QuickLibraryImport({ onImport, onOpenFullLibrary }: QuickLibrary
                   placeholder="Search your songs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border-0 py-2 pl-8 pr-3 text-xs outline-none transition focus:ring-2"
+                  className="w-full rounded-lg border-0 py-2 pl-8 pr-3 text-xs outline-hidden transition focus:ring-2"
                   style={{
                     background: 'var(--background)',
                     color: 'var(--text)',
@@ -204,7 +204,7 @@ export function QuickLibraryImport({ onImport, onOpenFullLibrary }: QuickLibrary
               <div className="max-h-48 space-y-1 overflow-y-auto">
                 {isLoading ? (
                   <div className="flex items-center justify-center py-6">
-                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--accent)] border-t-transparent" />
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--accent) border-t-transparent" />
                   </div>
                 ) : filteredFiles.length === 0 ? (
                   <div className="py-6 text-center">

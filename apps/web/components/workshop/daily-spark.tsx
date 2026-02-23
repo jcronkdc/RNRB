@@ -174,7 +174,7 @@ export function SparkIndicator({ completed }: { completed?: boolean }) {
 
   return (
     <div
-      className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-[var(--panel-hover)]"
+      className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-(--panel-hover)"
       title={spark.prompt}
     >
       <Sparkles className="h-4 w-4" style={{ color: completed ? 'var(--sage)' : 'var(--gold)' }} />

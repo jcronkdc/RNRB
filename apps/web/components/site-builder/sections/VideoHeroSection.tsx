@@ -278,7 +278,7 @@ export function VideoHeroSectionEditor({
               key={source}
               onClick={() => setVideoSource(source)}
               className={`rounded-lg px-4 py-2 capitalize ${
-                videoSource === source ? 'ring-2 ring-[var(--accent)]' : ''
+                videoSource === source ? 'ring-2 ring-(--accent)' : ''
               }`}
               style={{
                 background: videoSource === source ? 'var(--accent)' : 'var(--bg)',
@@ -462,7 +462,7 @@ export function VideoHeroSectionEditor({
               key={align}
               onClick={() => onChange({ ...content, textAlignment: align })}
               className={`rounded-lg px-4 py-2 capitalize ${
-                content.textAlignment === align ? 'ring-2 ring-[var(--accent)]' : ''
+                content.textAlignment === align ? 'ring-2 ring-(--accent)' : ''
               }`}
               style={{
                 background: content.textAlignment === align ? 'var(--accent)' : 'var(--bg)',

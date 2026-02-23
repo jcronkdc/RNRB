@@ -737,7 +737,7 @@ export default function LibraryPage() {
                   href="/tools?tool=backing-tracks"
                   className="mb-4 flex items-center gap-3 rounded-xl border border-teal-500/30 bg-teal-500/10 px-3 py-3 text-sm font-medium text-teal-500 transition-all hover:bg-teal-500/20"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-teal-500 to-emerald-600">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-teal-500 to-emerald-600">
                     <Layers className="h-4 w-4 text-white" />
                   </div>
                   <div className="flex-1">
@@ -843,7 +843,7 @@ export default function LibraryPage() {
                         value={newCollectionName}
                         onChange={(e) => setNewCollectionName(e.target.value)}
                         placeholder="Collection name"
-                        className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                        className="flex-1 rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                         autoFocus
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') handleCreateCollection();
@@ -1084,7 +1084,7 @@ export default function LibraryPage() {
                     placeholder="Search files, lyrics, notes..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
                   />
                 </div>
 
@@ -1530,7 +1530,7 @@ export default function LibraryPage() {
                                 src={file.url}
                                 name={file.name}
                                 onEnded={() => setPlayingId(null)}
-                                className="!p-2"
+                                className="p-2!"
                               />
                             </div>
                           )}

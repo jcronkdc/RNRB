@@ -351,7 +351,7 @@ export function BreakoutRooms({
                     {room.participants.slice(0, 5).map((p) => (
                       <div
                         key={p.id}
-                        className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-violet-500 text-xs font-medium text-white"
+                        className="flex h-7 w-7 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-violet-500 text-xs font-medium text-white"
                         title={p.user_name}
                       >
                         {p.user_avatar ? (

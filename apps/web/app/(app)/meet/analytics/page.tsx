@@ -214,7 +214,7 @@ export default function MeetAnalyticsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 p-6">
+    <div className="min-h-screen bg-linear-to-br from-gray-950 via-gray-900 to-gray-950 p-6">
       {/* RR Logo */}
       <div className="flex justify-center pb-4">
         <Link href="/" className="transition-transform hover:scale-105">
@@ -311,12 +311,12 @@ export default function MeetAnalyticsPage() {
             >
               {/* Background Gradient */}
               <div
-                className={`absolute right-0 top-0 h-24 w-24 bg-gradient-to-br ${stat.color} -translate-y-1/2 translate-x-1/2 rounded-full opacity-10 blur-2xl`}
+                className={`absolute right-0 top-0 h-24 w-24 bg-linear-to-br ${stat.color} -translate-y-1/2 translate-x-1/2 rounded-full opacity-10 blur-2xl`}
               />
 
               <div className="relative">
                 <div
-                  className={`h-10 w-10 rounded-xl bg-gradient-to-br ${stat.color} mb-3 flex items-center justify-center`}
+                  className={`h-10 w-10 rounded-xl bg-linear-to-br ${stat.color} mb-3 flex items-center justify-center`}
                 >
                   <stat.icon className="h-5 w-5 text-white" />
                 </div>
@@ -398,7 +398,7 @@ export default function MeetAnalyticsPage() {
                     initial={{ width: 0 }}
                     animate={{ width: `${displayAnalytics.participationRate}%` }}
                     transition={{ duration: 0.8, delay: 0.5 }}
-                    className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                    className="h-full rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
                   />
                 </div>
               </div>

@@ -154,7 +154,7 @@ export default function StudioPage() {
           {/* Quick Actions */}
           <div className="mb-8">
             <h2 className="font-display mb-2 text-2xl font-bold">Quick Actions</h2>
-            <p className="text-[color:var(--muted)]">Start your creative session</p>
+            <p className="text-(--muted)">Start your creative session</p>
           </div>
 
           <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-4">
@@ -162,17 +162,17 @@ export default function StudioPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="rnrb-card rnrb-hover-lift cursor-pointer border-2 border-[color:rgba(232,93,59,0.2)] p-6 transition-colors hover:border-[color:rgba(232,93,59,0.5)]"
+              className="rnrb-card rnrb-hover-lift cursor-pointer border-2 border-[rgba(232,93,59,0.2)] p-6 transition-colors hover:border-[rgba(232,93,59,0.5)]"
               onClick={startNewSession}
               style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
             >
               <div className="flex flex-col gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:rgba(232,93,59,0.1)]">
-                  <Disc className="h-6 w-6 text-[color:var(--accent)]" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(232,93,59,0.1)]">
+                  <Disc className="h-6 w-6 text-(--accent)" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-semibold">Start Recording</h3>
-                  <p className="text-sm text-[color:var(--muted)]">HD video/audio session</p>
+                  <p className="text-sm text-(--muted)">HD video/audio session</p>
                 </div>
               </div>
             </motion.div>
@@ -181,15 +181,15 @@ export default function StudioPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="rnrb-card rnrb-hover-lift cursor-pointer p-6 transition-colors hover:border-[color:rgba(232,93,59,0.3)]"
+              className="rnrb-card rnrb-hover-lift cursor-pointer p-6 transition-colors hover:border-[rgba(232,93,59,0.3)]"
             >
               <div className="flex flex-col gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:rgba(232,93,59,0.1)]">
-                  <Radio className="h-6 w-6 text-[color:var(--accent)]" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(232,93,59,0.1)]">
+                  <Radio className="h-6 w-6 text-(--accent)" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-semibold">Go Live</h3>
-                  <p className="text-sm text-[color:var(--muted)]">Stream to fans</p>
+                  <p className="text-sm text-(--muted)">Stream to fans</p>
                 </div>
               </div>
             </motion.div>
@@ -198,15 +198,15 @@ export default function StudioPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="rnrb-card rnrb-hover-lift cursor-pointer p-6 transition-colors hover:border-[color:rgba(232,93,59,0.3)]"
+              className="rnrb-card rnrb-hover-lift cursor-pointer p-6 transition-colors hover:border-[rgba(232,93,59,0.3)]"
             >
               <div className="flex flex-col gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:rgba(232,93,59,0.1)]">
-                  <Users className="h-6 w-6 text-[color:var(--accent)]" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(232,93,59,0.1)]">
+                  <Users className="h-6 w-6 text-(--accent)" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-semibold">Collaborate</h3>
-                  <p className="text-sm text-[color:var(--muted)]">Invite musicians</p>
+                  <p className="text-sm text-(--muted)">Invite musicians</p>
                 </div>
               </div>
             </motion.div>
@@ -215,15 +215,15 @@ export default function StudioPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="rnrb-card rnrb-hover-lift cursor-pointer p-6 transition-colors hover:border-[color:rgba(232,93,59,0.3)]"
+              className="rnrb-card rnrb-hover-lift cursor-pointer p-6 transition-colors hover:border-[rgba(232,93,59,0.3)]"
             >
               <div className="flex flex-col gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:rgba(232,93,59,0.1)]">
-                  <Calendar className="h-6 w-6 text-[color:var(--accent)]" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[rgba(232,93,59,0.1)]">
+                  <Calendar className="h-6 w-6 text-(--accent)" />
                 </div>
                 <div>
                   <h3 className="mb-1 font-semibold">Schedule</h3>
-                  <p className="text-sm text-[color:var(--muted)]">Plan sessions</p>
+                  <p className="text-sm text-(--muted)">Plan sessions</p>
                 </div>
               </div>
             </motion.div>
@@ -234,7 +234,7 @@ export default function StudioPage() {
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h2 className="font-display mb-2 text-2xl font-bold">Studio Tools</h2>
-                <p className="text-[color:var(--muted)]">
+                <p className="text-(--muted)">
                   Essential tools for your recording session
                 </p>
               </div>
@@ -255,12 +255,12 @@ export default function StudioPage() {
                   className="rnrb-card group cursor-pointer p-5 transition-all hover:border-emerald-500/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600">
                       <Music2 className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold group-hover:text-emerald-400">Tuner</h3>
-                      <p className="text-xs text-[color:var(--muted)]">Tune before recording</p>
+                      <p className="text-xs text-(--muted)">Tune before recording</p>
                     </div>
                   </div>
                 </motion.div>
@@ -274,12 +274,12 @@ export default function StudioPage() {
                   className="rnrb-card group cursor-pointer p-5 transition-all hover:border-orange-500/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-600">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-red-600">
                       <Drum className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold group-hover:text-orange-400">Click Track</h3>
-                      <p className="text-xs text-[color:var(--muted)]">Record to tempo</p>
+                      <p className="text-xs text-(--muted)">Record to tempo</p>
                     </div>
                   </div>
                 </motion.div>
@@ -293,12 +293,12 @@ export default function StudioPage() {
                   className="rnrb-card group cursor-pointer p-5 transition-all hover:border-teal-500/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-teal-500 to-emerald-600">
                       <ClipboardList className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold group-hover:text-teal-400">Session Notes</h3>
-                      <p className="text-xs text-[color:var(--muted)]">Document your setup</p>
+                      <p className="text-xs text-(--muted)">Document your setup</p>
                     </div>
                   </div>
                 </motion.div>
@@ -312,12 +312,12 @@ export default function StudioPage() {
                   className="rnrb-card group cursor-pointer p-5 transition-all hover:border-purple-500/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-600">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-pink-600">
                       <Mic className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold group-hover:text-purple-400">Recording Guide</h3>
-                      <p className="text-xs text-[color:var(--muted)]">Best practices</p>
+                      <p className="text-xs text-(--muted)">Best practices</p>
                     </div>
                   </div>
                 </motion.div>
@@ -358,7 +358,7 @@ export default function StudioPage() {
                 <h2 className="font-display mb-4 text-3xl font-bold">
                   Remote Collaboration Studio
                 </h2>
-                <p className="mb-6 text-lg text-[color:var(--muted)]">
+                <p className="mb-6 text-lg text-(--muted)">
                   Let's be honest: You can't record professional multi-track audio over the internet
                   due to latency and compression. But you CAN collaborate effectively while each
                   person records locally.
@@ -366,11 +366,11 @@ export default function StudioPage() {
 
                 <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div className="rnrb-card border-green-500/20 bg-green-500/5 p-6">
-                    <h4 className="mb-3 flex items-center gap-2 font-semibold text-[color:var(--accent)]">
+                    <h4 className="mb-3 flex items-center gap-2 font-semibold text-(--accent)">
                       <CheckCircle className="h-5 w-5" />
                       What This Studio DOES
                     </h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>✓ HD video calls with up to 32 musicians</li>
                       <li>✓ Screen share your DAW (Pro Tools, Logic, Ableton)</li>
                       <li>✓ Remote direction & real-time feedback</li>
@@ -385,7 +385,7 @@ export default function StudioPage() {
                       <CheckCircle className="h-5 w-5" />
                       What This Studio DOESN'T Do
                     </h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>✗ Multi-track recording (use your local DAW)</li>
                       <li>✗ Replace professional audio interfaces</li>
                       <li>✗ Latency-free jamming (physics limits: 50-200ms)</li>
@@ -396,54 +396,54 @@ export default function StudioPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-[color:rgba(232,93,59,0.2)] bg-brand-primary/5 p-6">
+                <div className="rounded-lg border border-[rgba(232,93,59,0.2)] bg-brand-primary/5 p-6">
                   <h3 className="mb-4 text-xl font-semibold">
                     The Real Professional Remote Workflow
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
-                      <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[color:rgba(232,93,59,0.2)] text-sm font-bold text-[color:var(--accent)]">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(232,93,59,0.2)] text-sm font-bold text-(--accent)">
                         1
                       </div>
                       <div>
                         <p className="font-medium">Each Musician Records Locally</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Use your own audio interface and DAW to record high-quality tracks
                           (48kHz/24-bit minimum)
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[color:rgba(232,93,59,0.2)] text-sm font-bold text-[color:var(--accent)]">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(232,93,59,0.2)] text-sm font-bold text-(--accent)">
                         2
                       </div>
                       <div>
                         <p className="font-medium">Use Daily.co Video for Communication</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Producer in Nashville watches drummer's screen in LA, gives real-time
                           direction: "One more take, stronger on the chorus"
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[color:rgba(232,93,59,0.2)] text-sm font-bold text-[color:var(--accent)]">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(232,93,59,0.2)] text-sm font-bold text-(--accent)">
                         3
                       </div>
                       <div>
                         <p className="font-medium">Upload High-Quality Files</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Once recorded, upload your WAV/AIFF files to the project for mixing (file
                           upload feature coming soon)
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[color:rgba(232,93,59,0.2)] text-sm font-bold text-[color:var(--accent)]">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[rgba(232,93,59,0.2)] text-sm font-bold text-(--accent)">
                         4
                       </div>
                       <div>
                         <p className="font-medium">Mix Engineer Combines All Tracks</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Download all musicians' files, mix in your DAW. This is how real
                           distributed albums are made.
                         </p>
@@ -457,53 +457,53 @@ export default function StudioPage() {
               <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Card className="rnrb-card p-6">
                   <h3 className="mb-6 flex items-center gap-2 text-2xl font-semibold">
-                    <Video className="h-6 w-6 text-[color:var(--accent)]" />
+                    <Video className="h-6 w-6 text-(--accent)" />
                     Video Collaboration Features
                   </h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <Video className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <Video className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">HD Video Calls</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           1080p video at 30fps. See your collaborators clearly for feedback
                           sessions, rehearsals, and songwriting.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <MonitorSpeaker className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <MonitorSpeaker className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">Screen Sharing</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Share your DAW screen so producers can watch you work. They can provide
                           direction, suggest edits, and guide your recording process.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <Users className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <Users className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">Up to 32 Participants</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Large group video calls for full band meetings, collaborative songwriting,
                           or remote rehearsals.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <Disc className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <Disc className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">Cloud Recording</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Record video sessions to cloud storage. Great for video content, not for
                           professional audio capture.
                         </p>
@@ -514,41 +514,41 @@ export default function StudioPage() {
 
                 <Card className="rnrb-card p-6">
                   <h3 className="mb-6 flex items-center gap-2 text-2xl font-semibold">
-                    <Radio className="h-6 w-6 text-[color:var(--accent)]" />
+                    <Radio className="h-6 w-6 text-(--accent)" />
                     Live Streaming Features
                   </h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <Radio className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <Radio className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">Live Streaming to Fans</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Stream finished performances to YouTube, Twitch, Facebook Live via RTMP.
                           Perfect for virtual concerts and live events.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <MessageSquare className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <MessageSquare className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">In-Session Chat</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Text chat during video calls for sharing links, notes, or quick messages
                           without interrupting the session.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="flex-shrink-0 rounded bg-[color:rgba(232,93,59,0.1)] p-2">
-                        <Mic className="h-5 w-5 text-[color:var(--accent)]" />
+                      <div className="shrink-0 rounded bg-[rgba(232,93,59,0.1)] p-2">
+                        <Mic className="h-5 w-5 text-(--accent)" />
                       </div>
                       <div>
                         <p className="mb-1 font-semibold">Mute/Video Controls</p>
-                        <p className="text-sm text-[color:var(--muted)]">
+                        <p className="text-sm text-(--muted)">
                           Individual audio/video controls. Participants can mute themselves or turn
                           off cameras as needed.
                         </p>
@@ -565,10 +565,10 @@ export default function StudioPage() {
                 </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <h4 className="mb-3 font-semibold text-[color:var(--accent)]">
+                    <h4 className="mb-3 font-semibold text-(--accent)">
                       Video Communication
                     </h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• 1080p HD video at 30fps</li>
                       <li>• H.264 codec (browser-compatible)</li>
                       <li>• Grid, active speaker, or custom layouts</li>
@@ -577,10 +577,10 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-[color:var(--accent)]">
+                    <h4 className="mb-3 font-semibold text-(--accent)">
                       Audio Streaming
                     </h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• Opus codec (compressed for internet)</li>
                       <li>• NOT professional recording quality</li>
                       <li>• 50-200ms internet latency (varies)</li>
@@ -589,10 +589,10 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-[color:var(--accent)]">
+                    <h4 className="mb-3 font-semibold text-(--accent)">
                       Live Streaming
                     </h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• RTMP/RTMPS output</li>
                       <li>• Stream to YouTube, Twitch, Facebook</li>
                       <li>• Great for finished performances</li>
@@ -601,10 +601,10 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-[color:var(--accent)]">
+                    <h4 className="mb-3 font-semibold text-(--accent)">
                       Recording Formats
                     </h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• MP4 video files</li>
                       <li>• WAV/MP3 audio exports</li>
                       <li>• Per-participant track isolation</li>
@@ -613,8 +613,8 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-[color:var(--accent)]">Best Uses</h4>
-                    <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+                    <h4 className="mb-3 font-semibold text-(--accent)">Best Uses</h4>
+                    <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• Remote collaboration & feedback</li>
                       <li>• Screen sharing your DAW for direction</li>
                       <li>• Live streaming finished performances</li>

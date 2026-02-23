@@ -88,7 +88,7 @@ function SidebarLogo({
 
   return (
     <div
-      className="flex h-[var(--topbar-height)] shrink-0 items-center justify-between border-b px-3"
+      className="flex h-(--topbar-height) shrink-0 items-center justify-between border-b px-3"
       style={{ borderColor: 'var(--border)' }}
     >
       <Link href="/" className="flex items-center overflow-hidden">
@@ -196,7 +196,7 @@ export function SidebarNav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
           />
         )}
@@ -241,7 +241,7 @@ export function SidebarNav() {
                 <Link key={item.href} href={item.href}>
                   <div
                     className={`group flex items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 ${
-                      active ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
+                      active ? 'bg-white/6' : 'hover:bg-white/3'
                     }`}
                   >
                     {/* Active indicator bar */}
@@ -281,7 +281,7 @@ export function SidebarNav() {
           <Link href="/settings">
             <div
               className={`group flex items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 ${
-                pathname?.startsWith('/settings') ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
+                pathname?.startsWith('/settings') ? 'bg-white/6' : 'hover:bg-white/3'
               }`}
             >
               <div
@@ -303,7 +303,7 @@ export function SidebarNav() {
           <button
             onClick={handleSignOut}
             disabled={signingOut}
-            className="group flex w-full items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 hover:bg-white/[0.03]"
+            className="group flex w-full items-center gap-3 rounded-lg px-2.5 py-2 transition-all duration-150 hover:bg-white/3"
           >
             <div
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md"

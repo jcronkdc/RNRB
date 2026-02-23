@@ -161,7 +161,7 @@ function QuickAction({
   return (
     <Link href={href}>
       <div
-        className="group flex items-center gap-4 rounded-xl border p-4 transition-all duration-200 hover:border-[var(--border-strong)]"
+        className="group flex items-center gap-4 rounded-xl border p-4 transition-all duration-200 hover:border-(--border-strong)"
         style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
       >
         <div
@@ -274,7 +274,7 @@ export function DashboardContent({
             {songs.map((song, i) => (
               <Link key={song.id} href={`/songwriting?id=${song.id}`}>
                 <div
-                  className="group flex items-center gap-4 px-4 py-3 transition-colors duration-150 hover:bg-white/[0.03]"
+                  className="group flex items-center gap-4 px-4 py-3 transition-colors duration-150 hover:bg-white/3"
                   style={i > 0 ? { borderTop: '1px solid var(--border)' } : undefined}
                 >
                   <div
@@ -354,7 +354,7 @@ export function DashboardContent({
             {projects.map((project) => (
               <Link key={project.id} href={`/projects/${project.slug}`}>
                 <div
-                  className="rounded-xl border p-4 transition-all duration-150 hover:border-[var(--border-strong)] hover:bg-white/[0.02]"
+                  className="rounded-xl border p-4 transition-all duration-150 hover:border-(--border-strong) hover:bg-white/2"
                   style={{ borderColor: 'var(--border)' }}
                 >
                   <div className="mb-2.5 flex items-center gap-3">
@@ -403,7 +403,7 @@ export function DashboardContent({
             </p>
             <Link
               href="/projects/new"
-              className="flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--border-strong)]"
+              className="flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors hover:border-(--border-strong)"
               style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
             >
               <Plus className="h-4 w-4" />

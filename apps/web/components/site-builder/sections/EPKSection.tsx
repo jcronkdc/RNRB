@@ -199,7 +199,7 @@ export function EPKSection({ content, theme, siteId }: EPKSectionProps) {
           <div className="flex flex-col gap-8 md:flex-row">
             {/* Logo */}
             {logoUrl && (
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <img
                   src={logoUrl}
                   alt={`${artistName} logo`}

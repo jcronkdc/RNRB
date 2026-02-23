@@ -223,11 +223,11 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
           className="flex cursor-pointer items-center gap-4 rounded-xl p-3 transition-all hover:bg-white/5"
         >
           {/* Avatar */}
-          <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-white/10 transition-all group-hover:ring-orange-500/50">
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-white/10 transition-all group-hover:ring-orange-500/50">
             {user.image ? (
               <Image src={user.image} alt={user.name || 'User'} fill className="object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-red-600">
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-orange-500 to-red-600">
                 <span className="text-lg font-bold text-white">
                   {user.name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                 </span>
@@ -245,7 +245,7 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
               <span className="truncate font-semibold text-white">
                 {user.name || user.email?.split('@')[0]}
               </span>
-              {user.isAvailable && <CheckCircle className="h-4 w-4 flex-shrink-0 text-green-400" />}
+              {user.isAvailable && <CheckCircle className="h-4 w-4 shrink-0 text-green-400" />}
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-400">
               {user.instruments?.length ? (
@@ -276,7 +276,7 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
             className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
               isFollowing
                 ? 'border border-white/20 bg-white/5 text-white hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-400'
-                : 'bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700'
+                : 'bg-linear-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700'
             }`}
           >
             {isFollowing ? (
@@ -318,7 +318,7 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
       >
         {/* Search Header */}
         <div className="flex items-center gap-3 border-b border-white/10 p-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-red-600">
             <Search className="h-5 w-5 text-white" />
           </div>
           <input
@@ -327,7 +327,7 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for musicians, collaborators, friends..."
-            className="flex-1 bg-transparent text-lg text-white placeholder:text-gray-500 focus:outline-none"
+            className="flex-1 bg-transparent text-lg text-white placeholder:text-gray-500 focus:outline-hidden"
           />
           {loading && <Loader2 className="h-5 w-5 animate-spin text-orange-500" />}
           <button
@@ -428,7 +428,7 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
               {/* Quick Actions */}
               {recentSearches.length === 0 && suggestions.length === 0 && (
                 <div className="py-8 text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-orange-500/20 to-red-600/20">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-orange-500/20 to-red-600/20">
                     <Users className="h-8 w-8 text-orange-500" />
                   </div>
                   <h3 className="mb-2 text-lg font-medium text-white">Find Your People</h3>
@@ -438,7 +438,7 @@ export function GlobalUserSearch({ isOpen, onClose }: GlobalUserSearchProps) {
                   <Link
                     href="/discover"
                     onClick={onClose}
-                    className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 px-6 py-3 font-medium text-white transition-all hover:from-orange-600 hover:to-red-700"
+                    className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-600 px-6 py-3 font-medium text-white transition-all hover:from-orange-600 hover:to-red-700"
                   >
                     <TrendingUp className="h-4 w-4" />
                     Browse Musicians

@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          'group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 shadow-sm ring-offset-background focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2 motion-safe:transition-all motion-safe:duration-200',
+          'group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 shadow-xs ring-offset-background focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2 motion-safe:transition-all motion-safe:duration-200',
           disabled && 'opacity-60',
           containerClassName
         )}
@@ -39,7 +39,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             LeadingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>,
             {
               className:
-                'h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary',
+                'h-4 w-4 shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary',
               'aria-hidden': 'true',
             }
           )}
@@ -48,7 +48,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           disabled={disabled}
           className={cn(
-            'flex h-6 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground/80',
+            'flex h-6 w-full bg-transparent text-sm text-foreground outline-hidden placeholder:text-muted-foreground/80',
             className
           )}
           {...props}
@@ -58,7 +58,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             TrailingIcon as React.ComponentType<{ className?: string; 'aria-hidden'?: string }>,
             {
               className:
-                'h-4 w-4 flex-shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary',
+                'h-4 w-4 shrink-0 text-muted-foreground motion-safe:transition-colors group-focus-within:text-brand-primary',
               'aria-hidden': 'true',
             }
           )}

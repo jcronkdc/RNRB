@@ -139,8 +139,8 @@ function ArtistStoreContent() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -176,7 +176,7 @@ function ArtistStoreContent() {
                 className="mb-4 rounded-full border-2 border-orange-500/50"
               />
             ) : (
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-orange-500/30 to-red-500/30">
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-orange-500/30 to-red-500/30">
                 <User className="h-10 w-10 text-white/60" />
               </div>
             )}
@@ -249,7 +249,7 @@ function ArtistStoreContent() {
                   className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10"
                 >
                   {/* Product Image */}
-                  <div className="relative aspect-square bg-gradient-to-br from-white/10 to-white/5">
+                  <div className="relative aspect-square bg-linear-to-br from-white/10 to-white/5">
                     {product.mockupUrl || product.thumbnailUrl ? (
                       <Image
                         src={product.mockupUrl || product.thumbnailUrl || ''}
@@ -313,7 +313,7 @@ function ArtistStoreContent() {
                         </div>
                         <button
                           onClick={() => handleAddToCart(product, product.variants[0])}
-                          className="w-full rounded-lg bg-gradient-to-r from-orange-500 to-red-500 py-2.5 font-medium text-white transition-all hover:shadow-lg hover:shadow-orange-500/25"
+                          className="w-full rounded-lg bg-linear-to-r from-orange-500 to-red-500 py-2.5 font-medium text-white transition-all hover:shadow-lg hover:shadow-orange-500/25"
                         >
                           Add to Cart
                         </button>
@@ -321,7 +321,7 @@ function ArtistStoreContent() {
                     ) : (
                       <button
                         onClick={() => handleAddToCart(product)}
-                        className="w-full rounded-lg bg-gradient-to-r from-orange-500 to-red-500 py-2.5 font-medium text-white transition-all hover:shadow-lg hover:shadow-orange-500/25"
+                        className="w-full rounded-lg bg-linear-to-r from-orange-500 to-red-500 py-2.5 font-medium text-white transition-all hover:shadow-lg hover:shadow-orange-500/25"
                       >
                         Add to Cart
                       </button>

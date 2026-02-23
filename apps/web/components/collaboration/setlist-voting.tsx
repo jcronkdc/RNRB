@@ -109,7 +109,7 @@ export function SetlistVoting({
 
         <div className="flex items-center gap-2">
           <Button
-            variant={isLocked ? 'default' : 'outline'}
+            variant={isLocked ? 'default' : 'outline-solid'}
             size="sm"
             onClick={toggleLock}
             className="flex items-center gap-2"
@@ -201,7 +201,7 @@ export function SetlistVoting({
               >
                 {/* Position */}
                 <div
-                  className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold"
                   style={{
                     background: index < 3 ? 'var(--accent)' : 'var(--panel)',
                     color: index < 3 ? 'white' : 'var(--text)',

@@ -276,7 +276,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
         value={content}
         onChange={(e) => onContentChange(e.target.value)}
         placeholder={`Write your ${blockType} lyrics...`}
-        className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white outline-none transition-all placeholder:text-zinc-500 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20"
+        className="w-full resize-none rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-white outline-hidden transition-all placeholder:text-zinc-500 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20"
         rows={2}
         aria-label={`${blockType} lyrics editor`}
       />
@@ -378,7 +378,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                     onChange={(e) => setCustomChord(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && addCustomChord()}
                     placeholder="e.g., Cmaj7, Dsus4, Fadd9"
-                    className="flex-1 rounded-lg border-2 border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-white outline-none placeholder:text-zinc-500 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                    className="flex-1 rounded-lg border-2 border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-white outline-hidden placeholder:text-zinc-500 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                     aria-label="Custom chord input"
                   />
                   <Button

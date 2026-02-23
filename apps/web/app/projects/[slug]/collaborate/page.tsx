@@ -154,7 +154,7 @@ export default function ProjectCollaboratePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-black via-gray-900/50 to-black">
+      <div className="flex min-h-screen items-center justify-center bg-linear-to-b from-black via-gray-900/50 to-black">
         <div className="flex flex-col items-center gap-4">
           <motion.div
             animate={{ opacity: [0.2, 1, 0.2] }}
@@ -178,10 +178,10 @@ export default function ProjectCollaboratePage() {
   const pendingInvites = project.invites || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900/50 to-black">
+    <div className="min-h-screen bg-linear-to-b from-black via-gray-900/50 to-black">
       {/* Improved Hero Section with Better Mobile Layout */}
       <div className="relative overflow-hidden border-b border-gray-800">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-orange-500/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-orange-500/5 via-transparent to-orange-500/5" />
         <div className="absolute inset-0">
           <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
           <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl" />
@@ -238,7 +238,7 @@ export default function ProjectCollaboratePage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 rounded-lg border border-green-500/20 bg-gradient-to-r from-green-500/10 to-emerald-500/10 p-3 sm:mb-6 sm:p-4"
+            className="mb-4 rounded-lg border border-green-500/20 bg-linear-to-r from-green-500/10 to-emerald-500/10 p-3 sm:mb-6 sm:p-4"
           >
             <PresenceIndicator
               channelName={`project:${slug}`}
@@ -310,7 +310,7 @@ export default function ProjectCollaboratePage() {
             onClick={() => setActiveView('ai-music')}
             className={`relative flex shrink-0 items-center gap-1.5 rounded-t-lg px-3 py-2 text-sm font-medium transition-all sm:gap-2 sm:px-6 sm:py-3 sm:text-base ${
               activeView === 'ai-music'
-                ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white'
+                ? 'bg-linear-to-r from-purple-600 to-purple-500 text-white'
                 : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
             }`}
           >
@@ -332,7 +332,7 @@ export default function ProjectCollaboratePage() {
           >
             <div className="space-y-4 sm:space-y-6 lg:col-span-2">
               {/* Current Team */}
-              <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+              <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
                 <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold text-white sm:mb-4 sm:text-2xl">
                   <Users className="h-5 w-5 text-orange-500 sm:h-6 sm:w-6" />
                   <span>Team Members ({collaborators.length})</span>
@@ -382,7 +382,7 @@ export default function ProjectCollaboratePage() {
 
               {/* Pending Invites */}
               {pendingInvites.length > 0 && (
-                <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+                <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
                   <h3 className="mb-3 text-lg font-semibold text-white sm:mb-4 sm:text-xl">
                     Pending Invitations ({pendingInvites.length})
                   </h3>
@@ -412,7 +412,7 @@ export default function ProjectCollaboratePage() {
 
             {/* Invite Panel - Mobile Optimized */}
             <div>
-              <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+              <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
                 <h3 className="mb-3 flex items-center gap-2 text-lg font-semibold text-white sm:mb-4 sm:text-xl">
                   <UserPlus className="h-4 w-4 text-orange-500 sm:h-5 sm:w-5" />
                   <span>Invite Member</span>
@@ -426,7 +426,7 @@ export default function ProjectCollaboratePage() {
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="musician@example.com"
-                    className="w-full rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-white outline-none transition placeholder:text-gray-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 sm:px-4 sm:text-base"
+                    className="w-full rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-white outline-hidden transition placeholder:text-gray-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 sm:px-4 sm:text-base"
                     onKeyPress={(e) => e.key === 'Enter' && handleInvite()}
                   />
                   <Button
@@ -460,7 +460,7 @@ export default function ProjectCollaboratePage() {
 
         {/* Chat View - LIVE Ably Integration */}
         {activeView === 'chat' && (
-          <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+          <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
             <ProjectChat projectSlug={slug} projectName={project.name} />
           </Card>
         )}
@@ -468,13 +468,13 @@ export default function ProjectCollaboratePage() {
         {/* Video View - LIVE Daily.co Integration */}
         {activeView === 'video' && (
           <div className="space-y-4 sm:space-y-6">
-            <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+            <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
               <ProjectVideoRoom projectSlug={slug} projectName={project.name} />
             </Card>
 
             {/* Collaborative Whiteboard */}
             {user && (
-              <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+              <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
                 <h3 className="mb-3 flex flex-wrap items-center gap-2 text-lg font-semibold text-white sm:mb-4 sm:text-xl">
                   <Palette className="h-4 w-4 shrink-0 text-orange-500 sm:h-5 sm:w-5" />
                   <span>Collaborative Whiteboard</span>
@@ -510,9 +510,9 @@ export default function ProjectCollaboratePage() {
             className="space-y-4 sm:space-y-6"
           >
             {/* Coming Soon Banner with R&R Labs - Mobile Responsive */}
-            <Card className="rounded-xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 via-transparent to-brand-primary/10 p-4 sm:p-6 lg:p-8">
+            <Card className="rounded-xl border-2 border-purple-500/30 bg-linear-to-br from-purple-500/10 via-transparent to-brand-primary/10 p-4 sm:p-6 lg:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg sm:h-16 sm:w-16">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500 to-purple-600 shadow-lg sm:h-16 sm:w-16">
                   <FlaskConical className="h-6 w-6 text-white sm:h-8 sm:w-8" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -539,7 +539,7 @@ export default function ProjectCollaboratePage() {
             </Card>
 
             {/* R&R Labs Volunteer Section - Mobile Responsive */}
-            <Card className="rounded-xl border-2 border-orange-500/20 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6 lg:p-8">
+            <Card className="rounded-xl border-2 border-orange-500/20 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6 lg:p-8">
               <div className="mx-auto max-w-3xl">
                 <h3 className="mb-3 flex flex-wrap items-center gap-2 text-xl font-bold text-white sm:mb-4 sm:text-2xl">
                   <FlaskConical className="h-5 w-5 shrink-0 text-purple-400 sm:h-6 sm:w-6" />
@@ -610,7 +610,7 @@ export default function ProjectCollaboratePage() {
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
                   <Button
-                    className="rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-600 hover:shadow-xl sm:px-8 sm:py-4 sm:text-base"
+                    className="rounded-xl bg-linear-to-r from-purple-600 to-purple-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:from-purple-700 hover:to-purple-600 hover:shadow-xl sm:px-8 sm:py-4 sm:text-base"
                     onClick={() =>
                       window.open(
                         'mailto:labs@rnrb.app?subject=Volunteer for R&R Labs AI Music',
@@ -645,7 +645,7 @@ export default function ProjectCollaboratePage() {
             </Card>
 
             {/* Preview Section - Mobile Responsive */}
-            <Card className="rounded-xl border-2 border-dashed border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6 lg:p-8">
+            <Card className="rounded-xl border-2 border-dashed border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6 lg:p-8">
               <div className="mb-4 text-center sm:mb-6">
                 <h4 className="mb-1 flex flex-wrap items-center justify-center gap-2 text-lg font-semibold text-white sm:mb-2 sm:text-xl">
                   <Sparkles className="h-4 w-4 text-purple-400 sm:h-5 sm:w-5" />
@@ -697,7 +697,7 @@ export default function ProjectCollaboratePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <Card className="rounded-xl border border-gray-800 bg-gradient-to-b from-gray-900 to-black p-4 sm:p-6">
+            <Card className="rounded-xl border border-gray-800 bg-linear-to-b from-gray-900 to-black p-4 sm:p-6">
               <ActivityFeed
                 channelName={`activity:project:${slug}`}
                 showHeader={true}

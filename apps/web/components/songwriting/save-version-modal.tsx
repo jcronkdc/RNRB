@@ -177,7 +177,7 @@ export function SaveVersionModal({
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 placeholder="e.g., Demo, Final Mix, Acoustic Version"
-                className="w-full rounded-xl px-4 py-3 text-sm outline-none transition focus:ring-2"
+                className="w-full rounded-xl px-4 py-3 text-sm outline-hidden transition focus:ring-2"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -199,7 +199,7 @@ export function SaveVersionModal({
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe what changed in this version..."
                 rows={3}
-                className="w-full resize-none rounded-xl px-4 py-3 text-sm outline-none transition focus:ring-2"
+                className="w-full resize-none rounded-xl px-4 py-3 text-sm outline-hidden transition focus:ring-2"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',

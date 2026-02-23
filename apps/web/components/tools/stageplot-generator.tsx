@@ -372,7 +372,7 @@ export function StageplotGenerator() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-600">
             <Grid className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -380,7 +380,7 @@ export function StageplotGenerator() {
               type="text"
               value={stageName}
               onChange={(e) => setStageName(e.target.value)}
-              className="bg-transparent text-lg font-bold focus:outline-none focus:ring-0"
+              className="bg-transparent text-lg font-bold focus:outline-hidden focus:ring-0"
             />
             <p className="text-sm text-muted-foreground">Drag equipment to position</p>
           </div>

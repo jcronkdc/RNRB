@@ -610,7 +610,7 @@ function SiteEditorContent() {
     <div className="flex h-screen flex-col overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Top Bar */}
       <div
-        className="flex flex-shrink-0 items-center justify-between px-4 py-3"
+        className="flex shrink-0 items-center justify-between px-4 py-3"
         style={{
           background: 'var(--panel)',
           borderBottom: '1px solid var(--border)',
@@ -767,7 +767,7 @@ function SiteEditorContent() {
 
       {/* Tabs */}
       <div
-        className="flex flex-shrink-0 gap-2 px-4 py-2"
+        className="flex shrink-0 gap-2 px-4 py-2"
         style={{
           background: 'var(--panel)',
           borderBottom: '1px solid var(--border)',
@@ -795,7 +795,7 @@ function SiteEditorContent() {
       <div className="flex flex-1 overflow-hidden">
         {/* Editor Panel */}
         <div
-          className={`flex-shrink-0 overflow-y-auto transition-all duration-300 ${
+          className={`shrink-0 overflow-y-auto transition-all duration-300 ${
             showPreview ? 'w-1/2' : 'w-full'
           }`}
           style={{ borderRight: showPreview ? '1px solid var(--border)' : 'none' }}
@@ -878,7 +878,7 @@ function SiteEditorContent() {
                       border: '1px solid var(--border)',
                     }}
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
                       <Wand2 size={24} className="text-white" />
                     </div>
                     <div>

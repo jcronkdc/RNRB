@@ -45,7 +45,7 @@ function SuccessContent() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8 text-center"
+          className="overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 p-8 text-center"
         >
           {/* Success Icon */}
           <motion.div
@@ -103,7 +103,7 @@ function SuccessContent() {
             <h3 className="font-semibold text-white">What happens next?</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-medium text-orange-400">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-medium text-orange-400">
                   1
                 </div>
                 <div>
@@ -114,7 +114,7 @@ function SuccessContent() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-medium text-orange-400">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-medium text-orange-400">
                   2
                 </div>
                 <div>
@@ -125,7 +125,7 @@ function SuccessContent() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-medium text-orange-400">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-500/20 text-xs font-medium text-orange-400">
                   3
                 </div>
                 <div>
@@ -149,7 +149,7 @@ function SuccessContent() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white sm:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white sm:w-auto"
               >
                 Continue Shopping
                 <ArrowRight className="h-4 w-4" />

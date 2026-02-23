@@ -53,14 +53,14 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+        className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs md:hidden"
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Panel */}
       <nav
-        className="fixed inset-x-0 top-[56px] z-50 border-b border-[var(--border)] md:hidden"
+        className="fixed inset-x-0 top-[56px] z-50 border-b border-(--border) md:hidden"
         style={{ background: 'var(--bg)' }}
         aria-label="Mobile navigation"
       >
@@ -70,7 +70,7 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="border-b border-[var(--border-subtle)] py-3.5 text-[15px] font-medium transition-colors hover:text-[var(--accent)]"
+              className="border-b border-(--border-subtle) py-3.5 text-[15px] font-medium transition-colors hover:text-(--accent)"
               style={{ color: 'var(--text)' }}
             >
               {link.label}
@@ -81,7 +81,7 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
             <Link
               href="/auth"
               onClick={onClose}
-              className="rounded-lg border border-[var(--border)] px-4 py-2.5 text-center text-sm font-medium transition-colors hover:border-[var(--border-strong)]"
+              className="rounded-lg border border-(--border) px-4 py-2.5 text-center text-sm font-medium transition-colors hover:border-(--border-strong)"
               style={{ color: 'var(--text)' }}
             >
               Sign in
@@ -146,8 +146,8 @@ export function NavBar() {
               href={link.href}
               className={`relative rounded-md px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
                 isActive(link.href)
-                  ? 'text-[var(--text)]'
-                  : 'text-[var(--muted)] hover:text-[var(--text)]'
+                  ? 'text-(--text)'
+                  : 'text-(--muted) hover:text-(--text)'
               }`}
             >
               {link.label}

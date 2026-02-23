@@ -72,20 +72,20 @@ export default function SongRequestPage() {
 
   if (submitted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-primary/10 via-background to-background px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-brand-primary/10 via-background to-background px-4 py-12">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-2xl"
         >
           <Card className="rnrb-card p-8 text-center sm:p-12">
-            <CheckCircle className="mx-auto mb-6 h-20 w-20 text-[color:var(--accent)]" />
+            <CheckCircle className="mx-auto mb-6 h-20 w-20 text-(--accent)" />
             <h1 className="font-display mb-4 text-3xl font-bold sm:text-4xl">Request Submitted!</h1>
-            <p className="mb-8 text-lg text-[color:var(--muted)]">
+            <p className="mb-8 text-lg text-(--muted)">
               Thank you for your song request. The band will review it and get back to you soon!
             </p>
             {formData.email && (
-              <p className="mb-6 text-sm text-[color:var(--muted)]">
+              <p className="mb-6 text-sm text-(--muted)">
                 We'll send you an email at <strong>{formData.email}</strong> once your request is
                 reviewed.
               </p>
@@ -103,7 +103,7 @@ export default function SongRequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-primary/10 via-background to-background px-4 py-12">
+    <div className="min-h-screen bg-linear-to-br from-brand-primary/10 via-background to-background px-4 py-12">
       <div className="rnrb-container mx-auto max-w-3xl">
         {/* Header */}
         <motion.div
@@ -112,10 +112,10 @@ export default function SongRequestPage() {
           className="mb-8 text-center"
         >
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-primary/10">
-            <Music className="h-10 w-10 text-[color:var(--accent)]" />
+            <Music className="h-10 w-10 text-(--accent)" />
           </div>
           <h1 className="font-display mb-3 text-4xl font-bold sm:text-5xl">Request a Song</h1>
-          <p className="mx-auto max-w-2xl text-lg text-[color:var(--muted)] sm:text-xl">
+          <p className="mx-auto max-w-2xl text-lg text-(--muted) sm:text-xl">
             Got a song you'd love to hear? Submit your request and we'll do our best to include it
             in our setlist!
           </p>
@@ -174,7 +174,7 @@ export default function SongRequestPage() {
                   placeholder="We'll let you know if we add your song"
                   className="rnrb-input w-full rounded-xl"
                 />
-                <p className="mt-1.5 text-xs text-[color:var(--muted)]">
+                <p className="mt-1.5 text-xs text-(--muted)">
                   We'll email you when your request is reviewed
                 </p>
               </div>
@@ -207,7 +207,7 @@ export default function SongRequestPage() {
                   placeholder="Want to dedicate this song to someone?"
                   className="rnrb-input w-full rounded-xl"
                 />
-                <p className="mt-1.5 text-xs text-[color:var(--muted)]">
+                <p className="mt-1.5 text-xs text-(--muted)">
                   We might give you a shoutout if we play your request!
                 </p>
               </div>
@@ -256,25 +256,25 @@ export default function SongRequestPage() {
         >
           <Card className="rnrb-card mt-6 border-blue-500/20 bg-blue-500/5 p-6">
             <h3 className="mb-3 text-lg font-semibold">How It Works</h3>
-            <ul className="space-y-2 text-sm text-[color:var(--muted)]">
+            <ul className="space-y-2 text-sm text-(--muted)">
               <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-[color:var(--accent)]">1.</span>
+                <span className="mt-0.5 text-(--accent)">1.</span>
                 <span>Submit your song request with your name and optional message</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-[color:var(--accent)]">2.</span>
+                <span className="mt-0.5 text-(--accent)">2.</span>
                 <span>
                   The band reviews all requests and decides which songs to add to the setlist
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-[color:var(--accent)]">3.</span>
+                <span className="mt-0.5 text-(--accent)">3.</span>
                 <span>
                   If your song is selected, you'll get notified (if you provided an email)
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-[color:var(--accent)]">4.</span>
+                <span className="mt-0.5 text-(--accent)">4.</span>
                 <span>Come to the show and enjoy hearing your requested song!</span>
               </li>
             </ul>

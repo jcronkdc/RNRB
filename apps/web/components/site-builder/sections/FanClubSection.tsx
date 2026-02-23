@@ -248,7 +248,7 @@ export function FanClubSection({
                     <li key={i} className="flex items-start gap-2">
                       <Check
                         size={18}
-                        className="mt-0.5 flex-shrink-0"
+                        className="mt-0.5 shrink-0"
                         style={{ color: tier.color }}
                       />
                       <span className="text-sm" style={{ color: 'var(--text)' }}>
@@ -297,7 +297,7 @@ export function FanClubSection({
                           src={item.thumbnail}
                           alt={item.title}
                           className={`h-full w-full object-cover transition-transform group-hover:scale-105 ${
-                            !hasAccess ? 'blur-sm' : ''
+                            !hasAccess ? 'blur-xs' : ''
                           }`}
                         />
                       ) : (

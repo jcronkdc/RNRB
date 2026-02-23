@@ -53,7 +53,7 @@ function CollaborationNeedCard({ need }: { need: any }) {
     <Link href={`/collaboration-needs/${need.id}`}>
       <motion.div
         whileHover={{ y: -4 }}
-        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-5 transition-all hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10"
+        className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 p-5 transition-all hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10"
       >
         {/* Glow effect */}
         <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-blue-500/0 blur-3xl transition-all duration-500 group-hover:bg-blue-500/20" />
@@ -128,7 +128,7 @@ function CollaborationNeedCard({ need }: { need: any }) {
           {/* Posted by */}
           <div className="flex items-center justify-between border-t border-white/10 pt-3">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600">
+              <div className="h-8 w-8 overflow-hidden rounded-full bg-linear-to-br from-blue-500 to-purple-600">
                 {need.user?.image ? (
                   <Image
                     src={need.user.image}
@@ -255,7 +255,7 @@ export default function CollaborationNeedsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search collaboration needs..."
-                className="w-full rounded-xl border py-3 pl-12 pr-4 outline-none transition-all focus:ring-2"
+                className="w-full rounded-xl border py-3 pl-12 pr-4 outline-hidden transition-all focus:ring-2"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',

@@ -159,13 +159,13 @@ export function LiveTeleprompter({
           className="flex items-center gap-2 overflow-x-auto px-6 py-3"
           style={{ borderBottom: '1px solid var(--border)' }}
         >
-          <span className="flex-shrink-0 text-xs text-zinc-500">Jump to:</span>
+          <span className="shrink-0 text-xs text-zinc-500">Jump to:</span>
           {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => canControl && jumpToSection(section.id)}
               disabled={!canControl}
-              className="flex-shrink-0 rounded-lg px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+              className="shrink-0 rounded-lg px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50"
               style={{
                 background: state.currentSection === section.id ? 'var(--accent)' : 'var(--panel)',
                 color: state.currentSection === section.id ? 'white' : 'var(--text)',

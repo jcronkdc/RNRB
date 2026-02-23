@@ -102,7 +102,7 @@ function FeatureCard({
         style={{ background: gradient }}
       />
       <div className="relative z-10">
-        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+        <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
           <Icon className="h-7 w-7 text-white" />
         </div>
         <h3 className="mb-3 text-xl font-bold text-white">{title}</h3>
@@ -135,7 +135,7 @@ function TestimonialCard({
       </div>
       <p className="mb-6 text-lg leading-relaxed text-gray-300">&ldquo;{quote}&rdquo;</p>
       <div className="flex items-center gap-4">
-        <div className="h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-orange-500 to-pink-500">
+        <div className="h-12 w-12 overflow-hidden rounded-full bg-linear-to-br from-orange-500 to-pink-500">
           <div className="flex h-full w-full items-center justify-center text-lg font-bold text-white">
             {avatar}
           </div>
@@ -171,12 +171,12 @@ function PricingCard({
     <div
       className={`relative overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:scale-[1.02] ${
         popular
-          ? 'bg-gradient-to-br from-orange-500/20 to-pink-500/20 ring-2 ring-orange-500'
+          ? 'bg-linear-to-br from-orange-500/20 to-pink-500/20 ring-2 ring-orange-500'
           : 'bg-gray-900/50'
       }`}
     >
       {popular && (
-        <div className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
+        <div className="absolute right-4 top-4 rounded-full bg-linear-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
           MOST POPULAR
         </div>
       )}
@@ -189,7 +189,7 @@ function PricingCard({
       <ul className="mb-8 space-y-4">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start gap-3">
-            <Check className="mt-0.5 h-5 w-5 flex-shrink-0 text-orange-500" />
+            <Check className="mt-0.5 h-5 w-5 shrink-0 text-orange-500" />
             <span className="text-gray-300">{feature}</span>
           </li>
         ))}
@@ -198,7 +198,7 @@ function PricingCard({
         href="/sites"
         className={`block w-full rounded-xl py-4 text-center font-semibold transition-all hover:scale-[1.02] ${
           popular
-            ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white'
+            ? 'bg-linear-to-r from-orange-500 to-pink-500 text-white'
             : 'bg-white/10 text-white hover:bg-white/20'
         }`}
       >
@@ -217,7 +217,7 @@ export default function WebsiteBuilderLanding() {
       <section className="relative overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 via-transparent to-pink-500/20" />
+          <div className="absolute inset-0 bg-linear-to-br from-orange-500/20 via-transparent to-pink-500/20" />
           <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-orange-500/30 blur-[128px]" />
           <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-pink-500/30 blur-[128px]" />
           {/* Grid pattern */}
@@ -234,7 +234,7 @@ export default function WebsiteBuilderLanding() {
         <div className="relative mx-auto max-w-7xl px-6 pb-32 pt-24">
           {/* Badge */}
           <div className="mb-8 flex justify-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500/20 to-pink-500/20 px-4 py-2 text-sm">
+            <div className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-orange-500/20 to-pink-500/20 px-4 py-2 text-sm">
               <Sparkles className="h-4 w-4 text-orange-500" />
               <span className="text-orange-300">AI-Powered Website Builder for Musicians</span>
             </div>
@@ -244,7 +244,7 @@ export default function WebsiteBuilderLanding() {
           <h1 className="mb-6 text-center text-5xl font-bold leading-tight md:text-7xl">
             Build Your Music Website
             <br />
-            <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
               In Minutes, Not Months
             </span>
           </h1>
@@ -258,7 +258,7 @@ export default function WebsiteBuilderLanding() {
           <div className="mb-16 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/sites"
-              className="group flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-8 py-4 text-lg font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
+              className="group flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-pink-500 px-8 py-4 text-lg font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
             >
               Start Building Free
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -336,11 +336,11 @@ export default function WebsiteBuilderLanding() {
               </div>
 
               {/* Preview content */}
-              <div className="relative aspect-[16/10] bg-gradient-to-br from-gray-900 to-black">
+              <div className="relative aspect-16/10 bg-linear-to-br from-gray-900 to-black">
                 {/* Fake website preview */}
                 <div className="absolute inset-0 flex flex-col">
                   {/* Hero area */}
-                  <div className="relative flex-1 bg-gradient-to-br from-orange-900/50 to-pink-900/50">
+                  <div className="relative flex-1 bg-linear-to-br from-orange-900/50 to-pink-900/50">
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
                       <h2 className="mb-4 text-4xl font-bold text-white">THE MIDNIGHT</h2>
                       <p className="mb-6 text-xl text-orange-300">Synthwave | Los Angeles</p>
@@ -363,7 +363,7 @@ export default function WebsiteBuilderLanding() {
                 </div>
 
                 {/* AI Assistant indicator */}
-                <div className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-pink-500 shadow-lg">
+                <div className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-r from-orange-500 to-pink-500 shadow-lg">
                   <Bot className="h-6 w-6 text-white" />
                 </div>
               </div>
@@ -378,7 +378,7 @@ export default function WebsiteBuilderLanding() {
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               Everything You Need to{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
                 Stand Out
               </span>
             </h2>
@@ -448,7 +448,7 @@ export default function WebsiteBuilderLanding() {
 
       {/* AI Features Deep Dive */}
       <section className="relative overflow-hidden py-32">
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-b from-orange-500/5 to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="mb-16 text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-orange-500/20 px-4 py-2 text-sm text-orange-300">
@@ -457,7 +457,7 @@ export default function WebsiteBuilderLanding() {
             </div>
             <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               Your Personal{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
                 AI Creative Director
               </span>
             </h2>
@@ -480,7 +480,7 @@ export default function WebsiteBuilderLanding() {
                     I want my website to feel dark and moody, like my synthwave music. Can you help?
                   </p>
                 </div>
-                <div className="rounded-2xl rounded-br-md bg-gradient-to-r from-orange-500/20 to-pink-500/20 p-4">
+                <div className="rounded-2xl rounded-br-md bg-linear-to-r from-orange-500/20 to-pink-500/20 p-4">
                   <p className="text-gray-200">
                     Perfect choice! I recommend the <strong>Noir</strong> or <strong>Neon</strong>{' '}
                     theme for synthwave. Noir gives you an elegant, cinematic feel with red accents,
@@ -539,7 +539,7 @@ export default function WebsiteBuilderLanding() {
                 },
               ].map((item, i) => (
                 <div key={i} className="flex gap-4 rounded-xl bg-gray-900/50 p-6">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
                     <item.icon className="h-6 w-6 text-white" />
                   </div>
                   <div>
@@ -559,7 +559,7 @@ export default function WebsiteBuilderLanding() {
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               Loved by{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
                 Musicians Worldwide
               </span>
             </h2>
@@ -596,12 +596,12 @@ export default function WebsiteBuilderLanding() {
 
       {/* Pricing Section */}
       <section id="pricing" className="relative py-32">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/5 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-b from-transparent via-orange-500/5 to-transparent" />
         <div className="relative mx-auto max-w-7xl px-6">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               Simple,{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
                 Transparent Pricing
               </span>
             </h2>
@@ -676,14 +676,14 @@ export default function WebsiteBuilderLanding() {
 
       {/* Final CTA */}
       <section className="relative overflow-hidden py-32">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-pink-500/20" />
+        <div className="absolute inset-0 bg-linear-to-r from-orange-500/20 to-pink-500/20" />
         <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/30 blur-[128px]" />
 
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           <h2 className="mb-6 text-4xl font-bold md:text-6xl">
             Ready to Build Your
             <br />
-            <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
               Dream Website?
             </span>
           </h2>
@@ -693,7 +693,7 @@ export default function WebsiteBuilderLanding() {
           </p>
           <Link
             href="/sites"
-            className="group inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-10 py-5 text-xl font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
+            className="group inline-flex items-center gap-3 rounded-xl bg-linear-to-r from-orange-500 to-pink-500 px-10 py-5 text-xl font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
           >
             Start Building Free
             <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />
@@ -709,7 +709,7 @@ export default function WebsiteBuilderLanding() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-orange-500 to-pink-500">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-r from-orange-500 to-pink-500">
                 <Sparkles className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-bold">CronkWaters</span>

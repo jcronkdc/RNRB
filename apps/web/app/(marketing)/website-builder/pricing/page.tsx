@@ -212,7 +212,7 @@ export default function PricingPage() {
       {/* Hero */}
       <section className="relative overflow-hidden py-24">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-pink-500/10" />
+          <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 via-transparent to-pink-500/10" />
           <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-orange-500/20 blur-[128px]" />
           <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-pink-500/20 blur-[128px]" />
         </div>
@@ -220,7 +220,7 @@ export default function PricingPage() {
         <div className="relative mx-auto max-w-7xl px-6 text-center">
           <h1 className="mb-6 text-4xl font-bold md:text-6xl" style={{ color: 'var(--text)' }}>
             Simple,{' '}
-            <span className="bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
               Transparent Pricing
             </span>
           </h1>
@@ -283,7 +283,7 @@ export default function PricingPage() {
                 }}
               >
                 {tier.popular && (
-                  <div className="absolute right-4 top-4 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
+                  <div className="absolute right-4 top-4 rounded-full bg-linear-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
                     MOST POPULAR
                   </div>
                 )}
@@ -292,7 +292,7 @@ export default function PricingPage() {
                 <div className="mb-6">
                   <div
                     className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${
-                      tier.gradient ? `bg-gradient-to-br ${tier.gradient}` : ''
+                      tier.gradient ? `bg-linear-to-br ${tier.gradient}` : ''
                     }`}
                     style={{
                       background: tier.gradient ? undefined : 'var(--bg)',
@@ -344,12 +344,12 @@ export default function PricingPage() {
                       {feature.included ? (
                         <Check
                           size={18}
-                          className={`mt-0.5 flex-shrink-0 ${
+                          className={`mt-0.5 shrink-0 ${
                             feature.highlight ? 'text-orange-500' : 'text-green-500'
                           }`}
                         />
                       ) : (
-                        <X size={18} className="mt-0.5 flex-shrink-0 text-gray-600" />
+                        <X size={18} className="mt-0.5 shrink-0 text-gray-600" />
                       )}
                       <span
                         className={feature.included ? '' : 'opacity-50'}
@@ -365,7 +365,7 @@ export default function PricingPage() {
                 <Link
                   href={tier.id === 'enterprise' ? '/contact' : '/sites'}
                   className={`block w-full rounded-xl py-4 text-center font-semibold transition-all hover:scale-[1.02] ${
-                    tier.popular ? 'bg-gradient-to-r from-orange-500 to-pink-500 text-white' : ''
+                    tier.popular ? 'bg-linear-to-r from-orange-500 to-pink-500 text-white' : ''
                   }`}
                   style={{
                     background: tier.popular ? undefined : 'var(--bg)',
@@ -388,7 +388,7 @@ export default function PricingPage() {
             className="flex flex-col items-center gap-6 rounded-2xl p-8 text-center md:flex-row md:text-left"
             style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
           >
-            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-green-500/20">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-green-500/20">
               <Shield size={32} className="text-green-500" />
             </div>
             <div>
@@ -452,7 +452,7 @@ export default function PricingPage() {
           </p>
           <Link
             href="/sites"
-            className="group inline-flex items-center gap-3 rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-10 py-5 text-xl font-semibold text-white transition-all hover:scale-105"
+            className="group inline-flex items-center gap-3 rounded-xl bg-linear-to-r from-orange-500 to-pink-500 px-10 py-5 text-xl font-semibold text-white transition-all hover:scale-105"
           >
             Start Building Free
             <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-1" />

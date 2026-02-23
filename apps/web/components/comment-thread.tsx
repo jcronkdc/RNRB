@@ -121,7 +121,7 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
                 <input
                   type="text"
                   placeholder="Write a reply..."
-                  className="flex-1 rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-white outline-none focus:border-orange-500"
+                  className="flex-1 rounded-lg border border-gray-800 bg-gray-900 px-3 py-2 text-sm text-white outline-hidden focus:border-orange-500"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       postComment(e.currentTarget.value, comment.id);
@@ -160,7 +160,7 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Add a comment..."
-              className="w-full rounded-lg border border-gray-800 bg-black px-3 py-2 text-sm text-white outline-none focus:border-orange-500"
+              className="w-full rounded-lg border border-gray-800 bg-black px-3 py-2 text-sm text-white outline-hidden focus:border-orange-500"
               rows={3}
             />
             <div className="mt-2 flex justify-end">

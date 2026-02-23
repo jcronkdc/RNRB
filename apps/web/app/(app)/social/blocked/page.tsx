@@ -144,7 +144,7 @@ export default function BlockedUsersPage() {
           className="mb-6 flex items-start gap-3 rounded-xl p-4"
           style={{ backgroundColor: 'var(--accent-dim)', border: '1px solid var(--accent)' }}
         >
-          <Shield className="mt-0.5 h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+          <Shield className="mt-0.5 h-5 w-5 shrink-0" style={{ color: 'var(--accent)' }} />
           <div>
             <p style={{ fontWeight: '600', color: 'var(--text)', marginBottom: '4px' }}>
               What happens when you block someone?
@@ -277,7 +277,7 @@ export default function BlockedUsersPage() {
             className="mt-6 flex items-start gap-3 rounded-xl p-4"
             style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', border: '1px solid #f59e0b' }}
           >
-            <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0" style={{ color: '#f59e0b' }} />
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" style={{ color: '#f59e0b' }} />
             <p style={{ fontSize: '0.875rem', color: 'var(--muted)' }}>
               Unblocking a user will allow them to message you again and see your profile. They
               won't be notified that you unblocked them.

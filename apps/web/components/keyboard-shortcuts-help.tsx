@@ -65,7 +65,7 @@ export function KeyboardShortcutsHelp() {
               {/* Header */}
               <div className="flex items-center justify-between border-b border-border bg-muted/30 p-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-purple-500 to-pink-500">
                     <Zap className="h-5 w-5 text-white" />
                   </div>
                   <div>
@@ -144,7 +144,7 @@ function ShortcutRow({ keys, description }: { keys: string[]; description: strin
         {keys.map((key, index) => (
           <kbd
             key={index}
-            className="rounded border border-border bg-muted px-2 py-1 text-xs font-medium shadow-sm"
+            className="rounded border border-border bg-muted px-2 py-1 text-xs font-medium shadow-xs"
           >
             {key}
           </kbd>

@@ -134,7 +134,7 @@ function PasswordResetContent() {
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-zinc-950">
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950" />
+        <div className="absolute inset-0 bg-linear-to-br from-zinc-950 via-zinc-900 to-zinc-950" />
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.25, 0.4, 0.25] }}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
@@ -198,14 +198,14 @@ function PasswordResetContent() {
                     placeholder="you@example.com"
                     required
                     disabled={loading}
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="mt-2 w-full rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-500/40 disabled:opacity-50"
+                  className="mt-2 w-full rounded-lg bg-linear-to-r from-orange-500 to-orange-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-500/40 disabled:opacity-50"
                 >
                   {loading ? (
                     <span className="inline-flex items-center justify-center gap-2">
@@ -236,7 +236,7 @@ function PasswordResetContent() {
                       required
                       minLength={8}
                       disabled={loading}
-                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
                     />
                     <button
                       type="button"
@@ -267,7 +267,7 @@ function PasswordResetContent() {
                       required
                       minLength={8}
                       disabled={loading}
-                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
                     />
                     <button
                       type="button"
@@ -284,7 +284,7 @@ function PasswordResetContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="mt-2 w-full rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-500/40 disabled:opacity-50"
+                  className="mt-2 w-full rounded-lg bg-linear-to-r from-orange-500 to-orange-600 px-4 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:from-orange-600 hover:to-orange-700 hover:shadow-orange-500/40 disabled:opacity-50"
                 >
                   {loading ? (
                     <span className="inline-flex items-center justify-center gap-2">

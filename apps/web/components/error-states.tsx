@@ -203,7 +203,7 @@ export function ErrorState({
           damping: 20,
           delay: 0.1,
         }}
-        className={`mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${config.color}`}
+        className={`mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-linear-to-br ${config.color}`}
       >
         <Icon className="h-10 w-10 text-white" />
       </motion.div>
@@ -251,7 +251,7 @@ export function ErrorState({
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleAction}
-          className={`flex items-center gap-2 rounded-xl bg-gradient-to-r ${config.color} px-6 py-3 font-semibold text-white shadow-lg transition-shadow hover:shadow-xl`}
+          className={`flex items-center gap-2 rounded-xl bg-linear-to-r ${config.color} px-6 py-3 font-semibold text-white shadow-lg transition-shadow hover:shadow-xl`}
         >
           <RefreshCw className="h-4 w-4" />
           {config.primaryAction.label}
@@ -340,7 +340,7 @@ export function ErrorToast({
       initial={{ opacity: 0, y: -20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      className={`flex items-start gap-3 rounded-xl bg-gradient-to-r ${config.color} p-4 shadow-xl`}
+      className={`flex items-start gap-3 rounded-xl bg-linear-to-r ${config.color} p-4 shadow-xl`}
     >
       <Icon className="h-5 w-5 shrink-0 text-white" />
       <div className="flex-1">

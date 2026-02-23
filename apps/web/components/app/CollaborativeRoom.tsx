@@ -56,7 +56,7 @@ const VideoTile = memo(({ participant }: { participant: DailyParticipant }) => {
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="from-primary/20 to-primary/5 flex h-full w-full items-center justify-center bg-gradient-to-br">
+        <div className="from-primary/20 to-primary/5 flex h-full w-full items-center justify-center bg-linear-to-br">
           <div className="bg-primary/20 text-primary flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold">
             {participant.user_name?.charAt(0).toUpperCase() || '?'}
           </div>
@@ -234,7 +234,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
       <div className="flex items-center justify-center gap-3 rounded-2xl border border-border bg-surface p-4">
         <Button
           onClick={toggleVideo}
-          variant={isVideoEnabled ? 'solid' : 'outline'}
+          variant={isVideoEnabled ? 'solid' : 'outline-solid'}
           size="lg"
           className="gap-2"
         >
@@ -244,7 +244,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
         <Button
           onClick={toggleAudio}
-          variant={isAudioEnabled ? 'solid' : 'outline'}
+          variant={isAudioEnabled ? 'solid' : 'outline-solid'}
           size="lg"
           className="gap-2"
         >
@@ -254,7 +254,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
         <Button
           onClick={toggleScreenShare}
-          variant={isSharingScreen ? 'solid' : 'outline'}
+          variant={isSharingScreen ? 'solid' : 'outline-solid'}
           size="lg"
           className="gap-2"
         >

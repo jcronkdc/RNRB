@@ -408,7 +408,7 @@ export default function ReportPage() {
               type="checkbox"
               checked={alsoBlock}
               onChange={(e) => setAlsoBlock(e.target.checked)}
-              className="h-5 w-5 rounded accent-[var(--accent)]"
+              className="h-5 w-5 rounded accent-(--accent)"
             />
             <div>
               <p style={{ fontWeight: '600', color: 'var(--text)' }}>Also block this user</p>

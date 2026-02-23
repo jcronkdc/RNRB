@@ -152,14 +152,14 @@ export default function MarketplacePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, skill, or genre..."
-              className="w-full rounded-xl border border-border bg-surface py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+              className="w-full rounded-xl border border-border bg-surface py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
             />
           </div>
           <div className="flex gap-2">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="rounded-xl border border-border bg-surface px-4 py-3 text-foreground focus:border-brand-primary focus:outline-none"
+              className="rounded-xl border border-border bg-surface px-4 py-3 text-foreground focus:border-brand-primary focus:outline-hidden"
             >
               <option value="rating">Top Rated</option>
               <option value="reviews">Most Reviews</option>
@@ -265,7 +265,7 @@ export default function MarketplacePage() {
                               {provider.displayName}
                             </h3>
                             {provider.isPro && (
-                              <span className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
+                              <span className="rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
                                 PRO
                               </span>
                             )}
@@ -334,7 +334,7 @@ export default function MarketplacePage() {
         )}
 
         {/* Featured Banner */}
-        <Card className="mt-12 overflow-hidden bg-gradient-to-r from-brand-primary/20 via-purple-500/20 to-cyan-500/20 p-8">
+        <Card className="mt-12 overflow-hidden bg-linear-to-r from-brand-primary/20 via-purple-500/20 to-cyan-500/20 p-8">
           <div className="flex flex-col items-center gap-6 md:flex-row">
             <div className="flex-1">
               <h2 className="mb-2 text-2xl font-bold text-foreground">Offer Your Services</h2>

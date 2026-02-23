@@ -81,7 +81,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
       <div className="absolute inset-0 bg-black/90" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-2xl rounded-2xl border border-white/10 bg-gradient-to-br from-black via-purple-950/20 to-black shadow-2xl">
+      <div className="relative w-full max-w-2xl rounded-2xl border border-white/10 bg-linear-to-br from-black via-purple-950/20 to-black shadow-2xl">
         {/* Search Input */}
         <div className="flex items-center gap-3 border-b border-white/10 p-4">
           <Search className="h-5 w-5 text-white/50" />
@@ -91,7 +91,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search posts, music, artists, hashtags..."
-            className="flex-1 bg-transparent text-lg text-white placeholder:text-white/40 focus:outline-none"
+            className="flex-1 bg-transparent text-lg text-white placeholder:text-white/40 focus:outline-hidden"
           />
           {loading && <Loader2 className="h-5 w-5 animate-spin text-purple-500" />}
           <button onClick={onClose} className="text-white/50 hover:text-white">
@@ -146,7 +146,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         className="block rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:border-purple-500/30 hover:bg-white/10"
                       >
                         <div className="flex items-start gap-3">
-                          <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+                          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-linear-to-br from-purple-500 to-pink-500">
                             {post.author.image ? (
                               <Image
                                 src={post.author.image}
@@ -189,7 +189,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         onClick={onClose}
                         className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:border-purple-500/30 hover:bg-white/10"
                       >
-                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-pink-500">
                           <Music className="h-6 w-6 text-white" />
                         </div>
                         <div className="min-w-0 flex-1">
@@ -227,7 +227,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         onClick={onClose}
                         className="flex items-center gap-3 rounded-lg border border-white/5 bg-white/5 p-3 transition-colors hover:border-purple-500/30 hover:bg-white/10"
                       >
-                        <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+                        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-linear-to-br from-purple-500 to-pink-500">
                           {user.image ? (
                             <Image src={user.image} alt={user.name} fill className="object-cover" />
                           ) : (

@@ -120,7 +120,7 @@ export default function AnalyticsPage() {
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Premium Hero */}
       <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-purple-500/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-orange-500/5 via-transparent to-purple-500/5" />
         <div className="absolute inset-0">
           <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
           <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-purple-500/10 blur-3xl" />
@@ -286,9 +286,9 @@ export default function AnalyticsPage() {
             </div>
 
             {/* Motivation Card */}
-            <Card className="rnrb-card bg-gradient-to-br from-brand-primary/5 to-purple-500/5 p-8">
+            <Card className="rnrb-card bg-linear-to-br from-brand-primary/5 to-purple-500/5 p-8">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-brand-primary/10">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-primary/10">
                   <Award className="h-6 w-6 text-brand-primary" />
                 </div>
                 <div className="flex-1">
@@ -389,10 +389,10 @@ export default function AnalyticsPage() {
 
             {/* Activity Streak */}
             {stats.streakDays > 0 && (
-              <Card className="rnrb-card border-orange-500/30 bg-gradient-to-br from-orange-500/10 to-red-500/10 p-6">
+              <Card className="rnrb-card border-orange-500/30 bg-linear-to-br from-orange-500/10 to-red-500/10 p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-red-500">
                       <Flame className="h-7 w-7 text-white" />
                     </div>
                     <div>
@@ -482,7 +482,7 @@ export default function AnalyticsPage() {
             {/* Pro Tips */}
             <Card className="rnrb-card border-purple-500/20 bg-purple-500/5 p-6">
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-purple-500/20">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/20">
                   <Zap className="h-5 w-5 text-purple-400" />
                 </div>
                 <div>

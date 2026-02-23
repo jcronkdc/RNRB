@@ -103,7 +103,7 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.15 }}
-                  className="relative flex-shrink-0"
+                  className="relative shrink-0"
                 >
                   <button
                     onClick={() => handleTabClick(workspace.id)}
@@ -112,8 +112,8 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                     }
                     className={`group relative flex items-center gap-2 rounded-xl px-4 py-2.5 transition-all duration-200 ${
                       isActive
-                        ? 'bg-[var(--accent-glow)] text-[var(--accent)]'
-                        : 'text-[var(--muted)] hover:bg-[var(--panel-hover)] hover:text-[var(--text)]'
+                        ? 'bg-(--accent-glow) text-(--accent)'
+                        : 'text-(--muted) hover:bg-(--panel-hover) hover:text-(--text)'
                     } ${isEditMode && !workspace.isDefault ? 'pr-8' : ''} `}
                   >
                     {/* Drag handle in edit mode */}
@@ -136,20 +136,20 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                             if (e.key === 'Escape') handleCancelRename();
                           }}
                           autoFocus
-                          className="w-24 bg-transparent text-sm font-medium outline-none"
+                          className="w-24 bg-transparent text-sm font-medium outline-hidden"
                           style={{ color: 'var(--text)' }}
                         />
                         <button
                           onClick={handleSaveRename}
-                          className="rounded p-0.5 hover:bg-[var(--panel-hover)]"
+                          className="rounded p-0.5 hover:bg-(--panel-hover)"
                         >
                           <Check className="h-3 w-3 text-green-500" />
                         </button>
                         <button
                           onClick={handleCancelRename}
-                          className="rounded p-0.5 hover:bg-[var(--panel-hover)]"
+                          className="rounded p-0.5 hover:bg-(--panel-hover)"
                         >
-                          <X className="h-3 w-3 text-[var(--muted)]" />
+                          <X className="h-3 w-3 text-(--muted)" />
                         </button>
                       </div>
                     ) : (
@@ -188,7 +188,7 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={onCreateWorkspace}
-          className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border-2 border-dashed transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-glow)]"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-dashed transition-all hover:border-(--accent) hover:bg-(--accent-glow)"
           style={{ borderColor: 'var(--border)' }}
         >
           <Plus className="h-4 w-4" style={{ color: 'var(--muted)' }} />
@@ -203,8 +203,8 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
             onClick={isEditMode ? exitEditMode : toggleEditMode}
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
               isEditMode
-                ? 'bg-[var(--accent)] text-white'
-                : 'text-[var(--muted)] hover:bg-[var(--panel-hover)] hover:text-[var(--text)]'
+                ? 'bg-(--accent) text-white'
+                : 'text-(--muted) hover:bg-(--panel-hover) hover:text-(--text)'
             } `}
           >
             <Edit2 className="h-3.5 w-3.5" />

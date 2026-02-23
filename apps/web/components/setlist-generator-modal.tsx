@@ -171,7 +171,7 @@ export function SetlistGeneratorModal({
           {/* Header */}
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-pink-500 shadow-lg">
                 <Wand2 className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -193,7 +193,7 @@ export function SetlistGeneratorModal({
               animate={{ opacity: 1, y: 0 }}
               className="mb-4 flex items-start gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4"
             >
-              <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
               <div>
                 <h4 className="font-semibold text-red-400">Generation Failed</h4>
                 <p className="text-sm text-red-300">{error}</p>
@@ -329,7 +329,7 @@ export function SetlistGeneratorModal({
                     disabled={loading}
                     min={15}
                     max={240}
-                    className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                    className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                   />
                 </div>
               </div>
@@ -352,7 +352,7 @@ export function SetlistGeneratorModal({
                         }`}
                       >
                         <div className="mb-2 flex items-center gap-2">
-                          <div className={`rounded-lg bg-gradient-to-br ${profile.gradient} p-2`}>
+                          <div className={`rounded-lg bg-linear-to-br ${profile.gradient} p-2`}>
                             <Icon className="h-4 w-4 text-white" />
                           </div>
                           <div className="font-semibold">{profile.name}</div>
@@ -456,7 +456,7 @@ export function SetlistGeneratorModal({
               {/* Honest Expectations */}
               <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
                 <div className="flex items-start gap-3">
-                  <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
+                  <Info className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
                   <div className="text-sm">
                     <p className="mb-1 font-medium text-blue-300">What This Tool Does</p>
                     <ul className="space-y-1 text-muted-foreground">
@@ -472,7 +472,7 @@ export function SetlistGeneratorModal({
               {/* Data Quality Warning */}
               <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-4">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-400" />
+                  <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
                   <div className="text-sm">
                     <p className="mb-1 font-medium text-yellow-300">Realistic Expectations</p>
                     <ul className="space-y-1 text-muted-foreground">

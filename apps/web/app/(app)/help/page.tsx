@@ -366,7 +366,7 @@ export default function HelpPage() {
                   style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
                 >
                   <div
-                    className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                     style={{ background: `${link.color}20`, color: link.color }}
                   >
                     <link.icon className="h-5 w-5" />
@@ -411,7 +411,7 @@ export default function HelpPage() {
                       {item.question}
                     </span>
                     <svg
-                      className={`h-5 w-5 flex-shrink-0 transition-transform ${openFaq === index ? 'rotate-180' : ''}`}
+                      className={`h-5 w-5 shrink-0 transition-transform ${openFaq === index ? 'rotate-180' : ''}`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

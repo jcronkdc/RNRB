@@ -348,7 +348,7 @@ export function DataSyncPicker({
         >
           {/* Header */}
           <div
-            className="flex flex-shrink-0 items-center justify-between px-6 py-4"
+            className="flex shrink-0 items-center justify-between px-6 py-4"
             style={{ borderBottom: '1px solid var(--border)' }}
           >
             <div className="flex items-center gap-4">
@@ -378,7 +378,7 @@ export function DataSyncPicker({
 
           {/* Toolbar */}
           <div
-            className="flex flex-shrink-0 items-center gap-4 px-6 py-3"
+            className="flex shrink-0 items-center gap-4 px-6 py-3"
             style={{ borderBottom: '1px solid var(--border)' }}
           >
             {/* Search */}
@@ -472,7 +472,7 @@ export function DataSyncPicker({
 
           {/* Selection Controls */}
           <div
-            className="flex flex-shrink-0 items-center justify-between px-6 py-2"
+            className="flex shrink-0 items-center justify-between px-6 py-2"
             style={{ background: 'var(--bg)' }}
           >
             <div className="flex items-center gap-4">
@@ -578,7 +578,7 @@ export function DataSyncPicker({
                     >
                       {/* Checkbox */}
                       <div
-                        className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-md transition-colors ${
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md transition-colors ${
                           isSelected ? '' : 'border-2'
                         }`}
                         style={{
@@ -606,7 +606,7 @@ export function DataSyncPicker({
 
           {/* Footer */}
           <div
-            className="flex flex-shrink-0 items-center justify-between px-6 py-4"
+            className="flex shrink-0 items-center justify-between px-6 py-4"
             style={{ borderTop: '1px solid var(--border)' }}
           >
             <p className="text-sm" style={{ color: 'var(--muted)' }}>
@@ -654,7 +654,7 @@ function SongItem({ song, color }: { song: SyncableSong; color: string }) {
     <>
       {/* Cover Art */}
       <div
-        className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg"
+        className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg"
         style={{ background: color + '20' }}
       >
         {song.coverUrl ? (
@@ -682,7 +682,7 @@ function SongItem({ song, color }: { song: SyncableSong; color: string }) {
 
       {/* Meta */}
       <div
-        className="flex flex-shrink-0 items-center gap-4 text-sm"
+        className="flex shrink-0 items-center gap-4 text-sm"
         style={{ color: 'var(--muted)' }}
       >
         {song.duration && (
@@ -712,7 +712,7 @@ function ShowItem({ show, color }: { show: SyncableShow; color: string }) {
     <>
       {/* Date Block */}
       <div
-        className="flex h-14 w-14 flex-shrink-0 flex-col items-center justify-center rounded-lg"
+        className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg"
         style={{ background: color + '20' }}
       >
         <span className="text-xs font-bold uppercase" style={{ color }}>
@@ -740,7 +740,7 @@ function ShowItem({ show, color }: { show: SyncableShow; color: string }) {
       </div>
 
       {/* Status */}
-      <div className="flex flex-shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2">
         {show.tourName && (
           <span className="text-sm" style={{ color: 'var(--muted)' }}>
             {show.tourName}
@@ -773,7 +773,7 @@ function MemberItem({ member }: { member: SyncableMember }) {
   return (
     <>
       {/* Avatar */}
-      <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-800">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-800">
         {member.image ? (
           <img src={member.image} alt={member.name} className="h-full w-full object-cover" />
         ) : (
@@ -795,7 +795,7 @@ function MemberItem({ member }: { member: SyncableMember }) {
 
       {/* Instruments */}
       {member.instruments && member.instruments.length > 0 && (
-        <div className="flex flex-shrink-0 flex-wrap gap-1">
+        <div className="flex shrink-0 flex-wrap gap-1">
           {member.instruments.slice(0, 3).map((inst, i) => (
             <span
               key={i}
@@ -815,7 +815,7 @@ function AwardItem({ award }: { award: SyncableAward }) {
   return (
     <>
       {/* Icon */}
-      <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-lg bg-yellow-500/20">
+      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-yellow-500/20">
         {award.image ? (
           <img
             src={award.image}
@@ -853,7 +853,7 @@ function ReleaseItem({ release, color }: { release: SyncableRelease; color: stri
     <>
       {/* Cover */}
       <div
-        className="flex h-14 w-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-lg"
+        className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-lg"
         style={{ background: color + '20' }}
       >
         {release.coverUrl ? (

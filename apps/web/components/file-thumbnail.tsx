@@ -116,7 +116,7 @@ export function FileThumbnail({
   // Show icon with gradient background for other types
   return (
     <div
-      className={`relative flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${colorClass} ${SIZE_CLASSES[size]} ${className}`}
+      className={`relative flex items-center justify-center overflow-hidden rounded-xl bg-linear-to-br ${colorClass} ${SIZE_CLASSES[size]} ${className}`}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}

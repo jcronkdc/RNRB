@@ -215,7 +215,7 @@ export default function SolutionsForStudiosPage() {
                     'Searchable metadata and tags',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -308,7 +308,7 @@ export default function SolutionsForStudiosPage() {
                       className="rounded-lg p-4 text-center"
                       style={{ background: 'var(--panel)' }}
                     >
-                      <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-cyan-500">
+                      <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-teal-500 to-cyan-500">
                         <Headphones className="h-8 w-8 text-white" />
                       </div>
                       <p className="text-sm font-medium">You (Producer)</p>
@@ -318,7 +318,7 @@ export default function SolutionsForStudiosPage() {
                       className="rounded-lg p-4 text-center"
                       style={{ background: 'var(--panel)' }}
                     >
-                      <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-500">
+                      <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-pink-500 to-purple-500">
                         <Mic2 className="h-8 w-8 text-white" />
                       </div>
                       <p className="text-sm font-medium">Sarah (Artist)</p>
@@ -360,7 +360,7 @@ export default function SolutionsForStudiosPage() {
                     'Invite clients, artists, or engineers',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -397,7 +397,7 @@ export default function SolutionsForStudiosPage() {
                     'Auto-backup of all project files',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -539,7 +539,7 @@ export default function SolutionsForStudiosPage() {
                     'Join scheduled video sessions',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -576,7 +576,7 @@ export default function SolutionsForStudiosPage() {
                     'Export reports for accounting',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -676,7 +676,7 @@ export default function SolutionsForStudiosPage() {
                   'Built-in analytics + contact forms for your studio',
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                    <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -850,7 +850,7 @@ export default function SolutionsForStudiosPage() {
               workflows are actually professional now. Should have done this years ago."
             </blockquote>
             <div className="flex items-center justify-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-cyan-500">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-teal-500 to-cyan-500">
                 <span className="text-lg font-bold text-white">MR</span>
               </div>
               <div className="text-left">

@@ -121,7 +121,7 @@ function AuthForm() {
   };
 
   const inputClass =
-    'w-full rounded-lg border px-4 py-3 text-sm transition-all duration-200 focus:outline-none focus:ring-2 disabled:opacity-50';
+    'w-full rounded-lg border px-4 py-3 text-sm transition-all duration-200 focus:outline-hidden focus:ring-2 disabled:opacity-50';
 
   return (
     <div className="relative flex min-h-screen" style={{ background: 'var(--bg)' }}>
@@ -248,7 +248,7 @@ function AuthForm() {
                   exit={{ opacity: 0, y: -8, height: 0 }}
                   className={`mb-5 overflow-hidden rounded-lg border p-3.5 ${
                     message.type === 'success'
-                      ? 'border-[var(--sage)]/30 bg-[var(--sage-muted)]'
+                      ? 'border-(--sage)/30 bg-(--sage-muted)'
                       : 'border-red-500/30 bg-red-500/10'
                   }`}
                 >
@@ -420,11 +420,11 @@ function AuthForm() {
 
           <p className="mt-6 text-center text-xs" style={{ color: 'var(--muted-soft)' }}>
             By continuing, you agree to our{' '}
-            <Link href="/terms" className="transition-colors hover:text-[var(--muted)]" style={{ color: 'var(--muted-soft)' }}>
+            <Link href="/terms" className="transition-colors hover:text-(--muted)" style={{ color: 'var(--muted-soft)' }}>
               Terms
             </Link>{' '}
             and{' '}
-            <Link href="/privacy" className="transition-colors hover:text-[var(--muted)]" style={{ color: 'var(--muted-soft)' }}>
+            <Link href="/privacy" className="transition-colors hover:text-(--muted)" style={{ color: 'var(--muted-soft)' }}>
               Privacy Policy
             </Link>
           </p>

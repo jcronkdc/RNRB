@@ -843,7 +843,7 @@ function ProfileSettingsContent() {
                   {/* Username status indicator */}
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
                     {usernameStatus.checking && (
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-[var(--muted)] border-t-transparent" />
+                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--muted) border-t-transparent" />
                     )}
                     {!usernameStatus.checking && usernameStatus.available === true && (
                       <CheckCircle2 className="h-5 w-5" style={{ color: 'var(--success)' }} />
@@ -1905,7 +1905,7 @@ export default function ProfileSettingsPage() {
           className="flex min-h-screen items-center justify-center"
           style={{ background: 'var(--bg)' }}
         >
-          <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-(--accent) border-t-transparent" />
         </div>
       }
     >

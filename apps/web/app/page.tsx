@@ -62,7 +62,7 @@ function FeatureCard({
   return (
     <motion.div
       variants={fadeUp}
-      className="group relative rounded-xl border border-[var(--border)] p-6 transition-all duration-300 hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+      className="group relative rounded-xl border border-(--border) p-6 transition-all duration-300 hover:border-(--border-strong) hover:bg-(--surface)"
     >
       <div
         className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg"
@@ -140,8 +140,8 @@ function PricingTier({
       variants={fadeUp}
       className={`relative flex flex-col rounded-xl border p-6 transition-all duration-300 ${
         highlight
-          ? 'border-[var(--accent)] bg-[var(--surface)]'
-          : 'border-[var(--border)] hover:border-[var(--border-strong)]'
+          ? 'border-(--accent) bg-(--surface)'
+          : 'border-(--border) hover:border-(--border-strong)'
       }`}
     >
       {highlight && (
@@ -182,8 +182,8 @@ function PricingTier({
         href={href}
         className={`rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition-all duration-200 ${
           highlight
-            ? 'bg-[var(--accent)] text-white hover:opacity-90'
-            : 'border border-[var(--border)] hover:border-[var(--border-strong)] hover:bg-[var(--surface)]'
+            ? 'bg-(--accent) text-white hover:opacity-90'
+            : 'border border-(--border) hover:border-(--border-strong) hover:bg-(--surface)'
         }`}
         style={!highlight ? { color: 'var(--text)' } : undefined}
       >
@@ -247,7 +247,7 @@ export default function HomePage() {
         <div className="flex items-center gap-3">
           <Link
             href="/auth"
-            className="hidden text-sm font-medium transition-colors hover:text-[var(--text)] sm:block"
+            className="hidden text-sm font-medium transition-colors hover:text-(--text) sm:block"
             style={{ color: 'var(--muted)' }}
           >
             Sign in
@@ -330,7 +330,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/features"
-              className="w-full rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:border-[var(--border-strong)] hover:bg-[var(--surface)] sm:w-auto"
+              className="w-full rounded-lg border px-6 py-3 text-center text-sm font-medium transition-all duration-200 hover:border-(--border-strong) hover:bg-(--surface) sm:w-auto"
               style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
             >
               See how it works
@@ -561,9 +561,9 @@ export default function HomePage() {
           <div className="flex items-center gap-6">
             <FooterLogo />
             <div className="flex gap-5 text-xs" style={{ color: 'var(--muted)' }}>
-              <Link href="/terms" className="transition-colors hover:text-[var(--text)]">Terms</Link>
-              <Link href="/privacy" className="transition-colors hover:text-[var(--text)]">Privacy</Link>
-              <Link href="/contact" className="transition-colors hover:text-[var(--text)]">Contact</Link>
+              <Link href="/terms" className="transition-colors hover:text-(--text)">Terms</Link>
+              <Link href="/privacy" className="transition-colors hover:text-(--text)">Privacy</Link>
+              <Link href="/contact" className="transition-colors hover:text-(--text)">Contact</Link>
             </div>
           </div>
           <p className="text-xs" style={{ color: 'var(--muted-soft)' }}>

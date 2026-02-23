@@ -100,13 +100,13 @@ export function UserProfileCard({
     <Link href={ROUTES.profile.view(id)}>
       <Card className="rnrb-card group relative overflow-hidden p-6 transition-all hover:shadow-xl">
         {/* Hover Effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
         <div className="relative z-10">
           {/* Header */}
           <div className="mb-4 flex items-start gap-4">
             {/* Avatar */}
-            <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl ring-2 ring-border transition-all group-hover:ring-brand-primary">
+            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl ring-2 ring-border transition-all group-hover:ring-brand-primary">
               {image ? (
                 <Image src={image} alt={name || 'User'} fill className="object-cover" />
               ) : (
@@ -124,7 +124,7 @@ export function UserProfileCard({
                 </h3>
                 {profile?.availableForCollaboration && (
                   <CheckCircle
-                    className="h-4 w-4 flex-shrink-0 text-brand-primary"
+                    className="h-4 w-4 shrink-0 text-brand-primary"
                     aria-label="Available for collaboration"
                   />
                 )}
@@ -139,7 +139,7 @@ export function UserProfileCard({
               {/* Genres */}
               {profile.genres && profile.genres.length > 0 && (
                 <div className="flex items-center gap-2">
-                  <Music className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                  <Music className="h-4 w-4 shrink-0 text-muted-foreground" />
                   <div className="flex flex-wrap gap-1">
                     {profile.genres.slice(0, 3).map((genre) => (
                       <span

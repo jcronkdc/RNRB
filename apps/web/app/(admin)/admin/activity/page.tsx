@@ -68,7 +68,7 @@ function ActivityItem({ activity }: ActivityItemProps) {
   const { icon: Icon, color, bg } = getActivityIcon(activity.type);
 
   return (
-    <div className="group flex items-start gap-4 rounded-xl p-4 transition-colors hover:bg-white/[0.02]">
+    <div className="group flex items-start gap-4 rounded-xl p-4 transition-colors hover:bg-white/2">
       {/* Timeline indicator */}
       <div className="relative flex flex-col items-center">
         <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${bg}`}>
@@ -227,7 +227,7 @@ export default function ActivityPage() {
           <select
             value={limit}
             onChange={(e) => setLimit(Number(e.target.value))}
-            className="rounded-lg border bg-white/5 px-3 py-1.5 text-sm text-white focus:border-orange-500/50 focus:outline-none"
+            className="rounded-lg border bg-white/5 px-3 py-1.5 text-sm text-white focus:border-orange-500/50 focus:outline-hidden"
             style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
           >
             <option value={25}>25 events</option>

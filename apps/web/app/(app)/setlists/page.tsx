@@ -227,7 +227,7 @@ export default function SetlistsPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.3 }}
                   whileHover={{ scale: 1.05 }}
-                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-pink-500/30 bg-gradient-to-r from-pink-500/10 to-rose-500/10 px-4 py-2 transition-colors hover:border-pink-500/50"
+                  className="flex cursor-pointer items-center gap-2 rounded-xl border border-pink-500/30 bg-linear-to-r from-pink-500/10 to-rose-500/10 px-4 py-2 transition-colors hover:border-pink-500/50"
                 >
                   <Presentation className="h-4 w-4 text-pink-500" />
                   <span className="text-sm font-medium text-pink-400">Performer Mode</span>
@@ -240,9 +240,9 @@ export default function SetlistsPage() {
                 <motion.button
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-2xl hover:shadow-orange-500/40"
+                  className="group relative overflow-hidden rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-2xl hover:shadow-orange-500/40"
                 >
-                  <div className="group-hover:animate-shimmer absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <div className="group-hover:animate-shimmer absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
                   <div className="relative flex items-center gap-2">
                     <Plus className="h-5 w-5" />
                     <span>Generate Setlist</span>
@@ -260,7 +260,7 @@ export default function SetlistsPage() {
                 }
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                className="group relative overflow-hidden rounded-xl border-2 border-orange-500/50 bg-gradient-to-r from-orange-500/10 to-red-500/10 px-6 py-3 font-bold text-white shadow-lg transition-all hover:border-orange-500 hover:shadow-2xl hover:shadow-orange-500/40"
+                className="group relative overflow-hidden rounded-xl border-2 border-orange-500/50 bg-linear-to-r from-orange-500/10 to-red-500/10 px-6 py-3 font-bold text-white shadow-lg transition-all hover:border-orange-500 hover:shadow-2xl hover:shadow-orange-500/40"
               >
                 <div className="relative flex items-center gap-2">
                   <Lock className="h-5 w-5 text-orange-500" />
@@ -278,12 +278,12 @@ export default function SetlistsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mb-8 overflow-hidden rounded-2xl border border-orange-500/30 bg-gradient-to-br from-orange-500/10 via-red-500/5 to-orange-500/10 p-8"
+            className="mb-8 overflow-hidden rounded-2xl border border-orange-500/30 bg-linear-to-br from-orange-500/10 via-red-500/5 to-orange-500/10 p-8"
           >
             {/* Animated glow effect */}
             <div className="absolute inset-0 -z-10 opacity-50">
               <motion.div
-                className="absolute left-0 top-0 h-full w-1/3 bg-gradient-to-r from-orange-500/20 to-transparent"
+                className="absolute left-0 top-0 h-full w-1/3 bg-linear-to-r from-orange-500/20 to-transparent"
                 animate={{
                   x: ['-100%', '300%'],
                 }}
@@ -295,7 +295,7 @@ export default function SetlistsPage() {
               <motion.div
                 animate={{ rotate: [0, 5, 0, -5, 0] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                className="rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 p-4 shadow-lg"
+                className="rounded-2xl bg-linear-to-br from-orange-500 to-red-500 p-4 shadow-lg"
               >
                 <Sparkles className="h-8 w-8 text-white" />
               </motion.div>
@@ -339,10 +339,10 @@ export default function SetlistsPage() {
                   className="group relative overflow-hidden rounded-xl border border-gray-800 bg-gray-900/50 p-6 transition-all hover:border-gray-700"
                 >
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 transition-opacity group-hover:opacity-10`}
+                    className={`absolute inset-0 bg-linear-to-br ${benefit.color} opacity-0 transition-opacity group-hover:opacity-10`}
                   />
                   <div
-                    className={`mb-3 inline-flex rounded-lg bg-gradient-to-br ${benefit.color} p-3`}
+                    className={`mb-3 inline-flex rounded-lg bg-linear-to-br ${benefit.color} p-3`}
                   >
                     <benefit.icon className="h-6 w-6 text-white" />
                   </div>
@@ -362,9 +362,9 @@ export default function SetlistsPage() {
                 }
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-2xl hover:shadow-orange-500/40"
+                className="group relative overflow-hidden rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-8 py-4 font-bold text-white shadow-lg shadow-orange-500/20 transition-all hover:shadow-2xl hover:shadow-orange-500/40"
               >
-                <div className="group-hover:animate-shimmer absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="group-hover:animate-shimmer absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100" />
                 <span className="relative flex items-center gap-2">
                   Upgrade to Creator
                   <span className="text-sm opacity-80">from $17.99/mo</span>
@@ -421,12 +421,12 @@ export default function SetlistsPage() {
                       onHoverEnd={() => setHoveredCard(null)}
                       className="group relative"
                     >
-                      <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900 to-black transition-all duration-300 hover:border-gray-700 hover:shadow-2xl">
+                      <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-linear-to-br from-gray-900 to-black transition-all duration-300 hover:border-gray-700 hover:shadow-2xl">
                         {/* Hover glow effect */}
                         {hoveredCard === setlist.id && (
                           <motion.div
                             layoutId="card-glow"
-                            className={`absolute inset-0 bg-gradient-to-br ${energyColor} opacity-5`}
+                            className={`absolute inset-0 bg-linear-to-br ${energyColor} opacity-5`}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 0.1 }}
                             exit={{ opacity: 0 }}
@@ -454,7 +454,7 @@ export default function SetlistsPage() {
                               <motion.div
                                 animate={{ y: [0, -8, 0] }}
                                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                                className="rounded-full bg-gradient-to-br from-orange-500 to-red-500 p-4 shadow-lg shadow-orange-500/50"
+                                className="rounded-full bg-linear-to-br from-orange-500 to-red-500 p-4 shadow-lg shadow-orange-500/50"
                               >
                                 <Lock className="h-8 w-8" />
                               </motion.div>
@@ -471,7 +471,7 @@ export default function SetlistsPage() {
                           <div className="mb-4 flex items-start justify-between">
                             <div className="flex items-center gap-3">
                               <div
-                                className={`rounded-xl bg-gradient-to-br ${energyColor} p-3 shadow-lg`}
+                                className={`rounded-xl bg-linear-to-br ${energyColor} p-3 shadow-lg`}
                               >
                                 <EnergyIcon className="h-6 w-6 text-white" />
                               </div>
@@ -506,7 +506,7 @@ export default function SetlistsPage() {
                           {/* Energy Badge */}
                           <div className="mb-4">
                             <span
-                              className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${energyColor} px-3 py-1 text-xs font-bold text-white`}
+                              className={`inline-flex items-center gap-1.5 rounded-full bg-linear-to-r ${energyColor} px-3 py-1 text-xs font-bold text-white`}
                             >
                               <Activity className="h-3 w-3" />
                               {setlist.energyLevel.toUpperCase()} ENERGY
@@ -517,7 +517,7 @@ export default function SetlistsPage() {
                           {hasAccess && (
                             <div className="flex gap-2 opacity-0 transition-opacity group-hover:opacity-100">
                               <Link href={`/setlists/${setlist.id}/perform`} className="flex-1">
-                                <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-4 py-2.5 text-sm font-bold text-white transition-all hover:shadow-lg hover:shadow-orange-500/50">
+                                <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-orange-500 to-red-500 px-4 py-2.5 text-sm font-bold text-white transition-all hover:shadow-lg hover:shadow-orange-500/50">
                                   <Play className="h-4 w-4" />
                                   Perform
                                 </button>

@@ -227,7 +227,7 @@ export default function ExplorePage() {
               placeholder="Search tracks, styles, or moods..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-hidden transition placeholder:text-gray-500 focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
             />
           </div>
 
@@ -236,7 +236,7 @@ export default function ExplorePage() {
               onClick={() => setFilter('trending')}
               className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition ${
                 filter === 'trending'
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25'
+                  ? 'bg-linear-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25'
                   : 'border border-white/10 bg-white/5 text-gray-300 hover:border-cyan-500/50 hover:bg-white/10'
               }`}
             >
@@ -247,7 +247,7 @@ export default function ExplorePage() {
               onClick={() => setFilter('recent')}
               className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition ${
                 filter === 'recent'
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25'
+                  ? 'bg-linear-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25'
                   : 'border border-white/10 bg-white/5 text-gray-300 hover:border-cyan-500/50 hover:bg-white/10'
               }`}
             >
@@ -258,7 +258,7 @@ export default function ExplorePage() {
               onClick={() => setFilter('top')}
               className={`flex items-center gap-2 rounded-xl px-4 py-2.5 font-medium transition ${
                 filter === 'top'
-                  ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25'
+                  ? 'bg-linear-to-r from-cyan-500 to-purple-500 text-white shadow-lg shadow-cyan-500/25'
                   : 'border border-white/10 bg-white/5 text-gray-300 hover:border-cyan-500/50 hover:bg-white/10'
               }`}
             >
@@ -291,7 +291,7 @@ export default function ExplorePage() {
         {!loading && tracks.length > 0 && (
           <div>
             <h2 className="mb-4 flex items-center gap-2 text-xl font-semibold">
-              <TrendingUp className="h-5 w-5 text-[color:var(--accent)]" />
+              <TrendingUp className="h-5 w-5 text-(--accent)" />
               {filter === 'trending'
                 ? 'Trending Now'
                 : filter === 'recent'

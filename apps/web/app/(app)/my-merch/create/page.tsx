@@ -268,8 +268,8 @@ export default function CreateProductPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -365,7 +365,7 @@ export default function CreateProductPage() {
               {/* Printful Catalog Link */}
               <Link
                 href="/my-merch/printful-catalog"
-                className="flex items-center justify-between rounded-2xl border border-purple-500/30 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-5 transition-all hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10"
+                className="flex items-center justify-between rounded-2xl border border-purple-500/30 bg-linear-to-r from-purple-500/10 to-orange-500/10 p-5 transition-all hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10"
               >
                 <div className="flex items-center gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20">
@@ -384,7 +384,7 @@ export default function CreateProductPage() {
               <div className="flex justify-end">
                 <button
                   onClick={() => setStep(2)}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white"
+                  className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white"
                 >
                   Continue <ChevronRight className="h-4 w-4" />
                 </button>
@@ -497,7 +497,7 @@ export default function CreateProductPage() {
                   <h3 className="mb-4 font-semibold text-white">Product Preview</h3>
 
                   {/* Main Preview Area */}
-                  <div className="relative aspect-square overflow-hidden rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-900">
+                  <div className="relative aspect-square overflow-hidden rounded-xl bg-linear-to-br from-zinc-800 to-zinc-900">
                     {/* Product Base Image */}
                     <div className="absolute inset-0">
                       {selectedProduct.id === 'tshirt' && (
@@ -823,7 +823,7 @@ export default function CreateProductPage() {
                 <button
                   onClick={() => setStep(3)}
                   disabled={!designUrl}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white disabled:opacity-50"
                 >
                   Continue <ChevronRight className="h-4 w-4" />
                 </button>
@@ -850,7 +850,7 @@ export default function CreateProductPage() {
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     placeholder="e.g., Tour 2025 Tee"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-orange-500/50 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-orange-500/50 focus:outline-hidden"
                   />
                 </div>
 
@@ -863,7 +863,7 @@ export default function CreateProductPage() {
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Tell your fans about this product..."
                     rows={3}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-orange-500/50 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-orange-500/50 focus:outline-hidden"
                   />
                 </div>
 
@@ -925,7 +925,7 @@ export default function CreateProductPage() {
                 <button
                   onClick={handleSubmit}
                   disabled={!productName || isSubmitting}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white disabled:opacity-50"
+                  className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <Loader2 className="h-5 w-5 animate-spin" />

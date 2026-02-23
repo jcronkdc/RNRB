@@ -32,7 +32,7 @@ export function TopBar() {
 
   return (
     <header
-      className="fixed left-0 right-0 top-0 z-30 flex h-[var(--topbar-height)] items-center border-b lg:ml-[var(--sidebar-width)]"
+      className="fixed left-0 right-0 top-0 z-30 flex h-(--topbar-height) items-center border-b lg:ml-(--sidebar-width)"
       style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
     >
       <div className="flex h-full w-full items-center justify-between px-4 lg:px-5">
@@ -49,7 +49,7 @@ export function TopBar() {
           <div className="relative">
             <button
               onClick={() => setProfileOpen(!profileOpen)}
-              className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.04]"
+              className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/4"
               aria-expanded={profileOpen}
             >
               {user?.image ? (
@@ -116,7 +116,7 @@ export function TopBar() {
                           setProfileOpen(false);
                           router.push('/settings');
                         }}
-                        className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-white/[0.04]"
+                        className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-colors hover:bg-white/4"
                       >
                         <Settings className="h-3.5 w-3.5" style={{ color: 'var(--muted)' }} />
                         <span className="text-[13px]" style={{ color: 'var(--text-secondary)' }}>

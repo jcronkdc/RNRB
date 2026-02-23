@@ -104,7 +104,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%)' }}
                 >
                   {/* Mock website preview */}
@@ -159,7 +159,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #1a1612 0%, #2d2318 100%)' }}
                 >
                   <div className="flex h-full flex-col p-4">
@@ -232,7 +232,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #0d0015 0%, #1a0025 100%)' }}
                 >
                   <div className="flex h-full flex-col p-4">
@@ -305,7 +305,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #faf8f5 0%, #f5f0e8 100%)' }}
                 >
                   <div className="flex h-full flex-col p-4">
@@ -369,7 +369,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #0f0f0f 0%, #1f1f1f 100%)' }}
                 >
                   <div className="relative flex h-full flex-col p-4">
@@ -432,7 +432,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: '#ffffff' }}
                 >
                   <div className="flex h-full flex-col p-4">
@@ -481,7 +481,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{ background: 'linear-gradient(180deg, #1a1510 0%, #2a2015 100%)' }}
                 >
                   <div className="relative flex h-full flex-col p-4">
@@ -552,7 +552,7 @@ export default function WebsiteBuilderFeaturePage() {
             >
               <Card className={templateCardClass}>
                 <div
-                  className="aspect-[4/3] overflow-hidden rounded-t-xl"
+                  className="aspect-4/3 overflow-hidden rounded-t-xl"
                   style={{
                     background: 'linear-gradient(135deg, #0a0a0f 0%, #15151f 50%, #0a0a0f 100%)',
                   }}
@@ -716,7 +716,7 @@ export default function WebsiteBuilderFeaturePage() {
                   {feature.features.map((item) => (
                     <li key={item} className="flex items-center gap-2">
                       <CheckCircle
-                        className="h-4 w-4 flex-shrink-0"
+                        className="h-4 w-4 shrink-0"
                         style={{ color: 'var(--accent)' }}
                       />
                       {item}

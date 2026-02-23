@@ -21,7 +21,7 @@ export default function ShowsTodayLoading() {
           <div className="h-5 w-56 animate-pulse rounded bg-white/5" />
         </div>
         {/* Date display skeleton */}
-        <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.02] p-6 text-center">
+        <div className="mb-6 rounded-xl border border-white/10 bg-white/2 p-6 text-center">
           <div className="mx-auto h-10 w-48 animate-pulse rounded bg-white/5" />
           <div className="mx-auto mt-2 h-5 w-32 animate-pulse rounded bg-white/5" />
         </div>

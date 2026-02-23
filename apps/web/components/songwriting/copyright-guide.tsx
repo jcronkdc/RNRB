@@ -208,7 +208,7 @@ export function CopyrightGuide({ onClose }: { onClose?: () => void }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <Card className="border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-blue-500/10 p-6">
+      <Card className="border-2 border-purple-500/30 bg-linear-to-br from-purple-500/10 to-blue-500/10 p-6">
         <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-500/20">
             <HelpCircle className="h-6 w-6 text-purple-400" />
@@ -225,7 +225,7 @@ export function CopyrightGuide({ onClose }: { onClose?: () => void }) {
       </Card>
 
       {/* Quick Start */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h4 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <CheckCircle2 className="h-5 w-5 text-green-400" />
           Quick Start (Recommended Order)
@@ -303,7 +303,7 @@ export function CopyrightGuide({ onClose }: { onClose?: () => void }) {
           return (
             <Card
               key={section.id}
-              className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6 transition hover:border-gray-700"
+              className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6 transition hover:border-gray-700"
             >
               {/* Section Header */}
               <button

@@ -459,7 +459,7 @@ export default function CreatePage() {
             <div>
               <label className="mb-3 block text-sm font-medium">
                 Describe your track
-                <span className="ml-2 text-xs text-[color:var(--muted)]">
+                <span className="ml-2 text-xs text-(--muted)">
                   ({prompt.length}/500 characters)
                 </span>
               </label>
@@ -468,7 +468,7 @@ export default function CreatePage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-                  className="w-full resize-none rounded-xl border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full resize-none rounded-xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
                   rows={4}
                   maxLength={500}
                   disabled={isDisabled}
@@ -477,7 +477,7 @@ export default function CreatePage() {
                   onClick={() =>
                     setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])
                   }
-                  className="hover:bg-[color:var(--surface)]/50 absolute bottom-3 right-3 rounded-lg p-2 text-[color:var(--muted)] transition hover:text-[color:var(--text)] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="hover:bg-(--surface)/50 absolute bottom-3 right-3 rounded-lg p-2 text-(--muted) transition hover:text-(--text) disabled:cursor-not-allowed disabled:opacity-50"
                   title="Get random prompt"
                   disabled={isDisabled}
                 >
@@ -492,20 +492,20 @@ export default function CreatePage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-3 flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400"
                 >
-                  <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                  <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{error}</span>
                 </motion.div>
               )}
 
               {/* Example prompts */}
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-[color:var(--muted)]">Try:</span>
+                <span className="text-xs text-(--muted)">Try:</span>
                 <div className="flex flex-wrap gap-2">
                   {examplePrompts.slice(0, 3).map((example, i) => (
                     <button
                       key={i}
                       onClick={() => setPrompt(example)}
-                      className="hover:bg-[color:var(--surface)]/80 rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="hover:bg-(--surface)/80 rounded-lg border border-(--border) bg-(--surface) px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={isDisabled}
                     >
                       {example.substring(0, 30)}...
@@ -519,7 +519,7 @@ export default function CreatePage() {
             <div>
               <label className="mb-3 block text-sm font-medium">
                 Instruments
-                <span className="ml-2 text-xs text-[color:var(--muted)]">
+                <span className="ml-2 text-xs text-(--muted)">
                   (optional - select specific instruments to feature)
                 </span>
               </label>
@@ -533,7 +533,7 @@ export default function CreatePage() {
                     className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                       selectedInstruments.includes(instrument)
                         ? 'bg-orange-500 text-white'
-                        : 'border border-[color:var(--border)] bg-[color:var(--surface)] hover:border-brand-primary/50'
+                        : 'border border-(--border) bg-(--surface) hover:border-brand-primary/50'
                     }`}
                     disabled={isDisabled}
                   >
@@ -545,7 +545,7 @@ export default function CreatePage() {
               {selectedInstruments.length > 0 && (
                 <button
                   onClick={() => setSelectedInstruments([])}
-                  className="mt-2 text-xs text-[color:var(--muted)] transition hover:text-white"
+                  className="mt-2 text-xs text-(--muted) transition hover:text-white"
                   disabled={isDisabled}
                 >
                   Clear all
@@ -561,7 +561,7 @@ export default function CreatePage() {
                     <Clock className="h-4 w-4" />
                     Duration: {duration} seconds
                   </span>
-                  <span className="mt-1 block text-xs font-normal text-[color:var(--muted)]">
+                  <span className="mt-1 block text-xs font-normal text-(--muted)">
                     AI generates 5-30 second clips
                   </span>
                 </label>
@@ -609,7 +609,7 @@ export default function CreatePage() {
             <div>
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center gap-2 text-sm font-medium text-[color:var(--muted)] transition-colors hover:text-[color:var(--text)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex items-center gap-2 text-sm font-medium text-(--muted) transition-colors hover:text-(--text) disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isDisabled}
               >
                 <Sliders className="h-4 w-4" />
@@ -628,7 +628,7 @@ export default function CreatePage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-[color:var(--surface)]/50 mt-4 rounded-xl border border-[color:var(--border)] p-6">
+                    <div className="bg-(--surface)/50 mt-4 rounded-xl border border-(--border) p-6">
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                           <label className="mb-2 block flex items-center gap-2 text-sm font-medium">
@@ -640,10 +640,10 @@ export default function CreatePage() {
                             value={seed}
                             onChange={(e) => setSeed(e.target.value)}
                             placeholder="Enter seed for consistent results"
-                            className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           />
-                          <p className="mt-1 text-xs text-[color:var(--muted)]">
+                          <p className="mt-1 text-xs text-(--muted)">
                             Same seed = same output
                           </p>
                         </div>
@@ -652,7 +652,7 @@ export default function CreatePage() {
                           <select
                             value={keySignature}
                             onChange={(e) => setKeySignature(e.target.value)}
-                            className="w-full rounded-lg border border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-2 text-[color:var(--text)] transition focus:border-brand-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                            className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           >
                             <option>Auto</option>
@@ -674,9 +674,9 @@ export default function CreatePage() {
             </div>
 
             {/* Generate Button */}
-            <div className="flex flex-col gap-4 border-t border-[color:var(--border)] pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-4 border-t border-(--border) pt-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+                <div className="flex items-center gap-2 text-sm text-(--muted)">
                   <Info className="h-4 w-4" />
                   <span>Generation uses {estimatedCredits} credits</span>
                 </div>
@@ -731,10 +731,10 @@ export default function CreatePage() {
               className="mt-8"
             >
               <Card className="rnrb-card p-12 text-center">
-                <Music2 className="rnrb-pulse mx-auto mb-4 h-16 w-16 text-[color:var(--accent)]" />
+                <Music2 className="rnrb-pulse mx-auto mb-4 h-16 w-16 text-(--accent)" />
                 <h3 className="mb-2 text-xl font-semibold">Creating your track...</h3>
-                <p className="mb-4 text-[color:var(--muted)]">This usually takes 20-30 seconds</p>
-                <div className="mx-auto max-w-md space-y-2 text-sm text-[color:var(--muted)]">
+                <p className="mb-4 text-(--muted)">This usually takes 20-30 seconds</p>
+                <div className="mx-auto max-w-md space-y-2 text-sm text-(--muted)">
                   {progress >= 0 && progress < 30 && (
                     <p className="flex items-center justify-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -774,7 +774,7 @@ export default function CreatePage() {
               <Card className="rnrb-card border-green-500/20 bg-green-500/5 p-12 text-center">
                 <CheckCircle2 className="mx-auto mb-4 h-16 w-16 text-green-500" />
                 <h3 className="mb-2 text-xl font-semibold text-green-400">Track Generated!</h3>
-                <p className="mb-4 text-[color:var(--muted)]">
+                <p className="mb-4 text-(--muted)">
                   Your AI-generated track is ready. Add it to a project or view it now.
                 </p>
 
@@ -782,7 +782,7 @@ export default function CreatePage() {
                 {(window as any).__rnrbDemoMode && (
                   <div className="mb-6 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-left">
                     <div className="flex items-start gap-3">
-                      <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-400" />
+                      <Info className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
                       <div>
                         <p className="text-sm font-medium text-yellow-400">Demo Mode Active</p>
                         <p className="mt-1 text-xs text-yellow-400/80">
@@ -798,8 +798,8 @@ export default function CreatePage() {
                 {/* Audio Preview */}
                 <div className="mb-6 rounded-xl bg-white/5 p-4">
                   <div className="flex items-center justify-center gap-4">
-                    <Volume2 className="h-5 w-5 text-[color:var(--muted)]" />
-                    <span className="text-sm text-[color:var(--muted)]">
+                    <Volume2 className="h-5 w-5 text-(--muted)" />
+                    <span className="text-sm text-(--muted)">
                       Your track:{' '}
                       <span className="font-medium text-white">AI Generated Sketch</span>
                     </span>
@@ -854,7 +854,7 @@ export default function CreatePage() {
               <Card className="rnrb-card border-red-500/20 bg-red-500/5 p-12 text-center">
                 <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-500" />
                 <h3 className="mb-2 text-xl font-semibold text-red-400">Generation Failed</h3>
-                <p className="mb-4 text-[color:var(--muted)]">{error}</p>
+                <p className="mb-4 text-(--muted)">{error}</p>
                 <button
                   onClick={() => {
                     setStatus('idle');

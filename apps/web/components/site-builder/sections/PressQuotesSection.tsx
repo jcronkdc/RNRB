@@ -180,7 +180,7 @@ export function PressQuotesSection({ content, theme }: PressQuotesSectionProps) 
                 style={{ transform: `translateX(-${currentIndex * 100}%)` }}
               >
                 {quotes.map((quote) => (
-                  <div key={quote.id} className="w-full flex-shrink-0 px-4">
+                  <div key={quote.id} className="w-full shrink-0 px-4">
                     <QuoteCard quote={quote} size="featured" />
                   </div>
                 ))}

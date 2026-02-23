@@ -250,7 +250,7 @@ export function SupportTicketForm({
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Your name"
-                className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+                className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
               />
             </div>
             <div>
@@ -261,7 +261,7 @@ export function SupportTicketForm({
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="your@email.com"
                 required
-                className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+                className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
               />
             </div>
           </div>
@@ -275,7 +275,7 @@ export function SupportTicketForm({
               <select
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="focus:ring-gold-500/50 focus:border-gold-500 w-full cursor-pointer appearance-none rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all focus:outline-none focus:ring-2"
+                className="focus:ring-gold-500/50 focus:border-gold-500 w-full cursor-pointer appearance-none rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all focus:outline-hidden focus:ring-2"
               >
                 {CATEGORIES.map((cat) => (
                   <option key={cat.value} value={cat.value}>
@@ -294,7 +294,7 @@ export function SupportTicketForm({
               <select
                 value={formData.priority}
                 onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                className="focus:ring-gold-500/50 focus:border-gold-500 w-full cursor-pointer appearance-none rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all focus:outline-none focus:ring-2"
+                className="focus:ring-gold-500/50 focus:border-gold-500 w-full cursor-pointer appearance-none rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all focus:outline-hidden focus:ring-2"
               >
                 {PRIORITIES.map((pri) => (
                   <option key={pri.value} value={pri.value}>
@@ -318,7 +318,7 @@ export function SupportTicketForm({
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
             placeholder="Brief description of your issue"
             required
-            className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+            className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
           />
         </div>
 
@@ -331,7 +331,7 @@ export function SupportTicketForm({
             placeholder="Please describe your issue in detail. Include any steps to reproduce the problem, error messages, and what you expected to happen."
             required
             rows={5}
-            className="focus:ring-gold-500/50 focus:border-gold-500 w-full resize-none rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+            className="focus:ring-gold-500/50 focus:border-gold-500 w-full resize-none rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
           />
         </div>
 
@@ -394,7 +394,7 @@ export function SupportTicketForm({
         <button
           type="submit"
           disabled={status === 'loading'}
-          className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r py-3 font-semibold text-black transition-all disabled:opacity-50"
+          className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r py-3 font-semibold text-black transition-all disabled:opacity-50"
         >
           {status === 'loading' ? (
             <>

@@ -55,13 +55,13 @@ function ConversationItem({
       onClick={onClick}
       className={`w-full rounded-xl p-3 text-left transition-all ${
         isActive
-          ? 'border border-orange-500/30 bg-gradient-to-r from-orange-500/20 to-amber-500/20'
+          ? 'border border-orange-500/30 bg-linear-to-r from-orange-500/20 to-amber-500/20'
           : 'hover:bg-white/5'
       }`}
     >
       <div className="flex gap-3">
         {/* User Avatar */}
-        <div className="relative h-12 w-12 flex-shrink-0">
+        <div className="relative h-12 w-12 shrink-0">
           {conversation.otherUser?.image ? (
             <img
               src={conversation.otherUser.image}
@@ -69,7 +69,7 @@ function ConversationItem({
               className="h-full w-full rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-amber-500">
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-amber-500">
               <User className="h-6 w-6 text-white" />
             </div>
           )}
@@ -86,7 +86,7 @@ function ConversationItem({
             <span className={`truncate font-medium ${isActive ? 'text-white' : 'text-white/90'}`}>
               {conversation.otherUser?.name || 'Unknown User'}
             </span>
-            <span className="flex-shrink-0 text-xs text-white/40">
+            <span className="shrink-0 text-xs text-white/40">
               {formatTime(conversation.lastMessage.createdAt)}
             </span>
           </div>
@@ -112,7 +112,7 @@ function MessageBubble({ message, isOwn }: { message: any; isOwn: boolean }) {
       <div
         className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${
           isOwn
-            ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white'
+            ? 'bg-linear-to-r from-orange-500 to-amber-500 text-white'
             : 'bg-white/10 text-white/90'
         }`}
       >
@@ -239,8 +239,8 @@ function MessagesContent() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-gradient-to-tl from-violet-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-8">
@@ -289,10 +289,10 @@ function MessagesContent() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="flex h-[calc(100vh-280px)] min-h-[500px] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]"
+          className="flex h-[calc(100vh-280px)] min-h-[500px] overflow-hidden rounded-2xl border border-white/10 bg-white/2"
         >
           {/* Conversations List */}
-          <div className="w-80 flex-shrink-0 overflow-y-auto border-r border-white/10">
+          <div className="w-80 shrink-0 overflow-y-auto border-r border-white/10">
             <div className="p-4">
               <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/50">
                 Conversations
@@ -343,7 +343,7 @@ function MessagesContent() {
               <>
                 {/* Chat Header */}
                 <div className="flex items-center gap-4 border-b border-white/10 p-4">
-                  <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-orange-500 to-amber-500">
+                  <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full bg-linear-to-br from-orange-500 to-amber-500">
                     {selectedConversation.otherUser?.image ? (
                       <img
                         src={selectedConversation.otherUser.image}
@@ -411,12 +411,12 @@ function MessagesContent() {
                         }
                       }}
                       placeholder="Type a message..."
-                      className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20"
+                      className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20"
                     />
                     <button
                       onClick={handleSend}
                       disabled={!newMessage.trim() || sendMessageMutation.isPending}
-                      className="flex items-center justify-center rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 text-white disabled:opacity-50"
+                      className="flex items-center justify-center rounded-xl bg-linear-to-r from-orange-500 to-amber-500 px-5 text-white disabled:opacity-50"
                     >
                       {sendMessageMutation.isPending ? (
                         <Loader2 className="h-5 w-5 animate-spin" />

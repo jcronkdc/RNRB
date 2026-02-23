@@ -305,14 +305,14 @@ export default function PerformerModePage() {
             <div className="mb-4 flex justify-center gap-3">
               <Button
                 onClick={() => setShowDetails(false)}
-                variant={!showDetails ? 'default' : 'outline'}
+                variant={!showDetails ? 'default' : 'outline-solid'}
                 className="px-6 py-3 text-base"
               >
                 Lyrics
               </Button>
               <Button
                 onClick={() => setShowDetails(true)}
-                variant={showDetails ? 'default' : 'outline'}
+                variant={showDetails ? 'default' : 'outline-solid'}
                 className="px-6 py-3 text-base"
               >
                 Chords
@@ -332,7 +332,7 @@ export default function PerformerModePage() {
                 ) : (
                   // Chords
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 lg:p-10">
-                    <pre className="whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed text-[color:var(--accent)] sm:text-xl lg:text-2xl">
+                    <pre className="whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed text-(--accent) sm:text-xl lg:text-2xl">
                       {currentSong.song.chords || 'No chords available'}
                     </pre>
                   </div>
@@ -344,7 +344,7 @@ export default function PerformerModePage() {
             <div className="mt-6 text-center">
               <Button
                 onClick={toggleCompleted}
-                variant={completedSongs.has(currentSong.song.id) ? 'default' : 'outline'}
+                variant={completedSongs.has(currentSong.song.id) ? 'default' : 'outline-solid'}
                 className="px-8 py-4 text-lg"
               >
                 {completedSongs.has(currentSong.song.id) ? (

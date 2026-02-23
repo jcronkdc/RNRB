@@ -282,7 +282,7 @@ export function CircleOfFifths() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-cyan-600">
             <Music2 className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -309,7 +309,7 @@ export function CircleOfFifths() {
             onClick={() => setShowMinor(false)}
             className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${
               !showMinor
-                ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
+                ? 'bg-linear-to-r from-blue-500 to-cyan-600 text-white'
                 : 'text-muted-foreground hover:text-white'
             }`}
           >
@@ -319,7 +319,7 @@ export function CircleOfFifths() {
             onClick={() => setShowMinor(true)}
             className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${
               showMinor
-                ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white'
+                ? 'bg-linear-to-r from-purple-500 to-pink-600 text-white'
                 : 'text-muted-foreground hover:text-white'
             }`}
           >
@@ -581,11 +581,11 @@ export function CircleOfFifths() {
       {/* Legend */}
       <div className="mt-6 flex items-center justify-center gap-6 text-sm">
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-600" />
+          <div className="h-3 w-3 rounded-full bg-linear-to-r from-blue-500 to-cyan-600" />
           <span className="text-muted-foreground">Major Keys</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="h-3 w-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-600" />
+          <div className="h-3 w-3 rounded-full bg-linear-to-r from-purple-500 to-pink-600" />
           <span className="text-muted-foreground">Minor Keys</span>
         </div>
       </div>

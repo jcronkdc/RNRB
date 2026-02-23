@@ -871,7 +871,7 @@ export function StreamlinedSongBuilder({
                 value={freeformText}
                 onChange={(e) => handleFreeformChange(e.target.value)}
                 placeholder={`Start typing your song here...\n\nExample:\n[VERSE]\nYour first verse lyrics go here\nAdd as many lines as you want\n\n[CHORUS]\nYour catchy chorus goes here\n\n[VERSE]\nYour second verse...\n\n[BRIDGE]\nSomething different to break it up\n\n[CHORUS]\nRepeat that chorus!`}
-                className="min-h-[350px] w-full resize-y rounded-lg border-0 p-4 text-sm leading-relaxed outline-none transition focus:ring-2"
+                className="min-h-[350px] w-full resize-y rounded-lg border-0 p-4 text-sm leading-relaxed outline-hidden transition focus:ring-2"
                 style={{
                   background: 'var(--background)',
                   color: 'var(--text)',

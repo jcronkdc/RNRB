@@ -220,7 +220,7 @@ export function CopyrightManager({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="rounded-2xl border-2 border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-blue-500/10 p-6">
+      <div className="rounded-2xl border-2 border-purple-500/30 bg-linear-to-br from-purple-500/10 to-blue-500/10 p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-purple-500/20">
@@ -253,7 +253,7 @@ export function CopyrightManager({
 
       {/* Quick Start Card - Show if user hasn't filled anything out yet */}
       {!copyrightInfo.performingRightsOrg && copyrightInfo.splits.length === 0 && !showGuide && (
-        <Card className="border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 p-6">
+        <Card className="border-yellow-500/30 bg-linear-to-br from-yellow-500/10 to-orange-500/10 p-6">
           <div className="flex items-start gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-yellow-500/20">
               <HelpCircle className="h-6 w-6 text-yellow-400" />
@@ -303,7 +303,7 @@ export function CopyrightManager({
       )}
 
       {/* Copyright Information */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <FileCheck className="h-5 w-5 text-blue-400" />
           Copyright Information
@@ -425,7 +425,7 @@ export function CopyrightManager({
       </Card>
 
       {/* PRO Information */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <Shield className="h-5 w-5 text-green-400" />
           Performance Rights Organization (PRO)
@@ -540,7 +540,7 @@ export function CopyrightManager({
       </Card>
 
       {/* Ownership Splits */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
             <Users className="h-5 w-5 text-orange-400" />
@@ -683,7 +683,7 @@ export function CopyrightManager({
       </Card>
 
       {/* Publishing Information */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <FileCheck className="h-5 w-5 text-purple-400" />
           Publishing Information
@@ -726,7 +726,7 @@ export function CopyrightManager({
       </Card>
 
       {/* Registration Status */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <Shield className="h-5 w-5 text-green-400" />
           Registration Status
@@ -800,7 +800,7 @@ export function CopyrightManager({
       </Card>
 
       {/* Split Sheet Generator */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <FileCheck className="h-5 w-5 text-blue-400" />
           Generate Split Sheet
@@ -812,7 +812,7 @@ export function CopyrightManager({
       <CollaborationAgreementGenerator songTitle={songTitle} copyrightInfo={copyrightInfo} />
 
       {/* Audio Upload */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
           <Music className="h-5 w-5 text-purple-400" />
           Audio Track

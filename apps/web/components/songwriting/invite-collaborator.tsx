@@ -158,7 +158,7 @@ export function InviteCollaborator({
                     if (e.key === 'Escape') onClose();
                   }}
                   placeholder="Their email address"
-                  className="w-full rounded-lg border-0 px-3 py-2.5 text-sm outline-none"
+                  className="w-full rounded-lg border-0 px-3 py-2.5 text-sm outline-hidden"
                   style={{
                     background: 'var(--surface)',
                     color: 'var(--text)',

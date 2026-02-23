@@ -114,17 +114,17 @@ export default function VenuesPage() {
 
   if (loading || loadingVenues) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--bg)]">
+      <div className="flex min-h-screen items-center justify-center bg-(--bg)">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-[color:var(--accent)]" />
-          <p className="text-lg text-[color:var(--muted)]">Loading venues...</p>
+          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-(--accent)" />
+          <p className="text-lg text-(--muted)">Loading venues...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[color:var(--bg)] px-4 py-12">
+    <div className="min-h-screen bg-(--bg) px-4 py-12">
       <div className="rnrb-container mx-auto max-w-7xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -133,7 +133,7 @@ export default function VenuesPage() {
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Venues</h1>
-            <p className="text-base text-[color:var(--muted)] sm:text-lg lg:text-xl">
+            <p className="text-base text-(--muted) sm:text-lg lg:text-xl">
               Your touring venue database
             </p>
           </div>
@@ -157,7 +157,7 @@ export default function VenuesPage() {
         {/* Search */}
         <div className="mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[color:var(--muted)] sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted) sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search venues by name, city, state..."
@@ -182,11 +182,11 @@ export default function VenuesPage() {
         {/* Empty State */}
         {venues.length === 0 ? (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <MapPin className="text-[color:var(--muted)]/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+            <MapPin className="text-(--muted)/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Venues in Database
             </h2>
-            <p className="mx-auto mb-6 max-w-2xl text-base text-[color:var(--muted)] sm:text-lg">
+            <p className="mx-auto mb-6 max-w-2xl text-base text-(--muted) sm:text-lg">
               Build your touring venue database. Save venue details for quick access when scheduling
               shows.
             </p>
@@ -225,7 +225,7 @@ function VenueCard({
           <div className="min-w-0 flex-1">
             <h3 className="mb-1 truncate text-lg font-semibold sm:text-xl">{venue.name}</h3>
             {(venue.city || venue.state) && (
-              <p className="truncate text-sm text-[color:var(--muted)]">
+              <p className="truncate text-sm text-(--muted)">
                 {venue.city}
                 {venue.city && venue.state && ', '}
                 {venue.state}
@@ -254,34 +254,34 @@ function VenueCard({
         {/* Details */}
         <div className="space-y-2">
           {venue.address && (
-            <div className="flex items-start gap-2 text-sm text-[color:var(--muted)]">
+            <div className="flex items-start gap-2 text-sm text-(--muted)">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
-              <span className="break-words">{venue.address}</span>
+              <span className="wrap-break-word">{venue.address}</span>
             </div>
           )}
 
           {venue.capacity && (
-            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+            <div className="flex items-center gap-2 text-sm text-(--muted)">
               <Users className="h-4 w-4 shrink-0" />
               <span>Capacity: {formatNumber(venue.capacity)}</span>
             </div>
           )}
 
           {venue.phone && (
-            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+            <div className="flex items-center gap-2 text-sm text-(--muted)">
               <Phone className="h-4 w-4 shrink-0" />
-              <a href={`tel:${venue.phone}`} className="hover:text-[color:var(--accent)]">
+              <a href={`tel:${venue.phone}`} className="hover:text-(--accent)">
                 {venue.phone}
               </a>
             </div>
           )}
 
           {venue.email && (
-            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+            <div className="flex items-center gap-2 text-sm text-(--muted)">
               <Mail className="h-4 w-4 shrink-0" />
               <a
                 href={`mailto:${venue.email}`}
-                className="truncate hover:text-[color:var(--accent)]"
+                className="truncate hover:text-(--accent)"
               >
                 {venue.email}
               </a>
@@ -289,13 +289,13 @@ function VenueCard({
           )}
 
           {venue.website && (
-            <div className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
+            <div className="flex items-center gap-2 text-sm text-(--muted)">
               <ExternalLink className="h-4 w-4 shrink-0" />
               <a
                 href={venue.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="truncate hover:text-[color:var(--accent)]"
+                className="truncate hover:text-(--accent)"
               >
                 Website
               </a>
@@ -305,8 +305,8 @@ function VenueCard({
 
         {/* Show Count */}
         {venue._count && venue._count.shows > 0 && (
-          <div className="mt-4 border-t border-[color:var(--border)] pt-3">
-            <p className="text-xs text-[color:var(--muted)]">
+          <div className="mt-4 border-t border-(--border) pt-3">
+            <p className="text-xs text-(--muted)">
               {venue._count.shows} {venue._count.shows === 1 ? 'show' : 'shows'} at this venue
             </p>
           </div>

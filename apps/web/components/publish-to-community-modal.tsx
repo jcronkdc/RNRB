@@ -144,7 +144,7 @@ export function PublishToCommunityModal({
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
                 placeholder="Select or type a genre"
-                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                 required
               />
               <datalist id="genre-suggestions">
@@ -166,7 +166,7 @@ export function PublishToCommunityModal({
                 value={mood}
                 onChange={(e) => setMood(e.target.value)}
                 placeholder="Select or type a mood (optional)"
-                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               />
               <datalist id="mood-suggestions">
                 {moods.map((m) => (
@@ -185,7 +185,7 @@ export function PublishToCommunityModal({
                 placeholder="e.g., 120"
                 min="40"
                 max="240"
-                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               />
             </div>
 
@@ -199,7 +199,7 @@ export function PublishToCommunityModal({
                 value={coverUrl}
                 onChange={(e) => setCoverUrl(e.target.value)}
                 placeholder="https://example.com/cover.jpg"
-                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               />
             </div>
 

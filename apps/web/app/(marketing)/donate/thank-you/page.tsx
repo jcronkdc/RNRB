@@ -75,7 +75,7 @@ export default function ThankYouPage() {
           <ul className="space-y-3 text-left">
             <li className="flex items-start gap-3">
               <span
-                className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold"
                 style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}
               >
                 1
@@ -86,7 +86,7 @@ export default function ThankYouPage() {
             </li>
             <li className="flex items-start gap-3">
               <span
-                className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold"
                 style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}
               >
                 2
@@ -97,7 +97,7 @@ export default function ThankYouPage() {
             </li>
             <li className="flex items-start gap-3">
               <span
-                className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold"
                 style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' }}
               >
                 3

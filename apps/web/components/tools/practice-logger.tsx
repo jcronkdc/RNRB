@@ -285,7 +285,7 @@ export function PracticeLogger() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-indigo-600">
             <Clock className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -306,17 +306,17 @@ export function PracticeLogger() {
 
       {/* Stats Row */}
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <div className="rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 p-4 text-center">
+        <div className="rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20 p-4 text-center">
           <Flame className="mx-auto mb-2 h-6 w-6 text-orange-400" />
           <div className="text-2xl font-bold">{streak}</div>
           <div className="text-xs text-muted-foreground">Day Streak</div>
         </div>
-        <div className="rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 p-4 text-center">
+        <div className="rounded-xl bg-linear-to-br from-purple-500/20 to-indigo-500/20 p-4 text-center">
           <Music className="mx-auto mb-2 h-6 w-6 text-purple-400" />
           <div className="text-2xl font-bold">{sessions.length}</div>
           <div className="text-xs text-muted-foreground">Sessions</div>
         </div>
-        <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 p-4 text-center">
+        <div className="rounded-xl bg-linear-to-br from-emerald-500/20 to-teal-500/20 p-4 text-center">
           <Trophy className="mx-auto mb-2 h-6 w-6 text-emerald-400" />
           <div className="text-2xl font-bold">{Math.floor(totalPracticeTime / 3600)}h</div>
           <div className="text-xs text-muted-foreground">Total Time</div>
@@ -348,8 +348,8 @@ export function PracticeLogger() {
                   animate={{ width: `${progress}%` }}
                   className={`h-full rounded-full ${
                     isComplete
-                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500'
-                      : 'bg-gradient-to-r from-purple-500 to-indigo-500'
+                      ? 'bg-linear-to-r from-emerald-500 to-teal-500'
+                      : 'bg-linear-to-r from-purple-500 to-indigo-500'
                   }`}
                 />
               </div>
@@ -386,7 +386,7 @@ export function PracticeLogger() {
             value={currentSong}
             onChange={(e) => setCurrentSong(e.target.value)}
             placeholder="Song name, technique, scales..."
-            className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+            className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
           />
         </div>
       )}
@@ -401,7 +401,7 @@ export function PracticeLogger() {
               onChange={(e) => setSessionNotes(e.target.value)}
               placeholder="What did you work on? Any breakthroughs?"
               rows={3}
-              className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+              className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
             />
           </div>
           <div>
@@ -431,7 +431,7 @@ export function PracticeLogger() {
           <Button
             onClick={startTimer}
             disabled={!currentSong.trim()}
-            className="gap-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 px-8 py-6 text-lg font-bold hover:from-purple-600 hover:to-indigo-700"
+            className="gap-2 rounded-full bg-linear-to-r from-purple-500 to-indigo-600 px-8 py-6 text-lg font-bold hover:from-purple-600 hover:to-indigo-700"
           >
             <Play className="h-5 w-5" />
             Start Practice
@@ -443,7 +443,7 @@ export function PracticeLogger() {
               className={`gap-2 rounded-full px-8 py-6 text-lg font-bold ${
                 isRunning
                   ? 'bg-yellow-500 hover:bg-yellow-600'
-                  : 'bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700'
+                  : 'bg-linear-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700'
               }`}
             >
               {isRunning ? (
@@ -521,7 +521,7 @@ export function PracticeLogger() {
 
               {/* Weekly Summary */}
               {sessions.length > 0 && (
-                <div className="mt-4 rounded-lg bg-gradient-to-r from-purple-500/10 to-indigo-500/10 p-4">
+                <div className="mt-4 rounded-lg bg-linear-to-r from-purple-500/10 to-indigo-500/10 p-4">
                   <div className="flex items-center gap-2">
                     <TrendingUp className="h-4 w-4 text-purple-400" />
                     <span className="text-sm font-semibold">This Week</span>

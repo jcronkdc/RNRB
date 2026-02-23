@@ -87,8 +87,8 @@ export default function MerchHelpPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -162,14 +162,14 @@ export default function MerchHelpPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mb-12 rounded-2xl border border-green-500/20 bg-gradient-to-br from-green-500/10 to-transparent p-8"
+            className="mb-12 rounded-2xl border border-green-500/20 bg-linear-to-br from-green-500/10 to-transparent p-8"
           >
             <h2 className="mb-6 text-2xl font-bold text-white">
               Why Sell on Rock N' Roll Basement
             </h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex items-start gap-3">
-                <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-400" />
+                <CheckCircle className="mt-1 h-5 w-5 shrink-0 text-green-400" />
                 <div>
                   <h4 className="font-semibold text-white">Zero Upfront Cost</h4>
                   <p className="text-sm text-white/60">
@@ -178,21 +178,21 @@ export default function MerchHelpPage() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-400" />
+                <CheckCircle className="mt-1 h-5 w-5 shrink-0 text-green-400" />
                 <div>
                   <h4 className="font-semibold text-white">85% Profit Share</h4>
                   <p className="text-sm text-white/60">You keep most of the earnings.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-400" />
+                <CheckCircle className="mt-1 h-5 w-5 shrink-0 text-green-400" />
                 <div>
                   <h4 className="font-semibold text-white">Premium Quality</h4>
                   <p className="text-sm text-white/60">High-quality materials and printing.</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <CheckCircle className="mt-1 h-5 w-5 flex-shrink-0 text-green-400" />
+                <CheckCircle className="mt-1 h-5 w-5 shrink-0 text-green-400" />
                 <div>
                   <h4 className="font-semibold text-white">Global Shipping</h4>
                   <p className="text-sm text-white/60">We ship worldwide with tracking.</p>
@@ -219,7 +219,7 @@ export default function MerchHelpPage() {
                   className="rounded-2xl border border-white/10 bg-white/5 p-6"
                 >
                   <div className="mb-2 flex items-start gap-3">
-                    <HelpCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-orange-400" />
+                    <HelpCircle className="mt-0.5 h-5 w-5 shrink-0 text-orange-400" />
                     <h3 className="font-semibold text-white">{faq.question}</h3>
                   </div>
                   <p className="ml-8 text-white/60">{faq.answer}</p>
@@ -233,7 +233,7 @@ export default function MerchHelpPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/10 to-transparent p-8 text-center"
+            className="rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/10 to-transparent p-8 text-center"
           >
             <h2 className="mb-3 text-2xl font-bold text-white">Ready to Start Selling?</h2>
             <p className="mb-6 text-white/60">
@@ -242,7 +242,7 @@ export default function MerchHelpPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/my-merch/create"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
               >
                 Create Your First Product
                 <ArrowRight className="h-5 w-5" />

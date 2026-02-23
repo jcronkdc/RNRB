@@ -342,7 +342,7 @@ export function OptimizedChat({
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               style={{ minHeight: '48px', maxHeight: '120px' }}
               disabled={isDisconnected}
             />

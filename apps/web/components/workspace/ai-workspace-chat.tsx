@@ -415,7 +415,7 @@ export function AIWorkspaceChat() {
             'flex items-center gap-2 rounded-full',
             'shadow-lg',
             'ai-floating-btn',
-            'bg-gradient-to-r from-violet-600 to-purple-600',
+            'bg-linear-to-r from-violet-600 to-purple-600',
             'hover:shadow-xl hover:shadow-purple-500/30',
             'transition-shadow duration-300',
             isMinimized ? 'p-3' : 'px-4 py-3'
@@ -424,7 +424,7 @@ export function AIWorkspaceChat() {
         >
           <Wand2 className="h-5 w-5 text-white" />
           {!isMinimized && (
-            <svg width="140" height="20" viewBox="0 0 140 20" className="flex-shrink-0">
+            <svg width="140" height="20" viewBox="0 0 140 20" className="shrink-0">
               <text
                 x="0"
                 y="15"
@@ -471,7 +471,7 @@ export function AIWorkspaceChat() {
         }}
       >
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
             <Wand2 className="h-5 w-5 text-white" />
             <div
               className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 bg-green-400"
@@ -515,7 +515,7 @@ export function AIWorkspaceChat() {
           <div className="flex h-full flex-col">
             {/* Welcome */}
             <div className="mb-6 text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
                 <Wand2 className="h-8 w-8 text-white" />
               </div>
               <h4 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text)' }}>
@@ -548,7 +548,7 @@ export function AIWorkspaceChat() {
                   style={{ border: '1px solid var(--border)' }}
                 >
                   <prompt.icon
-                    className="h-4 w-4 flex-shrink-0"
+                    className="h-4 w-4 shrink-0"
                     style={{ color: 'var(--accent)' }}
                   />
                   <span style={{ color: 'var(--text)' }}>{prompt.text}</span>
@@ -616,7 +616,7 @@ export function AIWorkspaceChat() {
                   <div
                     className={cn(
                       'mb-2 flex h-8 w-8 items-center justify-center rounded-lg',
-                      `bg-gradient-to-br ${template.gradient}`
+                      `bg-linear-to-br ${template.gradient}`
                     )}
                   >
                     {(() => {
@@ -657,7 +657,7 @@ export function AIWorkspaceChat() {
                   className={cn(
                     'inline-block rounded-2xl px-4 py-3 text-sm leading-relaxed',
                     message.role === 'user'
-                      ? 'bg-gradient-to-r from-violet-500 to-purple-600 font-medium text-white shadow-lg shadow-purple-500/20'
+                      ? 'bg-linear-to-r from-violet-500 to-purple-600 font-medium text-white shadow-lg shadow-purple-500/20'
                       : 'font-medium'
                   )}
                   style={
@@ -754,7 +754,7 @@ export function AIWorkspaceChat() {
             className={cn(
               'flex-1 resize-none rounded-xl px-4 py-3',
               'text-sm',
-              'focus:outline-none focus:ring-2 focus:ring-purple-500/50',
+              'focus:outline-hidden focus:ring-2 focus:ring-purple-500/50',
               'max-h-24'
             )}
             style={{
@@ -769,8 +769,8 @@ export function AIWorkspaceChat() {
             onClick={() => sendMessage(inputValue)}
             disabled={isLoading || !inputValue.trim()}
             className={cn(
-              'flex-shrink-0 rounded-xl p-3 transition-all',
-              'bg-gradient-to-r from-violet-500 to-purple-600 text-white',
+              'shrink-0 rounded-xl p-3 transition-all',
+              'bg-linear-to-r from-violet-500 to-purple-600 text-white',
               'hover:shadow-lg hover:shadow-purple-500/30',
               'disabled:cursor-not-allowed disabled:opacity-50',
               'hover:scale-105 active:scale-95'
@@ -823,7 +823,7 @@ function WorkspacePreviewCard({
       onClick={onSelect}
     >
       {/* Header with gradient */}
-      <div className={cn('flex items-center gap-3 px-4 py-3', `bg-gradient-to-r ${gradient}`)}>
+      <div className={cn('flex items-center gap-3 px-4 py-3', `bg-linear-to-r ${gradient}`)}>
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
           <Icon className="h-5 w-5 text-white" />
         </div>
@@ -869,7 +869,7 @@ function WorkspacePreviewCard({
             'w-full rounded-xl py-2.5 text-sm font-semibold',
             'flex items-center justify-center gap-2',
             'transition-all',
-            'bg-gradient-to-r from-violet-500 to-purple-600 text-white',
+            'bg-linear-to-r from-violet-500 to-purple-600 text-white',
             'hover:shadow-lg hover:shadow-purple-500/30',
             'hover:scale-[1.02] active:scale-[0.98]',
             'disabled:cursor-not-allowed disabled:opacity-50'

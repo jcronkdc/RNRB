@@ -218,7 +218,7 @@ export function OnboardingTour({ isOpen, onClose, onComplete }: OnboardingTourPr
   return (
     <>
       {/* Overlay */}
-      <div className="fixed inset-0 z-[100]">
+      <div className="fixed inset-0 z-100">
         {/* Dark overlay with cutout for highlighted element */}
         <svg className="absolute inset-0 h-full w-full">
           <defs>
@@ -262,7 +262,7 @@ export function OnboardingTour({ isOpen, onClose, onComplete }: OnboardingTourPr
 
         {/* Tooltip */}
         <div
-          className="z-[101] w-[400px] rounded-2xl p-6 shadow-2xl"
+          className="z-101 w-[400px] rounded-2xl p-6 shadow-2xl"
           style={{
             ...getTooltipStyle(),
             background: 'var(--panel)',

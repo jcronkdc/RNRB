@@ -1150,7 +1150,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                               border: '1px solid var(--border)',
                             }}
                           >
-                            <div className="aspect-video bg-gradient-to-br from-purple-600/20 to-pink-600/20">
+                            <div className="aspect-video bg-linear-to-br from-purple-600/20 to-pink-600/20">
                               {project.coverImage && (
                                 <Image
                                   src={project.coverImage}

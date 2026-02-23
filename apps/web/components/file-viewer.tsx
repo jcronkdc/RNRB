@@ -266,7 +266,7 @@ export function FileViewer({ url, name, mimeType, onClose }: FileViewerProps) {
                 >
                   <ZoomOut className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
-                <span className="min-w-[3rem] text-center text-xs text-gray-400 sm:text-sm">
+                <span className="min-w-12 text-center text-xs text-gray-400 sm:text-sm">
                   {zoom}%
                 </span>
                 <button

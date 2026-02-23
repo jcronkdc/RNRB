@@ -224,7 +224,7 @@ export function LoopPlayer() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-lime-500 to-green-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-lime-500 to-green-600">
             <Repeat className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -333,7 +333,7 @@ export function LoopPlayer() {
               className={`h-16 w-16 rounded-full ${
                 isPlaying
                   ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gradient-to-r from-lime-500 to-green-600 hover:from-lime-600 hover:to-green-700'
+                  : 'bg-linear-to-r from-lime-500 to-green-600 hover:from-lime-600 hover:to-green-700'
               }`}
             >
               {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8" />}
@@ -368,7 +368,7 @@ export function LoopPlayer() {
               {speedPresets.map((speed) => (
                 <Button
                   key={speed}
-                  variant={playbackRate === speed ? 'default' : 'outline'}
+                  variant={playbackRate === speed ? 'default' : 'outline-solid'}
                   size="sm"
                   onClick={() => setPlaybackRate(speed)}
                   className="rounded-full px-4"

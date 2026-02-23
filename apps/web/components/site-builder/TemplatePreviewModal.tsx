@@ -166,7 +166,7 @@ export function TemplatePreviewModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 z-100 flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.95)' }}
       onClick={onClose}
     >
@@ -185,7 +185,7 @@ export function TemplatePreviewModal({
       >
         {/* Header */}
         <div
-          className="flex flex-shrink-0 items-center justify-between px-6 py-4"
+          className="flex shrink-0 items-center justify-between px-6 py-4"
           style={{ borderBottom: '1px solid #222' }}
         >
           <div className="flex items-center gap-4">
@@ -617,7 +617,7 @@ export function TemplatePreviewModal({
                   <div className="grid gap-12 md:grid-cols-2">
                     {/* Image placeholder */}
                     <div
-                      className="aspect-[4/5] rounded-2xl"
+                      className="aspect-4/5 rounded-2xl"
                       style={{
                         background: `linear-gradient(135deg, ${colors.accent}20 0%, ${colors.primary} 100%)`,
                         border: `1px solid ${colors.border}`,
@@ -690,7 +690,7 @@ export function TemplatePreviewModal({
                     <input
                       type="email"
                       placeholder="Enter your email"
-                      className="flex-1 bg-transparent px-6 py-4 outline-none"
+                      className="flex-1 bg-transparent px-6 py-4 outline-hidden"
                       style={{ color: colors.text }}
                     />
                     <button
@@ -766,7 +766,7 @@ export function TemplatePreviewModal({
 
         {/* Footer with Template Info */}
         <div
-          className="flex flex-shrink-0 items-center justify-between px-6 py-4"
+          className="flex shrink-0 items-center justify-between px-6 py-4"
           style={{ borderTop: '1px solid #222', background: '#0a0a0a' }}
         >
           <div className="flex items-center gap-6">

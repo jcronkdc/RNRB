@@ -256,8 +256,8 @@ export default function MerchDesignerPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -350,7 +350,7 @@ export default function MerchDesignerPage() {
                         : 'border-white/10 bg-white/5 hover:border-white/20'
                     }`}
                   >
-                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-white/10 to-white/5">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-linear-to-br from-white/10 to-white/5">
                       <IconComponent className="h-8 w-8 text-white/60" />
                     </div>
                     <h3 className="text-lg font-semibold text-white">{product.name}</h3>
@@ -378,7 +378,7 @@ export default function MerchDesignerPage() {
             <div className="flex justify-end">
               <button
                 onClick={() => setStep(2)}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white shadow-lg"
+                className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white shadow-lg"
               >
                 Continue to Design
                 <ChevronRight className="h-4 w-4" />
@@ -568,7 +568,7 @@ export default function MerchDesignerPage() {
                 </button>
               </div>
 
-              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5">
+              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/10 to-white/5">
                 {/* Product mockup background - using custom SVG icons */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   {(() => {
@@ -610,7 +610,7 @@ export default function MerchDesignerPage() {
                 <button
                   onClick={() => setStep(3)}
                   disabled={!design.designUrl || selectedSizes.length === 0}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg disabled:opacity-50"
                 >
                   Set Pricing
                   <ChevronRight className="h-4 w-4" />
@@ -638,7 +638,7 @@ export default function MerchDesignerPage() {
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
                   placeholder="e.g., Band Logo Tee"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-orange-500/50 focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-orange-500/50 focus:outline-hidden"
                 />
               </div>
 
@@ -720,7 +720,7 @@ export default function MerchDesignerPage() {
               <button
                 onClick={handleSaveProduct}
                 disabled={!productName || isSaving}
-                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg disabled:opacity-50"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg disabled:opacity-50"
               >
                 {isSaving ? (
                   <Loader2 className="h-5 w-5 animate-spin" />

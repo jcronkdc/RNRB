@@ -247,10 +247,10 @@ export default function ContactPage() {
               <div className="mb-6 space-y-3">
                 <a
                   href="mailto:support@rnrb.me"
-                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
+                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-(--border-strong)"
                   style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
                 >
-                  <TicketIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--violet)' }} />
+                  <TicketIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--violet)' }} />
                   <div>
                     <div className="font-medium">support@rnrb.me</div>
                     <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -260,10 +260,10 @@ export default function ContactPage() {
                 </a>
                 <a
                   href="mailto:info@rnrb.me"
-                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
+                  className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-(--border-strong)"
                   style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
                 >
-                  <QuestionIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--violet)' }} />
+                  <QuestionIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--violet)' }} />
                   <div>
                     <div className="font-medium">info@rnrb.me</div>
                     <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -293,10 +293,10 @@ export default function ContactPage() {
               </p>
               <a
                 href="mailto:business@rnrb.me"
-                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
+                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-(--border-strong)"
                 style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
               >
-                <EmailIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--sage)' }} />
+                <EmailIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--sage)' }} />
                 <div>
                   <div className="font-medium">business@rnrb.me</div>
                   <div className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -320,10 +320,10 @@ export default function ContactPage() {
               </p>
               <a
                 href="mailto:newsletter@rnrb.me"
-                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-[var(--border-strong)]"
+                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:border-(--border-strong)"
                 style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
               >
-                <NewsletterIcon className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+                <NewsletterIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--accent)' }} />
                 <div>
                   <div className="font-medium">newsletter@rnrb.me</div>
                   <div className="text-xs" style={{ color: 'var(--muted)' }}>

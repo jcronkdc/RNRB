@@ -102,7 +102,7 @@ export function UpgradeModal({
               </button>
 
               {/* Header with gradient */}
-              <div className={`bg-gradient-to-r ${tier.color} p-8 text-white`}>
+              <div className={`bg-linear-to-r ${tier.color} p-8 text-white`}>
                 <div className="mb-4 flex items-center gap-3">
                   <div className="rounded-full bg-white/30 p-3">
                     <Lock className="h-6 w-6" />
@@ -171,7 +171,7 @@ export function UpgradeModal({
                 <div className="mb-6 rounded-xl border border-gray-800 bg-gray-800/50 p-6">
                   <div className="mb-4 flex items-center gap-2">
                     <TierIcon
-                      className={`h-5 w-5 bg-gradient-to-r ${tier.color} bg-clip-text text-transparent`}
+                      className={`h-5 w-5 bg-linear-to-r ${tier.color} bg-clip-text text-transparent`}
                     />
                     <h3 className="font-semibold text-white">{tier.name} Plan Includes:</h3>
                   </div>
@@ -188,7 +188,7 @@ export function UpgradeModal({
                 {/* CTA */}
                 <Link href={`/settings/billing?upgrade=${selectedTier}`}>
                   <button
-                    className={`group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${tier.color} px-6 py-4 font-semibold text-white transition-all hover:shadow-lg hover:shadow-orange-500/20`}
+                    className={`group flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r ${tier.color} px-6 py-4 font-semibold text-white transition-all hover:shadow-lg hover:shadow-orange-500/20`}
                   >
                     <Sparkles className="h-5 w-5" />
                     <span>Upgrade to {tier.name}</span>

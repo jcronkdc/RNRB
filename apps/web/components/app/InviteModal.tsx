@@ -124,7 +124,7 @@ export default function InviteModal({
               value={role}
               onChange={(e) => setRole(e.target.value)}
               disabled={isSending || success}
-              className="focus:border-primary focus:ring-primary/20 h-12 w-full rounded-2xl border border-border bg-surface px-4 text-base focus:outline-none focus:ring-2"
+              className="focus:border-primary focus:ring-primary/20 h-12 w-full rounded-2xl border border-border bg-surface px-4 text-base focus:outline-hidden focus:ring-2"
             >
               <option value="member">Member</option>
               <option value="admin">Admin</option>

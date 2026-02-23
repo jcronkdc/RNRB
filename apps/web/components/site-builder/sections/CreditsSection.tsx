@@ -91,7 +91,7 @@ export function CreditsSection({ content, theme }: CreditsSectionProps) {
         <div className="flex items-center gap-4 p-4">
           {/* Avatar */}
           <div
-            className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full"
+            className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full"
             style={{ background: 'var(--bg)' }}
           >
             {collab.image ? (

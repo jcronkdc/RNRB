@@ -133,7 +133,7 @@ export function VoiceRoom({
                 }`}
               >
                 {/* Avatar */}
-                <div className="relative flex-shrink-0">
+                <div className="relative shrink-0">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                     {userAvatar && participant.id === 'local' ? (
                       <img
@@ -181,7 +181,7 @@ export function VoiceRoom({
 
                 {/* Mute indicator */}
                 {!participant.audioEnabled && (
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <MicOff className="h-4 w-4 text-red-500" />
                   </div>
                 )}

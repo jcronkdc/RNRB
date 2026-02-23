@@ -89,7 +89,7 @@ function SortableChordBlock({
       style={style}
       {...attributes}
       {...listeners}
-      className="rnrb-card group relative cursor-move border-2 border-brand-primary/30 bg-gradient-to-br from-brand-primary/10 to-brand-primary/5 p-6 transition-all duration-300 hover:border-brand-primary/50 hover:shadow-2xl"
+      className="rnrb-card group relative cursor-move border-2 border-brand-primary/30 bg-linear-to-br from-brand-primary/10 to-brand-primary/5 p-6 transition-all duration-300 hover:border-brand-primary/50 hover:shadow-2xl"
     >
       {/* Grip Indicator */}
       <div className="absolute left-2 top-1/2 -translate-y-1/2 opacity-30 transition group-hover:opacity-60">
@@ -143,7 +143,7 @@ function SortableChordButton({ id, chord, onRemove }: ChordBlock & { onRemove: (
       <div
         {...attributes}
         {...listeners}
-        className="font-display relative cursor-move rounded-xl border-2 border-brand-primary/40 bg-gradient-to-br from-brand-primary/20 to-brand-primary/10 px-4 py-3 text-lg font-bold text-brand-primary transition-all duration-200 hover:scale-105 hover:border-brand-primary/60 hover:shadow-lg"
+        className="font-display relative cursor-move rounded-xl border-2 border-brand-primary/40 bg-linear-to-br from-brand-primary/20 to-brand-primary/10 px-4 py-3 text-lg font-bold text-brand-primary transition-all duration-200 hover:scale-105 hover:border-brand-primary/60 hover:shadow-lg"
       >
         <GripVertical className="absolute left-1 top-1/2 h-3 w-3 -translate-y-1/2 opacity-0 transition group-hover:opacity-40" />
         <span className="px-1">{chord}</span>
@@ -271,7 +271,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
               onClick={() => setViewMode('compact')}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 viewMode === 'compact'
-                  ? 'bg-brand-primary text-white shadow-sm'
+                  ? 'bg-brand-primary text-white shadow-xs'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
               title="Compact inline view"
@@ -283,7 +283,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
               onClick={() => setViewMode('blocks')}
               className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition ${
                 viewMode === 'blocks'
-                  ? 'bg-brand-primary text-white shadow-sm'
+                  ? 'bg-brand-primary text-white shadow-xs'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
               title="Large block view"
@@ -304,7 +304,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
 
       {/* Chord Palette */}
       {showChordPalette && (
-        <Card className="rnrb-card border-2 border-brand-primary/20 bg-gradient-to-br from-brand-primary/5 to-transparent p-8 shadow-2xl">
+        <Card className="rnrb-card border-2 border-brand-primary/20 bg-linear-to-br from-brand-primary/5 to-transparent p-8 shadow-2xl">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h4 className="font-display mb-1 text-xl font-bold">Choose Your Chord</h4>
@@ -341,7 +341,7 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
       )}
 
       {/* Chord Progression Workspace */}
-      <Card className="rnrb-card min-h-[400px] bg-gradient-to-b from-surface to-surface-muted/50 p-8">
+      <Card className="rnrb-card min-h-[400px] bg-linear-to-b from-surface to-surface-muted/50 p-8">
         {chords.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center py-16 text-center">
             <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-brand-primary/10">
@@ -395,9 +395,9 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
 
       {chords.length > 0 && (
         <>
-          <div className="rnrb-card border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 to-brand-primary/5 p-6">
+          <div className="rnrb-card border-2 border-green-500/20 bg-linear-to-r from-green-500/5 to-brand-primary/5 p-6">
             <div className="flex items-start gap-4">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-green-500/10">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-green-500/10">
                 <Music className="h-5 w-5 text-green-500" />
               </div>
               <div className="flex-1">
@@ -417,9 +417,9 @@ export function ChordBuilder({ onChange }: { onChange: (chords: ChordBlock[]) =>
 
           {/* Chord Analysis */}
           {analysis && analysis.mostLikelyKey && (
-            <div className="rnrb-card space-y-4 border-2 border-purple-500/20 bg-gradient-to-r from-purple-500/5 to-blue-500/5 p-6">
+            <div className="rnrb-card space-y-4 border-2 border-purple-500/20 bg-linear-to-r from-purple-500/5 to-blue-500/5 p-6">
               <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-500/10">
                   <Zap className="h-5 w-5 text-purple-400" />
                 </div>
                 <div className="flex-1">

@@ -282,7 +282,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             value={(value as string) || ''}
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
           />
         );
 
@@ -293,7 +293,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             rows={4}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
           />
         );
 
@@ -304,7 +304,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             rows={6}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 font-mono text-sm text-green-400 placeholder-gray-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 font-mono text-sm text-green-400 placeholder-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
           />
         );
 
@@ -336,7 +336,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
           <select
             value={(value as string) || options[0]?.value || ''}
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
           >
             {options.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -491,7 +491,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
                     id="section-animation"
                     value={animation}
                     onChange={(e) => setAnimation(e.target.value)}
-                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
                   >
                     {animationOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -514,7 +514,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-6 py-2 font-medium text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-linear-to-r from-orange-500 to-red-500 px-6 py-2 font-medium text-white hover:from-orange-600 hover:to-red-600 disabled:opacity-50"
               >
                 {isSaving ? (
                   <>

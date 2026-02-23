@@ -109,7 +109,7 @@ export function PhotoGallerySection({ content, styles }: PhotoGallerySectionProp
                   </div>
                 </div>
                 {photo.caption && (
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
+                  <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
                     <p className="text-sm text-white">{photo.caption}</p>
                   </div>
                 )}
@@ -151,7 +151,7 @@ export function PhotoGallerySection({ content, styles }: PhotoGallerySectionProp
               {photos.map((photo, index) => (
                 <div
                   key={index}
-                  className="group relative aspect-[4/3] w-[300px] flex-shrink-0 cursor-pointer snap-center overflow-hidden rounded-xl md:w-[400px] lg:w-[500px]"
+                  className="group relative aspect-4/3 w-[300px] shrink-0 cursor-pointer snap-center overflow-hidden rounded-xl md:w-[400px] lg:w-[500px]"
                   onClick={() => openLightbox(index)}
                 >
                   <Image
@@ -161,7 +161,7 @@ export function PhotoGallerySection({ content, styles }: PhotoGallerySectionProp
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   {photo.caption && (
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-4">
                       <p className="text-sm text-white">{photo.caption}</p>
                     </div>
                   )}
@@ -310,7 +310,7 @@ export function PhotoGallerySectionEditor({
               key={layoutOption}
               onClick={() => onChange({ ...content, layout: layoutOption })}
               className={`rounded-lg px-4 py-2 capitalize ${
-                content.layout === layoutOption ? 'ring-2 ring-[var(--accent)]' : ''
+                content.layout === layoutOption ? 'ring-2 ring-(--accent)' : ''
               }`}
               style={{
                 background: content.layout === layoutOption ? 'var(--accent)' : 'var(--bg)',
@@ -336,7 +336,7 @@ export function PhotoGallerySectionEditor({
                 key={col}
                 onClick={() => onChange({ ...content, columns: col })}
                 className={`rounded-lg px-4 py-2 ${
-                  content.columns === col ? 'ring-2 ring-[var(--accent)]' : ''
+                  content.columns === col ? 'ring-2 ring-(--accent)' : ''
                 }`}
                 style={{
                   background: content.columns === col ? 'var(--accent)' : 'var(--bg)',

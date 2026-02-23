@@ -271,7 +271,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {/* Avatar */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {showAvatar ? (
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                       {message.avatar ? (
@@ -310,7 +310,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                         : 'border border-border bg-surface text-foreground'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
+                    <p className="whitespace-pre-wrap wrap-break-word text-sm">{message.content}</p>
                   </div>
                 </div>
               </motion.div>
@@ -369,7 +369,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               style={{ minHeight: '48px', maxHeight: '120px' }}
             />
           </div>

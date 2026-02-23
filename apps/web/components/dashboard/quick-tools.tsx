@@ -69,7 +69,7 @@ export function QuickTools() {
             className="group relative flex flex-col items-center gap-1.5 rounded-xl p-3 transition-all hover:bg-white/5"
           >
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tool.color} transition-transform group-hover:scale-110`}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br ${tool.color} transition-transform group-hover:scale-110`}
             >
               <tool.icon className="h-5 w-5 text-white" />
             </div>

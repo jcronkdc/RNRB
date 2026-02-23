@@ -239,7 +239,7 @@ export function AssistantChat() {
           'flex items-center gap-2',
           'rounded-full',
           'ai-floating-btn',
-          'bg-gradient-to-r from-brand-primary to-purple-600',
+          'bg-linear-to-r from-brand-primary to-purple-600',
           'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
@@ -256,7 +256,7 @@ export function AssistantChat() {
           )}
         </div>
         {!isMinimized && (
-          <svg width="90" height="20" viewBox="0 0 90 20" className="flex-shrink-0">
+          <svg width="90" height="20" viewBox="0 0 90 20" className="shrink-0">
             <text
               x="0"
               y="15"
@@ -290,11 +290,11 @@ export function AssistantChat() {
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between rounded-t-2xl bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-brand-primary/10 px-4 py-3"
+        className="flex items-center justify-between rounded-t-2xl bg-linear-to-r from-brand-primary/10 via-purple-500/10 to-brand-primary/10 px-4 py-3"
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
             <Sparkles className="h-5 w-5 text-white" />
             <div
               className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-green-400"
@@ -335,7 +335,7 @@ export function AssistantChat() {
             <div className="flex h-full flex-col px-2">
               {/* Welcome */}
               <div className="mb-6 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
                   <Sparkles className="h-8 w-8 text-white" />
                 </div>
                 <h4 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text)' }}>
@@ -402,7 +402,7 @@ export function AssistantChat() {
                 className={cn(
                   'max-w-[85%] rounded-2xl px-4 py-3 text-sm',
                   message.role === 'user'
-                    ? 'bg-gradient-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-brand-primary/20'
+                    ? 'bg-linear-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-brand-primary/20'
                     : ''
                 )}
                 style={
@@ -417,7 +417,7 @@ export function AssistantChat() {
               >
                 {message.role === 'assistant' && (
                   <div className="mb-2 flex items-center gap-2">
-                    <div className="flex h-5 w-5 items-center justify-center rounded-md bg-gradient-to-br from-brand-primary to-purple-600">
+                    <div className="flex h-5 w-5 items-center justify-center rounded-md bg-linear-to-br from-brand-primary to-purple-600">
                       <Sparkles className="h-3 w-3 text-white" />
                     </div>
                     <span className="text-xs font-medium text-brand-primary">AI Assistant</span>
@@ -544,7 +544,7 @@ export function AssistantChat() {
               className={cn(
                 'flex-1 resize-none rounded-xl px-4 py-3',
                 'text-sm',
-                'focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20',
+                'focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20',
                 'max-h-32'
               )}
               style={{
@@ -568,7 +568,7 @@ export function AssistantChat() {
                 onClick={() => handleSendMessage()}
                 disabled={isLoading || !inputValue.trim()}
                 size="icon"
-                className="shrink-0 bg-gradient-to-r from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/20 hover:from-brand-primary/90 hover:to-purple-600/90"
+                className="shrink-0 bg-linear-to-r from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/20 hover:from-brand-primary/90 hover:to-purple-600/90"
               >
                 <Send className="h-4 w-4" />
               </Button>

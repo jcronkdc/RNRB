@@ -209,7 +209,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
   return (
     <div className="space-y-6">
       {/* Recording Interface */}
-      <div className="rounded-xl border-2 border-red-500/20 bg-gradient-to-br from-red-500/5 to-orange-500/5 p-6">
+      <div className="rounded-xl border-2 border-red-500/20 bg-linear-to-br from-red-500/5 to-orange-500/5 p-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h3 className="mb-1 text-lg font-bold text-white">Voice Memo Recorder</h3>

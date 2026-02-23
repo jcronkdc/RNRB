@@ -83,10 +83,10 @@ function SortableSongBlock({
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`rnrb-card mb-4 bg-gradient-to-br p-6 ${getBlockColor(block.type)} group cursor-move border-2 transition-all hover:shadow-xl`}
+      className={`rnrb-card mb-4 bg-linear-to-br p-6 ${getBlockColor(block.type)} group cursor-move border-2 transition-all hover:shadow-xl`}
     >
       <div className="flex items-start gap-4">
-        <div {...listeners} className="flex-shrink-0 cursor-grab pt-1 active:cursor-grabbing">
+        <div {...listeners} className="shrink-0 cursor-grab pt-1 active:cursor-grabbing">
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
         <div className="flex-1">
@@ -113,7 +113,7 @@ function SortableSongBlock({
             value={block.content}
             onChange={(e) => onEdit(e.target.value)}
             placeholder={`Write your ${block.type} here...`}
-            className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 font-mono text-sm text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+            className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 font-mono text-sm text-foreground placeholder-muted-foreground outline-hidden transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
             rows={4}
           />
         </div>
@@ -218,7 +218,7 @@ export function VisualSongBuilder({
                 <div
                   key={`palette-${item.id}`}
                   id={`palette-${item.id}`}
-                  className="rnrb-card cursor-grab border-2 border-dashed border-brand-primary/30 bg-gradient-to-r from-brand-primary/10 to-transparent p-4 transition-all hover:border-brand-primary/50 hover:shadow-lg active:cursor-grabbing"
+                  className="rnrb-card cursor-grab border-2 border-dashed border-brand-primary/30 bg-linear-to-r from-brand-primary/10 to-transparent p-4 transition-all hover:border-brand-primary/50 hover:shadow-lg active:cursor-grabbing"
                 >
                   <div className="flex items-center gap-3">
                     <div className="text-2xl">{item.icon}</div>
@@ -288,7 +288,7 @@ export function VisualSongBuilder({
           </div>
 
           {songBlocks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-gradient-to-b from-surface-muted/30 to-transparent py-24 text-center">
+            <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-linear-to-b from-surface-muted/30 to-transparent py-24 text-center">
               <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-brand-primary/10">
                 <Music className="h-12 w-12 text-brand-primary" />
               </div>
@@ -324,7 +324,7 @@ export function VisualSongBuilder({
           )}
 
           {songBlocks.length > 0 && (
-            <div className="rnrb-card mt-8 border-2 border-green-500/20 bg-gradient-to-r from-green-500/5 to-brand-primary/5 p-6">
+            <div className="rnrb-card mt-8 border-2 border-green-500/20 bg-linear-to-r from-green-500/5 to-brand-primary/5 p-6">
               <h4 className="mb-3 font-semibold text-brand-primary">Song Structure:</h4>
               <p className="font-display text-lg text-foreground">
                 {songBlocks

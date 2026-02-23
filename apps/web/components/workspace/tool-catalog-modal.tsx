@@ -159,7 +159,7 @@ export function ToolCatalogModal({
             </div>
             <button
               onClick={onClose}
-              className="rounded-lg p-2 transition-colors hover:bg-[var(--panel-hover)]"
+              className="rounded-lg p-2 transition-colors hover:bg-(--panel-hover)"
             >
               <X className="h-5 w-5" style={{ color: 'var(--muted)' }} />
             </button>
@@ -178,7 +178,7 @@ export function ToolCatalogModal({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search tools..."
-                className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm outline-none transition-colors focus:border-[var(--accent)]"
+                className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm outline-hidden transition-colors focus:border-(--accent)"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',
@@ -240,7 +240,7 @@ export function ToolCatalogModal({
                         <button
                           key={key}
                           onClick={() => handleAddTool(key)}
-                          className="flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-all hover:border-[var(--accent)]"
+                          className="flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-all hover:border-(--accent)"
                           style={{ background: 'var(--panel)', borderColor: 'var(--border)' }}
                         >
                           <tool.icon className="h-3.5 w-3.5" style={{ color: tool.color }} />
@@ -264,8 +264,8 @@ export function ToolCatalogModal({
               onClick={() => setSelectedCategory(null)}
               className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
                 selectedCategory === null
-                  ? 'bg-[var(--accent)] text-white'
-                  : 'text-[var(--muted)] hover:bg-[var(--panel-hover)]'
+                  ? 'bg-(--accent) text-white'
+                  : 'text-(--muted) hover:bg-(--panel-hover)'
               }`}
             >
               All
@@ -276,8 +276,8 @@ export function ToolCatalogModal({
                 onClick={() => setSelectedCategory(key)}
                 className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
                   selectedCategory === key
-                    ? 'bg-[var(--accent)] text-white'
-                    : 'text-[var(--muted)] hover:bg-[var(--panel-hover)]'
+                    ? 'bg-(--accent) text-white'
+                    : 'text-(--muted) hover:bg-(--panel-hover)'
                 }`}
               >
                 <category.icon className="h-3.5 w-3.5" />
@@ -339,8 +339,8 @@ function ToolCard({
       onClick={handleAdd}
       disabled={isAdded}
       className={`group relative flex flex-col items-start gap-2 rounded-xl border p-4 text-left transition-all ${
-        isAdded ? 'cursor-default opacity-50' : 'hover:border-[var(--accent)] hover:shadow-lg'
-      } ${isSuggested ? 'ring-2 ring-[var(--accent)] ring-offset-2' : ''}`}
+        isAdded ? 'cursor-default opacity-50' : 'hover:border-(--accent) hover:shadow-lg'
+      } ${isSuggested ? 'ring-2 ring-(--accent) ring-offset-2' : ''}`}
       style={{
         background: 'var(--surface)',
         borderColor: 'var(--border)',
@@ -369,7 +369,7 @@ function ToolCard({
         className={`absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full transition-all ${
           isAdded
             ? 'bg-green-500 text-white'
-            : 'bg-[var(--panel)] opacity-0 group-hover:opacity-100'
+            : 'bg-(--panel) opacity-0 group-hover:opacity-100'
         }`}
       >
         {isAdded ? (

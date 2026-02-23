@@ -421,7 +421,7 @@ export function LibraryShareModal({
                       type="text"
                       value={generatedLink.url}
                       readOnly
-                      className="flex-1 bg-transparent text-sm text-white outline-none"
+                      className="flex-1 bg-transparent text-sm text-white outline-hidden"
                     />
                     <button
                       onClick={() => handleCopyLink(generatedLink.url)}
@@ -488,7 +488,7 @@ export function LibraryShareModal({
                         value={emailRecipient}
                         onChange={(e) => setEmailRecipient(e.target.value)}
                         placeholder="recipient@email.com"
-                        className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                        className="flex-1 rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                       />
                       <button
                         onClick={handleSendEmail}
@@ -531,7 +531,7 @@ export function LibraryShareModal({
                       value={linkName}
                       onChange={(e) => setLinkName(e.target.value)}
                       placeholder={fileNames[0]}
-                      className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2.5 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                     />
                   </div>
 
@@ -555,7 +555,7 @@ export function LibraryShareModal({
                             value={linkPassword}
                             onChange={(e) => setLinkPassword(e.target.value)}
                             placeholder="Set a password"
-                            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 pr-10 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                            className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 pr-10 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                           />
                           <button
                             type="button"
@@ -765,7 +765,7 @@ export function LibraryShareModal({
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by name or email..."
-                    className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                   />
                   {searching && (
                     <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-gray-500" />
@@ -901,7 +901,7 @@ export function LibraryShareModal({
                       placeholder="Add a note to your share..."
                       rows={2}
                       maxLength={500}
-                      className="w-full resize-none rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                      className="w-full resize-none rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                     />
                   </div>
                 </div>

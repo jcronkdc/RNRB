@@ -50,7 +50,7 @@ const MessageItem = memo(
         className={`flex gap-3 px-4 py-2 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
       >
         {/* Avatar */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           {showAvatar ? (
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
               {message.senderAvatar ? (
@@ -87,7 +87,7 @@ const MessageItem = memo(
                   : 'border border-border bg-surface text-foreground'
               }`}
             >
-              <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
+              <p className="whitespace-pre-wrap wrap-break-word text-sm">{message.content}</p>
               {message.isEdited && <span className="mt-1 block text-xs opacity-60">(edited)</span>}
             </div>
           )}

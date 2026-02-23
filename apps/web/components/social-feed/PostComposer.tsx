@@ -271,10 +271,10 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
   if (!session?.user) return null;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6">
+    <div className="overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-black/60 via-purple-900/10 to-black/60 p-6">
       {/* User Avatar & Input */}
       <div className="mb-4 flex gap-3">
-        <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-linear-to-br from-purple-500 to-pink-500">
           {session.user.image ? (
             <Image
               src={session.user.image}
@@ -292,7 +292,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind? Share your music, thoughts, or vibes..."
-          className="flex-1 resize-none bg-transparent text-white placeholder:text-white/40 focus:outline-none"
+          className="flex-1 resize-none bg-transparent text-white placeholder:text-white/40 focus:outline-hidden"
           rows={3}
         />
       </div>
@@ -432,21 +432,21 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
             value={genre}
             onChange={(e) => setGenre(e.target.value)}
             placeholder="Genre"
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
           />
           <input
             type="text"
             value={mood}
             onChange={(e) => setMood(e.target.value)}
             placeholder="Mood"
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
           />
           <input
             type="number"
             value={bpm}
             onChange={(e) => setBpm(e.target.value)}
             placeholder="BPM"
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
           />
         </div>
       )}
@@ -496,7 +496,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
             value={visibility}
             onChange={(e) => setVisibility(e.target.value as any)}
             aria-label="Post visibility"
-            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white focus:border-purple-500/50 focus:outline-none"
+            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white focus:border-purple-500/50 focus:outline-hidden"
           >
             <option value="public" className="bg-gray-900">
               🌍 Public
@@ -515,7 +515,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
           onClick={handleSubmit}
           disabled={posting || uploading || (!content && !audioUrl && imageFiles.length === 0)}
           aria-label={posting || uploading ? 'Posting content' : 'Publish post'}
-          className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-purple-500/40 disabled:opacity-50 disabled:shadow-none"
+          className="flex items-center gap-2 rounded-full bg-linear-to-r from-purple-500 to-pink-500 px-6 py-2 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-purple-500/40 disabled:opacity-50 disabled:shadow-none"
         >
           {posting || uploading ? (
             <>

@@ -133,7 +133,7 @@ export default function PricingPage() {
 
               <Link
                 href="/auth?signup=true"
-                className="rounded-lg border px-4 py-2.5 text-center text-sm font-semibold transition-colors hover:border-[var(--border-strong)] hover:bg-[var(--surface)]"
+                className="rounded-lg border px-4 py-2.5 text-center text-sm font-semibold transition-colors hover:border-(--border-strong) hover:bg-(--surface)"
                 style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
               >
                 Get started free
@@ -386,7 +386,7 @@ export default function PricingPage() {
                 <Link
                   key={link}
                   href={`/${link.toLowerCase()}`}
-                  className="transition-colors hover:text-[var(--text)]"
+                  className="transition-colors hover:text-(--text)"
                 >
                   {link}
                 </Link>

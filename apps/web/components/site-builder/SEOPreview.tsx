@@ -136,7 +136,7 @@ export function SEOPreview({
                 className="flex h-6 w-6 items-center justify-center rounded-full"
                 style={{ background: '#f1f3f4' }}
               >
-                <div className="h-4 w-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
+                <div className="h-4 w-4 rounded-full bg-linear-to-br from-blue-500 to-purple-500" />
               </div>
             )}
             <div className="flex items-center gap-1 text-sm">
@@ -261,7 +261,7 @@ export function SEOPreview({
         <div className="space-y-3 text-sm" style={{ color: 'var(--muted)' }}>
           <div className="flex gap-3">
             <div
-              className="mt-1 h-2 w-2 flex-shrink-0 rounded-full"
+              className="mt-1 h-2 w-2 shrink-0 rounded-full"
               style={{ background: 'var(--accent)' }}
             />
             <p>
@@ -271,7 +271,7 @@ export function SEOPreview({
           </div>
           <div className="flex gap-3">
             <div
-              className="mt-1 h-2 w-2 flex-shrink-0 rounded-full"
+              className="mt-1 h-2 w-2 shrink-0 rounded-full"
               style={{ background: 'var(--accent)' }}
             />
             <p>
@@ -281,7 +281,7 @@ export function SEOPreview({
           </div>
           <div className="flex gap-3">
             <div
-              className="mt-1 h-2 w-2 flex-shrink-0 rounded-full"
+              className="mt-1 h-2 w-2 shrink-0 rounded-full"
               style={{ background: 'var(--accent)' }}
             />
             <p>
@@ -291,7 +291,7 @@ export function SEOPreview({
           </div>
           <div className="flex gap-3">
             <div
-              className="mt-1 h-2 w-2 flex-shrink-0 rounded-full"
+              className="mt-1 h-2 w-2 shrink-0 rounded-full"
               style={{ background: 'var(--accent)' }}
             />
             <p>

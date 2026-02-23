@@ -224,26 +224,26 @@ export default function CreateMasterclassPage() {
   const totalDuration = lessons.reduce((sum, l) => sum + (l.duration || 0), 0);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
+    <div className="min-h-screen bg-(--bg)">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--panel)]">
+      <header className="sticky top-0 z-50 border-b border-(--border) bg-(--panel)">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-4">
             <Link href="/masterclasses/instructor">
-              <button className="text-[var(--muted)] hover:text-[var(--text)]">
+              <button className="text-(--muted) hover:text-(--text)">
                 <X className="h-6 w-6" />
               </button>
             </Link>
             <div>
-              <h1 className="font-bold text-[var(--text)]">Create Masterclass</h1>
-              <p className="text-xs text-[var(--muted)]">Draft • Not published</p>
+              <h1 className="font-bold text-(--text)">Create Masterclass</h1>
+              <p className="text-xs text-(--muted)">Draft • Not published</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={saveDraft}
               disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 text-[var(--muted)] hover:text-[var(--text)]"
+              className="flex items-center gap-2 px-4 py-2 text-(--muted) hover:text-(--text)"
             >
               {isSaving ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -255,7 +255,7 @@ export default function CreateMasterclassPage() {
             <button
               onClick={publish}
               disabled={!canPublish() || isPublishing}
-              className="flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-2 text-[var(--text)] disabled:opacity-50"
+              className="flex items-center gap-2 rounded-full bg-(--accent) px-6 py-2 text-(--text) disabled:opacity-50"
             >
               {isPublishing ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -276,8 +276,8 @@ export default function CreateMasterclassPage() {
                 onClick={() => setActiveTab(tab)}
                 className={`-mb-px border-b-2 px-2 pb-4 text-sm font-medium transition-colors ${
                   activeTab === tab
-                    ? 'border-[var(--accent)] text-[var(--accent)]'
-                    : 'border-transparent text-[var(--muted)] hover:text-[var(--text)]'
+                    ? 'border-(--accent) text-(--accent)'
+                    : 'border-transparent text-(--muted) hover:text-(--text)'
                 }`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -301,43 +301,43 @@ export default function CreateMasterclassPage() {
               {/* Main form */}
               <div className="space-y-6 lg:col-span-2">
                 {/* Course Type */}
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                  <h2 className="mb-4 font-bold text-[var(--text)]">Course Type</h2>
+                <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                  <h2 className="mb-4 font-bold text-(--text)">Course Type</h2>
                   <div className="grid grid-cols-2 gap-4">
                     <button
                       onClick={() => setCourseType('pre_recorded')}
                       className={`rounded-xl border-2 p-4 text-left transition-colors ${
                         courseType === 'pre_recorded'
-                          ? 'bg-[var(--accent)]/10 border-[var(--accent)]'
-                          : 'hover:border-[var(--accent)]/50 border-[var(--border)]'
+                          ? 'bg-(--accent)/10 border-(--accent)'
+                          : 'hover:border-(--accent)/50 border-(--border)'
                       }`}
                     >
-                      <Video className="mb-2 h-8 w-8 text-[var(--accent)]" />
-                      <div className="font-medium text-[var(--text)]">Pre-recorded</div>
-                      <div className="text-sm text-[var(--muted)]">Upload video lessons</div>
+                      <Video className="mb-2 h-8 w-8 text-(--accent)" />
+                      <div className="font-medium text-(--text)">Pre-recorded</div>
+                      <div className="text-sm text-(--muted)">Upload video lessons</div>
                     </button>
                     <button
                       onClick={() => setCourseType('live')}
                       className={`rounded-xl border-2 p-4 text-left transition-colors ${
                         courseType === 'live'
-                          ? 'bg-[var(--accent)]/10 border-[var(--accent)]'
-                          : 'hover:border-[var(--accent)]/50 border-[var(--border)]'
+                          ? 'bg-(--accent)/10 border-(--accent)'
+                          : 'hover:border-(--accent)/50 border-(--border)'
                       }`}
                     >
-                      <Play className="mb-2 h-8 w-8 text-[var(--accent)]" />
-                      <div className="font-medium text-[var(--text)]">Live Session</div>
-                      <div className="text-sm text-[var(--muted)]">Stream in real-time</div>
+                      <Play className="mb-2 h-8 w-8 text-(--accent)" />
+                      <div className="font-medium text-(--text)">Live Session</div>
+                      <div className="text-sm text-(--muted)">Stream in real-time</div>
                     </button>
                   </div>
                 </div>
 
                 {/* Basic Info */}
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                  <h2 className="mb-4 font-bold text-[var(--text)]">Basic Information</h2>
+                <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                  <h2 className="mb-4 font-bold text-(--text)">Basic Information</h2>
 
                   <div className="space-y-4">
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      <label className="mb-2 block text-sm font-medium text-(--muted)">
                         Course Title *
                       </label>
                       <input
@@ -345,12 +345,12 @@ export default function CreateMasterclassPage() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g., Complete Guitar Mastery"
-                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                       />
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      <label className="mb-2 block text-sm font-medium text-(--muted)">
                         Short Description
                       </label>
                       <input
@@ -359,15 +359,15 @@ export default function CreateMasterclassPage() {
                         onChange={(e) => setShortDescription(e.target.value)}
                         placeholder="A brief one-liner about your course"
                         maxLength={160}
-                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                       />
-                      <p className="mt-1 text-xs text-[var(--muted)]">
+                      <p className="mt-1 text-xs text-(--muted)">
                         {shortDescription.length}/160
                       </p>
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                      <label className="mb-2 block text-sm font-medium text-(--muted)">
                         Full Description *
                       </label>
                       <textarea
@@ -375,19 +375,19 @@ export default function CreateMasterclassPage() {
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Describe what students will learn, prerequisites, and what makes your course unique..."
                         rows={6}
-                        className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full resize-none rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                       />
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                        <label className="mb-2 block text-sm font-medium text-(--muted)">
                           Category *
                         </label>
                         <select
                           value={category}
                           onChange={(e) => setCategory(e.target.value)}
-                          className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                         >
                           <option value="">Select category</option>
                           {CATEGORIES.map((cat) => (
@@ -398,13 +398,13 @@ export default function CreateMasterclassPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                        <label className="mb-2 block text-sm font-medium text-(--muted)">
                           Skill Level
                         </label>
                         <select
                           value={skillLevel}
                           onChange={(e) => setSkillLevel(e.target.value)}
-                          className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                         >
                           {SKILL_LEVELS.map((level) => (
                             <option key={level.value} value={level.value}>
@@ -419,22 +419,22 @@ export default function CreateMasterclassPage() {
 
                 {/* Live Session Settings */}
                 {courseType === 'live' && (
-                  <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                    <h2 className="mb-4 font-bold text-[var(--text)]">Live Session Settings</h2>
+                  <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                    <h2 className="mb-4 font-bold text-(--text)">Live Session Settings</h2>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                        <label className="mb-2 block text-sm font-medium text-(--muted)">
                           Scheduled Date & Time *
                         </label>
                         <input
                           type="datetime-local"
                           value={scheduledAt}
                           onChange={(e) => setScheduledAt(e.target.value)}
-                          className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                         />
                       </div>
                       <div>
-                        <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                        <label className="mb-2 block text-sm font-medium text-(--muted)">
                           Max Participants
                         </label>
                         <input
@@ -443,7 +443,7 @@ export default function CreateMasterclassPage() {
                           onChange={(e) => setMaxParticipants(parseInt(e.target.value) || 100)}
                           min={1}
                           max={1000}
-                          className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                         />
                       </div>
                     </div>
@@ -454,18 +454,18 @@ export default function CreateMasterclassPage() {
               {/* Sidebar */}
               <div className="space-y-6">
                 {/* Thumbnail */}
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                  <h2 className="mb-4 font-bold text-[var(--text)]">Thumbnail</h2>
+                <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                  <h2 className="mb-4 font-bold text-(--text)">Thumbnail</h2>
                   <button
                     onClick={() => thumbnailInputRef.current?.click()}
-                    className="flex aspect-video w-full items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-[var(--border)] bg-[var(--bg)] transition-colors hover:border-[var(--accent)]"
+                    className="flex aspect-video w-full items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-(--border) bg-(--bg) transition-colors hover:border-(--accent)"
                   >
                     {thumbnailUrl ? (
                       <Image src={thumbnailUrl} alt="Thumbnail" fill className="object-cover" />
                     ) : (
                       <div className="text-center">
-                        <ImageIcon className="mx-auto mb-2 h-10 w-10 text-[var(--muted)]" />
-                        <span className="text-sm text-[var(--muted)]">Upload thumbnail</span>
+                        <ImageIcon className="mx-auto mb-2 h-10 w-10 text-(--muted)" />
+                        <span className="text-sm text-(--muted)">Upload thumbnail</span>
                       </div>
                     )}
                   </button>
@@ -482,34 +482,34 @@ export default function CreateMasterclassPage() {
                 </div>
 
                 {/* Trailer */}
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                  <h2 className="mb-4 font-bold text-[var(--text)]">Preview Video</h2>
+                <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                  <h2 className="mb-4 font-bold text-(--text)">Preview Video</h2>
                   <input
                     type="url"
                     value={trailerUrl}
                     onChange={(e) => setTrailerUrl(e.target.value)}
                     placeholder="YouTube or Vimeo URL"
-                    className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                    className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                   />
                 </div>
 
                 {/* Course Stats */}
-                <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                  <h2 className="mb-4 font-bold text-[var(--text)]">Course Stats</h2>
+                <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                  <h2 className="mb-4 font-bold text-(--text)">Course Stats</h2>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--muted)]">Lessons</span>
-                      <span className="text-[var(--text)]">{lessons.length}</span>
+                      <span className="text-(--muted)">Lessons</span>
+                      <span className="text-(--text)">{lessons.length}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--muted)]">Total Duration</span>
-                      <span className="text-[var(--text)]">
+                      <span className="text-(--muted)">Total Duration</span>
+                      <span className="text-(--text)">
                         {Math.round(totalDuration / 60)} min
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[var(--muted)]">Price</span>
-                      <span className="text-[var(--text)]">{isFree ? 'Free' : `$${price}`}</span>
+                      <span className="text-(--muted)">Price</span>
+                      <span className="text-(--text)">{isFree ? 'Free' : `$${price}`}</span>
                     </div>
                   </div>
                 </div>
@@ -524,15 +524,15 @@ export default function CreateMasterclassPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
+              <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
                 <div className="mb-6 flex items-center justify-between">
                   <div>
-                    <h2 className="font-bold text-[var(--text)]">Course Curriculum</h2>
-                    <p className="text-sm text-[var(--muted)]">Add and organize your lessons</p>
+                    <h2 className="font-bold text-(--text)">Course Curriculum</h2>
+                    <p className="text-sm text-(--muted)">Add and organize your lessons</p>
                   </div>
                   <button
                     onClick={addLesson}
-                    className="flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-[var(--text)]"
+                    className="flex items-center gap-2 rounded-lg bg-(--accent) px-4 py-2 text-(--text)"
                   >
                     <Plus className="h-4 w-4" />
                     Add Lesson
@@ -541,14 +541,14 @@ export default function CreateMasterclassPage() {
 
                 {lessons.length === 0 ? (
                   <div className="py-12 text-center">
-                    <FileText className="mx-auto mb-4 h-12 w-12 text-[var(--muted)]" />
-                    <h3 className="mb-2 font-medium text-[var(--text)]">No lessons yet</h3>
-                    <p className="mb-4 text-sm text-[var(--muted)]">
+                    <FileText className="mx-auto mb-4 h-12 w-12 text-(--muted)" />
+                    <h3 className="mb-2 font-medium text-(--text)">No lessons yet</h3>
+                    <p className="mb-4 text-sm text-(--muted)">
                       Add your first lesson to get started
                     </p>
                     <button
                       onClick={addLesson}
-                      className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-[var(--text)]"
+                      className="inline-flex items-center gap-2 rounded-lg bg-(--accent) px-4 py-2 text-(--text)"
                     >
                       <Plus className="h-4 w-4" />
                       Add Lesson
@@ -559,7 +559,7 @@ export default function CreateMasterclassPage() {
                     {lessons.map((lesson, index) => (
                       <div
                         key={lesson.id}
-                        className="rounded-lg border border-[var(--border)] bg-[var(--bg)]"
+                        className="rounded-lg border border-(--border) bg-(--bg)"
                       >
                         <div
                           className="flex cursor-pointer items-center gap-3 p-4"
@@ -567,16 +567,16 @@ export default function CreateMasterclassPage() {
                             setExpandedLesson(expandedLesson === lesson.id ? null : lesson.id)
                           }
                         >
-                          <GripVertical className="h-5 w-5 text-[var(--muted)]" />
-                          <div className="bg-[var(--accent)]/20 flex h-8 w-8 items-center justify-center rounded-full">
-                            <span className="text-sm text-[var(--accent)]">{index + 1}</span>
+                          <GripVertical className="h-5 w-5 text-(--muted)" />
+                          <div className="bg-(--accent)/20 flex h-8 w-8 items-center justify-center rounded-full">
+                            <span className="text-sm text-(--accent)">{index + 1}</span>
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="truncate font-medium text-[var(--text)]">
+                            <div className="truncate font-medium text-(--text)">
                               {lesson.title || 'Untitled Lesson'}
                             </div>
                             {lesson.duration > 0 && (
-                              <div className="text-xs text-[var(--muted)]">
+                              <div className="text-xs text-(--muted)">
                                 {Math.round(lesson.duration / 60)} min
                               </div>
                             )}
@@ -592,7 +592,7 @@ export default function CreateMasterclassPage() {
                                 e.stopPropagation();
                                 moveLesson(lesson.id, 'up');
                               }}
-                              className="p-1 text-[var(--muted)] hover:text-[var(--text)]"
+                              className="p-1 text-(--muted) hover:text-(--text)"
                             >
                               <ChevronUp className="h-4 w-4" />
                             </button>
@@ -601,7 +601,7 @@ export default function CreateMasterclassPage() {
                                 e.stopPropagation();
                                 moveLesson(lesson.id, 'down');
                               }}
-                              className="p-1 text-[var(--muted)] hover:text-[var(--text)]"
+                              className="p-1 text-(--muted) hover:text-(--text)"
                             >
                               <ChevronDown className="h-4 w-4" />
                             </button>
@@ -625,9 +625,9 @@ export default function CreateMasterclassPage() {
                               exit={{ height: 0 }}
                               className="overflow-hidden"
                             >
-                              <div className="space-y-4 border-t border-[var(--border)] p-4 pt-0">
+                              <div className="space-y-4 border-t border-(--border) p-4 pt-0">
                                 <div>
-                                  <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                                  <label className="mb-2 block text-sm font-medium text-(--muted)">
                                     Lesson Title
                                   </label>
                                   <input
@@ -637,11 +637,11 @@ export default function CreateMasterclassPage() {
                                       updateLesson(lesson.id, { title: e.target.value })
                                     }
                                     placeholder="e.g., Introduction to Chord Progressions"
-                                    className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                                    className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                                   />
                                 </div>
                                 <div>
-                                  <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                                  <label className="mb-2 block text-sm font-medium text-(--muted)">
                                     Description
                                   </label>
                                   <textarea
@@ -651,12 +651,12 @@ export default function CreateMasterclassPage() {
                                     }
                                     placeholder="What will students learn in this lesson?"
                                     rows={3}
-                                    className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                                    className="w-full resize-none rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                                   />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>
-                                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                                    <label className="mb-2 block text-sm font-medium text-(--muted)">
                                       Video URL
                                     </label>
                                     <input
@@ -666,11 +666,11 @@ export default function CreateMasterclassPage() {
                                         updateLesson(lesson.id, { videoUrl: e.target.value })
                                       }
                                       placeholder="https://..."
-                                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                                     />
                                   </div>
                                   <div>
-                                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                                    <label className="mb-2 block text-sm font-medium text-(--muted)">
                                       Duration (minutes)
                                     </label>
                                     <input
@@ -685,7 +685,7 @@ export default function CreateMasterclassPage() {
                                       }
                                       placeholder="10"
                                       min={1}
-                                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-2 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                                     />
                                   </div>
                                 </div>
@@ -696,9 +696,9 @@ export default function CreateMasterclassPage() {
                                     onChange={(e) =>
                                       updateLesson(lesson.id, { isFreePreview: e.target.checked })
                                     }
-                                    className="h-4 w-4 rounded border-[var(--border)] bg-[var(--panel)] text-[var(--accent)] focus:ring-[var(--accent)]"
+                                    className="h-4 w-4 rounded border-(--border) bg-(--panel) text-(--accent) focus:ring-(--accent)"
                                   />
-                                  <span className="text-sm text-[var(--muted)]">
+                                  <span className="text-sm text-(--muted)">
                                     Make this lesson a free preview
                                   </span>
                                 </label>
@@ -722,8 +722,8 @@ export default function CreateMasterclassPage() {
               exit={{ opacity: 0, y: -10 }}
               className="mx-auto max-w-2xl"
             >
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <h2 className="mb-6 font-bold text-[var(--text)]">Pricing</h2>
+              <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                <h2 className="mb-6 font-bold text-(--text)">Pricing</h2>
 
                 {/* Free/Paid Toggle */}
                 <div className="mb-6 grid grid-cols-2 gap-4">
@@ -732,33 +732,33 @@ export default function CreateMasterclassPage() {
                     className={`rounded-xl border-2 p-4 text-left transition-colors ${
                       isFree
                         ? 'border-green-500 bg-green-500/10'
-                        : 'border-[var(--border)] hover:border-green-500/50'
+                        : 'border-(--border) hover:border-green-500/50'
                     }`}
                   >
-                    <div className="font-medium text-[var(--text)]">Free</div>
-                    <div className="text-sm text-[var(--muted)]">Open to everyone</div>
+                    <div className="font-medium text-(--text)">Free</div>
+                    <div className="text-sm text-(--muted)">Open to everyone</div>
                   </button>
                   <button
                     onClick={() => setIsFree(false)}
                     className={`rounded-xl border-2 p-4 text-left transition-colors ${
                       !isFree
-                        ? 'bg-[var(--accent)]/10 border-[var(--accent)]'
-                        : 'hover:border-[var(--accent)]/50 border-[var(--border)]'
+                        ? 'bg-(--accent)/10 border-(--accent)'
+                        : 'hover:border-(--accent)/50 border-(--border)'
                     }`}
                   >
-                    <div className="font-medium text-[var(--text)]">Paid</div>
-                    <div className="text-sm text-[var(--muted)]">Set your own price</div>
+                    <div className="font-medium text-(--text)">Paid</div>
+                    <div className="text-sm text-(--muted)">Set your own price</div>
                   </button>
                 </div>
 
                 {/* Price Input */}
                 {!isFree && (
                   <div className="mb-6">
-                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                    <label className="mb-2 block text-sm font-medium text-(--muted)">
                       Price (USD)
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--muted)]">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-(--muted)">
                         $
                       </span>
                       <input
@@ -768,7 +768,7 @@ export default function CreateMasterclassPage() {
                         placeholder="49"
                         min={0}
                         step={1}
-                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] py-3 pl-8 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                        className="w-full rounded-lg border border-(--border) bg-(--bg) py-3 pl-8 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                       />
                     </div>
                   </div>
@@ -776,29 +776,29 @@ export default function CreateMasterclassPage() {
 
                 {/* Revenue Breakdown */}
                 {!isFree && price > 0 && (
-                  <div className="rounded-lg border border-[var(--border)] bg-[var(--bg)] p-4">
-                    <h3 className="mb-4 font-medium text-[var(--text)]">Revenue Breakdown</h3>
+                  <div className="rounded-lg border border-(--border) bg-(--bg) p-4">
+                    <h3 className="mb-4 font-medium text-(--text)">Revenue Breakdown</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-[var(--muted)]">Course Price</span>
-                        <span className="text-[var(--text)]">${price.toFixed(2)}</span>
+                        <span className="text-(--muted)">Course Price</span>
+                        <span className="text-(--text)">${price.toFixed(2)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[var(--muted)]">Platform Fee (15%)</span>
+                        <span className="text-(--muted)">Platform Fee (15%)</span>
                         <span className="text-red-400">-${(price * 0.15).toFixed(2)}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[var(--muted)]">Payment Processing (~3%)</span>
+                        <span className="text-(--muted)">Payment Processing (~3%)</span>
                         <span className="text-red-400">-${(price * 0.03).toFixed(2)}</span>
                       </div>
-                      <div className="border-t border-[var(--border)] pt-3">
+                      <div className="border-t border-(--border) pt-3">
                         <div className="flex items-center justify-between">
-                          <span className="font-medium text-[var(--text)]">Your Earnings</span>
+                          <span className="font-medium text-(--text)">Your Earnings</span>
                           <span className="text-xl font-bold text-green-400">
                             ${(price * 0.82).toFixed(2)}
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-[var(--muted)]">
+                        <p className="mt-1 text-xs text-(--muted)">
                           Per enrollment, before taxes
                         </p>
                       </div>
@@ -816,25 +816,25 @@ export default function CreateMasterclassPage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
-              <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)]">
+              <div className="overflow-hidden rounded-xl border border-(--border) bg-(--panel)">
                 {/* Preview header */}
-                <div className="relative aspect-video bg-[var(--bg)]">
+                <div className="relative aspect-video bg-(--bg)">
                   {thumbnailUrl ? (
                     <Image src={thumbnailUrl} alt="Preview" fill className="object-cover" />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <ImageIcon className="h-16 w-16 text-[var(--muted)]" />
+                      <ImageIcon className="h-16 w-16 text-(--muted)" />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <span className="mb-3 inline-block rounded-full bg-[var(--accent)] px-3 py-1 text-sm text-[var(--text)]">
+                    <span className="mb-3 inline-block rounded-full bg-(--accent) px-3 py-1 text-sm text-(--text)">
                       {category || 'Category'}
                     </span>
-                    <h2 className="mb-2 text-3xl font-bold text-[var(--text)]">
+                    <h2 className="mb-2 text-3xl font-bold text-(--text)">
                       {title || 'Course Title'}
                     </h2>
-                    <p className="text-[var(--muted)]">
+                    <p className="text-(--muted)">
                       {shortDescription || 'Short description of your course'}
                     </p>
                   </div>
@@ -843,32 +843,32 @@ export default function CreateMasterclassPage() {
                 <div className="p-6">
                   <div className="mb-6 flex items-center gap-6">
                     <div className="flex items-center gap-2">
-                      <Clock className="h-5 w-5 text-[var(--muted)]" />
-                      <span className="text-[var(--text)]">
+                      <Clock className="h-5 w-5 text-(--muted)" />
+                      <span className="text-(--text)">
                         {Math.round(totalDuration / 60)} min
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <FileText className="h-5 w-5 text-[var(--muted)]" />
-                      <span className="text-[var(--text)]">{lessons.length} lessons</span>
+                      <FileText className="h-5 w-5 text-(--muted)" />
+                      <span className="text-(--text)">{lessons.length} lessons</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-[var(--muted)]" />
-                      <span className="text-[var(--text)]">
+                      <Users className="h-5 w-5 text-(--muted)" />
+                      <span className="text-(--text)">
                         {SKILL_LEVELS.find((l) => l.value === skillLevel)?.label || 'All Levels'}
                       </span>
                     </div>
                   </div>
 
-                  <div className="mb-6 text-[var(--muted)]">
+                  <div className="mb-6 text-(--muted)">
                     {description || 'Full description of your course will appear here...'}
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <div className="text-3xl font-bold text-[var(--text)]">
+                    <div className="text-3xl font-bold text-(--text)">
                       {isFree ? 'Free' : `$${price}`}
                     </div>
-                    <button className="rounded-full bg-[var(--accent)] px-8 py-3 text-[var(--text)]">
+                    <button className="rounded-full bg-(--accent) px-8 py-3 text-(--text)">
                       {isFree ? 'Enroll Free' : 'Buy Now'}
                     </button>
                   </div>

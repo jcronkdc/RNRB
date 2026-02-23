@@ -323,14 +323,14 @@ export function AIContentGenerator({
       >
         {/* Left Panel - Template Selection */}
         <div
-          className="w-80 flex-shrink-0 overflow-y-auto"
+          className="w-80 shrink-0 overflow-y-auto"
           style={{ borderRight: '1px solid var(--border)' }}
         >
           {/* Header */}
           <div className="sticky top-0 z-10 p-4" style={{ background: 'var(--panel)' }}>
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
                   <Wand2 size={20} className="text-white" />
                 </div>
                 <div>
@@ -401,7 +401,7 @@ export function AIContentGenerator({
                 }}
               >
                 <div
-                  className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                   style={{
                     background:
                       selectedTemplate?.id === template.id ? 'var(--accent)' : 'var(--panel)',
@@ -434,11 +434,11 @@ export function AIContentGenerator({
             <>
               {/* Form Header */}
               <div
-                className="flex-shrink-0 p-6"
+                className="shrink-0 p-6"
                 style={{ borderBottom: '1px solid var(--border)' }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
                     <selectedTemplate.icon size={24} className="text-white" />
                   </div>
                   <div>

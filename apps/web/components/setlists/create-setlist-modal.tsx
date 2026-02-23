@@ -123,7 +123,7 @@ export default function CreateSetlistModal({
               className="pointer-events-auto flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
             >
               {/* Header */}
-              <div className="flex flex-shrink-0 items-center justify-between border-b border-border bg-background px-6 py-4">
+              <div className="flex shrink-0 items-center justify-between border-b border-border bg-background px-6 py-4">
                 <div>
                   <h2 className="font-display text-2xl font-bold">Create Setlist</h2>
                   <p className="text-sm text-muted-foreground">Organize songs for your show</p>
@@ -150,7 +150,7 @@ export default function CreateSetlistModal({
                         value={setlistName}
                         onChange={(e) => setSetlistName(e.target.value)}
                         placeholder="Friday Night Show, Acoustic Set, Main Set..."
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
                         autoFocus
                       />
                     </div>
@@ -164,7 +164,7 @@ export default function CreateSetlistModal({
                         value={venue}
                         onChange={(e) => setVenue(e.target.value)}
                         placeholder="The Bluebird Cafe, House of Blues..."
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
 
@@ -177,7 +177,7 @@ export default function CreateSetlistModal({
                         type="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
 
@@ -238,7 +238,7 @@ export default function CreateSetlistModal({
                                     )}
                                   </div>
                                 </div>
-                                <Plus className="ml-2 h-4 w-4 flex-shrink-0 text-brand-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                                <Plus className="ml-2 h-4 w-4 shrink-0 text-brand-primary opacity-0 transition-opacity group-hover:opacity-100" />
                               </div>
                             </button>
                           ))}
@@ -278,8 +278,8 @@ export default function CreateSetlistModal({
                               className="group cursor-move rounded-lg border border-brand-primary/30 bg-brand-primary/5 p-3"
                             >
                               <div className="flex items-center gap-3">
-                                <GripVertical className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-                                <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary text-sm font-bold text-brand-primary-foreground">
+                                <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
+                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-primary text-sm font-bold text-brand-primary-foreground">
                                   {index + 1}
                                 </span>
                                 <div className="min-w-0 flex-1">
@@ -302,7 +302,7 @@ export default function CreateSetlistModal({
                                 </div>
                                 <button
                                   onClick={() => removeSongFromSetlist(song.id)}
-                                  className="flex-shrink-0 p-1 text-muted-foreground opacity-0 transition-all hover:text-red-500 group-hover:opacity-100"
+                                  className="shrink-0 p-1 text-muted-foreground opacity-0 transition-all hover:text-red-500 group-hover:opacity-100"
                                   title="Remove from setlist"
                                 >
                                   <Trash2 className="h-4 w-4" />
@@ -336,7 +336,7 @@ export default function CreateSetlistModal({
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Special requests, transitions between songs, tuning changes..."
                       rows={3}
-                      className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground focus:border-brand-primary focus:outline-none"
+                      className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground focus:border-brand-primary focus:outline-hidden"
                     />
                   </div>
 
@@ -366,7 +366,7 @@ export default function CreateSetlistModal({
               </div>
 
               {/* Footer */}
-              <div className="flex flex-shrink-0 items-center justify-between border-t border-border bg-background px-6 py-4">
+              <div className="flex shrink-0 items-center justify-between border-t border-border bg-background px-6 py-4">
                 <div className="text-sm text-muted-foreground">
                   {!isValid && (
                     <span className="flex items-center gap-2 text-yellow-500">

@@ -215,7 +215,7 @@ export default function SolutionsForSongwritersPage() {
                     'Never claim your work as its own',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -361,7 +361,7 @@ export default function SolutionsForSongwritersPage() {
                     'Timestamped version history (proof of creation)',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -398,7 +398,7 @@ export default function SolutionsForSongwritersPage() {
                     'PDF export for your records',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -546,7 +546,7 @@ export default function SolutionsForSongwritersPage() {
                     'Full history as proof of creation date',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -583,7 +583,7 @@ export default function SolutionsForSongwritersPage() {
                     'Real-time co-writing sessions',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -624,7 +624,7 @@ export default function SolutionsForSongwritersPage() {
                         className="flex items-center gap-3 rounded-lg p-3"
                         style={{ background: 'var(--panel)' }}
                       >
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-purple-500 text-sm font-bold text-white">
                           {person.name
                             .split(' ')
                             .map((n) => n[0])
@@ -694,7 +694,7 @@ export default function SolutionsForSongwritersPage() {
                   'Visitor analytics to see which songs get traction',
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                    <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -836,7 +836,7 @@ export default function SolutionsForSongwritersPage() {
               And the copyright guidance? Should be required learning for every new songwriter."
             </blockquote>
             <div className="flex items-center justify-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-purple-500">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-pink-500 to-purple-500">
                 <span className="text-lg font-bold text-white">RK</span>
               </div>
               <div className="text-left">

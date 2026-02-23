@@ -64,10 +64,10 @@ function RevenueCard({ revenue }: { revenue: any }) {
   return (
     <motion.div
       whileHover={{ y: -2 }}
-      className="group flex items-center gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-all hover:bg-white/[0.06]"
+      className="group flex items-center gap-4 rounded-xl border border-white/10 bg-white/4 p-4 transition-all hover:bg-white/6"
     >
       <div
-        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${color}`}
+        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br ${color}`}
       >
         <Icon className="h-6 w-6 text-white" />
       </div>
@@ -110,7 +110,7 @@ function RevenueChart({ data }: { data: { month: string; amount: number }[] }) {
               initial={{ height: 0 }}
               animate={{ height: `${height}%` }}
               transition={{ delay: i * 0.05, duration: 0.5 }}
-              className="w-full rounded-t-lg bg-gradient-to-t from-emerald-600 to-emerald-400"
+              className="w-full rounded-t-lg bg-linear-to-t from-emerald-600 to-emerald-400"
               title={`$${item.amount.toFixed(2)}`}
             />
             <span className="text-[10px] text-white/40">{monthLabel}</span>
@@ -158,7 +158,7 @@ export default function RevenuePage() {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-950 to-black">
+    <div className="min-h-screen bg-linear-to-b from-black via-gray-950 to-black">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full bg-emerald-500/5 blur-[120px]" />
@@ -194,7 +194,7 @@ export default function RevenuePage() {
               <select
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-emerald-500/50"
+                className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-hidden focus:border-emerald-500/50"
               >
                 <option value="month">This Month</option>
                 <option value="quarter">This Quarter</option>
@@ -203,7 +203,7 @@ export default function RevenuePage() {
               </select>
               <button
                 onClick={() => setShowAddModal(true)}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-green-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-emerald-500/20 transition-all hover:from-emerald-600 hover:to-green-700"
+                className="flex items-center gap-2 rounded-xl bg-linear-to-r from-emerald-500 to-green-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-emerald-500/20 transition-all hover:from-emerald-600 hover:to-green-700"
               >
                 <Plus className="h-4 w-4" />
                 Log Income
@@ -220,7 +220,7 @@ export default function RevenuePage() {
           className="mb-8 grid gap-4 md:grid-cols-4"
         >
           {/* Total */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/20 to-green-500/10 p-6">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-emerald-500/20 to-green-500/10 p-6">
             <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-emerald-500/20 blur-2xl" />
             <div className="relative">
               <div className="mb-2 flex items-center gap-2">
@@ -234,7 +234,7 @@ export default function RevenuePage() {
           </div>
 
           {/* This Month */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/4 p-6">
             <div className="mb-2 flex items-center gap-2">
               <Calendar className="h-5 w-5 text-blue-400" />
               <span className="text-sm text-white/60">This Month</span>
@@ -255,7 +255,7 @@ export default function RevenuePage() {
           </div>
 
           {/* Transactions */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/4 p-6">
             <div className="mb-2 flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-purple-400" />
               <span className="text-sm text-white/60">Transactions</span>
@@ -264,7 +264,7 @@ export default function RevenuePage() {
           </div>
 
           {/* Top Source */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/4 p-6">
             <div className="mb-2 flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-orange-400" />
               <span className="text-sm text-white/60">Top Source</span>
@@ -281,7 +281,7 @@ export default function RevenuePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-8"
+            className="rounded-2xl border border-white/10 bg-white/4 p-6 lg:col-span-8"
           >
             <h3 className="mb-4 font-semibold text-white">Revenue Over Time</h3>
             {loading ? (
@@ -300,7 +300,7 @@ export default function RevenuePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 lg:col-span-4"
+            className="rounded-2xl border border-white/10 bg-white/4 p-6 lg:col-span-4"
           >
             <h3 className="mb-4 font-semibold text-white">By Source</h3>
             {topSources.length > 0 ? (
@@ -313,7 +313,7 @@ export default function RevenuePage() {
                   return (
                     <div key={source} className="flex items-center gap-3">
                       <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br ${color}`}
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br ${color}`}
                       >
                         <Icon className="h-4 w-4 text-white" />
                       </div>
@@ -331,7 +331,7 @@ export default function RevenuePage() {
                             initial={{ width: 0 }}
                             animate={{ width: `${percentage}%` }}
                             transition={{ duration: 0.5 }}
-                            className={`h-full rounded-full bg-gradient-to-r ${color}`}
+                            className={`h-full rounded-full bg-linear-to-r ${color}`}
                           />
                         </div>
                       </div>
@@ -350,7 +350,7 @@ export default function RevenuePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-6 rounded-2xl border border-white/10 bg-white/[0.04] p-6"
+          className="mt-6 rounded-2xl border border-white/10 bg-white/4 p-6"
         >
           <div className="mb-4 flex items-center justify-between">
             <h3 className="font-semibold text-white">Recent Transactions</h3>

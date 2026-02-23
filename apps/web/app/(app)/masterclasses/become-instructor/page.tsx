@@ -169,54 +169,54 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="text-center"
           >
-            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)]">
-              <GraduationCap className="h-12 w-12 text-[var(--text)]" />
+            <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-linear-to-r from-(--accent) to-(--gold)">
+              <GraduationCap className="h-12 w-12 text-(--text)" />
             </div>
-            <h2 className="mb-4 text-3xl font-bold text-[var(--text)]">
+            <h2 className="mb-4 text-3xl font-bold text-(--text)">
               Share Your Music Expertise
             </h2>
-            <p className="mx-auto mb-8 max-w-lg text-lg text-[var(--muted)]">
+            <p className="mx-auto mb-8 max-w-lg text-lg text-(--muted)">
               Create masterclasses, reach thousands of aspiring musicians, and earn money doing what
               you love.
             </p>
 
             <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <Video className="mb-4 h-10 w-10 text-[var(--accent)]" />
-                <h3 className="mb-2 font-bold text-[var(--text)]">Create Content</h3>
-                <p className="text-sm text-[var(--muted)]">
+              <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                <Video className="mb-4 h-10 w-10 text-(--accent)" />
+                <h3 className="mb-2 font-bold text-(--text)">Create Content</h3>
+                <p className="text-sm text-(--muted)">
                   Build comprehensive courses or host live sessions
                 </p>
               </div>
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <Users className="mb-4 h-10 w-10 text-[var(--accent)]" />
-                <h3 className="mb-2 font-bold text-[var(--text)]">Grow Your Audience</h3>
-                <p className="text-sm text-[var(--muted)]">
+              <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                <Users className="mb-4 h-10 w-10 text-(--accent)" />
+                <h3 className="mb-2 font-bold text-(--text)">Grow Your Audience</h3>
+                <p className="text-sm text-(--muted)">
                   Connect with passionate students worldwide
                 </p>
               </div>
-              <div className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-                <DollarSign className="mb-4 h-10 w-10 text-[var(--accent)]" />
-                <h3 className="mb-2 font-bold text-[var(--text)]">Earn 85%</h3>
-                <p className="text-sm text-[var(--muted)]">Keep the majority of your earnings</p>
+              <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
+                <DollarSign className="mb-4 h-10 w-10 text-(--accent)" />
+                <h3 className="mb-2 font-bold text-(--text)">Earn 85%</h3>
+                <p className="text-sm text-(--muted)">Keep the majority of your earnings</p>
               </div>
             </div>
 
-            <div className="border-[var(--accent)]/20 from-[var(--accent)]/10 to-[var(--gold)]/10 rounded-xl border bg-gradient-to-r p-6">
+            <div className="border-(--accent)/20 from-(--accent)/10 to-(--gold)/10 rounded-xl border bg-linear-to-r p-6">
               <div className="flex items-center justify-center gap-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[var(--text)]">10K+</div>
-                  <div className="text-sm text-[var(--muted)]">Active Students</div>
+                  <div className="text-3xl font-bold text-(--text)">10K+</div>
+                  <div className="text-sm text-(--muted)">Active Students</div>
                 </div>
-                <div className="h-12 w-px bg-[var(--border)]" />
+                <div className="h-12 w-px bg-(--border)" />
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[var(--text)]">$50K+</div>
-                  <div className="text-sm text-[var(--muted)]">Paid to Instructors</div>
+                  <div className="text-3xl font-bold text-(--text)">$50K+</div>
+                  <div className="text-sm text-(--muted)">Paid to Instructors</div>
                 </div>
-                <div className="h-12 w-px bg-[var(--border)]" />
+                <div className="h-12 w-px bg-(--border)" />
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-[var(--text)]">4.8</div>
-                  <div className="text-sm text-[var(--muted)]">Avg Rating</div>
+                  <div className="text-3xl font-bold text-(--text)">4.8</div>
+                  <div className="text-sm text-(--muted)">Avg Rating</div>
                 </div>
               </div>
             </div>
@@ -232,19 +232,19 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mx-auto max-w-xl"
           >
-            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Your Instructor Profile</h2>
-            <p className="mb-8 text-[var(--muted)]">This is how students will see you</p>
+            <h2 className="mb-2 text-2xl font-bold text-(--text)">Your Instructor Profile</h2>
+            <p className="mb-8 text-(--muted)">This is how students will see you</p>
 
             {/* Avatar */}
             <div className="mb-6 flex items-center gap-4">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-dashed border-[var(--border)] bg-[var(--panel)] transition-colors hover:border-[var(--accent)]"
+                className="relative h-24 w-24 overflow-hidden rounded-full border-2 border-dashed border-(--border) bg-(--panel) transition-colors hover:border-(--accent)"
               >
                 {avatarUrl ? (
                   <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
                 ) : (
-                  <Upload className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-[var(--muted)]" />
+                  <Upload className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-(--muted)" />
                 )}
               </button>
               <input
@@ -257,17 +257,17 @@ export default function BecomeInstructorPage() {
               <div>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="text-[var(--accent)] hover:text-[var(--accent-hover)]"
+                  className="text-(--accent) hover:text-(--accent-hover)"
                 >
                   Upload photo
                 </button>
-                <p className="text-xs text-[var(--muted)]">JPG, PNG. Max 5MB</p>
+                <p className="text-xs text-(--muted)">JPG, PNG. Max 5MB</p>
               </div>
             </div>
 
             {/* Display Name */}
             <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+              <label className="mb-2 block text-sm font-medium text-(--muted)">
                 Display Name *
               </label>
               <input
@@ -275,13 +275,13 @@ export default function BecomeInstructorPage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="How should students know you?"
-                className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
               />
             </div>
 
             {/* Headline */}
             <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+              <label className="mb-2 block text-sm font-medium text-(--muted)">
                 Headline *
               </label>
               <input
@@ -290,68 +290,68 @@ export default function BecomeInstructorPage() {
                 onChange={(e) => setHeadline(e.target.value)}
                 placeholder="e.g., Grammy-winning producer & songwriter"
                 maxLength={80}
-                className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
               />
-              <p className="mt-1 text-xs text-[var(--muted)]">{headline.length}/80</p>
+              <p className="mt-1 text-xs text-(--muted)">{headline.length}/80</p>
             </div>
 
             {/* Bio */}
             <div className="mb-6">
-              <label className="mb-2 block text-sm font-medium text-[var(--muted)]">Bio</label>
+              <label className="mb-2 block text-sm font-medium text-(--muted)">Bio</label>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="Tell students about your background, experience, and what makes you unique..."
                 rows={4}
                 maxLength={1000}
-                className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] px-4 py-3 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="w-full resize-none rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
               />
-              <p className="mt-1 text-xs text-[var(--muted)]">{bio.length}/1000</p>
+              <p className="mt-1 text-xs text-(--muted)">{bio.length}/1000</p>
             </div>
 
             {/* Social Links */}
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-[var(--muted)]">
+              <label className="block text-sm font-medium text-(--muted)">
                 Social Links (optional)
               </label>
               <div className="relative">
-                <Instagram className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+                <Instagram className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.instagram}
                   onChange={(e) => setSocialLinks({ ...socialLinks, instagram: e.target.value })}
                   placeholder="Instagram username"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                 />
               </div>
               <div className="relative">
-                <Twitter className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+                <Twitter className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.twitter}
                   onChange={(e) => setSocialLinks({ ...socialLinks, twitter: e.target.value })}
                   placeholder="Twitter/X username"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                 />
               </div>
               <div className="relative">
-                <Youtube className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+                <Youtube className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.youtube}
                   onChange={(e) => setSocialLinks({ ...socialLinks, youtube: e.target.value })}
                   placeholder="YouTube channel URL"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                 />
               </div>
               <div className="relative">
-                <Globe className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+                <Globe className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.website}
                   onChange={(e) => setSocialLinks({ ...socialLinks, website: e.target.value })}
                   placeholder="Personal website URL"
-                  className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                 />
               </div>
             </div>
@@ -367,12 +367,12 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mx-auto max-w-xl"
           >
-            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Your Expertise</h2>
-            <p className="mb-8 text-[var(--muted)]">Select all areas you can teach</p>
+            <h2 className="mb-2 text-2xl font-bold text-(--text)">Your Expertise</h2>
+            <p className="mb-8 text-(--muted)">Select all areas you can teach</p>
 
             {/* Categories */}
             <div className="mb-8">
-              <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
+              <label className="mb-3 block text-sm font-medium text-(--muted)">
                 Teaching Categories *
               </label>
               <div className="flex flex-wrap gap-2">
@@ -382,8 +382,8 @@ export default function BecomeInstructorPage() {
                     onClick={() => toggleCategory(category)}
                     className={`rounded-full px-4 py-2 text-sm transition-colors ${
                       selectedCategories.includes(category)
-                        ? 'bg-[var(--accent)] text-[var(--text)]'
-                        : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
+                        ? 'bg-(--accent) text-(--text)'
+                        : 'bg-(--panel) text-(--muted) hover:bg-(--border)'
                     }`}
                   >
                     {category}
@@ -394,7 +394,7 @@ export default function BecomeInstructorPage() {
 
             {/* Skill Level */}
             <div className="mb-8">
-              <label className="mb-3 block text-sm font-medium text-[var(--muted)]">
+              <label className="mb-3 block text-sm font-medium text-(--muted)">
                 Student Level You'll Teach
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -404,8 +404,8 @@ export default function BecomeInstructorPage() {
                     onClick={() => setSkillLevel(level)}
                     className={`rounded-lg px-4 py-3 text-sm transition-colors ${
                       skillLevel === level
-                        ? 'bg-[var(--accent)] text-[var(--text)]'
-                        : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
+                        ? 'bg-(--accent) text-(--text)'
+                        : 'bg-(--panel) text-(--muted) hover:bg-(--border)'
                     }`}
                   >
                     {level}
@@ -416,12 +416,12 @@ export default function BecomeInstructorPage() {
 
             {/* Stats Preview */}
             {selectedCategories.length > 0 && (
-              <div className="border-[var(--accent)]/20 from-[var(--accent)]/10 to-[var(--gold)]/10 rounded-xl border bg-gradient-to-r p-4">
+              <div className="border-(--accent)/20 from-(--accent)/10 to-(--gold)/10 rounded-xl border bg-linear-to-r p-4">
                 <div className="mb-2 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-[var(--accent)]" />
-                  <span className="font-medium text-[var(--text)]">Market Demand</span>
+                  <TrendingUp className="h-5 w-5 text-(--accent)" />
+                  <span className="font-medium text-(--text)">Market Demand</span>
                 </div>
-                <p className="text-sm text-[var(--muted)]">
+                <p className="text-sm text-(--muted)">
                   Courses in {selectedCategories[0]} are in high demand! Students are actively
                   searching for instructors in this area.
                 </p>
@@ -439,63 +439,63 @@ export default function BecomeInstructorPage() {
             exit={{ opacity: 0, y: -20 }}
             className="mx-auto max-w-xl"
           >
-            <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Payment Setup</h2>
-            <p className="mb-8 text-[var(--muted)]">
+            <h2 className="mb-2 text-2xl font-bold text-(--text)">Payment Setup</h2>
+            <p className="mb-8 text-(--muted)">
               Connect your Stripe account to receive payouts
             </p>
 
             {/* Revenue Split */}
-            <div className="mb-6 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-              <h3 className="mb-4 font-bold text-[var(--text)]">Revenue Split</h3>
+            <div className="mb-6 rounded-xl border border-(--border) bg-(--panel) p-6">
+              <h3 className="mb-4 font-bold text-(--text)">Revenue Split</h3>
               <div className="flex items-center gap-4">
                 <div className="flex-1">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-[var(--muted)]">Your share</span>
-                    <span className="text-2xl font-bold text-[var(--sage)]">85%</span>
+                    <span className="text-(--muted)">Your share</span>
+                    <span className="text-2xl font-bold text-(--sage)">85%</span>
                   </div>
-                  <div className="h-3 w-full overflow-hidden rounded-full bg-[var(--bg)]">
-                    <div className="h-full w-[85%] rounded-full bg-gradient-to-r from-green-500 to-emerald-500" />
+                  <div className="h-3 w-full overflow-hidden rounded-full bg-(--bg)">
+                    <div className="h-full w-[85%] rounded-full bg-linear-to-r from-green-500 to-emerald-500" />
                   </div>
                 </div>
               </div>
-              <p className="mt-4 text-xs text-[var(--muted)]">
+              <p className="mt-4 text-xs text-(--muted)">
                 Platform fee (15%) covers payment processing, hosting, and support.
               </p>
             </div>
 
             {/* How It Works */}
-            <div className="mb-6 rounded-xl border border-[var(--border)] bg-[var(--panel)] p-6">
-              <h3 className="mb-4 font-bold text-[var(--text)]">How Payouts Work</h3>
+            <div className="mb-6 rounded-xl border border-(--border) bg-(--panel) p-6">
+              <h3 className="mb-4 font-bold text-(--text)">How Payouts Work</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="bg-[var(--accent)]/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
-                    <span className="text-sm text-[var(--accent)]">1</span>
+                  <div className="bg-(--accent)/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                    <span className="text-sm text-(--accent)">1</span>
                   </div>
                   <div>
-                    <div className="font-medium text-[var(--text)]">Students Enroll</div>
-                    <div className="text-sm text-[var(--muted)]">
+                    <div className="font-medium text-(--text)">Students Enroll</div>
+                    <div className="text-sm text-(--muted)">
                       Payment is collected when students purchase your course
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="bg-[var(--accent)]/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
-                    <span className="text-sm text-[var(--accent)]">2</span>
+                  <div className="bg-(--accent)/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                    <span className="text-sm text-(--accent)">2</span>
                   </div>
                   <div>
-                    <div className="font-medium text-[var(--text)]">Earnings Accumulate</div>
-                    <div className="text-sm text-[var(--muted)]">
+                    <div className="font-medium text-(--text)">Earnings Accumulate</div>
+                    <div className="text-sm text-(--muted)">
                       Track your earnings in real-time from your dashboard
                     </div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="bg-[var(--accent)]/20 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full">
-                    <span className="text-sm text-[var(--accent)]">3</span>
+                  <div className="bg-(--accent)/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                    <span className="text-sm text-(--accent)">3</span>
                   </div>
                   <div>
-                    <div className="font-medium text-[var(--text)]">Monthly Payouts</div>
-                    <div className="text-sm text-[var(--muted)]">
+                    <div className="font-medium text-(--text)">Monthly Payouts</div>
+                    <div className="text-sm text-(--muted)">
                       Funds are automatically transferred to your bank account
                     </div>
                   </div>
@@ -509,13 +509,13 @@ export default function BecomeInstructorPage() {
                 type="checkbox"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-0.5 h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-[var(--accent)] focus:ring-[var(--accent)]"
+                className="mt-0.5 h-5 w-5 rounded border-(--border) bg-(--panel) text-(--accent) focus:ring-(--accent)"
               />
-              <span className="text-sm text-[var(--muted)]">
+              <span className="text-sm text-(--muted)">
                 I agree to the{' '}
                 <Link
                   href="/legal/instructor-terms"
-                  className="text-[var(--accent)] hover:underline"
+                  className="text-(--accent) hover:underline"
                 >
                   Instructor Terms of Service
                 </Link>{' '}
@@ -538,23 +538,23 @@ export default function BecomeInstructorPage() {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', delay: 0.2 }}
-              className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-emerald-500"
+              className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-linear-to-r from-green-500 to-emerald-500"
             >
-              <CheckCircle className="h-12 w-12 text-[var(--text)]" />
+              <CheckCircle className="h-12 w-12 text-(--text)" />
             </motion.div>
-            <h2 className="mb-4 text-3xl font-bold text-[var(--text)]">Welcome, Instructor!</h2>
-            <p className="mx-auto mb-8 max-w-lg text-lg text-[var(--muted)]">
+            <h2 className="mb-4 text-3xl font-bold text-(--text)">Welcome, Instructor!</h2>
+            <p className="mx-auto mb-8 max-w-lg text-lg text-(--muted)">
               Your instructor profile has been created. Now let's create your first masterclass!
             </p>
 
             <div className="flex items-center justify-center gap-4">
               <Link href="/masterclasses/instructor">
-                <button className="rounded-full bg-[var(--panel)] px-6 py-3 text-[var(--text)] transition-colors hover:bg-[var(--border)]">
+                <button className="rounded-full bg-(--panel) px-6 py-3 text-(--text) transition-colors hover:bg-(--border)">
                   Go to Dashboard
                 </button>
               </Link>
               <Link href="/masterclasses/create">
-                <button className="rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 text-[var(--text)] transition-opacity hover:opacity-90">
+                <button className="rounded-full bg-linear-to-r from-(--accent) to-(--gold) px-6 py-3 text-(--text) transition-opacity hover:opacity-90">
                   Create First Course
                 </button>
               </Link>
@@ -565,15 +565,15 @@ export default function BecomeInstructorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
+    <div className="min-h-screen bg-(--bg)">
       {/* Header */}
-      <header className="border-b border-[var(--border)] bg-[var(--panel)]">
+      <header className="border-b border-(--border) bg-(--panel)">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
           <Link href="/masterclasses" className="flex items-center gap-3">
             <Image src="/logo-dark.png" alt="Logo" width={40} height={40} />
-            <span className="font-bold text-[var(--text)]">Become an Instructor</span>
+            <span className="font-bold text-(--text)">Become an Instructor</span>
           </Link>
-          <Link href="/masterclasses" className="text-[var(--muted)] hover:text-[var(--text)]">
+          <Link href="/masterclasses" className="text-(--muted) hover:text-(--text)">
             Cancel
           </Link>
         </div>
@@ -593,29 +593,29 @@ export default function BecomeInstructorPage() {
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors ${
                       isComplete
-                        ? 'bg-[var(--sage)]'
+                        ? 'bg-(--sage)'
                         : isActive
-                          ? 'bg-[var(--accent)]'
-                          : 'border border-[var(--border)] bg-[var(--panel)]'
+                          ? 'bg-(--accent)'
+                          : 'border border-(--border) bg-(--panel)'
                     }`}
                   >
                     {isComplete ? (
-                      <CheckCircle className="h-5 w-5 text-[var(--text)]" />
+                      <CheckCircle className="h-5 w-5 text-(--text)" />
                     ) : (
                       <Icon
-                        className={`h-5 w-5 ${isActive ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`}
+                        className={`h-5 w-5 ${isActive ? 'text-(--text)' : 'text-(--muted)'}`}
                       />
                     )}
                   </div>
                   <span
-                    className={`mt-2 text-xs ${isActive ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`}
+                    className={`mt-2 text-xs ${isActive ? 'text-(--text)' : 'text-(--muted)'}`}
                   >
                     {step.title}
                   </span>
                 </div>
                 {index < STEPS.length - 1 && (
                   <div
-                    className={`mx-2 h-0.5 w-12 ${isComplete ? 'bg-[var(--sage)]' : 'bg-[var(--border)]'}`}
+                    className={`mx-2 h-0.5 w-12 ${isComplete ? 'bg-(--sage)' : 'bg-(--border)'}`}
                   />
                 )}
               </div>
@@ -632,7 +632,7 @@ export default function BecomeInstructorPage() {
             <button
               onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
               disabled={currentStep === 0}
-              className="flex items-center gap-2 rounded-lg px-4 py-2 text-[var(--muted)] hover:text-[var(--text)] disabled:opacity-0"
+              className="flex items-center gap-2 rounded-lg px-4 py-2 text-(--muted) hover:text-(--text) disabled:opacity-0"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
@@ -642,7 +642,7 @@ export default function BecomeInstructorPage() {
               <button
                 onClick={() => setCurrentStep(currentStep + 1)}
                 disabled={!canProceed()}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 text-[var(--text)] disabled:opacity-50"
+                className="flex items-center gap-2 rounded-full bg-linear-to-r from-(--accent) to-(--gold) px-6 py-3 text-(--text) disabled:opacity-50"
               >
                 Continue
                 <ChevronRight className="h-4 w-4" />
@@ -651,7 +651,7 @@ export default function BecomeInstructorPage() {
               <button
                 onClick={handleSubmit}
                 disabled={!canProceed() || isSubmitting}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] px-6 py-3 text-[var(--text)] disabled:opacity-50"
+                className="flex items-center gap-2 rounded-full bg-linear-to-r from-(--accent) to-(--gold) px-6 py-3 text-(--text) disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

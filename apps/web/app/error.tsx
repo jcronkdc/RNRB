@@ -60,7 +60,7 @@ export default function Error({
           </button>
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/[0.03]"
+            className="flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-white/3"
             style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
           >
             <Home className="h-4 w-4" />

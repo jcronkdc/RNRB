@@ -63,7 +63,7 @@ export function FocusModeOverlay() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="fixed bottom-8 left-1/2 z-[100] -translate-x-1/2"
+            className="fixed bottom-8 left-1/2 z-100 -translate-x-1/2"
           >
             <div
               className="flex items-center gap-3 rounded-xl px-5 py-3 shadow-2xl"
@@ -98,7 +98,7 @@ export function FocusModeOverlay() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed left-1/2 top-4 z-[100] -translate-x-1/2"
+            className="fixed left-1/2 top-4 z-100 -translate-x-1/2"
           >
             <button
               onClick={disableFocusMode}
@@ -128,12 +128,12 @@ export function FocusModeOverlay() {
 
       {/* Invisible click-to-exit zones at corners */}
       <div
-        className="fixed left-0 top-0 z-[99] h-16 w-16 cursor-pointer"
+        className="fixed left-0 top-0 z-99 h-16 w-16 cursor-pointer"
         onClick={disableFocusMode}
         title="Exit Focus Mode"
       />
       <div
-        className="fixed right-0 top-0 z-[99] h-16 w-16 cursor-pointer"
+        className="fixed right-0 top-0 z-99 h-16 w-16 cursor-pointer"
         onClick={disableFocusMode}
         title="Exit Focus Mode"
       />

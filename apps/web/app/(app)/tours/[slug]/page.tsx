@@ -135,7 +135,7 @@ export default function TourDetailPage() {
             <div className="flex-1">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                 <h1 className="font-display mb-2 text-3xl font-bold md:text-4xl">{tour.name}</h1>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-[color:var(--muted)]">
+                <div className="flex flex-wrap items-center gap-4 text-sm text-(--muted)">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     <span>
@@ -162,7 +162,7 @@ export default function TourDetailPage() {
                   </span>
                 </div>
                 {tour.description && (
-                  <p className="mt-3 max-w-2xl text-[color:var(--muted)]">{tour.description}</p>
+                  <p className="mt-3 max-w-2xl text-(--muted)">{tour.description}</p>
                 )}
               </motion.div>
             </div>
@@ -183,13 +183,13 @@ export default function TourDetailPage() {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="mt-6 flex gap-2 border-b border-[color:var(--border)]">
+          <div className="mt-6 flex gap-2 border-b border-(--border)">
             <button
               onClick={() => setActiveSection('overview')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'overview'
-                  ? 'border-b-2 border-brand-primary text-[color:var(--accent)]'
-                  : 'text-[color:var(--muted)] hover:text-[color:var(--text)]'
+                  ? 'border-b-2 border-brand-primary text-(--accent)'
+                  : 'text-(--muted) hover:text-(--text)'
               }`}
             >
               Overview & Routing
@@ -198,8 +198,8 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('shows')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'shows'
-                  ? 'border-b-2 border-brand-primary text-[color:var(--accent)]'
-                  : 'text-[color:var(--muted)] hover:text-[color:var(--text)]'
+                  ? 'border-b-2 border-brand-primary text-(--accent)'
+                  : 'text-(--muted) hover:text-(--text)'
               }`}
             >
               All Shows ({tour._count?.shows || tour.shows?.length || 0})
@@ -246,7 +246,7 @@ export default function TourDetailPage() {
                 {/* Past Shows */}
                 {pastShows.length > 0 && (
                   <div>
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-[color:var(--muted)]">
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-(--muted)">
                       <Clock className="h-5 w-5" />
                       Completed ({pastShows.length})
                     </h3>
@@ -260,9 +260,9 @@ export default function TourDetailPage() {
               </div>
             ) : (
               <Card className="p-12 text-center">
-                <Calendar className="text-[color:var(--muted)]/50 mx-auto mb-4 h-16 w-16" />
+                <Calendar className="text-(--muted)/50 mx-auto mb-4 h-16 w-16" />
                 <h3 className="mb-2 text-lg font-semibold">No Shows Yet</h3>
-                <p className="mb-6 text-[color:var(--muted)]">
+                <p className="mb-6 text-(--muted)">
                   Start adding shows to your tour to manage your schedule.
                 </p>
                 <Link href={`/tours/${tourSlug}/shows/new`}>
@@ -309,17 +309,17 @@ function ShowCard({
 
   return (
     <Card
-      className={`p-4 transition ${isPast ? 'border-[color:var(--border)]/50 bg-muted/10' : 'hover:border-brand-primary/30'}`}
+      className={`p-4 transition ${isPast ? 'border-(--border)/50 bg-muted/10' : 'hover:border-brand-primary/30'}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <Link
             href={`/shows/${show.slug}`}
-            className={`block font-semibold transition hover:text-[color:var(--accent)] ${isPast ? 'text-[color:var(--muted)]' : ''}`}
+            className={`block font-semibold transition hover:text-(--accent) ${isPast ? 'text-(--muted)' : ''}`}
           >
             {show.name}
           </Link>
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-[color:var(--muted)]">
+          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-(--muted)">
             <div className="flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
               {formatDate(show.date)}
@@ -346,7 +346,7 @@ function ShowCard({
 
           {/* Show times */}
           {(show.loadInTime || show.soundcheckTime || show.setTime) && (
-            <div className="mt-2 flex flex-wrap gap-3 text-xs text-[color:var(--muted)]">
+            <div className="mt-2 flex flex-wrap gap-3 text-xs text-(--muted)">
               {show.loadInTime && <span>Load-in: {formatTime(show.loadInTime)}</span>}
               {show.soundcheckTime && <span>Soundcheck: {formatTime(show.soundcheckTime)}</span>}
               {show.setTime && <span>Set: {formatTime(show.setTime)}</span>}
@@ -356,7 +356,7 @@ function ShowCard({
 
           {/* Notes */}
           {show.notes && (
-            <p className="mt-2 line-clamp-2 text-sm italic text-[color:var(--muted)]">
+            <p className="mt-2 line-clamp-2 text-sm italic text-(--muted)">
               {show.notes}
             </p>
           )}
@@ -384,7 +384,7 @@ function ShowCard({
               href={show.ticketUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:bg-[color:var(--accent)]/90 flex items-center gap-1.5 rounded-lg bg-[color:var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+              className="hover:bg-(--accent)/90 flex items-center gap-1.5 rounded-lg bg-(--accent) px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
             >
               <Ticket className="h-4 w-4" />
               Get Tickets

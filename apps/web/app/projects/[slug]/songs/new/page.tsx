@@ -143,7 +143,7 @@ export default function NewSongPage() {
                 value={songData.title}
                 onChange={(e) => setSongData({ ...songData, title: e.target.value })}
                 placeholder="Untitled Song"
-                className="w-full rounded-xl border-2 px-4 py-3 text-lg font-semibold outline-none transition"
+                className="w-full rounded-xl border-2 px-4 py-3 text-lg font-semibold outline-hidden transition"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',
@@ -160,7 +160,7 @@ export default function NewSongPage() {
                 value={songData.key}
                 onChange={(e) => setSongData({ ...songData, key: e.target.value })}
                 placeholder="C Major"
-                className="w-full rounded-xl border px-4 py-3 outline-none transition"
+                className="w-full rounded-xl border px-4 py-3 outline-hidden transition"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',
@@ -177,7 +177,7 @@ export default function NewSongPage() {
                 value={songData.tempo}
                 onChange={(e) => setSongData({ ...songData, tempo: e.target.value })}
                 placeholder="120"
-                className="w-full rounded-xl border px-4 py-3 outline-none transition"
+                className="w-full rounded-xl border px-4 py-3 outline-hidden transition"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',

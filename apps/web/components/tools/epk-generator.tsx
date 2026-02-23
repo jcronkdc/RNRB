@@ -370,7 +370,7 @@ Instagram: ${epkData.social.instagram}
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500 to-purple-600">
             <Newspaper className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -380,14 +380,14 @@ Instagram: ${epkData.social.instagram}
         </div>
         <div className="flex gap-2">
           <Button
-            variant={activeTab === 'edit' ? 'default' : 'outline'}
+            variant={activeTab === 'edit' ? 'default' : 'outline-solid'}
             size="sm"
             onClick={() => setActiveTab('edit')}
           >
             Edit
           </Button>
           <Button
-            variant={activeTab === 'preview' ? 'default' : 'outline'}
+            variant={activeTab === 'preview' ? 'default' : 'outline-solid'}
             size="sm"
             onClick={() => setActiveTab('preview')}
             className="gap-2"
@@ -703,7 +703,7 @@ Instagram: ${epkData.social.instagram}
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 rounded-xl bg-gradient-to-r from-violet-500/10 to-purple-500/10 p-6">
+            <div className="grid grid-cols-3 gap-4 rounded-xl bg-linear-to-r from-violet-500/10 to-purple-500/10 p-6">
               <div className="text-center">
                 <div className="text-2xl font-bold">{epkData.stats.monthlyListeners}</div>
                 <div className="text-xs text-muted-foreground">Monthly Listeners</div>
@@ -762,7 +762,7 @@ Instagram: ${epkData.social.instagram}
               </Button>
               <Button
                 onClick={downloadPDF}
-                className="gap-2 bg-gradient-to-r from-violet-500 to-purple-600"
+                className="gap-2 bg-linear-to-r from-violet-500 to-purple-600"
               >
                 <Download className="h-4 w-4" />
                 Download PDF

@@ -91,7 +91,7 @@ export function AIChatAssistant({ onSuggestion, projectContext }: AIChatAssistan
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="What chord goes after Am in this progression?"
-              className="w-full resize-none rounded border border-border bg-surface-muted px-3 py-2 text-sm text-foreground focus:border-brand-primary focus:outline-none"
+              className="w-full resize-none rounded border border-border bg-surface-muted px-3 py-2 text-sm text-foreground focus:border-brand-primary focus:outline-hidden"
               rows={3}
             />
 
