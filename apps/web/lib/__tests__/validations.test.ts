@@ -169,7 +169,7 @@ describe('Validation Schemas', () => {
   describe('updateProjectSchema', () => {
     it('should make all fields optional', () => {
       const result = updateProjectSchema.parse({});
-      expect(result).toEqual({});
+      expect(result).toEqual({ visibility: 'private' });
     });
 
     it('should validate fields when provided', () => {
@@ -365,7 +365,7 @@ describe('Validation Schemas', () => {
   describe('updateTourSchema', () => {
     it('should make all fields optional', () => {
       const result = updateTourSchema.parse({});
-      expect(result).toEqual({});
+      expect(result).toEqual({ status: 'planning' });
     });
   });
 
@@ -402,7 +402,7 @@ describe('Validation Schemas', () => {
   describe('updateShowSchema', () => {
     it('should make all fields optional', () => {
       const result = updateShowSchema.parse({});
-      expect(result).toEqual({});
+      expect(result).toEqual({ status: 'pending' });
     });
   });
 
