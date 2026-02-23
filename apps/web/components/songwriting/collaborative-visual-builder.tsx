@@ -165,7 +165,7 @@ const SortableBlock = memo(function SortableBlock({
         ...(editor && { borderColor: editor.userColor, outlineColor: editor.userColor }),
       }}
       className={`rnrb-card group relative mb-4 rounded p-4 transition-all hover:shadow-xl ${getColor()} border ${
-        editor ? 'outline-solid outline-2 outline-offset-2' : ''
+        editor ? 'outline-2 outline-offset-2 outline-solid' : ''
       }`}
     >
       {/* Active Editor Indicator */}
@@ -191,16 +191,16 @@ const SortableBlock = memo(function SortableBlock({
 
       <div className="flex gap-3">
         <div {...attributes} {...listeners} className="cursor-grab pt-1 active:cursor-grabbing">
-          <GripVertical className="h-5 w-5 text-muted-foreground" />
+          <GripVertical className="text-muted-foreground h-5 w-5" />
         </div>
         <div className="flex-1">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wide text-brand-primary">
+            <span className="text-brand-primary text-xs font-bold tracking-wide uppercase">
               {block.type}
             </span>
             <button
               onClick={onRemove}
-              className="text-red-500 opacity-0 hover:text-red-600 group-hover:opacity-100"
+              className="text-red-500 opacity-0 group-hover:opacity-100 hover:text-red-600"
             >
               <X className="h-4 w-4" />
             </button>
@@ -221,7 +221,7 @@ const SortableBlock = memo(function SortableBlock({
               onFocus={onFocus}
               onBlur={onBlur}
               placeholder={`Write your ${block.type}...`}
-              className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 text-sm text-foreground outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border/50 bg-surface/50 text-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border px-3 py-2 text-sm outline-hidden focus:ring-2"
               rows={3}
             />
           )}
@@ -640,8 +640,8 @@ function CollaborativeVisualBuilderInner({
                     <div className="flex items-center gap-3">
                       <div className="text-2xl">{item.icon}</div>
                       <div>
-                        <p className="font-semibold text-foreground">{item.label}</p>
-                        <p className="text-xs text-muted-foreground">Click to add →</p>
+                        <p className="text-foreground font-semibold">{item.label}</p>
+                        <p className="text-muted-foreground text-xs">Click to add →</p>
                       </div>
                     </div>
                   </button>
@@ -662,7 +662,7 @@ function CollaborativeVisualBuilderInner({
             {blocks.length === 0 ? (
               <div className="flex flex-col items-center justify-center rounded border border-zinc-800 bg-zinc-900/50 py-24">
                 <Music className="mb-4 h-12 w-12 text-zinc-600" />
-                <p className="font-mono text-sm uppercase tracking-wider text-zinc-400">
+                <p className="font-mono text-sm tracking-wider text-zinc-400 uppercase">
                   Click a block above to start
                 </p>
               </div>
@@ -704,17 +704,17 @@ function CollaborativeVisualBuilderInner({
       <Card className={`rnrb-card transition-all ${chatExpanded ? 'h-auto' : 'h-16'}`}>
         <button
           onClick={() => setChatExpanded(!chatExpanded)}
-          className="flex w-full items-center justify-between p-4 transition hover:bg-surface-muted/50"
+          className="hover:bg-surface-muted/50 flex w-full items-center justify-between p-4 transition"
         >
           <div className="flex items-center gap-3">
-            <MessageSquare className="h-5 w-5 text-brand-primary" />
+            <MessageSquare className="text-brand-primary h-5 w-5" />
             <span className="font-semibold">Team Chat</span>
-            <span className="text-xs text-muted-foreground">• 2 online</span>
+            <span className="text-muted-foreground text-xs">• 2 online</span>
           </div>
           {chatExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
         </button>
         {chatExpanded && (
-          <div className="border-t border-border p-4">
+          <div className="border-border border-t p-4">
             <ChatRoom channelName={`song-builder-${projectSlug}`} />
           </div>
         )}
@@ -733,16 +733,16 @@ function CollaborativeVisualBuilderInner({
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
-                  <Users className="h-6 w-6 text-brand-primary" />
+                  <Users className="text-brand-primary h-6 w-6" />
                   Collaborators
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mt-1 text-sm">
                   Invite friends to write together
                 </p>
               </div>
               <button
                 onClick={() => setShowCollaborators(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
+                className="text-muted-foreground hover:bg-surface-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -750,15 +750,15 @@ function CollaborativeVisualBuilderInner({
 
             {/* Current Collaborators */}
             <div className="mb-6">
-              <h4 className="mb-3 text-sm font-semibold text-muted-foreground">CURRENT TEAM</h4>
+              <h4 className="text-muted-foreground mb-3 text-sm font-semibold">CURRENT TEAM</h4>
               <div className="space-y-2">
-                <div className="flex items-center gap-3 rounded-lg bg-surface-muted p-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20">
-                    <span className="font-bold text-brand-primary">Y</span>
+                <div className="bg-surface-muted flex items-center gap-3 rounded-lg p-3">
+                  <div className="bg-brand-primary/20 flex h-10 w-10 items-center justify-center rounded-full">
+                    <span className="text-brand-primary font-bold">Y</span>
                   </div>
                   <div className="flex-1">
                     <p className="font-medium">You</p>
-                    <p className="text-xs text-muted-foreground">Creator • Full Access</p>
+                    <p className="text-muted-foreground text-xs">Creator • Full Access</p>
                   </div>
                   <div className="h-2 w-2 rounded-full bg-green-400" title="Online now" />
                 </div>
@@ -766,7 +766,7 @@ function CollaborativeVisualBuilderInner({
             </div>
 
             {/* TOKYO RULE: Invite form = 2 clicks (type email, click send) */}
-            <div className="border-t border-border pt-6">
+            <div className="border-border border-t pt-6">
               <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold">
                 <UserPlus className="h-4 w-4 text-purple-400" />
                 INVITE COLLABORATOR
@@ -778,18 +778,18 @@ function CollaborativeVisualBuilderInner({
                   onChange={(e) => setInviteEmail(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && sendInvite()}
                   placeholder="friend@email.com"
-                  className="flex-1 rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-hidden transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 flex-1 rounded-xl border-2 px-4 py-3 outline-hidden transition focus:ring-4"
                 />
                 <Button
                   onClick={sendInvite}
                   disabled={!inviteEmail.trim()}
-                  className="rounded-xl bg-brand-primary px-6 py-3 font-semibold text-brand-primary-foreground hover:bg-brand-primary/90"
+                  className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 rounded-xl px-6 py-3 font-semibold"
                 >
                   <Mail className="mr-2 h-4 w-4" />
                   Send
                 </Button>
               </div>
-              <p className="mt-3 flex items-center gap-1 text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-3 flex items-center gap-1 text-xs">
                 <Sparkles className="h-3 w-3 text-purple-400" />
                 They&apos;ll get an email invite to join this songwriting session
               </p>
@@ -814,16 +814,16 @@ function CollaborativeVisualBuilderInner({
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
-                  <History className="h-6 w-6 text-brand-primary" />
+                  <History className="text-brand-primary h-6 w-6" />
                   Version History
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mt-1 text-sm">
                   Restore previous versions with 1 click
                 </p>
               </div>
               <button
                 onClick={() => setShowHistory(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
+                className="text-muted-foreground hover:bg-surface-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -831,9 +831,9 @@ function CollaborativeVisualBuilderInner({
 
             {history.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Clock className="mb-4 h-16 w-16 text-muted-foreground/50" />
+                <Clock className="text-muted-foreground/50 mb-4 h-16 w-16" />
                 <h4 className="mb-2 text-lg font-semibold">No History Yet</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Make some changes and they&apos;ll be saved here automatically
                 </p>
               </div>
@@ -850,29 +850,29 @@ function CollaborativeVisualBuilderInner({
                       onClick={() => restoreVersion(index)}
                       className={`w-full rounded-xl p-4 text-left transition-all ${
                         isCurrent
-                          ? 'border-2 border-brand-primary/50 bg-brand-primary/10 shadow-lg'
-                          : 'border-2 border-transparent bg-surface-muted hover:border-brand-primary/30 hover:bg-surface'
+                          ? 'border-brand-primary/50 bg-brand-primary/10 border-2 shadow-lg'
+                          : 'bg-surface-muted hover:border-brand-primary/30 hover:bg-surface border-2 border-transparent'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1">
                           <div className="mb-1 flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-brand-primary" />
+                            <Clock className="text-brand-primary h-4 w-4" />
                             <span className="text-sm font-semibold">
                               {isCurrent ? 'Current Version' : `Version ${history.length - index}`}
                             </span>
                           </div>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             {timestamp} • {blockCount} {blockCount === 1 ? 'block' : 'blocks'}
                           </p>
                           {version.blocks.length > 0 && (
-                            <p className="mt-2 text-xs font-medium text-brand-primary">
+                            <p className="text-brand-primary mt-2 text-xs font-medium">
                               {version.blocks.map((b) => b.type).join(' → ')}
                             </p>
                           )}
                         </div>
                         {!isCurrent && (
-                          <div className="text-xs font-medium text-brand-primary opacity-0 transition group-hover:opacity-100">
+                          <div className="text-brand-primary text-xs font-medium opacity-0 transition group-hover:opacity-100">
                             Click to restore →
                           </div>
                         )}
@@ -908,13 +908,13 @@ function CollaborativeVisualBuilderInner({
                   <AlertCircle className="h-6 w-6 text-yellow-400" />
                   Pending Suggestions
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mt-1 text-sm">
                   Review and accept/reject changes from collaborators
                 </p>
               </div>
               <button
                 onClick={() => setShowSuggestions(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
+                className="text-muted-foreground hover:bg-surface-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -924,7 +924,7 @@ function CollaborativeVisualBuilderInner({
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <CheckCircle className="mb-4 h-16 w-16 text-green-400/50" />
                 <h4 className="mb-2 text-lg font-semibold">All Clear!</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   No pending suggestions at the moment
                 </p>
               </div>
@@ -945,10 +945,10 @@ function CollaborativeVisualBuilderInner({
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div className="flex-1">
                             <div className="mb-1 flex items-center gap-2">
-                              <span className="text-xs font-bold uppercase text-yellow-400">
+                              <span className="text-xs font-bold text-yellow-400 uppercase">
                                 {block.type}
                               </span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 • by {suggestion.userName}
                               </span>
                             </div>
@@ -1026,10 +1026,10 @@ function CollaborativeVisualBuilderInner({
                         <div className="mb-3 flex items-start justify-between gap-3">
                           <div className="flex-1">
                             <div className="mb-1 flex items-center gap-2">
-                              <span className="text-xs font-bold uppercase text-blue-400">
+                              <span className="text-xs font-bold text-blue-400 uppercase">
                                 {block.type} - CHORD
                               </span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-muted-foreground text-xs">
                                 • by {suggestion.userName}
                               </span>
                             </div>
@@ -1092,8 +1092,8 @@ function CollaborativeVisualBuilderInner({
               </div>
             )}
 
-            <div className="mt-6 border-t border-border pt-6">
-              <p className="text-center text-xs text-muted-foreground">
+            <div className="border-border mt-6 border-t pt-6">
+              <p className="text-muted-foreground text-center text-xs">
                 <Sparkles className="mr-1 inline h-3 w-3 text-purple-400" />
                 Suggestions keep your song organized while letting everyone contribute
               </p>
@@ -1117,20 +1117,20 @@ function CollaborativeVisualBuilderInner({
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="rnrb-card w-full max-w-lg rounded-2xl border-2 border-border bg-surface p-8"
+              className="rnrb-card border-border bg-surface w-full max-w-lg rounded-2xl border-2 p-8"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-6 flex items-center justify-between">
                 <div>
                   <h3 className="font-display flex items-center gap-2 text-2xl font-bold">
-                    <Keyboard className="h-6 w-6 text-brand-primary" />
+                    <Keyboard className="text-brand-primary h-6 w-6" />
                     Keyboard Shortcuts
                   </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Work faster with shortcuts</p>
+                  <p className="text-muted-foreground mt-1 text-sm">Work faster with shortcuts</p>
                 </div>
                 <button
                   onClick={() => setShowKeyboardHelp(false)}
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-surface-muted hover:text-foreground"
+                  className="text-muted-foreground hover:bg-surface-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition"
                   aria-label="Close keyboard shortcuts"
                 >
                   <X className="h-5 w-5" />
@@ -1150,17 +1150,17 @@ function CollaborativeVisualBuilderInner({
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex items-center justify-between rounded-lg bg-surface-muted p-3"
+                    className="bg-surface-muted flex items-center justify-between rounded-lg p-3"
                   >
                     <span className="text-foreground">{shortcut.action}</span>
                     <div className="flex items-center gap-1">
                       {shortcut.keys.map((key, i) => (
                         <span key={i} className="flex items-center gap-1">
-                          <kbd className="rounded border border-border bg-background px-2 py-1 text-xs font-medium">
+                          <kbd className="border-border bg-background rounded border px-2 py-1 text-xs font-medium">
                             {key}
                           </kbd>
                           {i < shortcut.keys.length - 1 && (
-                            <span className="text-xs text-muted-foreground">+</span>
+                            <span className="text-muted-foreground text-xs">+</span>
                           )}
                         </span>
                       ))}
@@ -1169,8 +1169,8 @@ function CollaborativeVisualBuilderInner({
                 ))}
               </div>
 
-              <div className="mt-6 border-t border-border pt-6">
-                <p className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
+              <div className="border-border mt-6 border-t pt-6">
+                <p className="text-muted-foreground flex items-center justify-center gap-2 text-center text-xs">
                   <Sparkles className="h-3 w-3 text-purple-400" />
                   Pro tip: Click any word in lyrics to add chords instantly!
                 </p>

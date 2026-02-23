@@ -237,7 +237,7 @@ Or just paste plain text - we'll auto-detect sections!`}
                             )}
                           </div>
                           <p
-                            className="line-clamp-3 whitespace-pre-wrap text-xs"
+                            className="line-clamp-3 text-xs whitespace-pre-wrap"
                             style={{ color: 'var(--text)' }}
                           >
                             {section.content}

@@ -382,7 +382,7 @@ DISCLAIMER: This agreement is a template and should be reviewed by a qualified m
 
       {/* Legal Notice */}
       <div className="mt-4 rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-4">
-        <p className="mb-2 text-xs font-semibold uppercase text-yellow-400">Legal Notice</p>
+        <p className="mb-2 text-xs font-semibold text-yellow-400 uppercase">Legal Notice</p>
         <p className="text-xs text-gray-400">
           This agreement is a template and should be reviewed by a qualified music attorney before
           signing. It does not constitute legal advice. CronkWaters is not responsible for the legal

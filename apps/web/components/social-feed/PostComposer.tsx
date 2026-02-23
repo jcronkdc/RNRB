@@ -337,7 +337,7 @@ export function PostComposer({ onPostCreated }: PostComposerProps) {
               <button
                 onClick={() => removeImage(i)}
                 aria-label={`Remove image ${i + 1}`}
-                className="absolute right-1 top-1 rounded-full bg-black/60 p-1 opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute top-1 right-1 rounded-full bg-black/60 p-1 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <X className="h-4 w-4 text-white" />
               </button>

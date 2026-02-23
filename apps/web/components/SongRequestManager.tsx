@@ -129,7 +129,7 @@ export function SongRequestManager({ setlistId, projectId }: SongRequestManagerP
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+        <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -140,7 +140,7 @@ export function SongRequestManager({ setlistId, projectId }: SongRequestManagerP
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold">Song Requests</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {pendingRequests.length} pending, {reviewedRequests.length} reviewed
           </p>
         </div>
@@ -159,14 +159,14 @@ export function SongRequestManager({ setlistId, projectId }: SongRequestManagerP
       {/* Empty State */}
       {requests.length === 0 && (
         <Card className="rnrb-card p-8 text-center">
-          <Music className="mx-auto mb-4 h-12 w-12 text-muted-foreground/50" />
+          <Music className="text-muted-foreground/50 mx-auto mb-4 h-12 w-12" />
           <h3 className="mb-2 text-lg font-semibold">No Requests Yet</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Share the request link with fans so they can submit song requests!
           </p>
-          <div className="mt-4 rounded-xl border border-border bg-surface/50 p-3">
-            <p className="mb-2 text-xs font-medium text-muted-foreground">Request Link:</p>
-            <code className="text-xs text-brand-primary">
+          <div className="border-border bg-surface/50 mt-4 rounded-xl border p-3">
+            <p className="text-muted-foreground mb-2 text-xs font-medium">Request Link:</p>
+            <code className="text-brand-primary text-xs">
               {typeof window !== 'undefined' && `${window.location.origin}/request/${setlistId}`}
             </code>
           </div>
@@ -243,7 +243,7 @@ function RequestCard({
         <div className="mb-3 flex items-start justify-between">
           <div className="min-w-0 flex-1">
             <h4 className="mb-1 truncate text-base font-semibold">{request.songTitle}</h4>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <User className="h-3 w-3" />
               <span>{request.requestedBy}</span>
               {request.email && (
@@ -267,8 +267,8 @@ function RequestCard({
 
         {/* Message */}
         {request.message && (
-          <div className="mb-3 rounded-lg border border-border bg-surface/50 p-3">
-            <div className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+          <div className="border-border bg-surface/50 mb-3 rounded-lg border p-3">
+            <div className="text-muted-foreground mb-1 flex items-center gap-1.5 text-xs font-medium">
               <MessageSquare className="h-3 w-3" />
               Message
             </div>
@@ -289,7 +289,7 @@ function RequestCard({
 
         {/* Actions (for pending requests) */}
         {!reviewed && onApprove && onReject && (
-          <div className="flex items-center justify-end gap-2 border-t border-border pt-3">
+          <div className="border-border flex items-center justify-end gap-2 border-t pt-3">
             <Button
               onClick={onReject}
               disabled={processing}
@@ -321,7 +321,7 @@ function RequestCard({
         )}
 
         {/* Timestamp */}
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-xs">
           Requested {formatDateLong(request.createdAt)}
           {request.respondedAt && ` • Reviewed ${formatDateLong(request.respondedAt)}`}
         </p>

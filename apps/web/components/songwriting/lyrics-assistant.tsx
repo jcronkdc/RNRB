@@ -317,7 +317,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Paste your lyrics here to count syllables per line..."
-              className="min-h-[120px] w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-base text-foreground placeholder-muted-foreground outline-hidden transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 min-h-[120px] w-full rounded-xl border-2 px-4 py-4 text-base outline-hidden transition focus:ring-4"
             />
             <Button
               onClick={handleSearch}
@@ -346,12 +346,12 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
                     ? 'Enter a word to find synonyms...'
                     : 'Ask AI for lyric help (e.g., "help with chorus about heartbreak")'
               }
-              className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 pr-32 text-base text-foreground placeholder-muted-foreground outline-hidden transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+              className="border-border bg-surface text-foreground placeholder-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 px-4 py-4 pr-32 text-base outline-hidden transition focus:ring-4"
             />
             <Button
               onClick={handleSearch}
               disabled={loading || !query.trim()}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-lg px-6 py-2.5 ${
+              className={`absolute top-1/2 right-2 -translate-y-1/2 rounded-lg px-6 py-2.5 ${
                 mode === 'ai'
                   ? 'bg-purple-600 hover:bg-purple-700'
                   : mode === 'rhyme'
@@ -368,17 +368,17 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
       {/* Syllable breakdown display */}
       {mode === 'syllables' && syllableResults.length > 0 && (
         <div className="space-y-3">
-          <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold tracking-wide uppercase">
             <Hash className="h-4 w-4" />
             Syllable Breakdown
           </h4>
           {syllableResults.map((result, index) => (
             <Card
               key={index}
-              className="rnrb-card border-2 border-border bg-linear-to-br from-surface-muted to-surface p-4"
+              className="rnrb-card border-border from-surface-muted to-surface border-2 bg-linear-to-br p-4"
             >
               <div className="mb-2 flex items-center justify-between gap-4">
-                <p className="flex-1 text-sm font-medium text-foreground">{result.line}</p>
+                <p className="text-foreground flex-1 text-sm font-medium">{result.line}</p>
                 <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">
                   {result.syllables} syllables
                 </span>
@@ -401,7 +401,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
       {/* Regular suggestions display */}
       {suggestions.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          <h4 className="text-muted-foreground text-sm font-semibold tracking-wide uppercase">
             {mode === 'ai'
               ? 'AI Suggestions'
               : mode === 'rhyme'
@@ -417,9 +417,9 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               onClick={mode === 'syllables' ? undefined : () => onInsert(suggestion)}
             >
               <div className="flex items-start justify-between gap-4">
-                <p className="flex-1 text-sm leading-relaxed text-foreground">{suggestion}</p>
+                <p className="text-foreground flex-1 text-sm leading-relaxed">{suggestion}</p>
                 {mode !== 'syllables' && (
-                  <div className="text-xs font-medium text-brand-primary opacity-0 transition group-hover:opacity-100">
+                  <div className="text-brand-primary text-xs font-medium opacity-0 transition group-hover:opacity-100">
                     Click to insert →
                   </div>
                 )}

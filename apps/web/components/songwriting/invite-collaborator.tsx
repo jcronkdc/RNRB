@@ -45,9 +45,8 @@ export function InviteCollaborator({
   }, [isOpen]);
 
   // Generate the shareable link
-  const shareLink = typeof window !== 'undefined'
-    ? `${window.location.origin}/songwriting?id=${songId}`
-    : '';
+  const shareLink =
+    typeof window !== 'undefined' ? `${window.location.origin}/songwriting?id=${songId}` : '';
 
   const handleInvite = useCallback(async () => {
     if (!email.trim() || !email.includes('@')) return;
@@ -118,7 +117,7 @@ export function InviteCollaborator({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
             transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed right-6 top-20 z-50 w-80 overflow-hidden rounded-xl"
+            className="fixed top-20 right-6 z-50 w-80 overflow-hidden rounded-xl"
             style={{
               background: 'var(--panel)',
               border: '1px solid var(--border)',
@@ -190,10 +189,7 @@ export function InviteCollaborator({
               )}
 
               {/* Or share a link */}
-              <div
-                className="pt-3"
-                style={{ borderTop: '1px solid var(--border)' }}
-              >
+              <div className="pt-3" style={{ borderTop: '1px solid var(--border)' }}>
                 <p className="mb-2 text-xs" style={{ color: 'var(--muted)' }}>
                   Or share a link
                 </p>
@@ -210,9 +206,7 @@ export function InviteCollaborator({
                   ) : (
                     <Copy className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--muted)' }} />
                   )}
-                  <span className="truncate">
-                    {copied ? 'Copied!' : shareLink}
-                  </span>
+                  <span className="truncate">{copied ? 'Copied!' : shareLink}</span>
                 </button>
               </div>
             </div>

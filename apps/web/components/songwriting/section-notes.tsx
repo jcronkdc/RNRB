@@ -199,7 +199,7 @@ export function SectionNotes({
                 </p>
                 <button
                   onClick={() => onDeleteNote(note.id)}
-                  className="absolute right-1 top-1 rounded p-1 opacity-0 transition group-hover:opacity-100"
+                  className="absolute top-1 right-1 rounded p-1 opacity-0 transition group-hover:opacity-100"
                   style={{ background: 'var(--background)' }}
                 >
                   <X className="h-3 w-3" style={{ color: 'var(--muted)' }} />

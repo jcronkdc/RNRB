@@ -179,7 +179,7 @@ export function ArtworkGenerator({
         </div>
         <div>
           <h3 className="font-display text-lg font-bold">AI Album Art Generator</h3>
-          <p className="text-sm text-muted-foreground">Create unique artwork for your music</p>
+          <p className="text-muted-foreground text-sm">Create unique artwork for your music</p>
         </div>
       </div>
 
@@ -191,9 +191,9 @@ export function ArtworkGenerator({
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="e.g., A lonely figure standing in rain on a city street at night, reflections on wet pavement..."
-            className="bg-panel min-h-[100px] w-full resize-none rounded-xl border border-border p-4 pr-12 focus:outline-hidden focus:ring-2 focus:ring-brand-primary/50"
+            className="bg-panel border-border focus:ring-brand-primary/50 min-h-[100px] w-full resize-none rounded-xl border p-4 pr-12 focus:ring-2 focus:outline-hidden"
           />
-          <Wand2 className="absolute right-4 top-4 h-5 w-5 text-gray-500" />
+          <Wand2 className="absolute top-4 right-4 h-5 w-5 text-gray-500" />
         </div>
 
         {/* Song context pills */}
@@ -230,7 +230,7 @@ export function ArtworkGenerator({
         <div className="space-y-4">
           {styleGroups.map((group) => (
             <div key={group.title}>
-              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-muted-foreground mb-2 text-xs font-medium tracking-wide uppercase">
                 {group.title}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -279,11 +279,11 @@ export function ArtworkGenerator({
                     {model.id === 'standard' && <Zap className="h-4 w-4 text-blue-400" />}
                     <span className="font-medium">{model.name}</span>
                   </div>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-muted-foreground text-sm">
                     {model.credits} credit{model.credits > 1 ? 's' : ''}
                   </span>
                 </div>
-                <p className="mt-1 text-xs text-muted-foreground">{model.description}</p>
+                <p className="text-muted-foreground mt-1 text-xs">{model.description}</p>
               </button>
             ))}
           </div>
@@ -307,7 +307,7 @@ export function ArtworkGenerator({
               </button>
             ))}
           </div>
-          <p className="mt-3 text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-3 text-center text-sm">
             Total: <span className="font-semibold text-purple-400">{creditsNeeded} credits</span>
           </p>
         </Card>
@@ -381,7 +381,7 @@ export function ArtworkGenerator({
                   className={`group relative aspect-square overflow-hidden rounded-xl border-2 transition-all ${
                     selectedImage === image.url
                       ? 'border-purple-500 ring-2 ring-purple-500/30'
-                      : 'border-transparent hover:border-border'
+                      : 'hover:border-border border-transparent'
                   }`}
                 >
                   <img
@@ -412,7 +412,7 @@ export function ArtworkGenerator({
 
                   {/* Selected indicator */}
                   {selectedImage === image.url && (
-                    <div className="absolute right-2 top-2 rounded-full bg-purple-500 p-1">
+                    <div className="absolute top-2 right-2 rounded-full bg-purple-500 p-1">
                       <Check className="h-4 w-4 text-white" />
                     </div>
                   )}

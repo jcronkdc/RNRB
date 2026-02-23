@@ -258,14 +258,14 @@ export function WebsiteAIAssistant({
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-all hover:scale-110"
+        className="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-2xl transition-all hover:scale-110"
         style={{
           background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 100%)',
         }}
         title="AI Website Assistant"
       >
         <Bot size={24} className="text-white" />
-        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-xs font-bold text-white">
           <Sparkles size={12} />
         </span>
       </button>
@@ -274,7 +274,7 @@ export function WebsiteAIAssistant({
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex flex-col overflow-hidden rounded-2xl shadow-2xl transition-all ${
+      className={`fixed right-6 bottom-6 z-50 flex flex-col overflow-hidden rounded-2xl shadow-2xl transition-all ${
         isMinimized ? 'h-14 w-80' : 'h-[600px] w-[420px]'
       }`}
       style={{
@@ -345,7 +345,7 @@ export function WebsiteAIAssistant({
                   }}
                 >
                   {/* Message content with markdown-like rendering */}
-                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap">
                     {message.content.split('\n').map((line, i) => {
                       // Bold text
                       const boldLine = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -366,7 +366,7 @@ export function WebsiteAIAssistant({
                   {message.role === 'assistant' && (
                     <button
                       onClick={() => copyToClipboard(message.content, message.id)}
-                      className="absolute -right-2 -top-2 rounded-full p-1.5 opacity-0 transition-all group-hover:opacity-100"
+                      className="absolute -top-2 -right-2 rounded-full p-1.5 opacity-0 transition-all group-hover:opacity-100"
                       style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
                     >
                       {copiedId === message.id ? (

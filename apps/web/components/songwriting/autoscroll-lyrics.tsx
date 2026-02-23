@@ -361,13 +361,13 @@ export function AutoscrollLyrics({
       >
         <div
           ref={contentRef}
-          className="mx-auto max-w-2xl whitespace-pre-wrap font-mono leading-relaxed"
+          className="mx-auto max-w-2xl font-mono leading-relaxed whitespace-pre-wrap"
           style={{ fontSize: `${fontSize}px`, lineHeight: 1.8 }}
         >
           {parsedLyrics.map((section, idx) => (
             <div key={idx} className="mb-8">
               {section.type !== 'verse' && (
-                <div className="mb-2 font-sans text-sm uppercase tracking-wider text-amber-500">
+                <div className="mb-2 font-sans text-sm tracking-wider text-amber-500 uppercase">
                   [{section.type}]
                 </div>
               )}

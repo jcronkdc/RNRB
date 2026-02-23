@@ -663,7 +663,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
             <div className="relative">
               <Search
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2"
+                className="absolute top-1/2 left-3 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -671,7 +671,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search guides..."
-                className="w-full rounded-lg py-2 pl-9 pr-4 text-sm"
+                className="w-full rounded-lg py-2 pr-4 pl-9 text-sm"
                 style={{
                   background: 'var(--bg)',
                   color: 'var(--text)',
@@ -761,7 +761,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
                     return (
                       <h3
                         key={i}
-                        className="mb-4 mt-8 text-xl font-bold"
+                        className="mt-8 mb-4 text-xl font-bold"
                         style={{ color: 'var(--text)' }}
                       >
                         {paragraph.replace(/\*\*/g, '')}

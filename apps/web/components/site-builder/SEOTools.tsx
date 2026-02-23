@@ -736,7 +736,7 @@ export function SEOTools({
                   )}
                 </div>
                 <div className="p-3">
-                  <p className="text-xs uppercase text-gray-500">{siteUrl}</p>
+                  <p className="text-xs text-gray-500 uppercase">{siteUrl}</p>
                   <p className="font-semibold text-gray-900">{ogTitle || 'Page Title'}</p>
                   <p className="text-sm text-gray-600">
                     {ogDescription || 'Page description will appear here...'}

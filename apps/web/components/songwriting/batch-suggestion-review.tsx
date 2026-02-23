@@ -302,7 +302,7 @@ export function BatchSuggestionReview({
         {/* Context */}
         {currentSuggestion.context && (
           <div className="mb-4 rounded-lg border border-gray-700 bg-gray-800/50 p-3">
-            <p className="text-xs uppercase tracking-wide text-gray-500">Context</p>
+            <p className="text-xs tracking-wide text-gray-500 uppercase">Context</p>
             <p className="mt-1 text-sm text-gray-300">{currentSuggestion.context}</p>
           </div>
         )}
@@ -311,7 +311,7 @@ export function BatchSuggestionReview({
         <div className="grid gap-4 md:grid-cols-2">
           {/* Original */}
           <div className="rounded-lg border-2 border-red-500/30 bg-red-500/5 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-red-400">
+            <p className="mb-2 text-xs font-semibold tracking-wide text-red-400 uppercase">
               Original
             </p>
             <p className="text-lg font-medium text-white">{currentSuggestion.original}</p>
@@ -319,7 +319,7 @@ export function BatchSuggestionReview({
 
           {/* Suggested */}
           <div className="rounded-lg border-2 border-green-500/30 bg-green-500/5 p-4">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-green-400">
+            <p className="mb-2 text-xs font-semibold tracking-wide text-green-400 uppercase">
               Suggested
             </p>
             <p className="text-lg font-medium text-white">{currentSuggestion.suggested}</p>
@@ -329,7 +329,7 @@ export function BatchSuggestionReview({
         {/* Reason */}
         {currentSuggestion.reason && (
           <div className="mt-4 rounded-lg border border-blue-500/30 bg-blue-500/5 p-3">
-            <p className="text-xs uppercase tracking-wide text-blue-400">Why this suggestion?</p>
+            <p className="text-xs tracking-wide text-blue-400 uppercase">Why this suggestion?</p>
             <p className="mt-1 text-sm text-gray-300">{currentSuggestion.reason}</p>
           </div>
         )}
@@ -404,7 +404,7 @@ export function BatchSuggestionReview({
 
       {/* Keyboard Shortcuts Help */}
       <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <p className="mb-2 text-xs font-semibold tracking-wide text-gray-500 uppercase">
           Keyboard Shortcuts
         </p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-gray-400 sm:grid-cols-4">

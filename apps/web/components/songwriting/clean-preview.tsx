@@ -294,7 +294,7 @@ export function CleanPreview({
               <div key={block.id} className="group">
                 {/* Section Header */}
                 <div
-                  className="mb-2 inline-flex items-center gap-2 rounded px-2 py-0.5 text-xs font-bold uppercase tracking-wider"
+                  className="mb-2 inline-flex items-center gap-2 rounded px-2 py-0.5 text-xs font-bold tracking-wider uppercase"
                   style={{ background: `${color}20`, color }}
                 >
                   <div className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />

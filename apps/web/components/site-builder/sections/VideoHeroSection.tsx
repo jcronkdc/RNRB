@@ -161,7 +161,7 @@ export function VideoHeroSection({ content, styles }: VideoHeroSectionProps) {
       {/* Content */}
       <div className={`relative z-10 flex max-w-5xl flex-col px-8 py-24 ${alignmentClass}`}>
         <h1
-          className="mb-6 text-5xl font-bold leading-tight md:text-6xl lg:text-7xl xl:text-8xl"
+          className="mb-6 text-5xl leading-tight font-bold md:text-6xl lg:text-7xl xl:text-8xl"
           style={{ color: textColor }}
         >
           {headline}

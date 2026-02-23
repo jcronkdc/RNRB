@@ -334,7 +334,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
 
           {/* Dropdown Menu */}
           {showMenu && (
-            <div className="absolute right-0 top-full z-50 mt-1 min-w-[200px] overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 py-1 shadow-xl">
+            <div className="absolute top-full right-0 z-50 mt-1 min-w-[200px] overflow-hidden rounded-xl border border-white/10 bg-zinc-900/95 py-1 shadow-xl">
               {isOwnPost ? (
                 <>
                   {/* Edit */}

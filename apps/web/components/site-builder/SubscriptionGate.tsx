@@ -100,7 +100,7 @@ export function SubscriptionGate({
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 rounded-lg p-2 transition-colors hover:bg-white/10"
+            className="absolute top-4 right-4 rounded-lg p-2 transition-colors hover:bg-white/10"
             style={{ color: 'var(--muted)' }}
           >
             <X size={20} />

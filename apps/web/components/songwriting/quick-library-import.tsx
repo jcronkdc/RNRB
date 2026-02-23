@@ -155,7 +155,7 @@ export function QuickLibraryImport({ onImport, onOpenFullLibrary }: QuickLibrary
               {/* Search */}
               <div className="relative mt-3">
                 <Search
-                  className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2"
+                  className="absolute top-1/2 left-2.5 h-3.5 w-3.5 -translate-y-1/2"
                   style={{ color: 'var(--muted)' }}
                 />
                 <input
@@ -163,7 +163,7 @@ export function QuickLibraryImport({ onImport, onOpenFullLibrary }: QuickLibrary
                   placeholder="Search your songs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full rounded-lg border-0 py-2 pl-8 pr-3 text-xs outline-hidden transition focus:ring-2"
+                  className="w-full rounded-lg border-0 py-2 pr-3 pl-8 text-xs outline-hidden transition focus:ring-2"
                   style={{
                     background: 'var(--background)',
                     color: 'var(--text)',

@@ -52,7 +52,7 @@ export function ReactionPicker({ onSelect, onClose, currentReaction }: ReactionP
             }`}
           >
             {emoji}
-            <span className="pointer-events-none absolute -top-8 whitespace-nowrap rounded-lg bg-black px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+            <span className="pointer-events-none absolute -top-8 rounded-lg bg-black px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100">
               {label}
             </span>
           </button>

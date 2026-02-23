@@ -209,7 +209,7 @@ export function Metronome({
       {/* BPM Display and Controls */}
       <div className="mb-6 space-y-4">
         <div className="text-center">
-          <div className="mb-2 text-xs uppercase tracking-wide text-gray-500">Tempo (BPM)</div>
+          <div className="mb-2 text-xs tracking-wide text-gray-500 uppercase">Tempo (BPM)</div>
           <div className="mb-4 flex items-center justify-center gap-4">
             <button
               onClick={() => handleBpmChange(bpm - 5)}
@@ -263,7 +263,7 @@ export function Metronome({
 
         {/* Time Signature */}
         <div className="text-center">
-          <div className="mb-2 text-xs uppercase tracking-wide text-gray-500">Time Signature</div>
+          <div className="mb-2 text-xs tracking-wide text-gray-500 uppercase">Time Signature</div>
           <div className="flex flex-wrap justify-center gap-2">
             {TIME_SIGNATURES.map((sig) => (
               <button
@@ -391,7 +391,7 @@ export function Metronome({
 
       {/* Tempo Presets */}
       <div className="mt-6">
-        <div className="mb-2 text-xs uppercase tracking-wide text-gray-500">Common Tempos</div>
+        <div className="mb-2 text-xs tracking-wide text-gray-500 uppercase">Common Tempos</div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
             { label: 'Largo', bpm: 60 },

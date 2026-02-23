@@ -363,14 +363,14 @@ export function SocialShareHub() {
             </Link>
             <div className="flex items-center gap-4">
               <h1
-                className="font-mono text-sm uppercase tracking-[0.3em]"
+                className="font-mono text-sm tracking-[0.3em] uppercase"
                 style={{ color: 'var(--muted)' }}
               >
                 Social Share Hub
               </h1>
               <button
                 onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center gap-1 rounded-none px-2 py-1 font-mono text-[10px] uppercase tracking-wider transition hover:bg-white/10"
+                className="flex items-center gap-1 rounded-none px-2 py-1 font-mono text-[10px] tracking-wider uppercase transition hover:bg-white/10"
                 style={{ border: '1px solid var(--border)', color: 'var(--muted)' }}
               >
                 <Settings className="h-3 w-3" />
@@ -395,7 +395,7 @@ export function SocialShareHub() {
               >
                 <div className="rounded-none p-4" style={{ border: '1px solid var(--border)' }}>
                   <h3
-                    className="mb-4 font-mono text-xs uppercase tracking-widest"
+                    className="mb-4 font-mono text-xs tracking-widest uppercase"
                     style={{ color: 'var(--muted)' }}
                   >
                     Connected Accounts
@@ -456,7 +456,7 @@ export function SocialShareHub() {
                     {!isPlatformConnected('twitter') && (
                       <a
                         href="/api/social/connect/twitter"
-                        className="flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-wider transition hover:bg-white/10"
+                        className="flex items-center gap-2 px-3 py-2 font-mono text-xs tracking-wider uppercase transition hover:bg-white/10"
                         style={{ border: '1px solid var(--border)', color: 'var(--text)' }}
                       >
                         Connect Twitter/X
@@ -465,7 +465,7 @@ export function SocialShareHub() {
                     {!isPlatformConnected('facebook') && (
                       <a
                         href="/api/social/connect/facebook"
-                        className="flex items-center gap-2 px-3 py-2 font-mono text-xs uppercase tracking-wider transition hover:bg-white/10"
+                        className="flex items-center gap-2 px-3 py-2 font-mono text-xs tracking-wider uppercase transition hover:bg-white/10"
                         style={{ border: '1px solid var(--border)', color: 'var(--text)' }}
                       >
                         Connect Facebook/Instagram
@@ -487,7 +487,7 @@ export function SocialShareHub() {
               <div key={step.num} className="flex items-center">
                 <button
                   onClick={() => step.num < currentStep && setCurrentStep(step.num)}
-                  className={`flex items-center gap-2 rounded-none px-4 py-2 font-mono text-xs uppercase tracking-wider transition ${
+                  className={`flex items-center gap-2 rounded-none px-4 py-2 font-mono text-xs tracking-wider uppercase transition ${
                     currentStep === step.num
                       ? 'text-white'
                       : currentStep > step.num
@@ -540,7 +540,7 @@ export function SocialShareHub() {
               {/* Content Type */}
               <div>
                 <h2
-                  className="mb-4 font-mono text-xs uppercase tracking-widest"
+                  className="mb-4 font-mono text-xs tracking-widest uppercase"
                   style={{ color: 'var(--muted)' }}
                 >
                   Content Type
@@ -550,7 +550,7 @@ export function SocialShareHub() {
                     <button
                       key={type.id}
                       onClick={() => setSelectedType(type.id)}
-                      className={`rounded-none px-4 py-2 font-mono text-xs uppercase tracking-wider transition ${
+                      className={`rounded-none px-4 py-2 font-mono text-xs tracking-wider uppercase transition ${
                         selectedType === type.id
                           ? 'bg-white text-black'
                           : 'text-zinc-400 hover:text-white'
@@ -569,11 +569,11 @@ export function SocialShareHub() {
               {/* Media Upload */}
               <div>
                 <h2
-                  className="mb-4 font-mono text-xs uppercase tracking-widest"
+                  className="mb-4 font-mono text-xs tracking-widest uppercase"
                   style={{ color: 'var(--muted)' }}
                 >
                   Media{' '}
-                  <span className="font-normal normal-case tracking-normal text-zinc-600">
+                  <span className="font-normal tracking-normal text-zinc-600 normal-case">
                     (optional)
                   </span>
                 </h2>
@@ -587,7 +587,7 @@ export function SocialShareHub() {
                     }}
                   >
                     <Upload className="h-5 w-5" />
-                    <span className="font-mono text-[10px] uppercase tracking-wider">Upload</span>
+                    <span className="font-mono text-[10px] tracking-wider uppercase">Upload</span>
                   </button>
                   <input
                     ref={fileInputRef}
@@ -608,7 +608,7 @@ export function SocialShareHub() {
                         onClick={() =>
                           setMediaFiles((prev) => prev.filter((m) => m.id !== media.id))
                         }
-                        className="absolute right-1 top-1 rounded-full p-1 opacity-0 transition group-hover:opacity-100"
+                        className="absolute top-1 right-1 rounded-full p-1 opacity-0 transition group-hover:opacity-100"
                         style={{ background: 'rgba(0,0,0,0.8)' }}
                       >
                         <X className="h-3 w-3" />
@@ -621,7 +621,7 @@ export function SocialShareHub() {
               {/* Title & Caption */}
               <div>
                 <h2
-                  className="mb-4 font-mono text-xs uppercase tracking-widest"
+                  className="mb-4 font-mono text-xs tracking-widest uppercase"
                   style={{ color: 'var(--muted)' }}
                 >
                   Message
@@ -629,7 +629,7 @@ export function SocialShareHub() {
                 <div className="space-y-4">
                   <div>
                     <label
-                      className="mb-2 block font-mono text-[10px] uppercase tracking-wider"
+                      className="mb-2 block font-mono text-[10px] tracking-wider uppercase"
                       style={{ color: 'var(--muted)' }}
                     >
                       Title / Headline
@@ -649,7 +649,7 @@ export function SocialShareHub() {
                   </div>
                   <div>
                     <label
-                      className="mb-2 block font-mono text-[10px] uppercase tracking-wider"
+                      className="mb-2 block font-mono text-[10px] tracking-wider uppercase"
                       style={{ color: 'var(--muted)' }}
                     >
                       Caption
@@ -680,7 +680,7 @@ export function SocialShareHub() {
               <div style={{ border: '1px solid var(--border)' }}>
                 <button
                   onClick={() => setShowAdvanced(!showAdvanced)}
-                  className="flex w-full items-center justify-between p-4 font-mono text-xs uppercase tracking-widest"
+                  className="flex w-full items-center justify-between p-4 font-mono text-xs tracking-widest uppercase"
                   style={{ color: 'var(--muted)' }}
                 >
                   <span>Link & Hashtags</span>
@@ -702,7 +702,7 @@ export function SocialShareHub() {
                       >
                         <div>
                           <label
-                            className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider"
+                            className="mb-2 flex items-center gap-2 font-mono text-[10px] tracking-wider uppercase"
                             style={{ color: 'var(--muted)' }}
                           >
                             <Link2 className="h-3 w-3" />
@@ -723,7 +723,7 @@ export function SocialShareHub() {
                         </div>
                         <div>
                           <label
-                            className="mb-2 font-mono text-[10px] uppercase tracking-wider"
+                            className="mb-2 font-mono text-[10px] tracking-wider uppercase"
                             style={{ color: 'var(--muted)' }}
                           >
                             Hashtags
@@ -771,7 +771,7 @@ export function SocialShareHub() {
               <button
                 onClick={() => setCurrentStep(2)}
                 disabled={!canProceed}
-                className="flex w-full items-center justify-center gap-3 py-4 font-mono text-sm uppercase tracking-widest transition disabled:opacity-30"
+                className="flex w-full items-center justify-center gap-3 py-4 font-mono text-sm tracking-widest uppercase transition disabled:opacity-30"
                 style={{
                   background: canProceed ? 'white' : 'var(--card)',
                   color: canProceed ? 'black' : 'var(--muted)',
@@ -796,7 +796,7 @@ export function SocialShareHub() {
               <div>
                 <div className="mb-6 flex items-center justify-between">
                   <h2
-                    className="font-mono text-xs uppercase tracking-widest"
+                    className="font-mono text-xs tracking-widest uppercase"
                     style={{ color: 'var(--muted)' }}
                   >
                     Select Platforms
@@ -804,14 +804,14 @@ export function SocialShareHub() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => setSelectedPlatforms(PLATFORMS.map((p) => p.id))}
-                      className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 transition hover:text-white"
+                      className="font-mono text-[10px] tracking-wider text-zinc-500 uppercase transition hover:text-white"
                     >
                       All
                     </button>
                     <span style={{ color: 'var(--border)' }}>|</span>
                     <button
                       onClick={() => setSelectedPlatforms([])}
-                      className="font-mono text-[10px] uppercase tracking-wider text-zinc-500 transition hover:text-white"
+                      className="font-mono text-[10px] tracking-wider text-zinc-500 uppercase transition hover:text-white"
                     >
                       None
                     </button>
@@ -827,7 +827,7 @@ export function SocialShareHub() {
                   return (
                     <div key={category} className="mb-8 last:mb-0">
                       <h3
-                        className="mb-3 font-mono text-[10px] uppercase tracking-widest"
+                        className="mb-3 font-mono text-[10px] tracking-widest uppercase"
                         style={{ color: 'var(--muted)' }}
                       >
                         {category}
@@ -852,7 +852,7 @@ export function SocialShareHub() {
                               {/* Connected indicator */}
                               {isConnected && (
                                 <div
-                                  className="absolute right-1 top-1 h-2 w-2 rounded-full"
+                                  className="absolute top-1 right-1 h-2 w-2 rounded-full"
                                   style={{ background: '#22c55e' }}
                                   title="Connected"
                                 />
@@ -868,7 +868,7 @@ export function SocialShareHub() {
                                 {platform.icon}
                               </span>
                               <span
-                                className="font-mono text-[10px] uppercase tracking-wider"
+                                className="font-mono text-[10px] tracking-wider uppercase"
                                 style={{
                                   color: isSelected ? 'var(--text)' : 'var(--muted)',
                                 }}
@@ -900,7 +900,7 @@ export function SocialShareHub() {
               <div className="flex gap-4">
                 <button
                   onClick={() => setCurrentStep(1)}
-                  className="flex-1 py-4 font-mono text-xs uppercase tracking-widest transition"
+                  className="flex-1 py-4 font-mono text-xs tracking-widest uppercase transition"
                   style={{
                     border: '1px solid var(--border)',
                     color: 'var(--muted)',
@@ -911,7 +911,7 @@ export function SocialShareHub() {
                 <button
                   onClick={generateContent}
                   disabled={generating || selectedPlatforms.length === 0}
-                  className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest transition disabled:opacity-30"
+                  className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs tracking-widest uppercase transition disabled:opacity-30"
                   style={{
                     background: 'white',
                     color: 'black',
@@ -950,7 +950,7 @@ export function SocialShareHub() {
                 {postResults.length > 0 ? (
                   <>
                     <p
-                      className="font-mono text-xs uppercase tracking-widest"
+                      className="font-mono text-xs tracking-widest uppercase"
                       style={{
                         color: postResults.every((r) => r.success) ? '#22c55e' : '#f59e0b',
                       }}
@@ -966,7 +966,7 @@ export function SocialShareHub() {
                 ) : (
                   <>
                     <p
-                      className="font-mono text-xs uppercase tracking-widest"
+                      className="font-mono text-xs tracking-widest uppercase"
                       style={{ color: 'var(--accent)' }}
                     >
                       Ready to share
@@ -1014,7 +1014,7 @@ export function SocialShareHub() {
                             {platform.icon}
                           </span>
                           <span
-                            className="font-mono text-xs uppercase tracking-wider"
+                            className="font-mono text-xs tracking-wider uppercase"
                             style={{ color: 'var(--text)' }}
                           >
                             {platform.name}
@@ -1058,7 +1058,7 @@ export function SocialShareHub() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => copyToClipboard(platformId)}
-                            className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition"
+                            className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] tracking-wider uppercase transition"
                             style={{
                               border: '1px solid var(--border)',
                               color: copiedPlatform === platformId ? '#22c55e' : 'var(--muted)',
@@ -1081,7 +1081,7 @@ export function SocialShareHub() {
                               href={result.postUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white transition"
+                              className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] tracking-wider text-white uppercase transition"
                               style={{ background: '#22c55e' }}
                             >
                               <ExternalLink className="h-3 w-3" />
@@ -1090,7 +1090,7 @@ export function SocialShareHub() {
                           ) : (
                             <button
                               onClick={() => shareToPlatform(platform)}
-                              className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white transition"
+                              className="flex items-center gap-1 px-3 py-1.5 font-mono text-[10px] tracking-wider text-white uppercase transition"
                               style={{ background: platform.color }}
                             >
                               <ExternalLink className="h-3 w-3" />
@@ -1103,7 +1103,7 @@ export function SocialShareHub() {
                       {/* Content */}
                       <div className="p-4" style={{ background: 'var(--card)' }}>
                         <p
-                          className="whitespace-pre-wrap text-sm leading-relaxed"
+                          className="text-sm leading-relaxed whitespace-pre-wrap"
                           style={{ color: 'var(--text)' }}
                         >
                           {text}
@@ -1122,7 +1122,7 @@ export function SocialShareHub() {
                     setGeneratedContent({});
                     setPostResults([]);
                   }}
-                  className="flex-1 py-4 font-mono text-xs uppercase tracking-widest transition"
+                  className="flex-1 py-4 font-mono text-xs tracking-widest uppercase transition"
                   style={{
                     border: '1px solid var(--border)',
                     color: 'var(--muted)',
@@ -1134,7 +1134,7 @@ export function SocialShareHub() {
                   <button
                     onClick={postToAllPlatforms}
                     disabled={posting}
-                    className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest text-white transition disabled:opacity-50"
+                    className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs tracking-widest text-white uppercase transition disabled:opacity-50"
                     style={{ background: '#22c55e' }}
                   >
                     {posting ? (
@@ -1160,7 +1160,7 @@ export function SocialShareHub() {
                         }
                       });
                     }}
-                    className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs uppercase tracking-widest transition"
+                    className="flex flex-2 items-center justify-center gap-2 py-4 font-mono text-xs tracking-widest uppercase transition"
                     style={{
                       background: 'var(--card)',
                       border: '1px solid var(--border)',

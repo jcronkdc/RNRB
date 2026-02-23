@@ -273,7 +273,7 @@ export function TemplatePreviewModal({
           >
             {/* Notch for mobile */}
             {device === 'mobile' && (
-              <div className="absolute left-1/2 top-0 z-50 h-7 w-36 -translate-x-1/2 rounded-b-3xl bg-[#1a1a1a]" />
+              <div className="absolute top-0 left-1/2 z-50 h-7 w-36 -translate-x-1/2 rounded-b-3xl bg-[#1a1a1a]" />
             )}
 
             {/* Live Template Preview */}
@@ -362,7 +362,7 @@ export function TemplatePreviewModal({
                   {/* Animated Tagline */}
                   <div className="relative mb-10">
                     <p
-                      className="text-2xl font-medium uppercase tracking-[0.3em]"
+                      className="text-2xl font-medium tracking-[0.3em] uppercase"
                       style={{ color: colors.accent }}
                     >
                       {PREVIEW_CONTENT.tagline}
@@ -460,7 +460,7 @@ export function TemplatePreviewModal({
                           {/* New badge for first album */}
                           {i === 0 && (
                             <div
-                              className="absolute left-2 top-2 rounded-full px-3 py-1 text-xs font-bold"
+                              className="absolute top-2 left-2 rounded-full px-3 py-1 text-xs font-bold"
                               style={{ background: colors.accent, color: colors.primary }}
                             >
                               NEW
@@ -942,7 +942,7 @@ function TemplateBackground({
             }}
           />
           <div
-            className="absolute -left-1/4 top-1/4 h-[600px] w-[600px] rounded-full blur-[150px]"
+            className="absolute top-1/4 -left-1/4 h-[600px] w-[600px] rounded-full blur-[150px]"
             style={{ background: colors.accent, opacity: 0.1 }}
           />
         </>
@@ -953,11 +953,11 @@ function TemplateBackground({
         <>
           <div className="absolute inset-0" style={{ background: '#000' }} />
           <div
-            className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full blur-[150px]"
+            className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full blur-[150px]"
             style={{ background: colors.accent, opacity: 0.4 }}
           />
           <div
-            className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full blur-[120px]"
+            className="absolute right-1/4 bottom-1/4 h-64 w-64 rounded-full blur-[120px]"
             style={{ background: '#ff00ff', opacity: 0.3 }}
           />
           <div
@@ -981,7 +981,7 @@ function TemplateBackground({
           {baseGradient}
           {/* Stadium lights effect */}
           <div
-            className="absolute left-1/4 top-0 h-[500px] w-[300px] opacity-30"
+            className="absolute top-0 left-1/4 h-[500px] w-[300px] opacity-30"
             style={{
               background: `linear-gradient(180deg, ${colors.accent} 0%, transparent 100%)`,
               transform: 'rotate(-15deg)',
@@ -989,7 +989,7 @@ function TemplateBackground({
             }}
           />
           <div
-            className="absolute right-1/4 top-0 h-[500px] w-[300px] opacity-30"
+            className="absolute top-0 right-1/4 h-[500px] w-[300px] opacity-30"
             style={{
               background: `linear-gradient(180deg, ${colors.accent} 0%, transparent 100%)`,
               transform: 'rotate(15deg)',
@@ -1016,7 +1016,7 @@ function TemplateBackground({
           />
           {/* Vinyl record decoration */}
           <div
-            className="absolute -right-20 top-20 h-80 w-80 rounded-full opacity-20"
+            className="absolute top-20 -right-20 h-80 w-80 rounded-full opacity-20"
             style={{ border: `40px solid ${colors.accent}` }}
           >
             <div className="absolute inset-8 rounded-full" style={{ background: colors.primary }} />
@@ -1043,7 +1043,7 @@ function TemplateBackground({
           />
           {/* Soft organic shapes */}
           <div
-            className="absolute right-0 top-0 h-full w-1/2 opacity-10"
+            className="absolute top-0 right-0 h-full w-1/2 opacity-10"
             style={{
               background: `radial-gradient(ellipse at right top, ${colors.accent} 0%, transparent 70%)`,
             }}
@@ -1057,7 +1057,7 @@ function TemplateBackground({
           <div className="absolute inset-0" style={{ background: colors.primary }} />
           {/* Minimal geometric shapes */}
           <div
-            className="absolute right-20 top-20 h-40 w-40 rotate-45 opacity-10"
+            className="absolute top-20 right-20 h-40 w-40 rotate-45 opacity-10"
             style={{ border: `2px solid ${colors.text}` }}
           />
           <div
@@ -1113,7 +1113,7 @@ function TemplateBackground({
             }}
           />
           <div
-            className="absolute bottom-0 left-0 right-0 h-1/2"
+            className="absolute right-0 bottom-0 left-0 h-1/2"
             style={{
               background: `linear-gradient(180deg, transparent 0%, ${colors.accent}10 100%)`,
             }}
