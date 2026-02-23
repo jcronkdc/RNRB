@@ -15,21 +15,21 @@ const PRESET_BACKGROUNDS = [
   {
     id: 'blur-light',
     name: 'Light Blur',
-    type: 'blur' as const,
+    type: 'blur-sm' as const,
     value: 'light',
     preview: '🌫️',
   },
   {
     id: 'blur-medium',
     name: 'Medium Blur',
-    type: 'blur' as const,
+    type: 'blur-sm' as const,
     value: 'medium',
     preview: '🌫️',
   },
   {
     id: 'blur-heavy',
     name: 'Heavy Blur',
-    type: 'blur' as const,
+    type: 'blur-sm' as const,
     value: 'heavy',
     preview: '🌫️',
   },
@@ -115,7 +115,7 @@ interface VirtualBackgroundsProps {
 export interface BackgroundOption {
   id: string;
   name: string;
-  type: 'none' | 'blur' | 'image' | 'gradient';
+  type: 'none' | 'blur-sm' | 'image' | 'gradient';
   url?: string;
   value?: string;
 }
@@ -217,7 +217,7 @@ export function VirtualBackgrounds({
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 p-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-500">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-violet-500">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -245,7 +245,7 @@ export function VirtualBackgrounds({
                   </h3>
                   <div className="grid grid-cols-4 gap-3">
                     {allBackgrounds
-                      .filter((bg) => bg.type === 'none' || bg.type === 'blur')
+                      .filter((bg) => bg.type === 'none' || bg.type === 'blur-sm')
                       .map((background) => (
                         <BackgroundCard
                           key={background.id}
@@ -363,7 +363,7 @@ function BackgroundCard({
     if (background.type === 'none') {
       return { backgroundColor: '#1a1a2e' };
     }
-    if (background.type === 'blur') {
+    if (background.type === 'blur-sm') {
       return {
         backgroundColor: '#1a1a2e',
         filter:
@@ -399,7 +399,7 @@ function BackgroundCard({
       >
         {/* Preview */}
         <div className="absolute inset-0" style={getPreviewStyle()}>
-          {(background.type === 'none' || background.type === 'blur') && (
+          {(background.type === 'none' || background.type === 'blur-sm') && (
             <div className="absolute inset-0 flex items-center justify-center text-2xl">
               {background.type === 'none' ? '×' : '~'}
             </div>

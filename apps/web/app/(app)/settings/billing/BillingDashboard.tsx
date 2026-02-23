@@ -177,7 +177,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4"
         >
-          <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
           <div className="flex-1">
             <p className="text-sm font-medium text-red-400">{error}</p>
           </div>
@@ -191,12 +191,12 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl border border-[color:var(--border)] bg-gradient-to-r from-gray-900 to-black p-8"
+        className="rounded-xl border border-(--border) bg-linear-to-r from-gray-900 to-black p-8"
       >
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div
-              className={`h-16 w-16 rounded-xl bg-gradient-to-br ${planInfo.color} flex items-center justify-center`}
+              className={`h-16 w-16 rounded-xl bg-linear-to-br ${planInfo.color} flex items-center justify-center`}
             >
               <PlanIcon className="h-8 w-8 text-white" />
             </div>
@@ -285,8 +285,8 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             transition={{ delay: 0.1 }}
             className={`rounded-xl p-6 ${
               currentTier === 'free'
-                ? 'border-2 border-orange-500 bg-gradient-to-br from-orange-500/10 to-red-500/10'
-                : 'border border-[color:var(--border)] bg-gray-900'
+                ? 'border-2 border-orange-500 bg-linear-to-br from-orange-500/10 to-red-500/10'
+                : 'border border-(--border) bg-gray-900'
             }`}
           >
             <div className="mb-4 flex items-center gap-2">
@@ -299,7 +299,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             <ul className="mb-6 space-y-2.5">
               {PLAN_FEATURES.free.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -319,8 +319,8 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             transition={{ delay: 0.2 }}
             className={`relative rounded-xl p-6 ${
               currentTier === 'creator'
-                ? 'border-2 border-orange-500 bg-gradient-to-br from-orange-500/10 to-red-500/10'
-                : 'border border-[color:var(--border)] bg-gray-900'
+                ? 'border-2 border-orange-500 bg-linear-to-br from-orange-500/10 to-red-500/10'
+                : 'border border-(--border) bg-gray-900'
             }`}
           >
             {currentTier !== 'creator' && (
@@ -340,7 +340,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             <ul className="mb-6 space-y-2.5">
               {PLAN_FEATURES.creator.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -354,7 +354,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
               <Button
                 onClick={() => handleUpgrade('creator')}
                 disabled={!!isLoading}
-                className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                className="w-full bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               >
                 {isLoading === 'creator' ? (
                   <>
@@ -384,8 +384,8 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             transition={{ delay: 0.3 }}
             className={`rounded-xl p-6 ${
               currentTier === 'studio'
-                ? 'border-2 border-purple-500 bg-gradient-to-br from-purple-500/10 to-pink-500/10'
-                : 'border border-[color:var(--border)] bg-gray-900'
+                ? 'border-2 border-purple-500 bg-linear-to-br from-purple-500/10 to-pink-500/10'
+                : 'border border-(--border) bg-gray-900'
             }`}
           >
             <div className="mb-4 flex items-center gap-2">
@@ -400,7 +400,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             <ul className="mb-6 space-y-2.5">
               {PLAN_FEATURES.studio.map((feature, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
                   <span>{feature}</span>
                 </li>
               ))}
@@ -416,7 +416,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
                   currentTier === 'free' ? handleUpgrade('studio') : handleManageBilling()
                 }
                 disabled={!!isLoading}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                className="w-full bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
               >
                 {isLoading === 'studio' ? (
                   <>
@@ -440,7 +440,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="rounded-xl border border-[color:var(--border)] bg-gray-900 p-6"
+          className="rounded-xl border border-(--border) bg-gray-900 p-6"
         >
           <h2 className="mb-4 text-xl font-semibold text-white">Manage Your Subscription</h2>
           <p className="mb-6 text-gray-400">
@@ -505,7 +505,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-xl border border-[color:var(--border)] bg-gray-900 p-6"
+            className="w-full max-w-md rounded-xl border border-(--border) bg-gray-900 p-6"
           >
             <h3 className="mb-4 text-xl font-bold text-white">Cancel Your Subscription?</h3>
             <p className="mb-6 text-gray-400">
@@ -547,10 +547,10 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="rounded-xl border border-orange-500/30 bg-gradient-to-r from-orange-500/10 to-red-500/10 p-6"
+          className="rounded-xl border border-orange-500/30 bg-linear-to-r from-orange-500/10 to-red-500/10 p-6"
         >
           <div className="flex items-start gap-4">
-            <Sparkles className="h-6 w-6 flex-shrink-0 text-orange-500" />
+            <Sparkles className="h-6 w-6 shrink-0 text-orange-500" />
             <div>
               <h3 className="mb-2 text-lg font-semibold text-white">Unlock More with Creator</h3>
               <p className="mb-4 text-sm text-gray-300">
@@ -560,7 +560,7 @@ export function BillingDashboard({ subscription }: BillingDashboardProps) {
                 onClick={() => handleUpgrade('creator')}
                 disabled={!!isLoading}
                 size="sm"
-                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                className="bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               >
                 {isLoading === 'creator' ? (
                   <>

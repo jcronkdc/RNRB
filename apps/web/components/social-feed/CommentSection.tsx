@@ -110,7 +110,7 @@ export function CommentSection({ postId }: CommentSectionProps) {
     <div className="space-y-4">
       {/* Comment Input */}
       <div className="flex gap-3">
-        <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-linear-to-br from-purple-500 to-pink-500">
           {session.user.image ? (
             <Image
               src={session.user.image}
@@ -144,12 +144,12 @@ export function CommentSection({ postId }: CommentSectionProps) {
                 }
               }}
               placeholder="Write a comment..."
-              className="flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-none"
+              className="flex-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
             />
             <button
               onClick={handleSubmit}
               disabled={posting || !newComment.trim()}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white transition-all hover:shadow-lg hover:shadow-purple-500/25 disabled:opacity-50"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-r from-purple-500 to-pink-500 text-white transition-all hover:shadow-lg hover:shadow-purple-500/25 disabled:opacity-50"
             >
               {posting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -202,7 +202,7 @@ function Comment({
 
   return (
     <div className={`flex gap-3 ${isReply ? 'ml-12' : ''}`}>
-      <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-linear-to-br from-purple-500 to-pink-500">
         {comment.user.image ? (
           <Image
             src={comment.user.image}

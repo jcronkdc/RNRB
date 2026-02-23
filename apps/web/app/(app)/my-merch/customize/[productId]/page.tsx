@@ -465,8 +465,8 @@ export default function ProductCustomizerPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -521,7 +521,7 @@ export default function ProductCustomizerPage() {
               className="space-y-6"
             >
               {/* Main Preview */}
-              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-800 to-zinc-900">
+              <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-zinc-800 to-zinc-900">
                 {/* Generated Mockup or Product Image */}
                 {generatedMockups.length > 0 ? (
                   <>
@@ -626,7 +626,7 @@ export default function ProductCustomizerPage() {
                   <button
                     key={variant.color}
                     onClick={() => setSelectedColor(variant.color)}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl transition-all ${
+                    className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-xl transition-all ${
                       selectedColor === variant.color
                         ? 'ring-2 ring-purple-500 ring-offset-2 ring-offset-black'
                         : 'opacity-60 hover:opacity-100'
@@ -821,7 +821,7 @@ export default function ProductCustomizerPage() {
                     value={productName}
                     onChange={(e) => setProductName(e.target.value)}
                     placeholder="e.g., Tour 2025 Tee"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/30 focus:border-purple-500/50 focus:outline-hidden"
                   />
                 </div>
 
@@ -877,7 +877,7 @@ export default function ProductCustomizerPage() {
               <button
                 onClick={handleCreateProduct}
                 disabled={!design.url || !productName || selectedSizes.length === 0 || isCreating}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-orange-500 px-6 py-4 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-xl hover:shadow-purple-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-purple-500 to-orange-500 px-6 py-4 font-semibold text-white shadow-lg shadow-purple-500/25 transition-all hover:shadow-xl hover:shadow-purple-500/30 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isCreating ? (
                   <Loader2 className="h-5 w-5 animate-spin" />

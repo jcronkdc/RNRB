@@ -626,7 +626,7 @@ export default function EmailSettingsPage() {
                   {setupInstructions[activeSetupTab].map((item) => (
                     <li key={item.step} className="flex items-start gap-3">
                       <span
-                        className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold"
                         style={{ background: 'rgba(34, 197, 94, 0.2)', color: '#22c55e' }}
                       >
                         {item.step}
@@ -788,7 +788,7 @@ export default function EmailSettingsPage() {
                       }}
                     />
                     {checkingUsername && (
-                      <Loader2 className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-[var(--muted)]" />
+                      <Loader2 className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-(--muted)" />
                     )}
                     {!checkingUsername && usernameAvailable === true && (
                       <Check className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
@@ -916,7 +916,7 @@ export default function EmailSettingsPage() {
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--text)]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted) hover:text-(--text)"
                   >
                     {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -970,7 +970,7 @@ export default function EmailSettingsPage() {
                   ].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div
-                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg sm:h-8 sm:w-8"
                         style={{ background: 'rgba(255, 99, 71, 0.15)' }}
                       >
                         <feature.icon className="h-5 w-5 text-orange-400 sm:h-4 sm:w-4" />
@@ -1095,7 +1095,7 @@ export default function EmailSettingsPage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-4">
                 <div
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
                   style={{ background: 'linear-gradient(135deg, #8b5cf6, #3b82f6)' }}
                 >
                   <Crown className="h-7 w-7 text-white" />
@@ -1207,15 +1207,15 @@ export default function EmailSettingsPage() {
               <div className="space-y-1 text-sm" style={{ color: 'var(--muted)' }}>
                 <p>
                   Server:{' '}
-                  <code className="text-[var(--accent)]">{connectionSettings?.imap.server}</code>
+                  <code className="text-(--accent)">{connectionSettings?.imap.server}</code>
                 </p>
                 <p>
                   Port:{' '}
-                  <code className="text-[var(--accent)]">{connectionSettings?.imap.port}</code>
+                  <code className="text-(--accent)">{connectionSettings?.imap.port}</code>
                 </p>
                 <p>
                   Security:{' '}
-                  <code className="text-[var(--accent)]">{connectionSettings?.imap.security}</code>
+                  <code className="text-(--accent)">{connectionSettings?.imap.security}</code>
                 </p>
               </div>
             </div>
@@ -1227,15 +1227,15 @@ export default function EmailSettingsPage() {
               <div className="space-y-1 text-sm" style={{ color: 'var(--muted)' }}>
                 <p>
                   Server:{' '}
-                  <code className="text-[var(--accent)]">{connectionSettings?.smtp.server}</code>
+                  <code className="text-(--accent)">{connectionSettings?.smtp.server}</code>
                 </p>
                 <p>
                   Port:{' '}
-                  <code className="text-[var(--accent)]">{connectionSettings?.smtp.port}</code>
+                  <code className="text-(--accent)">{connectionSettings?.smtp.port}</code>
                 </p>
                 <p>
                   Security:{' '}
-                  <code className="text-[var(--accent)]">{connectionSettings?.smtp.security}</code>
+                  <code className="text-(--accent)">{connectionSettings?.smtp.security}</code>
                 </p>
               </div>
             </div>
@@ -1398,7 +1398,7 @@ export default function EmailSettingsPage() {
                 type="button"
                 onClick={() => setAutoReplyEnabled(!autoReplyEnabled)}
                 className={`relative h-6 w-11 rounded-full transition-colors ${
-                  autoReplyEnabled ? 'bg-[var(--accent)]' : 'bg-gray-600'
+                  autoReplyEnabled ? 'bg-(--accent)' : 'bg-gray-600'
                 }`}
               >
                 <span
@@ -1452,7 +1452,7 @@ export default function EmailSettingsPage() {
                 type="button"
                 onClick={() => setForwardingEnabled(!forwardingEnabled)}
                 className={`relative h-6 w-11 rounded-full transition-colors ${
-                  forwardingEnabled ? 'bg-[var(--accent)]' : 'bg-gray-600'
+                  forwardingEnabled ? 'bg-(--accent)' : 'bg-gray-600'
                 }`}
               >
                 <span

@@ -384,7 +384,7 @@ export function ContractTemplates() {
     <div className="rnrb-card overflow-hidden rounded-2xl p-6">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-blue-600">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-sky-500 to-blue-600">
           <FileText className="h-5 w-5 text-white" />
         </div>
         <div>
@@ -396,7 +396,7 @@ export function ContractTemplates() {
       {/* Disclaimer */}
       <div className="mb-6 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4">
         <div className="flex items-start gap-3">
-          <Shield className="h-5 w-5 flex-shrink-0 text-yellow-500" />
+          <Shield className="h-5 w-5 shrink-0 text-yellow-500" />
           <div className="text-sm">
             <p className="font-semibold text-yellow-400">Legal Disclaimer</p>
             <p className="text-muted-foreground">
@@ -416,7 +416,7 @@ export function ContractTemplates() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search templates..."
-            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-none"
+            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-hidden"
           />
         </div>
         <div className="flex flex-wrap gap-2">

@@ -203,7 +203,7 @@ export function PinnedCommentThread({
                 <div className="mb-2 flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     {/* Avatar */}
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                       {comment.userAvatar ? (
                         <img
                           src={comment.userAvatar}
@@ -411,7 +411,7 @@ export function PinnedCommentThread({
               value={newCommentText}
               onChange={(e) => setNewCommentText(e.target.value)}
               placeholder="Add a comment... Use @ to mention someone"
-              className="w-full resize-none rounded-lg border border-border bg-surface p-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="w-full resize-none rounded-lg border border-border bg-surface p-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={3}
               autoFocus
             />

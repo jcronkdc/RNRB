@@ -255,7 +255,7 @@ export function AudioUploader({
 
       {/* Audio Player */}
       {audioUrl && (
-        <Card className="border-green-500/30 bg-gradient-to-br from-green-500/10 to-blue-500/10 p-6">
+        <Card className="border-green-500/30 bg-linear-to-br from-green-500/10 to-blue-500/10 p-6">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500/20">

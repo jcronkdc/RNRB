@@ -122,7 +122,7 @@ export function TourDatesSection({ content, theme, animation }: TourDatesSection
                 }}
               >
                 {/* Date Block */}
-                <div className="flex flex-shrink-0 items-center gap-2 md:w-24 md:flex-col md:items-center md:gap-0">
+                <div className="flex shrink-0 items-center gap-2 md:w-24 md:flex-col md:items-center md:gap-0">
                   <span className="text-sm font-bold" style={{ color: accentColor }}>
                     {date.month}
                   </span>
@@ -170,7 +170,7 @@ export function TourDatesSection({ content, theme, animation }: TourDatesSection
                 </div>
 
                 {/* Action */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {isCancelled ? (
                     <span
                       className="rounded-full px-4 py-2 text-sm font-semibold"

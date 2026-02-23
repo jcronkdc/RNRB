@@ -573,7 +573,7 @@ export default function ToursPage() {
                     placeholder="Search tours..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-12 w-full rounded-xl border pl-11 pr-4 text-sm transition-all focus:outline-none focus:ring-2"
+                    className="h-12 w-full rounded-xl border pl-11 pr-4 text-sm transition-all focus:outline-hidden focus:ring-2"
                     style={{
                       borderColor: 'var(--border)',
                       background: 'rgba(255, 255, 255, 0.03)',
@@ -584,7 +584,7 @@ export default function ToursPage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="h-12 rounded-xl border px-4 text-sm transition-all focus:outline-none focus:ring-2"
+                  className="h-12 rounded-xl border px-4 text-sm transition-all focus:outline-hidden focus:ring-2"
                   style={{
                     borderColor: 'var(--border)',
                     background: 'rgba(255, 255, 255, 0.03)',

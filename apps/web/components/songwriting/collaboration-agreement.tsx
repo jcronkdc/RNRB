@@ -217,7 +217,7 @@ DISCLAIMER: This agreement is a template and should be reviewed by a qualified m
     copyrightInfo.splits.reduce((sum, split) => sum + split.percentage, 0) === 100;
 
   return (
-    <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+    <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-500/20">
           <FileCheck className="h-6 w-6 text-green-400" />

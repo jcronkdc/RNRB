@@ -145,7 +145,7 @@ export function FloatingReactions({ reactions, onReact, disabled }: FloatingReac
             disabled={disabled}
             whileTap={{ scale: 0.9 }}
             whileHover={{ scale: 1.1 }}
-            className={`flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-red-500 text-white shadow-lg shadow-pink-500/30 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50`}
+            className={`flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-pink-500 to-red-500 text-white shadow-lg shadow-pink-500/30 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50`}
           >
             <div className="text-2xl">{REACTION_ICONS[selectedType]}</div>
           </motion.button>

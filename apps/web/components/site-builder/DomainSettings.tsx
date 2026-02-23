@@ -314,9 +314,9 @@ export function DomainSettings() {
                     }`}
                   >
                     {verifyResult.success ? (
-                      <CheckCircle size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
+                      <CheckCircle size={20} className="mt-0.5 shrink-0 text-green-400" />
                     ) : (
-                      <AlertCircle size={20} className="mt-0.5 flex-shrink-0 text-yellow-400" />
+                      <AlertCircle size={20} className="mt-0.5 shrink-0 text-yellow-400" />
                     )}
                     <div>
                       <p className={verifyResult.success ? 'text-green-400' : 'text-yellow-400'}>
@@ -444,13 +444,13 @@ function DNSRecord({
       </div>
       <button
         onClick={() => onCopy(value, label)}
-        className="flex-shrink-0 rounded p-2 transition-colors hover:bg-white/10"
+        className="shrink-0 rounded p-2 transition-colors hover:bg-white/10"
         style={{ color: copied === label ? 'var(--accent)' : 'var(--muted)' }}
       >
         {copied === label ? <Check size={16} /> : <Copy size={16} />}
       </button>
       {preferred && (
-        <span className="flex-shrink-0 rounded bg-green-500/20 px-2 py-1 text-xs text-green-400">
+        <span className="shrink-0 rounded bg-green-500/20 px-2 py-1 text-xs text-green-400">
           Recommended
         </span>
       )}

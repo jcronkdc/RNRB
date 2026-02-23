@@ -209,7 +209,7 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
               <div className="space-y-4">
                 {/* Current/Preview Image */}
                 <div
-                  className="relative aspect-[3/1] overflow-hidden rounded-xl"
+                  className="relative aspect-3/1 overflow-hidden rounded-xl"
                   style={{ background: 'var(--surface)' }}
                 >
                   {previewImage || activeWorkspace.headerImage ? (

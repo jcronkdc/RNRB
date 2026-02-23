@@ -404,7 +404,7 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
       >
         {/* Header */}
         <div
-          className="flex flex-shrink-0 items-center justify-between px-6 py-4"
+          className="flex shrink-0 items-center justify-between px-6 py-4"
           style={{ borderBottom: '1px solid var(--border)' }}
         >
           <div>
@@ -453,7 +453,7 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex-shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   selectedCategory === category.id ? 'bg-white/10' : ''
                 }`}
                 style={{
@@ -510,7 +510,7 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
                         {section.name}
                       </h3>
                       {section.isPro && (
-                        <span className="rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-bold text-white">
+                        <span className="rounded-full bg-linear-to-r from-amber-500 to-orange-500 px-2 py-0.5 text-xs font-bold text-white">
                           PRO
                         </span>
                       )}
@@ -535,7 +535,7 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
 
         {/* Footer */}
         <div
-          className="flex flex-shrink-0 items-center justify-between px-6 py-4"
+          className="flex shrink-0 items-center justify-between px-6 py-4"
           style={{ borderTop: '1px solid var(--border)' }}
         >
           <p className="text-sm" style={{ color: 'var(--muted)' }}>

@@ -163,7 +163,7 @@ export function TicketsSection({ content, theme }: TicketsSectionProps) {
                   <div className="flex items-center gap-4 p-4 md:gap-6 md:p-6">
                     {/* Date */}
                     <div
-                      className="flex-shrink-0 rounded-xl p-3 text-center"
+                      className="shrink-0 rounded-xl p-3 text-center"
                       style={{ background: 'var(--bg)', minWidth: '70px' }}
                     >
                       <div
@@ -189,13 +189,13 @@ export function TicketsSection({ content, theme }: TicketsSectionProps) {
                         {event.isHeadliner && (
                           <Star
                             size={14}
-                            className="flex-shrink-0"
+                            className="shrink-0"
                             style={{ color: accentColor }}
                           />
                         )}
                         {event.isFestival && (
                           <span
-                            className="flex-shrink-0 rounded px-2 py-0.5 text-xs font-medium"
+                            className="shrink-0 rounded px-2 py-0.5 text-xs font-medium"
                             style={{ background: `${accentColor}20`, color: accentColor }}
                           >
                             Festival
@@ -225,7 +225,7 @@ export function TicketsSection({ content, theme }: TicketsSectionProps) {
                     </div>
 
                     {/* Price & Status */}
-                    <div className="flex flex-shrink-0 flex-col items-end gap-2">
+                    <div className="flex shrink-0 flex-col items-end gap-2">
                       {statusInfo && (
                         <span
                           className="rounded-full px-3 py-1 text-xs font-semibold"
@@ -244,7 +244,7 @@ export function TicketsSection({ content, theme }: TicketsSectionProps) {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-shrink-0 items-center gap-2">
+                    <div className="flex shrink-0 items-center gap-2">
                       {event.ticketUrl &&
                         event.status !== 'sold_out' &&
                         event.status !== 'cancelled' && (

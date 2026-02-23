@@ -519,7 +519,7 @@ export default function MessagesPage() {
                     onFocus={() => setIsSearchFocused(true)}
                     onBlur={() => setIsSearchFocused(false)}
                     placeholder="Search conversations... (⌘K)"
-                    className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm transition-all focus:outline-none focus:ring-2"
+                    className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm transition-all focus:outline-hidden focus:ring-2"
                     style={{
                       borderColor: isSearchFocused ? 'var(--accent)' : 'var(--border)',
                       background: 'var(--bg)',
@@ -606,7 +606,7 @@ export default function MessagesPage() {
                           <div className="flex items-start gap-3">
                             {/* Avatar */}
                             <div
-                              className="relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                              className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
                               style={{
                                 background:
                                   conv.type === 'project'
@@ -931,7 +931,7 @@ export default function MessagesPage() {
                       style={{ borderColor: 'var(--border)', background: 'rgba(42, 42, 42, 0.5)' }}
                     >
                       <div
-                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
                         style={{ background: feature.bgColor }}
                       >
                         <feature.icon className="h-5 w-5" style={{ color: feature.iconColor }} />
@@ -1029,7 +1029,7 @@ export default function MessagesPage() {
                     value={newUserEmail}
                     onChange={(e) => setNewUserEmail(e.target.value)}
                     placeholder="colleague@example.com"
-                    className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-none focus:ring-2"
+                    className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-hidden focus:ring-2"
                     style={{
                       borderColor: 'var(--border)',
                       background: 'var(--bg)',

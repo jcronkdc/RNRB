@@ -186,8 +186,8 @@ export default function WriteReviewPage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-amber-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-gradient-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-amber-500/15 to-transparent blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-2xl px-4 py-8">
@@ -237,10 +237,10 @@ export default function WriteReviewPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-6 rounded-xl border border-white/10 bg-white/[0.03] p-4"
+            className="mb-6 rounded-xl border border-white/10 bg-white/3 p-4"
           >
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-orange-500 to-amber-500">
+              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-orange-500 to-amber-500">
                 {reviewee.image ? (
                   <img src={reviewee.image} alt="" className="h-full w-full object-cover" />
                 ) : (
@@ -272,7 +272,7 @@ export default function WriteReviewPage() {
           className="space-y-6"
         >
           {/* Overall Rating */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="rounded-xl border border-white/10 bg-white/3 p-5">
             <h2 className="mb-4 font-semibold text-white">Overall Rating</h2>
             <div className="flex items-center justify-center gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -303,7 +303,7 @@ export default function WriteReviewPage() {
           </div>
 
           {/* Detailed Ratings */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="rounded-xl border border-white/10 bg-white/3 p-5">
             <h2 className="mb-4 font-semibold text-white">Detailed Ratings (Optional)</h2>
             <div className="space-y-4">
               <StarInput
@@ -334,7 +334,7 @@ export default function WriteReviewPage() {
           </div>
 
           {/* Written Review */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="rounded-xl border border-white/10 bg-white/3 p-5">
             <h2 className="mb-4 font-semibold text-white">Your Review</h2>
 
             <div className="mb-4">
@@ -345,7 +345,7 @@ export default function WriteReviewPage() {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Summarize your experience"
                 maxLength={100}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
               />
             </div>
 
@@ -357,7 +357,7 @@ export default function WriteReviewPage() {
                 placeholder="Share your experience with this transaction..."
                 rows={5}
                 maxLength={2000}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                 required
               />
               <div className="mt-1 text-right text-xs text-white/40">{content.length}/2000</div>
@@ -365,7 +365,7 @@ export default function WriteReviewPage() {
           </div>
 
           {/* Pros & Cons */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="rounded-xl border border-white/10 bg-white/3 p-5">
             <h2 className="mb-4 font-semibold text-white">Pros & Cons (Optional)</h2>
 
             <div className="grid gap-6 md:grid-cols-2">
@@ -393,7 +393,7 @@ export default function WriteReviewPage() {
                         onChange={(e) => setNewPro(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddPro())}
                         placeholder="Add a pro"
-                        className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-emerald-500/50"
+                        className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-hidden focus:border-emerald-500/50"
                       />
                       <button
                         type="button"
@@ -431,7 +431,7 @@ export default function WriteReviewPage() {
                         onChange={(e) => setNewCon(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCon())}
                         placeholder="Add a con"
-                        className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-rose-500/50"
+                        className="flex-1 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/40 outline-hidden focus:border-rose-500/50"
                       />
                       <button
                         type="button"
@@ -459,7 +459,7 @@ export default function WriteReviewPage() {
             <button
               type="submit"
               disabled={submitMutation.isPending || overallRating === 0 || content.length < 10}
-              className="flex-1 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 disabled:opacity-50"
+              className="flex-1 rounded-xl bg-linear-to-r from-orange-500 to-amber-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 disabled:opacity-50"
             >
               {submitMutation.isPending ? (
                 <span className="flex items-center justify-center gap-2">

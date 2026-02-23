@@ -172,35 +172,35 @@ export default function CertificatePage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--bg)]">
-        <Loader2 className="h-12 w-12 animate-spin text-[var(--accent)]" />
+      <div className="flex min-h-screen items-center justify-center bg-(--bg)">
+        <Loader2 className="h-12 w-12 animate-spin text-(--accent)" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[var(--bg)] p-4">
-        <div className="w-full max-w-md rounded-2xl bg-[var(--panel)] p-8 text-center">
-          <Award className="mx-auto mb-4 h-16 w-16 text-[var(--muted)]" />
-          <h2 className="mb-2 text-xl font-bold text-[var(--text)]">{error}</h2>
+      <div className="flex min-h-screen items-center justify-center bg-(--bg) p-4">
+        <div className="w-full max-w-md rounded-2xl bg-(--panel) p-8 text-center">
+          <Award className="mx-auto mb-4 h-16 w-16 text-(--muted)" />
+          <h2 className="mb-2 text-xl font-bold text-(--text)">{error}</h2>
 
           {progress && (
             <div className="mt-6">
-              <p className="mb-4 text-[var(--muted)]">
+              <p className="mb-4 text-(--muted)">
                 Complete all lessons to earn your certificate
               </p>
-              <div className="mb-2 h-3 w-full rounded-full bg-[var(--bg)]">
+              <div className="mb-2 h-3 w-full rounded-full bg-(--bg)">
                 <div
-                  className="h-full rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] transition-all"
+                  className="h-full rounded-full bg-linear-to-r from-(--accent) to-(--gold) transition-all"
                   style={{ width: `${progress.percentage}%` }}
                 />
               </div>
-              <p className="text-sm text-[var(--muted)]">
+              <p className="text-sm text-(--muted)">
                 {progress.completed} of {progress.total} lessons completed ({progress.percentage}%)
               </p>
               <Link href={`/masterclasses/${slug}/watch`}>
-                <button className="mt-6 rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)] hover:bg-[var(--accent-hover)]">
+                <button className="mt-6 rounded-full bg-(--accent) px-6 py-3 text-(--text) hover:bg-(--accent-hover)">
                   Continue Learning
                 </button>
               </Link>
@@ -209,7 +209,7 @@ export default function CertificatePage() {
 
           {!progress && (
             <Link href={`/masterclasses/${slug}`}>
-              <button className="mt-6 rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)] hover:bg-[var(--accent-hover)]">
+              <button className="mt-6 rounded-full bg-(--accent) px-6 py-3 text-(--text) hover:bg-(--accent-hover)">
                 View Course
               </button>
             </Link>
@@ -222,7 +222,7 @@ export default function CertificatePage() {
   if (!certificate) return null;
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] px-4 py-12">
+    <div className="min-h-screen bg-(--bg) px-4 py-12">
       {/* Header with logo */}
       <div className="mb-8 text-center">
         <Link href="/" className="inline-block">
@@ -242,14 +242,14 @@ export default function CertificatePage() {
         animate={{ opacity: 1, y: 0 }}
         className="mx-auto mb-8 max-w-3xl text-center"
       >
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-green-500/20 px-4 py-2 text-[var(--sage)]">
+        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-green-500/20 px-4 py-2 text-(--sage)">
           <CheckCircle className="h-5 w-5" />
           <span>Course Completed!</span>
         </div>
-        <h1 className="mb-2 text-3xl font-bold text-[var(--text)]">
+        <h1 className="mb-2 text-3xl font-bold text-(--text)">
           Congratulations, {certificate.studentName}!
         </h1>
-        <p className="text-[var(--muted)]">You've earned your certificate of completion</p>
+        <p className="text-(--muted)">You've earned your certificate of completion</p>
       </motion.div>
 
       {/* Certificate Card */}
@@ -260,70 +260,70 @@ export default function CertificatePage() {
         transition={{ delay: 0.2 }}
         className="mx-auto max-w-3xl"
       >
-        <div className="relative rounded-3xl bg-gradient-to-br from-[#1a1a2e] to-[#16213e] p-1">
-          <div className="from-[var(--accent)]/20 to-[var(--gold)]/20 absolute inset-0 rounded-3xl bg-gradient-to-br via-transparent" />
+        <div className="relative rounded-3xl bg-linear-to-br from-[#1a1a2e] to-[#16213e] p-1">
+          <div className="from-(--accent)/20 to-(--gold)/20 absolute inset-0 rounded-3xl bg-linear-to-br via-transparent" />
 
-          <div className="border-[var(--accent)]/30 relative rounded-3xl border bg-[#0f0f23] p-8 md:p-12">
+          <div className="border-(--accent)/30 relative rounded-3xl border bg-[#0f0f23] p-8 md:p-12">
             {/* Decorative elements */}
-            <div className="border-[var(--accent)]/30 absolute left-4 top-4 h-20 w-20 border-l-2 border-t-2" />
-            <div className="border-[var(--accent)]/30 absolute right-4 top-4 h-20 w-20 border-r-2 border-t-2" />
-            <div className="border-[var(--accent)]/30 absolute bottom-4 left-4 h-20 w-20 border-b-2 border-l-2" />
-            <div className="border-[var(--accent)]/30 absolute bottom-4 right-4 h-20 w-20 border-b-2 border-r-2" />
+            <div className="border-(--accent)/30 absolute left-4 top-4 h-20 w-20 border-l-2 border-t-2" />
+            <div className="border-(--accent)/30 absolute right-4 top-4 h-20 w-20 border-r-2 border-t-2" />
+            <div className="border-(--accent)/30 absolute bottom-4 left-4 h-20 w-20 border-b-2 border-l-2" />
+            <div className="border-(--accent)/30 absolute bottom-4 right-4 h-20 w-20 border-b-2 border-r-2" />
 
             {/* Certificate Content */}
             <div className="text-center">
               {/* Award Icon */}
               <div className="relative mx-auto mb-6 h-20 w-20">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] opacity-50 blur-xl" />
-                <div className="relative flex h-full w-full items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)]">
-                  <Award className="h-10 w-10 text-[var(--text)]" />
+                <div className="absolute inset-0 rounded-full bg-linear-to-r from-(--accent) to-(--gold) opacity-50 blur-xl" />
+                <div className="relative flex h-full w-full items-center justify-center rounded-full bg-linear-to-r from-(--accent) to-(--gold)">
+                  <Award className="h-10 w-10 text-(--text)" />
                 </div>
               </div>
 
               {/* Title */}
-              <h2 className="mb-2 text-sm tracking-[0.3em] text-[var(--accent)]">
+              <h2 className="mb-2 text-sm tracking-[0.3em] text-(--accent)">
                 CERTIFICATE OF COMPLETION
               </h2>
-              <div className="mx-auto mb-8 h-1 w-24 bg-gradient-to-r from-[var(--accent)] to-[var(--gold)]" />
+              <div className="mx-auto mb-8 h-1 w-24 bg-linear-to-r from-(--accent) to-(--gold)" />
 
               {/* Student Name */}
-              <p className="mb-2 text-[var(--muted)]">This is to certify that</p>
-              <h3 className="mb-4 font-serif text-4xl font-bold text-[var(--text)]">
+              <p className="mb-2 text-(--muted)">This is to certify that</p>
+              <h3 className="mb-4 font-serif text-4xl font-bold text-(--text)">
                 {certificate.studentName}
               </h3>
 
               {/* Course */}
-              <p className="mb-2 text-[var(--muted)]">has successfully completed</p>
-              <h4 className="mb-2 text-2xl font-bold text-[var(--text)]">
+              <p className="mb-2 text-(--muted)">has successfully completed</p>
+              <h4 className="mb-2 text-2xl font-bold text-(--text)">
                 "{certificate.courseName}"
               </h4>
 
               {/* Instructor */}
-              <p className="text-[var(--muted)]">
-                Taught by <span className="text-[var(--accent)]">{certificate.instructorName}</span>
+              <p className="text-(--muted)">
+                Taught by <span className="text-(--accent)">{certificate.instructorName}</span>
               </p>
               {certificate.instructorHeadline && (
-                <p className="text-sm text-[var(--muted)]">{certificate.instructorHeadline}</p>
+                <p className="text-sm text-(--muted)">{certificate.instructorHeadline}</p>
               )}
 
               {/* Stats */}
               <div className="my-8 flex items-center justify-center gap-8">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-[var(--accent)]" />
-                  <span className="text-sm text-[var(--muted)]">
+                  <Calendar className="h-4 w-4 text-(--accent)" />
+                  <span className="text-sm text-(--muted)">
                     {formatDate(certificate.issuedAt)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-[var(--accent)]" />
-                  <span className="text-sm text-[var(--muted)]">
+                  <BookOpen className="h-4 w-4 text-(--accent)" />
+                  <span className="text-sm text-(--muted)">
                     {certificate.lessonsCompleted} Lessons
                   </span>
                 </div>
                 {certificate.duration && (
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-[var(--accent)]" />
-                    <span className="text-sm text-[var(--muted)]">
+                    <Clock className="h-4 w-4 text-(--accent)" />
+                    <span className="text-sm text-(--muted)">
                       {Math.round(certificate.duration / 60)} Hours
                     </span>
                   </div>
@@ -331,9 +331,9 @@ export default function CertificatePage() {
               </div>
 
               {/* Certificate Number */}
-              <div className="inline-flex items-center gap-2 rounded-full bg-[var(--panel)] px-4 py-2">
-                <Shield className="h-4 w-4 text-[var(--sage)]" />
-                <span className="text-xs text-[var(--muted)]">
+              <div className="inline-flex items-center gap-2 rounded-full bg-(--panel) px-4 py-2">
+                <Shield className="h-4 w-4 text-(--sage)" />
+                <span className="text-xs text-(--muted)">
                   Certificate ID: {certificate.certificateNumber}
                 </span>
               </div>
@@ -351,7 +351,7 @@ export default function CertificatePage() {
       >
         <button
           onClick={downloadCertificate}
-          className="flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)] transition-colors hover:bg-[var(--accent-hover)]"
+          className="flex items-center gap-2 rounded-full bg-(--accent) px-6 py-3 text-(--text) transition-colors hover:bg-(--accent-hover)"
         >
           <Download className="h-5 w-5" />
           Download PDF
@@ -359,7 +359,7 @@ export default function CertificatePage() {
 
         <button
           onClick={copyLink}
-          className="flex items-center gap-2 rounded-full bg-[var(--panel)] px-6 py-3 text-[var(--text)] transition-colors hover:bg-[var(--border)]"
+          className="flex items-center gap-2 rounded-full bg-(--panel) px-6 py-3 text-(--text) transition-colors hover:bg-(--border)"
         >
           <LinkIcon className="h-5 w-5" />
           {copied ? 'Copied!' : 'Copy Link'}
@@ -367,7 +367,7 @@ export default function CertificatePage() {
 
         <button
           onClick={shareTwitter}
-          className="flex items-center gap-2 rounded-full bg-[#1DA1F2] px-6 py-3 text-[var(--text)] transition-colors hover:bg-[#1a8cd8]"
+          className="flex items-center gap-2 rounded-full bg-[#1DA1F2] px-6 py-3 text-(--text) transition-colors hover:bg-[#1a8cd8]"
         >
           <Twitter className="h-5 w-5" />
           Share
@@ -375,7 +375,7 @@ export default function CertificatePage() {
 
         <button
           onClick={shareLinkedin}
-          className="flex items-center gap-2 rounded-full bg-[#0077B5] px-6 py-3 text-[var(--text)] transition-colors hover:bg-[#006699]"
+          className="flex items-center gap-2 rounded-full bg-[#0077B5] px-6 py-3 text-(--text) transition-colors hover:bg-[#006699]"
         >
           <Linkedin className="h-5 w-5" />
           Share
@@ -384,7 +384,7 @@ export default function CertificatePage() {
 
       {/* Back Link */}
       <div className="mt-8 text-center">
-        <Link href="/masterclasses" className="text-[var(--accent)] hover:underline">
+        <Link href="/masterclasses" className="text-(--accent) hover:underline">
           ← Browse More Masterclasses
         </Link>
       </div>

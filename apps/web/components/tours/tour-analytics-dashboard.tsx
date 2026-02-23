@@ -114,7 +114,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <Button
-            variant={activeTab === 'schedule' ? 'default' : 'outline'}
+            variant={activeTab === 'schedule' ? 'default' : 'outline-solid'}
             onClick={() => setActiveTab('schedule')}
             className="flex items-center gap-2"
           >
@@ -122,7 +122,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
             Schedule
           </Button>
           <Button
-            variant={activeTab === 'routing' ? 'default' : 'outline'}
+            variant={activeTab === 'routing' ? 'default' : 'outline-solid'}
             onClick={() => setActiveTab('routing')}
             className="flex items-center gap-2"
           >

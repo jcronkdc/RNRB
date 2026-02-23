@@ -146,7 +146,7 @@ First verse lyrics...
 Chorus lyrics...
 
 Or just paste plain text - we'll auto-detect sections!`}
-                className="flex-1 resize-none rounded-xl p-4 font-mono text-sm outline-none"
+                className="flex-1 resize-none rounded-xl p-4 font-mono text-sm outline-hidden"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',

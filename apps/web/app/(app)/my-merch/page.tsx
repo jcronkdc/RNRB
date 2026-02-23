@@ -165,8 +165,8 @@ export default function MyMerchPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -213,7 +213,7 @@ export default function MyMerchPage() {
               </Link>
               <Link
                 href="/my-merch/create"
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-5 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
+                className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-5 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl"
               >
                 <Plus className="h-5 w-5" />
                 Create Product
@@ -329,7 +329,7 @@ export default function MyMerchPage() {
                   className="group overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10"
                 >
                   {/* Product Image */}
-                  <div className="relative aspect-square bg-gradient-to-br from-white/10 to-white/5">
+                  <div className="relative aspect-square bg-linear-to-br from-white/10 to-white/5">
                     {product.mockupUrl || product.thumbnailUrl ? (
                       <Image
                         src={product.mockupUrl || product.thumbnailUrl || ''}
@@ -419,7 +419,7 @@ export default function MyMerchPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-12 rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/10 to-transparent p-6"
+            className="mt-12 rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/10 to-transparent p-6"
           >
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>

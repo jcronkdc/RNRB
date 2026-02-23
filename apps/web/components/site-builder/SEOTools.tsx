@@ -320,7 +320,7 @@ export function SEOTools({
           style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
           <div
-            className={`flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full ${getScoreBg(seoScore.overall)}`}
+            className={`flex h-24 w-24 shrink-0 items-center justify-center rounded-full ${getScoreBg(seoScore.overall)}`}
           >
             <span className={`text-4xl font-bold ${getScoreColor(seoScore.overall)}`}>
               {seoScore.overall}
@@ -754,7 +754,7 @@ export function SEOTools({
                 className="overflow-hidden rounded-2xl"
                 style={{ background: '#fff', maxWidth: '500px' }}
               >
-                <div className="aspect-[2/1] bg-gray-200">
+                <div className="aspect-2/1 bg-gray-200">
                   {ogImage ? (
                     <img
                       src={ogImage}

@@ -90,10 +90,10 @@ export function UsageHistory({
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className={`h-full rounded-full ${
                 isHealthy
-                  ? 'bg-gradient-to-r from-green-500 to-green-400'
+                  ? 'bg-linear-to-r from-green-500 to-green-400'
                   : percentageUsed < 90
-                    ? 'bg-gradient-to-r from-orange-500 to-orange-400'
-                    : 'bg-gradient-to-r from-red-500 to-red-400'
+                    ? 'bg-linear-to-r from-orange-500 to-orange-400'
+                    : 'bg-linear-to-r from-red-500 to-red-400'
               }`}
             />
           </div>

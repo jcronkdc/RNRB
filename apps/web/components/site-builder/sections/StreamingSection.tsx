@@ -480,7 +480,7 @@ export function StreamingSectionEditor({
               key={layoutOption}
               onClick={() => onChange({ ...content, layout: layoutOption })}
               className={`rounded-lg px-4 py-2 capitalize ${
-                content.layout === layoutOption ? 'ring-2 ring-[var(--accent)]' : ''
+                content.layout === layoutOption ? 'ring-2 ring-(--accent)' : ''
               }`}
               style={{
                 background: content.layout === layoutOption ? 'var(--accent)' : 'var(--bg)',

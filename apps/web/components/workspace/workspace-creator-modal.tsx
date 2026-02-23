@@ -160,7 +160,7 @@ export function WorkspaceCreatorModal({ isOpen, onClose, onCreated }: WorkspaceC
             </div>
             <button
               onClick={handleClose}
-              className="rounded-lg p-2 transition-colors hover:bg-[var(--panel-hover)]"
+              className="rounded-lg p-2 transition-colors hover:bg-(--panel-hover)"
             >
               <X className="h-5 w-5" style={{ color: 'var(--muted)' }} />
             </button>
@@ -193,7 +193,7 @@ export function WorkspaceCreatorModal({ isOpen, onClose, onCreated }: WorkspaceC
                             whileTap={{ scale: 0.98 }}
                             onClick={() => handlePresetSelect(preset)}
                             disabled={isCreating}
-                            className="group flex items-start gap-3 rounded-xl border p-4 text-left transition-all hover:border-[var(--accent)]"
+                            className="group flex items-start gap-3 rounded-xl border p-4 text-left transition-all hover:border-(--accent)"
                             style={{
                               background: 'var(--surface)',
                               borderColor: 'var(--border)',
@@ -242,7 +242,7 @@ export function WorkspaceCreatorModal({ isOpen, onClose, onCreated }: WorkspaceC
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={handleStartCustom}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed p-4 transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-glow)]"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed p-4 transition-all hover:border-(--accent) hover:bg-(--accent-glow)"
                     style={{ borderColor: 'var(--border)' }}
                   >
                     <Sparkles className="h-5 w-5" style={{ color: 'var(--accent)' }} />
@@ -272,7 +272,7 @@ export function WorkspaceCreatorModal({ isOpen, onClose, onCreated }: WorkspaceC
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g., My Writing Room"
                       autoFocus
-                      className="w-full rounded-xl border px-4 py-3 outline-none transition-colors focus:border-[var(--accent)]"
+                      className="w-full rounded-xl border px-4 py-3 outline-hidden transition-colors focus:border-(--accent)"
                       style={{
                         background: 'var(--surface)',
                         borderColor: 'var(--border)',
@@ -305,8 +305,8 @@ export function WorkspaceCreatorModal({ isOpen, onClose, onCreated }: WorkspaceC
                           title={label}
                           className={`flex h-11 w-11 items-center justify-center rounded-xl border transition-all ${
                             selectedIcon === key
-                              ? 'border-[var(--accent)] bg-[var(--accent-glow)]'
-                              : 'border-transparent hover:bg-[var(--panel-hover)]'
+                              ? 'border-(--accent) bg-(--accent-glow)'
+                              : 'border-transparent hover:bg-(--panel-hover)'
                           }`}
                         >
                           <IconComponent
@@ -324,7 +324,7 @@ export function WorkspaceCreatorModal({ isOpen, onClose, onCreated }: WorkspaceC
                   <div className="flex gap-3">
                     <button
                       onClick={() => setStep('choose')}
-                      className="flex-1 rounded-xl border px-4 py-3 font-medium transition-colors hover:bg-[var(--panel-hover)]"
+                      className="flex-1 rounded-xl border px-4 py-3 font-medium transition-colors hover:bg-(--panel-hover)"
                       style={{ borderColor: 'var(--border)', color: 'var(--text)' }}
                     >
                       Back

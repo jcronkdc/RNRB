@@ -158,7 +158,7 @@ export function MusicPlayerSection({ content, theme, animation }: MusicPlayerSec
             <div className="mb-8 flex flex-col items-center gap-6 md:flex-row">
               {/* Album Art */}
               <div
-                className="h-48 w-48 flex-shrink-0 overflow-hidden rounded-lg"
+                className="h-48 w-48 shrink-0 overflow-hidden rounded-lg"
                 style={{
                   backgroundColor: accentColor + '20',
                   borderRadius: (theme.borderRadius as string) || '8px',
@@ -277,7 +277,7 @@ export function MusicPlayerSection({ content, theme, animation }: MusicPlayerSec
                 }}
               >
                 <div
-                  className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded"
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded"
                   style={{ backgroundColor: accentColor + '30' }}
                 >
                   {currentTrack === index && isPlaying ? (

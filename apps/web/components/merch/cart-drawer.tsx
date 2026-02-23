@@ -94,7 +94,7 @@ export function CartDrawer() {
                         className="flex gap-4 rounded-xl border border-white/10 bg-white/5 p-3"
                       >
                         {/* Product Image */}
-                        <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-white/10">
+                        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-white/10">
                           {item.product.image ? (
                             <Image
                               src={item.product.image}
@@ -202,7 +202,7 @@ export function CartDrawer() {
                   disabled={isCheckingOut}
                   whileHover={{ scale: isCheckingOut ? 1 : 1.02 }}
                   whileTap={{ scale: isCheckingOut ? 1 : 0.98 }}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-orange-500/30 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-orange-500/30 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isCheckingOut ? (
                     <>

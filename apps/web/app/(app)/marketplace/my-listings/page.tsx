@@ -89,11 +89,11 @@ function ListingCard({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] p-4 transition-all hover:border-white/20 hover:bg-white/[0.05]"
+      className="group relative overflow-hidden rounded-xl border border-white/10 bg-white/3 p-4 transition-all hover:border-white/20 hover:bg-white/5"
     >
       <div className="flex gap-4">
         {/* Image */}
-        <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-white/5">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-white/5">
           {listing.images?.[0]?.url ? (
             <img
               src={listing.images[0].url}
@@ -118,7 +118,7 @@ function ListingCard({
             </Link>
 
             {/* Actions Menu */}
-            <div className="relative flex-shrink-0">
+            <div className="relative shrink-0">
               <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="rounded-lg p-1.5 text-white/40 hover:bg-white/10 hover:text-white"
@@ -340,8 +340,8 @@ export default function MyListingsPage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-orange-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-gradient-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-8">
@@ -389,7 +389,7 @@ export default function MyListingsPage() {
           </div>
           <Link
             href="/marketplace/create"
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl hover:shadow-orange-500/30"
+            className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-amber-500 px-5 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl hover:shadow-orange-500/30"
           >
             <Plus className="h-5 w-5" />
             New Listing
@@ -409,8 +409,8 @@ export default function MyListingsPage() {
               onClick={() => setActiveTab(tab.id)}
               className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
                 activeTab === tab.id
-                  ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
-                  : 'border border-white/10 bg-white/[0.03] text-white/60 hover:border-white/20 hover:text-white'
+                  ? 'bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
+                  : 'border border-white/10 bg-white/3 text-white/60 hover:border-white/20 hover:text-white'
               }`}
             >
               {tab.label}

@@ -4,7 +4,7 @@
 
 export function TourCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+    <div className="rounded-xl border border-white/10 bg-white/2 p-6">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
           <div className="mb-2 h-6 w-3/4 animate-pulse rounded bg-white/5"></div>
@@ -28,7 +28,7 @@ export function TourCardSkeleton() {
 
 export function ShowCardSkeleton() {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 sm:p-6">
+    <div className="rounded-xl border border-white/10 bg-white/2 p-4 sm:p-6">
       <div className="mb-4 flex items-start justify-between">
         <div className="min-w-0 flex-1">
           <div className="mb-2 h-6 w-3/4 animate-pulse rounded bg-white/5"></div>

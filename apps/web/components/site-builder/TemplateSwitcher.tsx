@@ -163,7 +163,7 @@ export function TemplateSwitcher({
         {currentTemplate && (
           <div className="flex items-start gap-4">
             <div
-              className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-lg"
+              className="flex h-20 w-20 shrink-0 items-center justify-center rounded-lg"
               style={{ background: currentTemplate.colors.primary }}
             >
               <div

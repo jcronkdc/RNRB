@@ -195,7 +195,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           onClick={() => setMode('rhyme')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'rhyme'
-              ? 'border-2 border-blue-500 bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30'
+              ? 'border-2 border-blue-500 bg-linear-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30'
               : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-blue-500/50 hover:bg-gray-700'
           }`}
         >
@@ -216,7 +216,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           onClick={() => setMode('thesaurus')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'thesaurus'
-              ? 'border-2 border-indigo-500 bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-500/30'
+              ? 'border-2 border-indigo-500 bg-linear-to-br from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-500/30'
               : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-indigo-500/50 hover:bg-gray-700'
           }`}
         >
@@ -237,7 +237,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           onClick={() => setMode('syllables')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'syllables'
-              ? 'border-2 border-green-500 bg-gradient-to-br from-green-600 to-green-500 text-white shadow-lg shadow-green-500/30'
+              ? 'border-2 border-green-500 bg-linear-to-br from-green-600 to-green-500 text-white shadow-lg shadow-green-500/30'
               : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-green-500/50 hover:bg-gray-700'
           }`}
         >
@@ -258,7 +258,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           onClick={() => setMode('ai')}
           className={`group relative overflow-hidden rounded-xl px-6 py-4 text-left font-semibold transition-all ${
             mode === 'ai'
-              ? 'border-2 border-purple-500 bg-gradient-to-br from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/30'
+              ? 'border-2 border-purple-500 bg-linear-to-br from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/30'
               : 'border-2 border-gray-700 bg-gray-800/50 text-gray-300 hover:border-purple-500/50 hover:bg-gray-700'
           }`}
         >
@@ -317,7 +317,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Paste your lyrics here to count syllables per line..."
-              className="min-h-[120px] w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-base text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+              className="min-h-[120px] w-full rounded-xl border-2 border-border bg-surface px-4 py-4 text-base text-foreground placeholder-muted-foreground outline-hidden transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
             />
             <Button
               onClick={handleSearch}
@@ -346,7 +346,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
                     ? 'Enter a word to find synonyms...'
                     : 'Ask AI for lyric help (e.g., "help with chorus about heartbreak")'
               }
-              className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 pr-32 text-base text-foreground placeholder-muted-foreground outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+              className="w-full rounded-xl border-2 border-border bg-surface px-4 py-4 pr-32 text-base text-foreground placeholder-muted-foreground outline-hidden transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
             />
             <Button
               onClick={handleSearch}
@@ -375,7 +375,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           {syllableResults.map((result, index) => (
             <Card
               key={index}
-              className="rnrb-card border-2 border-border bg-gradient-to-br from-surface-muted to-surface p-4"
+              className="rnrb-card border-2 border-border bg-linear-to-br from-surface-muted to-surface p-4"
             >
               <div className="mb-2 flex items-center justify-between gap-4">
                 <p className="flex-1 text-sm font-medium text-foreground">{result.line}</p>
@@ -413,7 +413,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
           {suggestions.map((suggestion, index) => (
             <Card
               key={index}
-              className={`rnrb-card border-border from-surface-muted to-surface hover:border-brand-primary/40 hover:from-brand-primary/5 ${mode === 'syllables' ? '' : 'group cursor-pointer'} border-2 bg-gradient-to-br p-5 transition-all duration-200 hover:to-transparent`}
+              className={`rnrb-card border-border from-surface-muted to-surface hover:border-brand-primary/40 hover:from-brand-primary/5 ${mode === 'syllables' ? '' : 'group cursor-pointer'} border-2 bg-linear-to-br p-5 transition-all duration-200 hover:to-transparent`}
               onClick={mode === 'syllables' ? undefined : () => onInsert(suggestion)}
             >
               <div className="flex items-start justify-between gap-4">

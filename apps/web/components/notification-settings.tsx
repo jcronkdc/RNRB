@@ -537,7 +537,7 @@ function PreferenceToggle({
 }) {
   return (
     <div
-      className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-white/[0.02]"
+      className="flex items-center justify-between gap-4 p-4 transition-colors hover:bg-white/2"
       style={{ borderColor: 'var(--border)' }}
     >
       <div className="flex items-center gap-3">
@@ -566,7 +566,7 @@ function PreferenceToggle({
         style={{ background: enabled ? '#22c55e' : 'rgba(255, 255, 255, 0.1)' }}
       >
         <span
-          className="inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform"
+          className="inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform"
           style={{ transform: enabled ? 'translateX(24px)' : 'translateX(4px)' }}
         />
       </button>

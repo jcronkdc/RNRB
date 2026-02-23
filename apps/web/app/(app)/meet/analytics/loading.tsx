@@ -33,11 +33,11 @@ export default function MeetAnalyticsLoading() {
         <DashboardStatsSkeleton />
         {/* Charts */}
         <div className="my-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+          <div className="rounded-xl border border-white/10 bg-white/2 p-6">
             <div className="mb-4 h-6 w-40 animate-pulse rounded bg-white/5" />
             <ChartSkeleton />
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+          <div className="rounded-xl border border-white/10 bg-white/2 p-6">
             <div className="mb-4 h-6 w-48 animate-pulse rounded bg-white/5" />
             <ChartSkeleton />
           </div>

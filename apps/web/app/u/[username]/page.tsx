@@ -1404,7 +1404,7 @@ export default function PublicProfilePage() {
                   className="mb-4 flex items-center gap-2 rounded-xl p-3"
                   style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                 >
-                  <Globe className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--muted)' }} />
+                  <Globe className="h-4 w-4 shrink-0" style={{ color: 'var(--muted)' }} />
                   <span className="flex-1 truncate text-sm" style={{ color: 'var(--text)' }}>
                     cronkwaters.com/u/{username}
                   </span>

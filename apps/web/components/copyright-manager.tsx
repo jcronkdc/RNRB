@@ -235,7 +235,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
 
         {!splitsValid && splits.length > 0 && (
           <div className="mb-4 flex items-center gap-2 rounded-lg border border-orange-500/20 bg-orange-500/10 p-3 text-orange-500">
-            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <AlertCircle className="h-4 w-4 shrink-0" />
             <p className="text-sm">
               Splits must total exactly 100%. Currently at {totalSplits.toFixed(1)}%
             </p>
@@ -305,7 +305,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
 
         {splitsValid && splits.length > 0 && (
           <div className="mt-4 flex items-center gap-2 rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-green-500">
-            <Check className="h-4 w-4 flex-shrink-0" />
+            <Check className="h-4 w-4 shrink-0" />
             <p className="text-sm">Splits are valid! Ready to generate split sheet.</p>
           </div>
         )}

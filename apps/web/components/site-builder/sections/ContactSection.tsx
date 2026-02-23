@@ -146,7 +146,7 @@ export function ContactSection({ content, theme, animation, siteId }: ContactSec
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full border px-4 py-3 focus:outline-none focus:ring-2"
+                  className="w-full border px-4 py-3 focus:outline-hidden focus:ring-2"
                   style={
                     {
                       ...inputStyles,
@@ -169,7 +169,7 @@ export function ContactSection({ content, theme, animation, siteId }: ContactSec
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full border px-4 py-3 focus:outline-none focus:ring-2"
+                  className="w-full border px-4 py-3 focus:outline-hidden focus:ring-2"
                   style={inputStyles}
                   placeholder="your@email.com"
                 />
@@ -187,7 +187,7 @@ export function ContactSection({ content, theme, animation, siteId }: ContactSec
                 <select
                   value={formData.inquiryType}
                   onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
-                  className="w-full border px-4 py-3 focus:outline-none focus:ring-2"
+                  className="w-full border px-4 py-3 focus:outline-hidden focus:ring-2"
                   style={inputStyles}
                 >
                   {inquiryTypes.map((type) => (
@@ -209,7 +209,7 @@ export function ContactSection({ content, theme, animation, siteId }: ContactSec
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  className="w-full border px-4 py-3 focus:outline-none focus:ring-2"
+                  className="w-full border px-4 py-3 focus:outline-hidden focus:ring-2"
                   style={inputStyles}
                   placeholder="Subject"
                 />
@@ -228,7 +228,7 @@ export function ContactSection({ content, theme, animation, siteId }: ContactSec
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full resize-none border px-4 py-3 focus:outline-none focus:ring-2"
+                className="w-full resize-none border px-4 py-3 focus:outline-hidden focus:ring-2"
                 style={inputStyles}
                 placeholder="Your message..."
               />

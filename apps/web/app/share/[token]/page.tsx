@@ -194,7 +194,7 @@ export default function SharePage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
-                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 pr-12 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 pr-12 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                 autoFocus
               />
               <button

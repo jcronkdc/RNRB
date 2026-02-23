@@ -91,7 +91,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
     <Link href={`/masterclasses/${masterclass.slug}`}>
       <motion.div
         whileHover={{ y: -4 }}
-        className="hover:border-[var(--accent)]/50 group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--panel)] transition-all"
+        className="hover:border-(--accent)/50 group relative overflow-hidden rounded-xl border border-(--border) bg-(--panel) transition-all"
       >
         {/* Thumbnail */}
         <div className="relative aspect-video">
@@ -103,8 +103,8 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
               className="object-cover"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#2a2620] to-[#352f28]">
-              <GraduationCap className="text-[var(--accent)]/30 h-12 w-12" />
+            <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-[#2a2620] to-[#352f28]">
+              <GraduationCap className="text-(--accent)/30 h-12 w-12" />
             </div>
           )}
 
@@ -113,7 +113,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
             <motion.div
               initial={{ scale: 0.8 }}
               whileHover={{ scale: 1.1 }}
-              className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--accent)]"
+              className="flex h-14 w-14 items-center justify-center rounded-full bg-(--accent)"
             >
               <Play className="ml-1 h-6 w-6 text-white" />
             </motion.div>
@@ -146,18 +146,18 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
         {/* Content */}
         <div className="p-4">
           {/* Category */}
-          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-[var(--accent)]">
+          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-(--accent)">
             {masterclass.category.replace('_', ' ')}
           </div>
 
           {/* Title */}
-          <h3 className="mb-2 line-clamp-2 text-lg font-bold text-[var(--text)] transition-colors group-hover:text-[var(--accent)]">
+          <h3 className="mb-2 line-clamp-2 text-lg font-bold text-(--text) transition-colors group-hover:text-(--accent)">
             {masterclass.title}
           </h3>
 
           {/* Instructor */}
           <div className="mb-3 flex items-center gap-2">
-            <div className="relative h-6 w-6 overflow-hidden rounded-full bg-[var(--border)]">
+            <div className="relative h-6 w-6 overflow-hidden rounded-full bg-(--border)">
               {masterclass.instructor.profileImage ? (
                 <Image
                   src={masterclass.instructor.profileImage}
@@ -166,21 +166,21 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
                   className="object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-xs font-bold text-white">
+                <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-(--accent) to-(--gold) text-xs font-bold text-white">
                   {masterclass.instructor.displayName.charAt(0)}
                 </div>
               )}
             </div>
-            <span className="text-sm text-[var(--muted)]">
+            <span className="text-sm text-(--muted)">
               {masterclass.instructor.displayName}
             </span>
             {masterclass.instructor.verified && (
-              <BadgeCheck className="h-4 w-4 text-[var(--sky)]" />
+              <BadgeCheck className="h-4 w-4 text-(--sky)" />
             )}
           </div>
 
           {/* Stats */}
-          <div className="mb-3 flex items-center gap-4 text-xs text-[var(--muted)]">
+          <div className="mb-3 flex items-center gap-4 text-xs text-(--muted)">
             <span className="flex items-center gap-1">
               <BookOpen className="h-3.5 w-3.5" />
               {masterclass._count.lessons} lessons
@@ -191,7 +191,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
             </span>
             {masterclass.averageRating > 0 && (
               <span className="flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 fill-[var(--gold)] text-[var(--gold)]" />
+                <Star className="h-3.5 w-3.5 fill-(--gold) text-(--gold)" />
                 {masterclass.averageRating.toFixed(1)}
               </span>
             )}
@@ -200,21 +200,21 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
           {/* Price */}
           <div className="flex items-center justify-between">
             {masterclass.isFree ? (
-              <span className="font-bold text-[var(--sage)]">Free</span>
+              <span className="font-bold text-(--sage)">Free</span>
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-[var(--text)]">
+                <span className="text-lg font-bold text-(--text)">
                   ${masterclass.price?.toFixed(2)}
                 </span>
                 {masterclass.originalPrice &&
                   masterclass.originalPrice > (masterclass.price || 0) && (
-                    <span className="text-sm text-[var(--muted)] line-through">
+                    <span className="text-sm text-(--muted) line-through">
                       ${masterclass.originalPrice.toFixed(2)}
                     </span>
                   )}
               </div>
             )}
-            <span className="text-xs capitalize text-[var(--muted)]">{masterclass.skillLevel}</span>
+            <span className="text-xs capitalize text-(--muted)">{masterclass.skillLevel}</span>
           </div>
         </div>
       </motion.div>
@@ -231,9 +231,9 @@ function FeaturedInstructor({
     <Link href={`/masterclasses/instructors/${instructor.id}`}>
       <motion.div
         whileHover={{ scale: 1.02 }}
-        className="border-[var(--accent)]/20 from-[var(--accent)]/10 to-[var(--gold)]/10 hover:border-[var(--accent)]/50 flex items-center gap-4 rounded-xl border bg-gradient-to-r p-4 transition-all"
+        className="border-(--accent)/20 from-(--accent)/10 to-(--gold)/10 hover:border-(--accent)/50 flex items-center gap-4 rounded-xl border bg-linear-to-r p-4 transition-all"
       >
-        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-full">
+        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full">
           {instructor.profileImage ? (
             <Image
               src={instructor.profileImage}
@@ -242,24 +242,24 @@ function FeaturedInstructor({
               className="object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] text-xl font-bold text-white">
+            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-(--accent) to-(--gold) text-xl font-bold text-white">
               {instructor.displayName.charAt(0)}
             </div>
           )}
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="truncate font-bold text-[var(--text)]">{instructor.displayName}</h4>
+            <h4 className="truncate font-bold text-(--text)">{instructor.displayName}</h4>
             {instructor.verified && (
-              <BadgeCheck className="h-4 w-4 flex-shrink-0 text-[var(--sky)]" />
+              <BadgeCheck className="h-4 w-4 shrink-0 text-(--sky)" />
             )}
           </div>
-          <p className="truncate text-sm text-[var(--muted)]">{instructor.headline}</p>
-          <div className="mt-1 flex items-center gap-3 text-xs text-[var(--muted)]">
+          <p className="truncate text-sm text-(--muted)">{instructor.headline}</p>
+          <div className="mt-1 flex items-center gap-3 text-xs text-(--muted)">
             <span>{instructor._count.masterclasses} classes</span>
             {instructor.averageRating > 0 && (
               <span className="flex items-center gap-1">
-                <Star className="h-3 w-3 fill-[var(--gold)] text-[var(--gold)]" />
+                <Star className="h-3 w-3 fill-(--gold) text-(--gold)" />
                 {instructor.averageRating.toFixed(1)}
               </span>
             )}
@@ -316,9 +316,9 @@ export default function MasterclassesPage() {
   }, [fetchMasterclasses]);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
+    <div className="min-h-screen bg-(--bg)">
       {/* Header */}
-      <div className="border-b border-[var(--border)] bg-[var(--panel)]">
+      <div className="border-b border-(--border) bg-(--panel)">
         <div className="mx-auto max-w-7xl px-4 py-6">
           {/* Logo */}
           <div className="mb-6 flex justify-center">
@@ -335,17 +335,17 @@ export default function MasterclassesPage() {
 
           {/* Title */}
           <div className="mb-8 text-center">
-            <div className="bg-[var(--accent)]/10 mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-[var(--accent)]">
+            <div className="bg-(--accent)/10 mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-(--accent)">
               <GraduationCap className="h-4 w-4" />
               Masterclasses
             </div>
-            <h1 className="mb-2 text-3xl font-bold text-[var(--text)] md:text-4xl">
+            <h1 className="mb-2 text-3xl font-bold text-(--text) md:text-4xl">
               Learn From the{' '}
-              <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-(--accent) to-(--gold) bg-clip-text text-transparent">
                 Best in Music
               </span>
             </h1>
-            <p className="mx-auto max-w-2xl text-[var(--muted)]">
+            <p className="mx-auto max-w-2xl text-(--muted)">
               World-class instruction from Grammy winners, touring pros, and industry legends. Live
               sessions, pre-recorded courses, and hands-on learning.
             </p>
@@ -354,20 +354,20 @@ export default function MasterclassesPage() {
           {/* Search */}
           <div className="mx-auto max-w-2xl">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
               <input
                 type="text"
                 placeholder="Search masterclasses, instructors, or topics..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] py-3 pl-12 pr-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                className="w-full rounded-xl border border-(--border) bg-(--bg) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
               />
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors ${
                   showFilters
-                    ? 'bg-[var(--accent)] text-white'
-                    : 'text-[var(--muted)] hover:bg-[var(--border)]'
+                    ? 'bg-(--accent) text-white'
+                    : 'text-(--muted) hover:bg-(--border)'
                 }`}
               >
                 <Filter className="h-5 w-5" />
@@ -379,17 +379,17 @@ export default function MasterclassesPage() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="mt-4 rounded-xl border border-[var(--border)] bg-[var(--bg)] p-4"
+                className="mt-4 rounded-xl border border-(--border) bg-(--bg) p-4"
               >
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                    <label className="mb-2 block text-sm font-medium text-(--muted)">
                       Category
                     </label>
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)]"
+                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-3 py-2 text-(--text)"
                     >
                       {CATEGORIES.map((cat) => (
                         <option key={cat.value} value={cat.value}>
@@ -399,13 +399,13 @@ export default function MasterclassesPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-[var(--muted)]">
+                    <label className="mb-2 block text-sm font-medium text-(--muted)">
                       Skill Level
                     </label>
                     <select
                       value={skillLevel}
                       onChange={(e) => setSkillLevel(e.target.value)}
-                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--panel)] px-3 py-2 text-[var(--text)]"
+                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-3 py-2 text-(--text)"
                     >
                       {SKILL_LEVELS.map((level) => (
                         <option key={level.value} value={level.value}>
@@ -420,9 +420,9 @@ export default function MasterclassesPage() {
                         type="checkbox"
                         checked={showFreeOnly}
                         onChange={(e) => setShowFreeOnly(e.target.checked)}
-                        className="h-5 w-5 rounded border-[var(--border)] bg-[var(--panel)] text-[var(--accent)] focus:ring-[var(--accent)]"
+                        className="h-5 w-5 rounded border-(--border) bg-(--panel) text-(--accent) focus:ring-(--accent)"
                       />
-                      <span className="text-[var(--text)]">Free classes only</span>
+                      <span className="text-(--text)">Free classes only</span>
                     </label>
                   </div>
                 </div>
@@ -443,8 +443,8 @@ export default function MasterclassesPage() {
                 onClick={() => setCategory(cat.value)}
                 className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 transition-all ${
                   category === cat.value
-                    ? 'bg-[var(--accent)] text-white'
-                    : 'bg-[var(--panel)] text-[var(--muted)] hover:bg-[var(--border)]'
+                    ? 'bg-(--accent) text-white'
+                    : 'bg-(--panel) text-(--muted) hover:bg-(--border)'
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -458,8 +458,8 @@ export default function MasterclassesPage() {
         {featuredInstructors.length > 0 && !search && !category && (
           <section className="mb-12">
             <div className="mb-4 flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-[var(--gold)]" />
-              <h2 className="text-xl font-bold text-[var(--text)]">Featured Instructors</h2>
+              <Sparkles className="h-5 w-5 text-(--gold)" />
+              <h2 className="text-xl font-bold text-(--text)">Featured Instructors</h2>
             </div>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
               {featuredInstructors.map((instructor) => (
@@ -473,8 +473,8 @@ export default function MasterclassesPage() {
         {isLoading ? (
           <div className="flex h-64 items-center justify-center">
             <div className="text-center">
-              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
-              <p className="text-[var(--muted)]">Loading masterclasses...</p>
+              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-(--accent) border-t-transparent" />
+              <p className="text-(--muted)">Loading masterclasses...</p>
             </div>
           </div>
         ) : masterclasses.length > 0 ? (
@@ -502,10 +502,10 @@ export default function MasterclassesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-[var(--accent)]/20 from-[var(--accent)]/15 to-[var(--gold)]/15 mt-16 rounded-2xl border bg-gradient-to-r p-8 text-center"
+            className="border-(--accent)/20 from-(--accent)/15 to-(--gold)/15 mt-16 rounded-2xl border bg-linear-to-r p-8 text-center"
           >
-            <h3 className="mb-2 text-2xl font-bold text-[var(--text)]">Share Your Expertise</h3>
-            <p className="mx-auto mb-6 max-w-xl text-[var(--muted)]">
+            <h3 className="mb-2 text-2xl font-bold text-(--text)">Share Your Expertise</h3>
+            <p className="mx-auto mb-6 max-w-xl text-(--muted)">
               Are you a professional musician, producer, or industry expert? Create your own
               masterclass and earn money teaching what you love.
             </p>
@@ -513,7 +513,7 @@ export default function MasterclassesPage() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--accent)] px-6 py-3 font-semibold text-white"
+                className="inline-flex items-center gap-2 rounded-full bg-(--accent) px-6 py-3 font-semibold text-white"
               >
                 <GraduationCap className="h-5 w-5" />
                 Become an Instructor

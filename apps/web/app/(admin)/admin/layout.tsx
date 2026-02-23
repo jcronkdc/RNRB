@@ -142,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Logo */}
         <div className="flex h-16 items-center border-b border-zinc-800/50 px-6">
           <Link href="/admin" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-red-500">
               <Shield className="h-5 w-5 text-white" />
             </div>
             <div>

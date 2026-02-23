@@ -493,7 +493,7 @@ export function TeamMemberManager({
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@example.com"
-                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-hidden focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 />
               </div>
 
@@ -502,7 +502,7 @@ export function TeamMemberManager({
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as any)}
-                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+                  className="w-full rounded-xl border-2 border-border bg-surface px-4 py-3 outline-hidden focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 >
                   <option value="viewer">Viewer (Read-only)</option>
                   <option value="member">Member (Can edit)</option>

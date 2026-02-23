@@ -281,7 +281,7 @@ function FeatureCategory({
                       style={{ color: 'var(--muted)' }}
                     >
                       <span
-                        className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full transition-all duration-300 group-hover:scale-150"
+                        className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full transition-all duration-300 group-hover:scale-150"
                         style={{
                           background: colors.text,
                           boxShadow: `0 0 6px ${colors.glow}`,
@@ -2410,7 +2410,7 @@ export default function FeaturesPage() {
                 <a
                   key={category.title}
                   href={`#${category.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                  className="flex flex-shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 hover:scale-105"
+                  className="flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-300 hover:scale-105"
                   style={{
                     background: colors.bg,
                     border: `1px solid ${colors.border}`,

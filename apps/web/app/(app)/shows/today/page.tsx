@@ -240,7 +240,7 @@ export default function DayOfShowPage() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="rounded-full border border-orange-500/20 bg-gradient-to-r from-orange-500/20 to-pink-500/20 px-4 py-1.5 text-xs font-medium text-orange-400"
+              className="rounded-full border border-orange-500/20 bg-linear-to-r from-orange-500/20 to-pink-500/20 px-4 py-1.5 text-xs font-medium text-orange-400"
             >
               <Sparkles className="mr-1 inline-block h-3 w-3" />
               Upcoming Show

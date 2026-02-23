@@ -17,7 +17,7 @@ export default function SongwritingFeaturePage() {
     <div className="min-h-screen bg-background">
       {/* Hero */}
       <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
           <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
         </div>

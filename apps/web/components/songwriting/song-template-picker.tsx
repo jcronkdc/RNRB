@@ -130,7 +130,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border-2 border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8 shadow-2xl">
+      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-2xl border-2 border-gray-800 bg-linear-to-b from-gray-900 to-black p-8 shadow-2xl">
         <div className="mb-6">
           <h2 className="mb-2 text-3xl font-bold text-white">Choose Your Song Structure</h2>
           <p className="text-gray-400">Start with a proven template or build from scratch</p>
@@ -146,8 +146,8 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
                 key={template.name}
                 className={`group cursor-pointer border-2 transition-all duration-200 ${
                   isSelected
-                    ? 'scale-[1.02] border-blue-500 bg-gradient-to-br from-blue-500/10 to-purple-500/10'
-                    : 'border-gray-800 bg-gradient-to-br from-gray-900 to-gray-800 hover:border-gray-700'
+                    ? 'scale-[1.02] border-blue-500 bg-linear-to-br from-blue-500/10 to-purple-500/10'
+                    : 'border-gray-800 bg-linear-to-br from-gray-900 to-gray-800 hover:border-gray-700'
                 }`}
                 onClick={() => setSelectedTemplate(template)}
               >
@@ -156,7 +156,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
                   <div className="mb-4 flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${template.color}`}
+                        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br ${template.color}`}
                       >
                         <Icon className="h-6 w-6 text-white" />
                       </div>
@@ -204,7 +204,7 @@ export function SongTemplatePicker({ onSelectTemplate, onClose }: SongTemplatePi
             disabled={!selectedTemplate}
             className={`flex-1 rounded-xl border-2 px-6 py-3 font-semibold transition ${
               selectedTemplate
-                ? 'border-blue-500 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500'
+                ? 'border-blue-500 bg-linear-to-r from-blue-600 to-purple-600 text-white hover:from-blue-500 hover:to-purple-500'
                 : 'cursor-not-allowed border-gray-700 bg-gray-800 text-gray-500'
             }`}
           >

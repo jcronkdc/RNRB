@@ -233,7 +233,7 @@ export function CalendarView({
         <div className="flex items-center gap-2 overflow-x-auto">
           <Button
             onClick={() => setViewMode('month')}
-            variant={viewMode === 'month' ? 'default' : 'outline'}
+            variant={viewMode === 'month' ? 'default' : 'outline-solid'}
             size="sm"
             className="flex items-center gap-1"
           >
@@ -242,7 +242,7 @@ export function CalendarView({
           </Button>
           <Button
             onClick={() => setViewMode('week')}
-            variant={viewMode === 'week' ? 'default' : 'outline'}
+            variant={viewMode === 'week' ? 'default' : 'outline-solid'}
             size="sm"
             className="flex items-center gap-1"
           >
@@ -251,7 +251,7 @@ export function CalendarView({
           </Button>
           <Button
             onClick={() => setViewMode('day')}
-            variant={viewMode === 'day' ? 'default' : 'outline'}
+            variant={viewMode === 'day' ? 'default' : 'outline-solid'}
             size="sm"
             className="flex items-center gap-1"
           >
@@ -260,7 +260,7 @@ export function CalendarView({
           </Button>
           <Button
             onClick={() => setViewMode('agenda')}
-            variant={viewMode === 'agenda' ? 'default' : 'outline'}
+            variant={viewMode === 'agenda' ? 'default' : 'outline-solid'}
             size="sm"
             className="flex items-center gap-1"
           >

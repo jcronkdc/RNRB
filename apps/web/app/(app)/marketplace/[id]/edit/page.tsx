@@ -268,8 +268,8 @@ export default function EditListingPage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-orange-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-gradient-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-3xl px-4 py-8">
@@ -320,7 +320,7 @@ export default function EditListingPage() {
           className="space-y-6"
         >
           {/* Basic Info */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-6">
             <h2 className="mb-4 text-lg font-semibold text-white">Basic Information</h2>
 
             <div className="space-y-4">
@@ -330,7 +330,7 @@ export default function EditListingPage() {
                   type="text"
                   value={formData.title}
                   onChange={(e) => updateField('title', e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20"
                   required
                 />
               </div>
@@ -344,7 +344,7 @@ export default function EditListingPage() {
                       updateField('category', e.target.value);
                       updateField('subcategory', '');
                     }}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-orange-500/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-orange-500/50"
                     required
                   >
                     <option value="" className="bg-gray-900">
@@ -364,7 +364,7 @@ export default function EditListingPage() {
                     <select
                       value={formData.subcategory}
                       onChange={(e) => updateField('subcategory', e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-orange-500/50"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-orange-500/50"
                     >
                       <option value="" className="bg-gray-900">
                         Select subcategory
@@ -387,7 +387,7 @@ export default function EditListingPage() {
                     value={formData.brand}
                     onChange={(e) => updateField('brand', e.target.value)}
                     placeholder="e.g., Fender"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                   />
                 </div>
                 <div>
@@ -397,7 +397,7 @@ export default function EditListingPage() {
                     value={formData.model}
                     onChange={(e) => updateField('model', e.target.value)}
                     placeholder="e.g., Stratocaster"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                   />
                 </div>
                 <div>
@@ -407,7 +407,7 @@ export default function EditListingPage() {
                     value={formData.year}
                     onChange={(e) => updateField('year', e.target.value)}
                     placeholder="e.g., 1965"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                   />
                 </div>
               </div>
@@ -444,7 +444,7 @@ export default function EditListingPage() {
                   onChange={(e) => updateField('description', e.target.value)}
                   placeholder="Describe your item in detail..."
                   rows={5}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                   required
                 />
               </div>
@@ -452,7 +452,7 @@ export default function EditListingPage() {
           </div>
 
           {/* Pricing */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-6">
             <h2 className="mb-4 text-lg font-semibold text-white">Pricing</h2>
 
             <div className="space-y-4">
@@ -496,7 +496,7 @@ export default function EditListingPage() {
                         value={formData.price}
                         onChange={(e) => updateField('price', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                       />
                     </div>
                   </div>
@@ -525,7 +525,7 @@ export default function EditListingPage() {
                     onChange={(e) => updateField('tradeFor', e.target.value)}
                     placeholder="Describe what you're looking for in a trade..."
                     rows={3}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                   />
                 </div>
               )}
@@ -533,7 +533,7 @@ export default function EditListingPage() {
           </div>
 
           {/* Location & Shipping */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+          <div className="rounded-2xl border border-white/10 bg-white/3 p-6">
             <h2 className="mb-4 text-lg font-semibold text-white">Location & Shipping</h2>
 
             <div className="space-y-4">
@@ -547,7 +547,7 @@ export default function EditListingPage() {
                       value={formData.location}
                       onChange={(e) => updateField('location', e.target.value)}
                       placeholder="City, State"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                     />
                   </div>
                 </div>
@@ -561,7 +561,7 @@ export default function EditListingPage() {
                       value={formData.shippingCost}
                       onChange={(e) => updateField('shippingCost', e.target.value)}
                       placeholder="0.00"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-orange-500/50"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                     />
                   </div>
                 </div>
@@ -611,7 +611,7 @@ export default function EditListingPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl disabled:opacity-50"
+                className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-amber-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>

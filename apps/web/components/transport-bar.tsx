@@ -81,7 +81,7 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
       className="fixed bottom-0 left-0 right-0 z-40 flex h-[72px] items-center gap-4 border-t border-border bg-surface px-4"
     >
       {/* Track Info */}
-      <div className="flex w-64 min-w-0 flex-shrink-0 items-center gap-3">
+      <div className="flex w-64 min-w-0 shrink-0 items-center gap-3">
         {currentTrack.coverUrl ? (
           <Image
             src={currentTrack.coverUrl}
@@ -101,7 +101,7 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
             {currentTrack.artist || 'Unknown Artist'}
           </p>
         </div>
-        <button className="btn-icon h-8 w-8 flex-shrink-0">
+        <button className="btn-icon h-8 w-8 shrink-0">
           <Heart className="h-4 w-4" />
         </button>
       </div>
@@ -181,7 +181,7 @@ export function TransportBar({ currentTrack, isVisible = true }: TransportBarPro
       </div>
 
       {/* Right Controls */}
-      <div className="flex flex-shrink-0 items-center gap-2">
+      <div className="flex shrink-0 items-center gap-2">
         {/* Volume */}
         <div className="flex items-center gap-2">
           <button className="btn-icon h-8 w-8" onClick={() => setIsMuted(!isMuted)}>

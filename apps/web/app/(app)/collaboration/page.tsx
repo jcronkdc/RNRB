@@ -120,7 +120,7 @@ export default function CollaborationDashboard() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="rounded-xl p-5 transition-colors hover:bg-[var(--panel-hover)]"
+              className="rounded-xl p-5 transition-colors hover:bg-(--panel-hover)"
               style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
             >
               <div
@@ -130,7 +130,7 @@ export default function CollaborationDashboard() {
                 <stat.icon className="h-5 w-5" style={{ color: 'var(--accent)' }} />
               </div>
               <p className="text-2xl font-bold text-white">{stat.value}</p>
-              <p className="text-sm font-medium text-[var(--text-secondary)]">{stat.label}</p>
+              <p className="text-sm font-medium text-(--text-secondary)">{stat.label}</p>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>
                 {stat.description}
               </p>
@@ -288,7 +288,7 @@ export default function CollaborationDashboard() {
                   </p>
                   <button
                     onClick={() => router.push('/masterclasses')}
-                    className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
+                    className="flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-(--panel-hover)"
                     style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                   >
                     <span className="flex h-6 w-6 items-center justify-center rounded-md bg-pink-500/20">
@@ -298,20 +298,20 @@ export default function CollaborationDashboard() {
                   </button>
                   <button
                     onClick={() => router.push('/projects/new')}
-                    className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
+                    className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-(--panel-hover)"
                     style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                   >
-                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[var(--accent-glow)]">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--accent-glow)">
                       <span className="text-xs">+</span>
                     </span>
                     New Project
                   </button>
                   <button
                     onClick={() => router.push('/studio')}
-                    className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--panel-hover)]"
+                    className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-(--panel-hover)"
                     style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                   >
-                    <span className="bg-[var(--sage)]/20 flex h-6 w-6 items-center justify-center rounded-md">
+                    <span className="bg-(--sage)/20 flex h-6 w-6 items-center justify-center rounded-md">
                       <span className="text-xs">🎙️</span>
                     </span>
                     Recording Studio

@@ -568,7 +568,7 @@ export default function WhyRNRBPage() {
             >
               <div className="relative z-10 flex gap-5">
                 <div
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
                   style={{ background: 'rgba(232, 93, 59, 0.15)' }}
                 >
                   <Layers className="h-7 w-7" style={{ color: 'var(--accent)' }} />
@@ -587,7 +587,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--accent)' }}
                       />
                       <span>Seamless data flow between features</span>
@@ -597,7 +597,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--accent)' }}
                       />
                       <span>One login, infinite possibilities</span>
@@ -607,7 +607,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--accent)' }}
                       />
                       <span>Unified analytics across all activities</span>
@@ -624,7 +624,7 @@ export default function WhyRNRBPage() {
             >
               <div className="relative z-10 flex gap-5">
                 <div
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
                   style={{ background: 'rgba(107, 155, 195, 0.15)' }}
                 >
                   <Globe className="h-7 w-7" style={{ color: 'var(--sky)' }} />
@@ -643,7 +643,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--sky)' }}
                       />
                       <span>Stream concerts while tracking sales</span>
@@ -653,7 +653,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--sky)' }}
                       />
                       <span>Collaborate with HD video &amp; audio</span>
@@ -663,7 +663,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--sky)' }}
                       />
                       <span>Manage streaming &amp; sync rights</span>
@@ -680,7 +680,7 @@ export default function WhyRNRBPage() {
             >
               <div className="relative z-10 flex gap-5">
                 <div
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
                   style={{ background: 'rgba(123, 145, 120, 0.15)' }}
                 >
                   <DollarSign className="h-7 w-7" style={{ color: 'var(--sage)' }} />
@@ -698,7 +698,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--sage)' }}
                       />
                       <span>Automated royalty calculations</span>
@@ -708,7 +708,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--sage)' }}
                       />
                       <span>Tour revenue vs. expenses</span>
@@ -718,7 +718,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--sage)' }}
                       />
                       <span>Streaming income consolidation</span>
@@ -735,7 +735,7 @@ export default function WhyRNRBPage() {
             >
               <div className="relative z-10 flex gap-5">
                 <div
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
+                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl"
                   style={{ background: 'rgba(212, 168, 75, 0.15)' }}
                 >
                   <Shield className="h-7 w-7" style={{ color: 'var(--gold)' }} />
@@ -754,7 +754,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--gold)' }}
                       />
                       <span>End-to-end encryption</span>
@@ -764,7 +764,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--gold)' }}
                       />
                       <span>Secure contract storage</span>
@@ -774,7 +774,7 @@ export default function WhyRNRBPage() {
                       style={{ color: 'var(--muted)' }}
                     >
                       <CheckCircle
-                        className="mt-0.5 h-4 w-4 flex-shrink-0"
+                        className="mt-0.5 h-4 w-4 shrink-0"
                         style={{ color: 'var(--gold)' }}
                       />
                       <span>GDPR and CCPA compliant</span>
@@ -796,7 +796,7 @@ export default function WhyRNRBPage() {
           >
             <div className="flex flex-col items-center gap-6 text-center md:flex-row md:text-left">
               <div
-                className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-xl"
+                className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl"
                 style={{ background: 'linear-gradient(135deg, var(--sage), #10b981)' }}
               >
                 <svg

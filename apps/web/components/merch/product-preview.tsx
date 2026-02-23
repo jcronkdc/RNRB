@@ -80,7 +80,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-zinc-900 to-black"
+          className="relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/20 bg-linear-to-br from-zinc-900 to-black"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
@@ -91,11 +91,11 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
             <X className="h-5 w-5" />
           </button>
 
-          <div className="grid gap-6 p-6 lg:grid-cols-[2fr,1fr]">
+          <div className="grid gap-6 p-6 lg:grid-cols-[2fr_1fr]">
             {/* Main Image Area */}
             <div className="relative">
               {/* Main Image */}
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-gradient-to-br from-white/10 to-white/5">
+              <div className="relative aspect-square overflow-hidden rounded-2xl bg-linear-to-br from-white/10 to-white/5">
                 {isLoading && (
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50">
                     <Loader2 className="h-8 w-8 animate-spin text-white" />
@@ -162,7 +162,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
                         setIsLoading(true);
                         setCurrentIndex(idx);
                       }}
-                      className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg transition-all ${
+                      className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg transition-all ${
                         currentIndex === idx
                           ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-black'
                           : 'opacity-50 hover:opacity-100'
@@ -215,7 +215,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
               </div>
 
               {/* Action Button */}
-              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-4 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl hover:shadow-orange-500/30">
+              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-4 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl hover:shadow-orange-500/30">
                 <ShoppingBag className="h-5 w-5" />
                 Add to Cart
               </button>
@@ -239,11 +239,11 @@ export function ProductCardWithPreview({ product }: { product: ProductPreviewPro
     <>
       <motion.div
         whileHover={{ y: -5 }}
-        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] transition-all duration-300 hover:border-white/20"
+        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 transition-all duration-300 hover:border-white/20"
         onClick={() => setShowPreview(true)}
       >
         {/* Product Image */}
-        <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-orange-500/20 to-purple-500/20">
+        <div className="relative aspect-square overflow-hidden bg-linear-to-br from-orange-500/20 to-purple-500/20">
           {product.mockupUrl || product.thumbnailUrl ? (
             <Image
               src={product.mockupUrl || product.thumbnailUrl || ''}

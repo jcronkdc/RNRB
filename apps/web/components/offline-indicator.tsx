@@ -22,7 +22,7 @@ export function OfflineIndicator() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 500 }}
-          className="fixed left-0 right-0 top-0 z-[9999] flex items-center justify-center gap-3 px-4 py-2"
+          className="fixed left-0 right-0 top-0 z-9999 flex items-center justify-center gap-3 px-4 py-2"
           style={{
             background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
             boxShadow: '0 4px 20px rgba(239, 68, 68, 0.3)',
@@ -67,7 +67,7 @@ export function OfflineIndicator() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 500 }}
-          className="fixed left-0 right-0 top-0 z-[9999] flex items-center justify-center gap-3 px-4 py-2"
+          className="fixed left-0 right-0 top-0 z-9999 flex items-center justify-center gap-3 px-4 py-2"
           style={{
             background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
             boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',

@@ -181,7 +181,7 @@ async function RisingArtists() {
               style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
             >
               <div
-                className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-full"
+                className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full"
                 style={{ background: 'var(--accent)' }}
               >
                 {artist.image ? (

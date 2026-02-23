@@ -211,7 +211,7 @@ export default function SolutionsForBandsPage() {
                     "Presence indicators—know who's online",
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -230,7 +230,7 @@ export default function SolutionsForBandsPage() {
                           className="rounded-lg p-4 text-center"
                           style={{ background: 'var(--panel)' }}
                         >
-                          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+                          <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-purple-500">
                             <Users className="h-6 w-6 text-white" />
                           </div>
                           <p className="text-sm font-medium">{member}</p>
@@ -332,7 +332,7 @@ export default function SolutionsForBandsPage() {
                     'Export itineraries for the whole band',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -370,7 +370,7 @@ export default function SolutionsForBandsPage() {
                     'Fan song requests integrated automatically',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -504,7 +504,7 @@ export default function SolutionsForBandsPage() {
                     'Activity feed shows all progress',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -542,7 +542,7 @@ export default function SolutionsForBandsPage() {
                     'Update once—website refreshes instantly',
                   ].map((feature) => (
                     <li key={feature} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-400" />
+                      <CheckCircle className="h-5 w-5 shrink-0 text-green-400" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -691,7 +691,7 @@ export default function SolutionsForBandsPage() {
               routing."
             </blockquote>
             <div className="flex items-center justify-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-purple-500">
                 <span className="text-lg font-bold text-white">JT</span>
               </div>
               <div className="text-left">

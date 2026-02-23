@@ -93,7 +93,7 @@ export function PWAUpdatePrompt() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 50, scale: 0.95 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="fixed bottom-20 left-4 right-4 z-[9998] mx-auto max-w-md rounded-2xl p-4 shadow-2xl md:bottom-6 md:left-auto md:right-6"
+          className="fixed bottom-20 left-4 right-4 z-9998 mx-auto max-w-md rounded-2xl p-4 shadow-2xl md:bottom-6 md:left-auto md:right-6"
           style={{
             background:
               'linear-gradient(135deg, var(--bg-elevated) 0%, rgba(59, 130, 246, 0.05) 100%)',

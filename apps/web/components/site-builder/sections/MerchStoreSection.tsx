@@ -483,7 +483,7 @@ export function MerchStoreSection({
                       className="mb-4 flex gap-4 rounded-xl p-4"
                       style={{ background: 'rgba(255,255,255,0.05)' }}
                     >
-                      <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg">
                         {item.product.images[0] ? (
                           <Image
                             src={item.product.images[0]}

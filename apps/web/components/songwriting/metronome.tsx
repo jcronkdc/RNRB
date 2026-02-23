@@ -193,7 +193,7 @@ export function Metronome({
   const beatsPerMeasure = parseInt(timeSignature.split('/')[0]);
 
   return (
-    <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+    <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20">

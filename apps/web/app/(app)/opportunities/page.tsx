@@ -80,7 +80,7 @@ function OpportunityCard({ opportunity }: { opportunity: any }) {
                 </span>
               )}
             </div>
-            <span className="rounded-full bg-[var(--panel-hover)] px-2 py-0.5 text-xs capitalize text-[var(--text-secondary)]">
+            <span className="rounded-full bg-(--panel-hover) px-2 py-0.5 text-xs capitalize text-(--text-secondary)">
               {opportunity.type.replace('_', ' ')}
             </span>
           </div>
@@ -252,13 +252,13 @@ export default function OpportunitiesPage() {
           {/* Search Bar */}
           <div className="flex gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search opportunities..."
-                className="w-full rounded-xl py-3 pl-12 pr-4 outline-none transition-all"
+                className="w-full rounded-xl py-3 pl-12 pr-4 outline-hidden transition-all"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -267,13 +267,13 @@ export default function OpportunitiesPage() {
               />
             </div>
             <div className="relative">
-              <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--muted)]" />
+              <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Location..."
-                className="w-48 rounded-xl py-3 pl-12 pr-4 outline-none transition-all"
+                className="w-48 rounded-xl py-3 pl-12 pr-4 outline-hidden transition-all"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -355,15 +355,15 @@ export default function OpportunitiesPage() {
           ].map((stat, i) => (
             <div
               key={stat.label}
-              className="rounded-xl border border-[var(--border)] bg-[var(--panel)] p-4"
+              className="rounded-xl border border-(--border) bg-(--panel) p-4"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent-glow)]">
-                  <stat.icon className="h-5 w-5 text-[var(--accent)]" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--accent-glow)">
+                  <stat.icon className="h-5 w-5 text-(--accent)" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-[var(--text)]">{stat.value}</p>
-                  <p className="text-xs text-[var(--muted)]">{stat.label}</p>
+                  <p className="text-2xl font-bold text-(--text)">{stat.value}</p>
+                  <p className="text-xs text-(--muted)">{stat.label}</p>
                 </div>
               </div>
             </div>
@@ -411,16 +411,16 @@ export default function OpportunitiesPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-12 rounded-2xl border border-[var(--border-strong)] bg-gradient-to-br from-green-500/10 to-[var(--gold-dim)] p-8 text-center"
+          className="mt-12 rounded-2xl border border-(--border-strong) bg-linear-to-br from-green-500/10 to-(--gold-dim) p-8 text-center"
         >
-          <Zap className="mx-auto mb-4 h-10 w-10 text-[var(--accent)]" />
-          <h2 className="mb-2 text-xl font-bold text-[var(--text)]">Looking to hire musicians?</h2>
-          <p className="mb-4 text-[var(--text-secondary)]">
+          <Zap className="mx-auto mb-4 h-10 w-10 text-(--accent)" />
+          <h2 className="mb-2 text-xl font-bold text-(--text)">Looking to hire musicians?</h2>
+          <p className="mb-4 text-(--text-secondary)">
             Post your opportunity and reach thousands of talented artists.
           </p>
           <Link
             href="/opportunities/post"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--clay)] px-6 py-3 font-medium text-[var(--text)] shadow-lg shadow-[var(--accent-glow)] transition-all hover:from-green-600 hover:to-emerald-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700"
           >
             <Plus className="h-5 w-5" />
             Post an Opportunity

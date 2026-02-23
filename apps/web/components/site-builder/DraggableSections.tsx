@@ -244,7 +244,7 @@ export function DraggableSections({
             onDrop={(e) => handleDrop(e, section)}
             className={`group relative flex items-center gap-3 rounded-xl p-4 transition-all ${
               isDragging ? 'opacity-50' : ''
-            } ${isDragOver ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-[var(--bg)]' : ''}`}
+            } ${isDragOver ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-(--bg)' : ''}`}
             style={{
               background: 'var(--panel)',
               border: '1px solid var(--border)',
@@ -253,7 +253,7 @@ export function DraggableSections({
           >
             {/* Drag Handle */}
             <div
-              className="flex-shrink-0 cursor-grab opacity-40 transition-opacity group-hover:opacity-100"
+              className="shrink-0 cursor-grab opacity-40 transition-opacity group-hover:opacity-100"
               style={{ color: 'var(--muted)' }}
             >
               <GripVertical size={20} />
@@ -261,7 +261,7 @@ export function DraggableSections({
 
             {/* Section Icon */}
             <div
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
               style={{ background: `${config.color}20`, color: config.color }}
             >
               <Icon size={20} />

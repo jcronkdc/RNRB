@@ -385,7 +385,7 @@ export function VideoPlayer({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent px-4 pb-4"
+          className="absolute bottom-0 left-0 right-0 z-10 bg-linear-to-t from-black/80 to-transparent px-4 pb-4"
         >
           <div className="flex items-center gap-3 text-sm text-white">
             <span>{formatTime(currentTime)}</span>

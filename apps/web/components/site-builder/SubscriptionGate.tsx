@@ -79,12 +79,12 @@ export function SubscriptionGate({
         {/* Header */}
         <div className="relative overflow-hidden p-8 text-center">
           {/* Background gradient */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-10`} />
+          <div className={`absolute inset-0 bg-linear-to-br ${plan.gradient} opacity-10`} />
 
           {/* Lock icon */}
           <div className="relative">
             <div
-              className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br ${plan.gradient}`}
+              className={`mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br ${plan.gradient}`}
             >
               <Lock size={40} className="text-white" />
             </div>
@@ -156,7 +156,7 @@ export function SubscriptionGate({
           <ul className="mb-6 space-y-3">
             {plan.features.map((feat, i) => (
               <li key={i} className="flex items-center gap-3">
-                <Check size={16} className="flex-shrink-0 text-green-500" />
+                <Check size={16} className="shrink-0 text-green-500" />
                 <span className="text-sm" style={{ color: 'var(--text)' }}>
                   {feat}
                 </span>
@@ -167,7 +167,7 @@ export function SubscriptionGate({
           {/* CTA */}
           <Link
             href="/website-builder/pricing"
-            className={`flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-4 font-semibold text-white transition-all hover:scale-[1.02] ${plan.gradient}`}
+            className={`flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r py-4 font-semibold text-white transition-all hover:scale-[1.02] ${plan.gradient}`}
           >
             Upgrade to {plan.name}
             <ArrowRight size={18} />

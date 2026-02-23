@@ -121,7 +121,7 @@ export function CustomizableDashboard() {
               alt={`${activeWorkspace.name} header`}
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-4 left-4">
               <h2 className="text-2xl font-bold text-white">{activeWorkspace.name}</h2>
             </div>
@@ -265,7 +265,7 @@ export function CustomizableDashboard() {
                       }}
                     >
                       <div
-                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
                         style={{ background: 'var(--accent-glow)' }}
                       >
                         <Palette className="h-4 w-4" style={{ color: 'var(--accent)' }} />
@@ -288,7 +288,7 @@ export function CustomizableDashboard() {
                       </div>
                       <button
                         onClick={handleStartCustomizing}
-                        className="flex flex-shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:scale-[1.02]"
+                        className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all hover:scale-[1.02]"
                         style={{ background: 'var(--accent)', color: 'var(--bg)' }}
                       >
                         <Edit3 className="h-3.5 w-3.5" />
@@ -296,7 +296,7 @@ export function CustomizableDashboard() {
                       </button>
                       <button
                         onClick={dismissCustomizationHint}
-                        className="flex-shrink-0 rounded-md p-1.5 transition-colors hover:bg-white/10"
+                        className="shrink-0 rounded-md p-1.5 transition-colors hover:bg-white/10"
                         style={{ color: 'var(--muted)' }}
                         aria-label="Dismiss hint"
                       >
@@ -395,7 +395,7 @@ export function CustomizableDashboard() {
                       style={{ background: 'var(--surface)' }}
                     >
                       <div
-                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
                         style={{ background: 'rgba(245, 158, 11, 0.15)' }}
                       >
                         <ShoppingBag className="h-5 w-5" style={{ color: '#f59e0b' }} />
@@ -420,7 +420,7 @@ export function CustomizableDashboard() {
                       style={{ background: 'var(--surface)' }}
                     >
                       <div
-                        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-transform group-hover:scale-110"
                         style={{ background: 'rgba(56, 189, 248, 0.15)' }}
                       >
                         <Mail className="h-5 w-5" style={{ color: '#38bdf8' }} />
@@ -443,7 +443,7 @@ export function CustomizableDashboard() {
                   style={{ background: 'var(--surface)' }}
                 >
                   <div
-                    className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                     style={{ background: 'rgba(34, 197, 94, 0.15)' }}
                   >
                     <Download className="h-5 w-5" style={{ color: '#22c55e' }} />

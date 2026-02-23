@@ -218,7 +218,7 @@ export function SpotifyImportModal({
           {/* Error Display */}
           {error && (
             <div className="mb-4 flex items-start gap-3 rounded-lg border border-red-500/20 bg-red-500/10 p-4">
-              <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" />
+              <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
               <div>
                 <h4 className="font-semibold text-red-400">Error</h4>
                 <p className="text-sm text-red-300">{error}</p>

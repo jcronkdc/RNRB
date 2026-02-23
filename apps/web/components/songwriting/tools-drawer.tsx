@@ -76,7 +76,7 @@ export function ToolsDrawer({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-xs lg:hidden"
             onClick={onClose}
           />
 

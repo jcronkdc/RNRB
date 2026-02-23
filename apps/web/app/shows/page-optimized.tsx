@@ -202,7 +202,7 @@ export default function ShowsPage() {
               <Button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                variant={statusFilter === status ? 'default' : 'outline'}
+                variant={statusFilter === status ? 'default' : 'outline-solid'}
                 className="shrink-0 rounded-xl px-3 py-2 text-xs capitalize sm:px-4 sm:text-sm"
               >
                 {status}

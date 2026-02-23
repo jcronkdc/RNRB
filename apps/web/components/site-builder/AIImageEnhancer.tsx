@@ -179,7 +179,7 @@ export function AIImageEnhancer({ isOpen, onClose, imageUrl, onSave }: AIImageEn
             style={{ borderBottom: '1px solid var(--border)' }}
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-pink-500">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
                 <ImageIcon size={20} className="text-white" />
               </div>
               <div>
@@ -277,7 +277,7 @@ export function AIImageEnhancer({ isOpen, onClose, imageUrl, onSave }: AIImageEn
 
         {/* Right Panel - Enhancements */}
         <div
-          className="w-80 flex-shrink-0 overflow-y-auto"
+          className="w-80 shrink-0 overflow-y-auto"
           style={{ borderLeft: '1px solid var(--border)' }}
         >
           {/* AI Enhancements */}
@@ -306,7 +306,7 @@ export function AIImageEnhancer({ isOpen, onClose, imageUrl, onSave }: AIImageEn
                   }}
                 >
                   <div
-                    className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                     style={{ background: 'var(--panel)' }}
                   >
                     <enhancement.icon size={18} style={{ color: 'var(--accent)' }} />
@@ -386,7 +386,7 @@ export function AIImageEnhancer({ isOpen, onClose, imageUrl, onSave }: AIImageEn
                     className="flex items-start gap-2 rounded-lg p-2"
                     style={{ background: 'var(--bg)' }}
                   >
-                    <Check size={14} className="mt-0.5 flex-shrink-0 text-green-500" />
+                    <Check size={14} className="mt-0.5 shrink-0 text-green-500" />
                     <span className="text-xs" style={{ color: 'var(--muted)' }}>
                       {suggestion}
                     </span>

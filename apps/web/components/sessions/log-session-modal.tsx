@@ -180,7 +180,7 @@ export default function LogSessionModal({
                         onChange={(e) =>
                           setDuration({ ...duration, hours: parseInt(e.target.value) || 0 })
                         }
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-center text-2xl font-bold text-foreground focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-center text-2xl font-bold text-foreground focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                     <span className="mt-6 text-2xl text-muted-foreground">:</span>
@@ -191,7 +191,7 @@ export default function LogSessionModal({
                         onChange={(e) =>
                           setDuration({ ...duration, minutes: parseInt(e.target.value) })
                         }
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-center text-2xl font-bold text-foreground focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-center text-2xl font-bold text-foreground focus:border-brand-primary focus:outline-hidden"
                       >
                         {[0, 15, 30, 45].map((min) => (
                           <option key={min} value={min}>
@@ -216,7 +216,7 @@ export default function LogSessionModal({
                     type="date"
                     value={sessionDate}
                     onChange={(e) => setSessionDate(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-none"
+                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
                   />
                 </div>
 
@@ -230,7 +230,7 @@ export default function LogSessionModal({
                     <select
                       value={selectedSong}
                       onChange={(e) => setSelectedSong(e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-none"
+                      className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
                     >
                       <option value="">No specific song</option>
                       {projectSongs.map((song) => (
@@ -284,7 +284,7 @@ export default function LogSessionModal({
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="What did you work on? Any breakthroughs or decisions made?"
                     rows={4}
-                    className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground focus:border-brand-primary focus:outline-none"
+                    className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground focus:border-brand-primary focus:outline-hidden"
                   />
                   <p className="mt-1 text-xs text-muted-foreground">
                     Example: "Recorded vocals for verse 1, decided on Am for the bridge"

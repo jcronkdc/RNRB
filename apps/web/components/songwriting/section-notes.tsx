@@ -106,7 +106,7 @@ export function SectionNotes({
               placeholder="Add a note about this section..."
               rows={2}
               autoFocus
-              className="mb-2 w-full resize-none rounded-lg bg-transparent p-2 text-sm outline-none"
+              className="mb-2 w-full resize-none rounded-lg bg-transparent p-2 text-sm outline-hidden"
               style={{ color: 'var(--text)' }}
             />
             <div className="flex items-center justify-between">
@@ -168,7 +168,7 @@ export function SectionNotes({
                   onChange={(e) => setEditContent(e.target.value)}
                   rows={2}
                   autoFocus
-                  className="mb-2 w-full resize-none rounded bg-transparent p-1 text-sm outline-none"
+                  className="mb-2 w-full resize-none rounded bg-transparent p-1 text-sm outline-hidden"
                   style={{ color: 'var(--text)' }}
                 />
                 <div className="flex justify-end gap-2">

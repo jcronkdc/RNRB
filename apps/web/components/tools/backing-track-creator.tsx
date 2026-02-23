@@ -588,7 +588,7 @@ export function BackingTrackCreator() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-fuchsia-500 to-pink-600">
             <PlayCircle className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -652,7 +652,7 @@ export function BackingTrackCreator() {
               <div className="flex items-center gap-4">
                 {/* Type indicator */}
                 <div
-                  className="h-10 w-10 flex-shrink-0 rounded-lg"
+                  className="h-10 w-10 shrink-0 rounded-lg"
                   style={{ backgroundColor: getStemColor(stem.type) + '30' }}
                 >
                   <div className="flex h-full items-center justify-center">
@@ -666,7 +666,7 @@ export function BackingTrackCreator() {
                     type="text"
                     value={stem.name}
                     onChange={(e) => updateStem(stem.id, { name: e.target.value })}
-                    className="w-full bg-transparent font-medium focus:outline-none"
+                    className="w-full bg-transparent font-medium focus:outline-hidden"
                   />
                   {decodingIds.has(stem.id) ? (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -781,7 +781,7 @@ export function BackingTrackCreator() {
               onClick={handleSeek}
             >
               {/* Inactive waveform bars */}
-              <div className="absolute inset-0 flex items-end gap-[1px] px-0.5">
+              <div className="absolute inset-0 flex items-end gap-px px-0.5">
                 {waveformData.map((peak, i) => (
                   <div
                     key={i}
@@ -793,7 +793,7 @@ export function BackingTrackCreator() {
 
               {/* Active (played) waveform overlay */}
               <div
-                className="absolute inset-0 flex items-end gap-[1px] px-0.5"
+                className="absolute inset-0 flex items-end gap-px px-0.5"
                 style={{
                   clipPath: `inset(0 ${100 - progressPct}% 0 0)`,
                 }}
@@ -801,7 +801,7 @@ export function BackingTrackCreator() {
                 {waveformData.map((peak, i) => (
                   <div
                     key={i}
-                    className="flex-1 rounded-t-sm bg-gradient-to-t from-fuchsia-500 to-pink-400"
+                    className="flex-1 rounded-t-sm bg-linear-to-t from-fuchsia-500 to-pink-400"
                     style={{ height: `${Math.max(6, peak * 100)}%` }}
                   />
                 ))}
@@ -826,7 +826,7 @@ export function BackingTrackCreator() {
 
       {/* Master Controls */}
       {stems.length > 0 && (
-        <div className="rounded-xl bg-gradient-to-r from-fuchsia-500/10 to-pink-500/10 p-4">
+        <div className="rounded-xl bg-linear-to-r from-fuchsia-500/10 to-pink-500/10 p-4">
           <div className="flex items-center gap-4">
             {/* Play/Pause */}
             <Button
@@ -835,7 +835,7 @@ export function BackingTrackCreator() {
               className={`h-14 w-14 rounded-full ${
                 isPlaying
                   ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-gradient-to-r from-fuchsia-500 to-pink-600'
+                  : 'bg-linear-to-r from-fuchsia-500 to-pink-600'
               }`}
             >
               {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}

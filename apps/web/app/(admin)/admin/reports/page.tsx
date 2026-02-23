@@ -242,7 +242,7 @@ export default function ReportsPage() {
                 type="date"
                 value={dateRange.start}
                 onChange={(e) => setDateRange((prev) => ({ ...prev, start: e.target.value }))}
-                className="w-full rounded-xl border bg-white/5 px-4 py-2.5 text-white focus:border-orange-500/50 focus:outline-none"
+                className="w-full rounded-xl border bg-white/5 px-4 py-2.5 text-white focus:border-orange-500/50 focus:outline-hidden"
                 style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
               />
             </div>
@@ -252,7 +252,7 @@ export default function ReportsPage() {
                 type="date"
                 value={dateRange.end}
                 onChange={(e) => setDateRange((prev) => ({ ...prev, end: e.target.value }))}
-                className="w-full rounded-xl border bg-white/5 px-4 py-2.5 text-white focus:border-orange-500/50 focus:outline-none"
+                className="w-full rounded-xl border bg-white/5 px-4 py-2.5 text-white focus:border-orange-500/50 focus:outline-hidden"
                 style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
               />
             </div>
@@ -343,7 +343,7 @@ export default function ReportsPage() {
         <button
           onClick={handleGenerate}
           disabled={generateMutation.isPending}
-          className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 text-lg font-semibold text-white transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center gap-3 rounded-2xl bg-linear-to-r from-orange-500 to-red-500 px-8 py-4 text-lg font-semibold text-white transition-all hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {generateMutation.isPending ? (
             <>

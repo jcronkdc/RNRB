@@ -49,13 +49,13 @@ function UserRow({ user, onSelect }: { user: any; onSelect: (id: string) => void
   const tierStyle = getTierColor(user.subscriptionTier);
 
   return (
-    <tr className="group border-b border-white/5 transition-colors hover:bg-white/[0.02]">
+    <tr className="group border-b border-white/5 transition-colors hover:bg-white/2">
       <td className="px-4 py-3">
         <div className="flex items-center gap-3">
           {user.image ? (
             <img src={user.image} alt="" className="h-10 w-10 rounded-full object-cover" />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-sm font-medium text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-red-500 text-sm font-medium text-white">
               {user.name?.[0] || user.email?.[0]?.toUpperCase() || '?'}
             </div>
           )}
@@ -220,7 +220,7 @@ export default function UsersPage() {
               placeholder="Search by email or name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 transition-colors focus:border-orange-500/50 focus:outline-none"
+              className="w-full rounded-xl border bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 transition-colors focus:border-orange-500/50 focus:outline-hidden"
               style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
             />
           </div>

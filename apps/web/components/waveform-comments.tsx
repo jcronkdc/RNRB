@@ -541,7 +541,7 @@ export function WaveformComments({
               value={newCommentText}
               onChange={(e) => setNewCommentText(e.target.value)}
               placeholder="Add your feedback... (e.g., 'Snare is too loud here', 'Love this section!')"
-              className="w-full resize-none rounded-lg border border-border bg-surface p-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-brand-primary"
+              className="w-full resize-none rounded-lg border border-border bg-surface p-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary"
               rows={3}
               autoFocus
             />
@@ -624,7 +624,7 @@ export function WaveformComments({
                     {/* Timestamp button */}
                     <button
                       onClick={() => jumpToComment(comment)}
-                      className="flex-shrink-0 rounded bg-blue-500/10 px-2 py-1 font-mono text-xs text-blue-400 transition-colors hover:bg-blue-500/20"
+                      className="shrink-0 rounded bg-blue-500/10 px-2 py-1 font-mono text-xs text-blue-400 transition-colors hover:bg-blue-500/20"
                       title="Jump to this timestamp"
                     >
                       {formatTimestamp(comment.location.timestamp || 0)}
@@ -658,7 +658,7 @@ export function WaveformComments({
                           ? unresolveComment(comment.id)
                           : resolveComment(comment.id)
                       }
-                      className={`flex-shrink-0 rounded-lg p-2 opacity-0 transition-all group-hover:opacity-100 ${
+                      className={`shrink-0 rounded-lg p-2 opacity-0 transition-all group-hover:opacity-100 ${
                         comment.isResolved
                           ? 'text-muted-foreground hover:bg-surface hover:text-foreground'
                           : 'text-green-400 hover:bg-green-500/10'

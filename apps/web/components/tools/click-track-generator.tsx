@@ -288,7 +288,7 @@ export function ClickTrackGenerator() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-red-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-red-600">
             <Drum className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -420,7 +420,7 @@ export function ClickTrackGenerator() {
           {[60, 80, 100, 120, 140, 160, 180].map((preset) => (
             <Button
               key={preset}
-              variant={bpm === preset ? 'default' : 'outline'}
+              variant={bpm === preset ? 'default' : 'outline-solid'}
               size="sm"
               onClick={() => setBpm(preset)}
               className="rounded-full px-4"
@@ -462,7 +462,7 @@ export function ClickTrackGenerator() {
               variant={
                 timeSignature.beats === ts.beats && timeSignature.noteValue === ts.noteValue
                   ? 'default'
-                  : 'outline'
+                  : 'outline-solid'
               }
               size="sm"
               onClick={() => {
@@ -488,7 +488,7 @@ export function ClickTrackGenerator() {
           className={`gap-2 rounded-full px-8 py-6 text-lg font-bold ${
             isPlaying
               ? 'bg-red-500 hover:bg-red-600'
-              : 'bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700'
+              : 'bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700'
           }`}
         >
           {isPlaying ? (

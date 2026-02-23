@@ -182,7 +182,7 @@ export default function MessageRequestsPage() {
           className="mb-6 flex items-start gap-4 rounded-xl p-4"
           style={{ backgroundColor: 'var(--accent-dim)', border: '1px solid var(--accent)' }}
         >
-          <Shield className="h-5 w-5 flex-shrink-0" style={{ color: 'var(--accent)' }} />
+          <Shield className="h-5 w-5 shrink-0" style={{ color: 'var(--accent)' }} />
           <div>
             <p style={{ fontWeight: '500', color: 'var(--text)', marginBottom: '4px' }}>
               These messages are from people you don't know

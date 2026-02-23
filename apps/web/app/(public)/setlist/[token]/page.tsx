@@ -111,7 +111,7 @@ export default function PublicSetlistPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-black">
+      <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-gray-950 via-gray-900 to-black">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
@@ -124,7 +124,7 @@ export default function PublicSetlistPage() {
 
   if (error || !setlist) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-950 via-gray-900 to-black px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-gray-950 via-gray-900 to-black px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -147,12 +147,12 @@ export default function PublicSetlistPage() {
   const mainSongs = setlist.songs.filter((s) => !s.isEncore);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black">
+    <div className="min-h-screen bg-linear-to-br from-gray-950 via-gray-900 to-black">
       {/* Hero Header */}
       <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden border-b border-white/10 bg-gradient-to-r from-orange-500/20 via-transparent to-purple-500/20 px-4 py-8"
+        className="relative overflow-hidden border-b border-white/10 bg-linear-to-r from-orange-500/20 via-transparent to-purple-500/20 px-4 py-8"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
@@ -334,7 +334,7 @@ export default function PublicSetlistPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="border-t border-white/10 bg-gradient-to-r from-orange-500/10 via-transparent to-purple-500/10 px-4 py-12"
+        className="border-t border-white/10 bg-linear-to-r from-orange-500/10 via-transparent to-purple-500/10 px-4 py-12"
       >
         <div className="mx-auto max-w-2xl text-center">
           {/* Logo */}

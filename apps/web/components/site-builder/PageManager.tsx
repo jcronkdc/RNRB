@@ -282,7 +282,7 @@ export function PageManager({
                 {/* Drag Handle */}
                 {!page.isHomepage && (
                   <div
-                    className="flex-shrink-0 cursor-move opacity-40 transition-opacity group-hover:opacity-100"
+                    className="shrink-0 cursor-move opacity-40 transition-opacity group-hover:opacity-100"
                     style={{ color: 'var(--muted)' }}
                   >
                     <GripVertical size={20} />
@@ -291,7 +291,7 @@ export function PageManager({
 
                 {/* Page Icon */}
                 <div
-                  className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg"
                   style={{
                     background: page.isHomepage ? 'var(--accent)' + '20' : 'var(--bg)',
                     color: page.isHomepage ? 'var(--accent)' : 'var(--muted)',

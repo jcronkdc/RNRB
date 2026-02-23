@@ -312,7 +312,7 @@ ${session.notes}
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-teal-500 to-emerald-600">
             <ClipboardList className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -325,7 +325,7 @@ ${session.notes}
             setEditingSession(DEFAULT_SESSION);
             setShowEditor(true);
           }}
-          className="gap-2 bg-gradient-to-r from-teal-500 to-emerald-600"
+          className="gap-2 bg-linear-to-r from-teal-500 to-emerald-600"
         >
           <Plus className="h-4 w-4" />
           New Session
@@ -341,7 +341,7 @@ ${session.notes}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search sessions..."
-            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-none"
+            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-hidden"
           />
         </div>
         <div className="flex gap-2">
@@ -399,7 +399,7 @@ ${session.notes}
                   </button>
 
                   <div
-                    className="h-10 w-10 flex-shrink-0 rounded-lg"
+                    className="h-10 w-10 shrink-0 rounded-lg"
                     style={{ backgroundColor: getTypeColor(session.trackType) + '30' }}
                   >
                     <div className="flex h-full items-center justify-center">

@@ -638,7 +638,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
       >
         {/* Sidebar */}
         <div
-          className="w-72 flex-shrink-0 overflow-y-auto"
+          className="w-72 shrink-0 overflow-y-auto"
           style={{ borderRight: '1px solid var(--border)' }}
         >
           {/* Header */}
@@ -782,7 +782,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
                           >
                             <CheckCircle
                               size={16}
-                              className="mt-1 flex-shrink-0"
+                              className="mt-1 shrink-0"
                               style={{ color: 'var(--accent)' }}
                             />
                             <span
@@ -829,7 +829,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
                     {selectedArticle.steps.map((step, i) => (
                       <li key={i} className="flex items-start gap-3">
                         <span
-                          className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold"
+                          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold"
                           style={{ background: 'var(--accent)', color: '#fff' }}
                         >
                           {i + 1}
@@ -863,7 +863,7 @@ export function UserGuides({ isOpen, onClose, initialArticle }: UserGuidesProps)
                       >
                         <ArrowRight
                           size={16}
-                          className="mt-1 flex-shrink-0"
+                          className="mt-1 shrink-0"
                           style={{ color: 'var(--accent)' }}
                         />
                         {tip}

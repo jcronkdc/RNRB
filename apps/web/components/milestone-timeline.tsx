@@ -330,7 +330,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                       {/* Blocking Issue */}
                       {milestone.blockingIssue && (
                         <div className="mt-2 flex items-start gap-2 rounded-lg border border-red-500/20 bg-red-500/5 p-2">
-                          <AlertTriangle className="h-4 w-4 flex-shrink-0 text-red-500" />
+                          <AlertTriangle className="h-4 w-4 shrink-0 text-red-500" />
                           <p className="text-xs text-red-500">{milestone.blockingIssue}</p>
                         </div>
                       )}

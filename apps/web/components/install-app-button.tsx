@@ -152,7 +152,7 @@ export function InstallAppButton({
         }}
       >
         {/* Shine effect */}
-        <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+        <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
 
         <svg
           width="22"
@@ -331,7 +331,7 @@ function IOSInstructionsModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4"
+        className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 p-4"
         onClick={onClose}
       >
         <motion.div

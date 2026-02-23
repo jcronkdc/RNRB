@@ -53,7 +53,7 @@ function RatingBar({ label, count, total }: { label: string; count: number; tota
       <span className="w-8 text-right text-sm text-white/60">{label}</span>
       <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400 transition-all"
+          className="h-full rounded-full bg-linear-to-r from-amber-400 to-orange-400 transition-all"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -70,10 +70,10 @@ function ReviewCard({
   onVote: (reviewId: string, isHelpful: boolean) => void;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
+    <div className="rounded-xl border border-white/10 bg-white/3 p-5">
       <div className="mb-3 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-orange-500 to-amber-500">
+          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-orange-500 to-amber-500">
             {review.reviewer?.image ? (
               <img src={review.reviewer.image} alt="" className="h-full w-full object-cover" />
             ) : (
@@ -240,8 +240,8 @@ export default function SellerProfilePage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-gradient-to-br from-orange-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-gradient-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
+        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-8">
@@ -281,12 +281,12 @@ export default function SellerProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+          className="mb-8 rounded-2xl border border-white/10 bg-white/3 p-6"
         >
           <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:items-start sm:text-left">
             {/* Avatar */}
             <div className="relative">
-              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-orange-500 to-amber-500">
+              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-linear-to-br from-orange-500 to-amber-500">
                 {profile.image ? (
                   <img src={profile.image} alt="" className="h-full w-full object-cover" />
                 ) : (
@@ -335,7 +335,7 @@ export default function SellerProfilePage() {
                 <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
                   <Link
                     href={`/marketplace/messages?to=${sellerId}`}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-2.5 font-medium text-white"
+                    className="flex items-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-amber-500 px-5 py-2.5 font-medium text-white"
                   >
                     <MessageSquare className="h-4 w-4" />
                     Send Message
@@ -356,7 +356,7 @@ export default function SellerProfilePage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-8 rounded-2xl border border-white/10 bg-white/[0.03] p-6"
+            className="mb-8 rounded-2xl border border-white/10 bg-white/3 p-6"
           >
             <h2 className="mb-4 text-lg font-semibold text-white">Rating Breakdown</h2>
             <div className="grid gap-6 md:grid-cols-2">
@@ -433,7 +433,7 @@ export default function SellerProfilePage() {
               <Loader2 className="h-6 w-6 animate-spin text-orange-400" />
             </div>
           ) : reviewsData?.reviews?.length === 0 ? (
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-12 text-center">
+            <div className="rounded-xl border border-white/10 bg-white/3 p-12 text-center">
               <Star className="mx-auto mb-3 h-12 w-12 text-white/20" />
               <p className="text-white/50">No reviews yet</p>
             </div>

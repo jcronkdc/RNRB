@@ -23,7 +23,7 @@ const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
         ref={ref}
         className={cn(
           'h-2 w-full cursor-pointer appearance-none rounded-lg bg-brand-muted/60 accent-brand-primary',
-          'focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2',
+          'focus:outline-hidden focus:ring-2 focus:ring-brand-primary focus:ring-offset-2',
           className
         )}
         value={value[0] ?? min}

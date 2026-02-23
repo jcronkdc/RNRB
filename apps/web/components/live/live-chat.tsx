@@ -64,10 +64,10 @@ function MessageItem({
     <motion.div
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
-      className={`flex gap-2 rounded-lg px-3 py-1.5 ${isHighlight ? 'border border-yellow-500/30 bg-gradient-to-r from-yellow-500/20 to-orange-500/20' : 'hover:bg-white/5'} ${message.isPinned ? 'border border-purple-500/30 bg-purple-500/10' : ''} group`}
+      className={`flex gap-2 rounded-lg px-3 py-1.5 ${isHighlight ? 'border border-yellow-500/30 bg-linear-to-r from-yellow-500/20 to-orange-500/20' : 'hover:bg-white/5'} ${message.isPinned ? 'border border-purple-500/30 bg-purple-500/10' : ''} group`}
     >
       {/* Avatar */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         {message.sender.avatar ? (
           <Image
             src={message.sender.avatar}
@@ -77,7 +77,7 @@ function MessageItem({
             className="rounded-full"
           />
         ) : (
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-xs font-bold text-white">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-pink-500 text-xs font-bold text-white">
             {message.sender.name.charAt(0).toUpperCase()}
           </div>
         )}
@@ -110,7 +110,7 @@ function MessageItem({
         </div>
 
         {/* Message text */}
-        <p className="break-words text-sm text-white/90">{message.message}</p>
+        <p className="wrap-break-word text-sm text-white/90">{message.message}</p>
       </div>
 
       {/* Reply button */}
@@ -266,13 +266,13 @@ export function LiveChat({
               placeholder={cooldown > 0 ? `Wait ${cooldown}s...` : 'Say something...'}
               disabled={isSending || cooldown > 0}
               maxLength={500}
-              className="flex-1 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-white placeholder-white/40 focus:border-white/30 focus:outline-none disabled:opacity-50"
+              className="flex-1 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-white placeholder-white/40 focus:border-white/30 focus:outline-hidden disabled:opacity-50"
             />
             <motion.button
               type="submit"
               disabled={!input.trim() || isSending || cooldown > 0}
               whileTap={{ scale: 0.95 }}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-pink-500 text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
             </motion.button>

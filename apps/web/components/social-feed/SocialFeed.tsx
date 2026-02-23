@@ -333,7 +333,7 @@ function FeedTypeButton({
       aria-pressed={active}
       className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-all ${
         active
-          ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
+          ? 'bg-linear-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25'
           : 'text-white/60 hover:bg-white/5 hover:text-white'
       }`}
     >

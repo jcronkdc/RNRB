@@ -245,7 +245,7 @@ const SectionEditor = memo(function SectionEditor({
         {/* Remove button — only visible on hover, minimum touch target */}
         <button
           onClick={onRemove}
-          className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg opacity-0 transition-opacity group-hover:opacity-40 hover:!opacity-100 hover:bg-white/5"
+          className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg opacity-0 transition-opacity group-hover:opacity-40 hover:opacity-100! hover:bg-white/5"
           style={{ color: 'var(--muted)' }}
           title="Remove section"
         >
@@ -356,7 +356,7 @@ const SectionEditor = memo(function SectionEditor({
               setChordInputValue('');
             }}
             autoFocus
-            className="w-16 rounded border-0 px-1 py-0.5 text-xs font-semibold outline-none"
+            className="w-16 rounded border-0 px-1 py-0.5 text-xs font-semibold outline-hidden"
             style={{
               background: 'var(--panel)',
               color: 'var(--accent)',
@@ -384,7 +384,7 @@ const SectionEditor = memo(function SectionEditor({
         onKeyDown={onKeyDown}
         readOnly={readOnly}
         placeholder="Start writing..."
-        className="w-full resize-none border-0 bg-transparent outline-none"
+        className="w-full resize-none border-0 bg-transparent outline-hidden"
         style={{
           color: 'var(--text)',
           fontSize: '16px',
@@ -638,7 +638,7 @@ export function SongEditor({
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Untitled Song"
           readOnly={readOnly}
-          className="w-full border-0 bg-transparent text-2xl font-light outline-none"
+          className="w-full border-0 bg-transparent text-2xl font-light outline-hidden"
           style={{
             color: 'var(--text)',
             caretColor: 'var(--accent)',

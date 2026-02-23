@@ -19,7 +19,7 @@ export default function SitesLoading() {
           <div className="h-5 w-80 animate-pulse rounded bg-white/5" />
         </div>
         {/* Site Preview skeleton */}
-        <div className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+        <div className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-white/2">
           <div className="h-64 w-full animate-pulse bg-white/5" />
           <div className="p-6">
             <div className="mb-4 flex items-center justify-between">
@@ -36,7 +36,7 @@ export default function SitesLoading() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]"
+              className="overflow-hidden rounded-xl border border-white/10 bg-white/2"
             >
               <div className="h-40 w-full animate-pulse bg-white/5" />
               <div className="p-4">

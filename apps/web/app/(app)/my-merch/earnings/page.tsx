@@ -128,8 +128,8 @@ export default function EarningsPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-green-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-emerald-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-green-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-emerald-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -351,7 +351,7 @@ export default function EarningsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="mt-12 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 to-transparent p-6"
+            className="mt-12 rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/10 to-transparent p-6"
           >
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>

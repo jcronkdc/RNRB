@@ -23,12 +23,12 @@ export default function MessagesLoading() {
         {/* Messages layout skeleton */}
         <div className="flex gap-6">
           {/* Conversations list */}
-          <div className="w-80 shrink-0 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+          <div className="w-80 shrink-0 rounded-xl border border-white/10 bg-white/2 p-4">
             <div className="mb-4 h-10 w-full animate-pulse rounded-lg bg-white/5" />
             <InboxSkeleton count={8} />
           </div>
           {/* Message view */}
-          <div className="flex-1 rounded-xl border border-white/10 bg-white/[0.02] p-6">
+          <div className="flex-1 rounded-xl border border-white/10 bg-white/2 p-6">
             <div className="flex h-[600px] flex-col">
               <div className="mb-4 flex items-center gap-3 border-b border-white/5 pb-4">
                 <div className="h-12 w-12 animate-pulse rounded-full bg-white/5" />

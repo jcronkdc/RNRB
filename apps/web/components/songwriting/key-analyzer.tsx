@@ -181,7 +181,7 @@ export const KeyAnalyzer = memo(function KeyAnalyzer({
             <motion.div
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary shadow-lg"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-br from-brand-primary to-brand-secondary shadow-lg"
             >
               <Music className="h-6 w-6 text-white" />
             </motion.div>

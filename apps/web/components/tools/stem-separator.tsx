@@ -369,7 +369,7 @@ export function StemSeparator() {
               {selectedMode === mode.id && (
                 <motion.div
                   layoutId="mode-indicator"
-                  className="absolute inset-0 -z-10 bg-gradient-to-br from-orange-500/20 to-transparent"
+                  className="absolute inset-0 -z-10 bg-linear-to-br from-orange-500/20 to-transparent"
                 />
               )}
             </motion.button>
@@ -403,7 +403,7 @@ export function StemSeparator() {
               {selectedQuality === preset.id && (
                 <motion.div
                   layoutId="quality-indicator"
-                  className="absolute inset-0 -z-10 bg-gradient-to-br from-emerald-500/20 to-transparent"
+                  className="absolute inset-0 -z-10 bg-linear-to-br from-emerald-500/20 to-transparent"
                 />
               )}
             </motion.button>
@@ -434,7 +434,7 @@ export function StemSeparator() {
 
           {file ? (
             <div className="space-y-4">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500/20 to-red-500/20">
                 <Music2 className="h-8 w-8 text-orange-400" />
               </div>
               <div>
@@ -497,7 +497,7 @@ export function StemSeparator() {
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${job.progress}%` }}
-                  className="h-full bg-gradient-to-r from-orange-500 to-red-500"
+                  className="h-full bg-linear-to-r from-orange-500 to-red-500"
                 />
               </div>
             </div>
@@ -550,7 +550,7 @@ export function StemSeparator() {
               <div className="flex gap-2">
                 <button
                   onClick={downloadAllStems}
-                  className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 hover:shadow-xl"
+                  className="flex items-center gap-2 rounded-lg bg-linear-to-r from-orange-500 to-red-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 hover:shadow-xl"
                 >
                   <Download className="h-4 w-4" />
                   Download All
@@ -579,7 +579,7 @@ export function StemSeparator() {
                   >
                     <div className="flex items-center gap-4">
                       <div
-                        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${stem.color}`}
+                        className={`flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br ${stem.color}`}
                       >
                         <IconComponent className="h-6 w-6 text-white" />
                       </div>
@@ -621,7 +621,7 @@ export function StemSeparator() {
           animate={{ opacity: 1, y: 0 }}
           onClick={uploadAndSeparate}
           disabled={isUploading}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-4 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl hover:shadow-orange-500/30 disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 py-4 text-lg font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:shadow-xl hover:shadow-orange-500/30 disabled:opacity-50"
         >
           {isUploading ? (
             <>

@@ -188,7 +188,7 @@ export function BatchSuggestionReview({
 
   if (isLoading) {
     return (
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-8">
         <div className="flex flex-col items-center justify-center">
           <Loader2 className="mb-4 h-12 w-12 animate-spin text-blue-400" />
           <p className="text-gray-400">Loading suggestions...</p>
@@ -199,7 +199,7 @@ export function BatchSuggestionReview({
 
   if (localSuggestions.length === 0) {
     return (
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-8">
         <div className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
             <Check className="h-8 w-8 text-green-400" />
@@ -217,7 +217,7 @@ export function BatchSuggestionReview({
 
   if (!currentSuggestion) {
     return (
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-8">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-8">
         <div className="text-center">
           <AlertCircle className="mx-auto mb-4 h-12 w-12 text-yellow-400" />
           <p className="text-gray-400">No suggestions match the current filter</p>
@@ -272,7 +272,7 @@ export function BatchSuggestionReview({
       </div>
 
       {/* Main Suggestion Card */}
-      <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+      <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
         {/* Type Badge */}
         <div className="mb-4 flex items-center gap-2">
           <span

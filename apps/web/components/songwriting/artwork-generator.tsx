@@ -174,7 +174,7 @@ export function ArtworkGenerator({
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-purple-500/20 to-pink-500/20">
           <Sparkles className="h-5 w-5 text-purple-400" />
         </div>
         <div>
@@ -191,7 +191,7 @@ export function ArtworkGenerator({
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="e.g., A lonely figure standing in rain on a city street at night, reflections on wet pavement..."
-            className="bg-panel min-h-[100px] w-full resize-none rounded-xl border border-border p-4 pr-12 focus:outline-none focus:ring-2 focus:ring-brand-primary/50"
+            className="bg-panel min-h-[100px] w-full resize-none rounded-xl border border-border p-4 pr-12 focus:outline-hidden focus:ring-2 focus:ring-brand-primary/50"
           />
           <Wand2 className="absolute right-4 top-4 h-5 w-5 text-gray-500" />
         </div>
@@ -341,7 +341,7 @@ export function ArtworkGenerator({
             exit={{ opacity: 0, y: -10 }}
             className="flex items-center gap-2 rounded-lg bg-red-500/10 p-4 text-red-400"
           >
-            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 shrink-0" />
             <p className="text-sm">{error}</p>
           </motion.div>
         )}

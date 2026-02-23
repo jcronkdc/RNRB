@@ -277,7 +277,7 @@ export function AboutPageSection({ content, theme }: AboutPageSectionProps) {
                   href={photo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative aspect-[4/3] overflow-hidden rounded-xl"
+                  className="group relative aspect-4/3 overflow-hidden rounded-xl"
                   style={{ background: 'var(--panel)' }}
                 >
                   <img

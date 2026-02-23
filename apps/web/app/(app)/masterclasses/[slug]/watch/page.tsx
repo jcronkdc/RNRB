@@ -266,9 +266,9 @@ function VideoPlayer({
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="flex h-20 w-20 items-center justify-center rounded-full bg-[var(--accent)]"
+              className="flex h-20 w-20 items-center justify-center rounded-full bg-(--accent)"
             >
-              <Play className="ml-1 h-10 w-10 text-[var(--text)]" />
+              <Play className="ml-1 h-10 w-10 text-(--text)" />
             </motion.button>
           </motion.div>
         )}
@@ -281,7 +281,7 @@ function VideoPlayer({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4"
+            className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-4"
           >
             {/* Progress bar */}
             <div className="mb-3">
@@ -291,7 +291,7 @@ function VideoPlayer({
                 max={duration}
                 value={currentTime}
                 onChange={(e) => seek(parseFloat(e.target.value))}
-                className="h-1 w-full cursor-pointer appearance-none rounded-full bg-white/30 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent)]"
+                className="h-1 w-full cursor-pointer appearance-none rounded-full bg-white/30 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-(--accent)"
               />
             </div>
 
@@ -300,19 +300,19 @@ function VideoPlayer({
               <div className="flex items-center gap-3">
                 <button
                   onClick={togglePlay}
-                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                  className="text-(--text) hover:text-(--accent)"
                 >
                   {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 </button>
                 <button
                   onClick={() => skip(-10)}
-                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                  className="text-(--text) hover:text-(--accent)"
                 >
                   <SkipBack className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => skip(10)}
-                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                  className="text-(--text) hover:text-(--accent)"
                 >
                   <SkipForward className="h-5 w-5" />
                 </button>
@@ -321,7 +321,7 @@ function VideoPlayer({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={toggleMute}
-                    className="text-[var(--text)] hover:text-[var(--accent)]"
+                    className="text-(--text) hover:text-(--accent)"
                   >
                     {isMuted || volume === 0 ? (
                       <VolumeX className="h-5 w-5" />
@@ -341,7 +341,7 @@ function VideoPlayer({
                 </div>
 
                 {/* Time */}
-                <span className="text-sm text-[var(--text)]">
+                <span className="text-sm text-(--text)">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
               </div>
@@ -352,7 +352,7 @@ function VideoPlayer({
                 <select
                   value={playbackRate}
                   onChange={(e) => changePlaybackRate(parseFloat(e.target.value))}
-                  className="rounded border border-white/30 bg-transparent px-2 py-1 text-sm text-[var(--text)]"
+                  className="rounded border border-white/30 bg-transparent px-2 py-1 text-sm text-(--text)"
                 >
                   <option value={0.5}>0.5x</option>
                   <option value={0.75}>0.75x</option>
@@ -364,7 +364,7 @@ function VideoPlayer({
 
                 <button
                   onClick={toggleFullscreen}
-                  className="text-[var(--text)] hover:text-[var(--accent)]"
+                  className="text-(--text) hover:text-(--accent)"
                 >
                   {isFullscreen ? (
                     <Minimize className="h-5 w-5" />
@@ -515,7 +515,7 @@ export default function WatchPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-(--accent) border-t-transparent" />
       </div>
     );
   }
@@ -524,13 +524,13 @@ export default function WatchPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
-          <Lock className="mx-auto mb-4 h-16 w-16 text-[var(--muted)]" />
-          <h2 className="mb-2 text-2xl font-bold text-[var(--text)]">Access Required</h2>
-          <p className="mb-6 text-[var(--muted)]">
+          <Lock className="mx-auto mb-4 h-16 w-16 text-(--muted)" />
+          <h2 className="mb-2 text-2xl font-bold text-(--text)">Access Required</h2>
+          <p className="mb-6 text-(--muted)">
             You need to enroll in this masterclass to watch lessons.
           </p>
           <Link href={`/masterclasses/${slug}`}>
-            <button className="rounded-full bg-[var(--accent)] px-6 py-3 text-[var(--text)]">
+            <button className="rounded-full bg-(--accent) px-6 py-3 text-(--text)">
               View Masterclass
             </button>
           </Link>
@@ -551,25 +551,25 @@ export default function WatchPage() {
           <div className="flex items-center gap-4">
             <Link
               href={`/masterclasses/${slug}`}
-              className="text-[var(--muted)] hover:text-[var(--text)]"
+              className="text-(--muted) hover:text-(--text)"
             >
               <ChevronLeft className="h-6 w-6" />
             </Link>
             <div>
-              <h1 className="font-bold text-[var(--text)]">{masterclass.title}</h1>
-              <p className="text-sm text-[var(--muted)]">{currentLesson?.title}</p>
+              <h1 className="font-bold text-(--text)">{masterclass.title}</h1>
+              <p className="text-sm text-(--muted)">{currentLesson?.title}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowNotes(!showNotes)}
-              className={`rounded-lg p-2 ${showNotes ? 'bg-[var(--accent)] text-[var(--text)]' : 'text-[var(--muted)] hover:text-[var(--text)]'}`}
+              className={`rounded-lg p-2 ${showNotes ? 'bg-(--accent) text-(--text)' : 'text-(--muted) hover:text-(--text)'}`}
             >
               <MessageSquare className="h-5 w-5" />
             </button>
             <button
               onClick={() => setShowSidebar(!showSidebar)}
-              className="rounded-lg p-2 text-[var(--muted)] hover:text-[var(--text)]"
+              className="rounded-lg p-2 text-(--muted) hover:text-(--text)"
             >
               <List className="h-5 w-5" />
             </button>
@@ -586,8 +586,8 @@ export default function WatchPage() {
               initialTime={lessonProgress?.watchedSeconds || 0}
             />
           ) : (
-            <div className="flex aspect-video items-center justify-center rounded-xl bg-[var(--panel)]">
-              <p className="text-[var(--muted)]">No video available for this lesson</p>
+            <div className="flex aspect-video items-center justify-center rounded-xl bg-(--panel)">
+              <p className="text-(--muted)">No video available for this lesson</p>
             </div>
           )}
 
@@ -596,20 +596,20 @@ export default function WatchPage() {
             <button
               onClick={() => goToLesson(currentLessonIndex - 1)}
               disabled={currentLessonIndex === 0}
-              className="flex items-center gap-2 rounded-lg bg-[var(--panel)] px-4 py-2 text-[var(--text)] disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-(--panel) px-4 py-2 text-(--text) disabled:opacity-50"
             >
               <ChevronLeft className="h-4 w-4" />
               Previous
             </button>
 
-            <div className="text-[var(--muted)]">
+            <div className="text-(--muted)">
               Lesson {currentLessonIndex + 1} of {lessons.length}
             </div>
 
             <button
               onClick={() => goToLesson(currentLessonIndex + 1)}
               disabled={currentLessonIndex === lessons.length - 1}
-              className="flex items-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-2 text-[var(--text)] disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-(--accent) px-4 py-2 text-(--text) disabled:opacity-50"
             >
               Next
               <ChevronRight className="h-4 w-4" />
@@ -618,16 +618,16 @@ export default function WatchPage() {
 
           {/* Lesson info */}
           <div className="mt-6">
-            <h2 className="mb-2 text-xl font-bold text-[var(--text)]">{currentLesson?.title}</h2>
+            <h2 className="mb-2 text-xl font-bold text-(--text)">{currentLesson?.title}</h2>
             {currentLesson?.description && (
-              <p className="text-[var(--muted)]">{currentLesson.description}</p>
+              <p className="text-(--muted)">{currentLesson.description}</p>
             )}
           </div>
 
           {/* Resources */}
           {currentLesson?.resources && currentLesson.resources.length > 0 && (
             <div className="mt-6">
-              <h3 className="mb-3 font-bold text-[var(--text)]">Lesson Resources</h3>
+              <h3 className="mb-3 font-bold text-(--text)">Lesson Resources</h3>
               <div className="space-y-2">
                 {currentLesson.resources.map((resource) => (
                   <a
@@ -635,12 +635,12 @@ export default function WatchPage() {
                     href={resource.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 rounded-lg bg-[var(--panel)] p-3 transition-colors hover:bg-[var(--border)]"
+                    className="flex items-center gap-3 rounded-lg bg-(--panel) p-3 transition-colors hover:bg-(--border)"
                   >
-                    <Download className="h-5 w-5 text-[var(--accent)]" />
+                    <Download className="h-5 w-5 text-(--accent)" />
                     <div className="flex-1">
-                      <div className="font-medium text-[var(--text)]">{resource.title}</div>
-                      <div className="text-xs text-[var(--muted)]">
+                      <div className="font-medium text-(--text)">{resource.title}</div>
+                      <div className="text-xs text-(--muted)">
                         {resource.fileType.toUpperCase()}
                       </div>
                     </div>
@@ -659,13 +659,13 @@ export default function WatchPage() {
                 exit={{ opacity: 0, height: 0 }}
                 className="mt-6"
               >
-                <h3 className="mb-3 font-bold text-[var(--text)]">My Notes</h3>
+                <h3 className="mb-3 font-bold text-(--text)">My Notes</h3>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   onBlur={saveNotes}
                   placeholder="Take notes on this lesson..."
-                  className="h-40 w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--panel)] p-4 text-[var(--text)] placeholder-[var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                  className="h-40 w-full resize-none rounded-lg border border-(--border) bg-(--panel) p-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
                 />
               </motion.div>
             )}
@@ -680,14 +680,14 @@ export default function WatchPage() {
             initial={{ x: 320 }}
             animate={{ x: 0 }}
             exit={{ x: 320 }}
-            className="fixed bottom-0 right-0 top-0 w-80 overflow-y-auto border-l border-[var(--border)] bg-[var(--panel)]"
+            className="fixed bottom-0 right-0 top-0 w-80 overflow-y-auto border-l border-(--border) bg-(--panel)"
           >
-            <div className="border-b border-[var(--border)] p-4">
+            <div className="border-b border-(--border) p-4">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-bold text-[var(--text)]">Course Content</h3>
+                <h3 className="font-bold text-(--text)">Course Content</h3>
                 <button
                   onClick={() => setShowSidebar(false)}
-                  className="text-[var(--muted)] hover:text-[var(--text)]"
+                  className="text-(--muted) hover:text-(--text)"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -696,14 +696,14 @@ export default function WatchPage() {
               {/* Progress */}
               <div className="mb-2">
                 <div className="mb-1 flex items-center justify-between text-sm">
-                  <span className="text-[var(--muted)]">Progress</span>
-                  <span className="text-[var(--text)]">
+                  <span className="text-(--muted)">Progress</span>
+                  <span className="text-(--text)">
                     {completedCount}/{lessons.length}
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-[var(--bg)]">
+                <div className="h-2 w-full rounded-full bg-(--bg)">
                   <div
-                    className="h-2 rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--gold)] transition-all"
+                    className="h-2 rounded-full bg-linear-to-r from-(--accent) to-(--gold) transition-all"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -722,34 +722,34 @@ export default function WatchPage() {
                     onClick={() => goToLesson(index)}
                     className={`mb-1 w-full rounded-lg p-3 text-left transition-colors ${
                       isCurrent
-                        ? 'border-[var(--accent)]/50 bg-[var(--accent)]/20 border'
-                        : 'hover:bg-[var(--bg)]'
+                        ? 'border-(--accent)/50 bg-(--accent)/20 border'
+                        : 'hover:bg-(--bg)'
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
+                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
                           isComplete
-                            ? 'bg-[var(--sage)]'
+                            ? 'bg-(--sage)'
                             : isCurrent
-                              ? 'bg-[var(--accent)]'
-                              : 'bg-[var(--bg)]'
+                              ? 'bg-(--accent)'
+                              : 'bg-(--bg)'
                         }`}
                       >
                         {isComplete ? (
-                          <CheckCircle className="h-4 w-4 text-[var(--text)]" />
+                          <CheckCircle className="h-4 w-4 text-(--text)" />
                         ) : (
-                          <span className="text-sm text-[var(--text)]">{index + 1}</span>
+                          <span className="text-sm text-(--text)">{index + 1}</span>
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div
-                          className={`truncate font-medium ${isCurrent ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`}
+                          className={`truncate font-medium ${isCurrent ? 'text-(--text)' : 'text-(--muted)'}`}
                         >
                           {lesson.title}
                         </div>
                         {lesson.duration && (
-                          <div className="mt-1 flex items-center gap-1 text-xs text-[var(--muted)]">
+                          <div className="mt-1 flex items-center gap-1 text-xs text-(--muted)">
                             <Clock className="h-3 w-3" />
                             {formatTime(lesson.duration)}
                           </div>

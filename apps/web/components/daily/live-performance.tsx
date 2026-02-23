@@ -286,7 +286,7 @@ export function LivePerformance({
   return (
     <div className="space-y-6">
       {/* Performance Header */}
-      <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 p-6">
+      <Card className="bg-linear-to-r from-purple-500/10 to-pink-500/10 p-6">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="mb-2 text-2xl font-bold">{performanceName}</h2>

@@ -284,7 +284,7 @@ function DeploymentSuccessContent() {
                 className="relative mb-6 inline-block"
               >
                 <div className="absolute inset-0 animate-ping rounded-full bg-green-500/30" />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-500">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-green-500 to-emerald-500">
                   <CheckCircle className="h-10 w-10 text-white" />
                 </div>
               </motion.div>
@@ -636,7 +636,7 @@ function DeploymentSuccessContent() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <div className="rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-500/10 to-orange-500/10 p-6">
+          <div className="rounded-2xl border border-purple-500/30 bg-linear-to-br from-purple-500/10 to-orange-500/10 p-6">
             <div className="mb-4 flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-purple-400" />
               <h3 className="font-bold text-white">Pro Tips</h3>

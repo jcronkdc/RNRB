@@ -90,7 +90,7 @@ export function AppVersionChecker() {
   // Force Update Modal - Cannot be dismissed
   if (showForceUpdate && versionInfo) {
     return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4">
+      <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/90 p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -178,7 +178,7 @@ export function AppVersionChecker() {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
-          className="fixed left-4 right-4 top-4 z-[9998] mx-auto max-w-lg rounded-2xl p-4 shadow-2xl md:left-auto md:right-4"
+          className="fixed left-4 right-4 top-4 z-9998 mx-auto max-w-lg rounded-2xl p-4 shadow-2xl md:left-auto md:right-4"
           style={{
             background:
               'linear-gradient(135deg, var(--bg-elevated) 0%, rgba(34, 197, 94, 0.1) 100%)',

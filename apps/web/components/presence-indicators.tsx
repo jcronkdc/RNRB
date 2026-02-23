@@ -162,7 +162,7 @@ export function PresenceIndicators({
                 >
                   <div className="flex items-start gap-3">
                     {/* Avatar with status */}
-                    <div className="relative flex-shrink-0">
+                    <div className="relative shrink-0">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
                         {member.userAvatar ? (
                           <img
@@ -190,7 +190,7 @@ export function PresenceIndicators({
                         </span>
 
                         {/* Device icon */}
-                        <div className="flex-shrink-0 text-muted-foreground">
+                        <div className="shrink-0 text-muted-foreground">
                           {getDeviceIcon(member.deviceType)}
                         </div>
                       </div>

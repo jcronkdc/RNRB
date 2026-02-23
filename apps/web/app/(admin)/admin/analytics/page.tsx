@@ -55,7 +55,7 @@ function GrowthChart({
             <div
               key={day.date}
               style={{ height: `${Math.max(heightPercent, 5)}%` }}
-              className="group relative flex-1 cursor-pointer rounded-t-sm bg-gradient-to-t from-orange-500/50 to-orange-500 transition-all hover:from-orange-400/50 hover:to-orange-400"
+              className="group relative flex-1 cursor-pointer rounded-t-sm bg-linear-to-t from-orange-500/50 to-orange-500 transition-all hover:from-orange-400/50 hover:to-orange-400"
             >
               {/* Tooltip */}
               <div className="absolute bottom-full left-1/2 z-10 mb-2 hidden -translate-x-1/2 rounded-lg bg-zinc-900 px-3 py-2 text-xs shadow-xl group-hover:block">
@@ -243,7 +243,7 @@ export default function AnalyticsPage() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(Number(e.target.value))}
-            className="rounded-xl border bg-white/5 px-4 py-2 text-sm text-white focus:border-orange-500/50 focus:outline-none"
+            className="rounded-xl border bg-white/5 px-4 py-2 text-sm text-white focus:border-orange-500/50 focus:outline-hidden"
             style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
           >
             <option value={7}>Last 7 days</option>
@@ -413,7 +413,7 @@ export default function AnalyticsPage() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {usageData?.usageByTier.map((tier) => (
-                    <tr key={tier.subscriptionTier} className="hover:bg-white/[0.02]">
+                    <tr key={tier.subscriptionTier} className="hover:bg-white/2">
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
@@ -498,7 +498,7 @@ export default function AnalyticsPage() {
                           className="h-10 w-10 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-sm font-medium text-white">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-orange-500 to-red-500 text-sm font-medium text-white">
                           {creator.name?.[0] || creator.email?.[0]?.toUpperCase() || '?'}
                         </div>
                       )}

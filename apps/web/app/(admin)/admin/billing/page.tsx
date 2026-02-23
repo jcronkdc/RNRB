@@ -140,7 +140,7 @@ export default function BillingPage() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(Number(e.target.value))}
-            className="rounded-xl border bg-white/5 px-4 py-2 text-sm text-white focus:border-orange-500/50 focus:outline-none"
+            className="rounded-xl border bg-white/5 px-4 py-2 text-sm text-white focus:border-orange-500/50 focus:outline-hidden"
             style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
           >
             <option value={7}>Last 7 days</option>

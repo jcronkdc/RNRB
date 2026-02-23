@@ -80,7 +80,7 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
                 className={`flex gap-3 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 {/* Avatar */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {message.userImage ? (
                     <img
                       src={message.userImage}
@@ -109,7 +109,7 @@ export default function RoomChat({ roomId, currentUser, onSendMessage, messages 
                         : 'bg-muted text-foreground'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap break-words text-sm">{message.content}</p>
+                    <p className="whitespace-pre-wrap wrap-break-word text-sm">{message.content}</p>
                   </div>
                 </div>
               </motion.div>

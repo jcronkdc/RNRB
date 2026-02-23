@@ -80,29 +80,29 @@ const STATUS_CONFIG = {
   draft: {
     label: 'Draft',
     icon: FileEdit,
-    color: 'text-[var(--muted)]',
+    color: 'text-(--muted)',
     bg: 'bg-white/5',
     progress: 25,
   },
   in_progress: {
     label: 'In Progress',
     icon: Clock,
-    color: 'text-[var(--sky)]',
-    bg: 'bg-[var(--sky-muted)]',
+    color: 'text-(--sky)',
+    bg: 'bg-(--sky-muted)',
     progress: 50,
   },
   needs_review: {
     label: 'Needs Review',
     icon: AlertCircle,
-    color: 'text-[var(--gold)]',
-    bg: 'bg-[var(--gold-muted)]',
+    color: 'text-(--gold)',
+    bg: 'bg-(--gold-muted)',
     progress: 75,
   },
   complete: {
     label: 'Complete',
     icon: CheckCircle2,
-    color: 'text-[var(--sage)]',
-    bg: 'bg-[var(--sage-muted)]',
+    color: 'text-(--sage)',
+    bg: 'bg-(--sage-muted)',
     progress: 100,
   },
 };
@@ -144,20 +144,20 @@ function StatCard({
       onClick={onClick}
       className={`flex items-center gap-3 rounded-xl border p-4 text-left transition-all ${
         active
-          ? 'border-[var(--accent)] bg-[var(--accent-muted)]'
-          : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-strong)]'
+          ? 'border-(--accent) bg-(--accent-muted)'
+          : 'border-(--border) bg-(--surface) hover:border-(--border-strong)'
       }`}
     >
       <div
         className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-          active ? 'bg-[var(--accent)]' : 'bg-[var(--surface-elevated)]'
+          active ? 'bg-(--accent)' : 'bg-(--surface-elevated)'
         }`}
       >
-        <Icon className={`h-5 w-5 ${active ? 'text-[var(--text)]' : 'text-[var(--muted)]'}`} />
+        <Icon className={`h-5 w-5 ${active ? 'text-(--text)' : 'text-(--muted)'}`} />
       </div>
       <div>
-        <p className="text-2xl font-bold text-[var(--text)]">{value}</p>
-        <p className="text-xs text-[var(--muted)]">{label}</p>
+        <p className="text-2xl font-bold text-(--text)">{value}</p>
+        <p className="text-xs text-(--muted)">{label}</p>
       </div>
     </motion.button>
   );
@@ -180,25 +180,25 @@ function QuickPreviewModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)]"
+        className="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-2xl border border-(--border) bg-(--surface)"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[var(--border)] p-4">
+        <div className="flex items-center justify-between border-b border-(--border) p-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)]/20">
-              <Music className="h-5 w-5 text-[var(--accent)]" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--accent)/20">
+              <Music className="h-5 w-5 text-(--accent)" />
             </div>
             <div>
-              <h2 className="font-semibold text-[var(--text)]">{song.title}</h2>
-              <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
+              <h2 className="font-semibold text-(--text)">{song.title}</h2>
+              <div className="flex items-center gap-2 text-xs text-(--muted)">
                 {song.key && <span>{song.key}</span>}
                 {song.tempo && <span>• {song.tempo} BPM</span>}
                 <span className={statusConfig.color}>• {statusConfig.label}</span>
@@ -208,14 +208,14 @@ function QuickPreviewModal({
           <div className="flex items-center gap-2">
             <button
               onClick={onEdit}
-              className="flex items-center gap-2 rounded-lg bg-[var(--accent)] px-3 py-1.5 text-sm font-medium text-[var(--text)] hover:opacity-90"
+              className="flex items-center gap-2 rounded-lg bg-(--accent) px-3 py-1.5 text-sm font-medium text-(--text) hover:opacity-90"
             >
               <ExternalLink className="h-4 w-4" />
               Edit
             </button>
             <button
               onClick={onClose}
-              className="rounded-lg p-2 text-[var(--muted)] hover:bg-[var(--surface-elevated)] hover:text-[var(--text)]"
+              className="rounded-lg p-2 text-(--muted) hover:bg-(--surface-elevated) hover:text-(--text)"
             >
               <X className="h-5 w-5" />
             </button>
@@ -223,16 +223,16 @@ function QuickPreviewModal({
         </div>
 
         {/* Progress Bar */}
-        <div className="border-b border-[var(--border)] px-4 py-3">
+        <div className="border-b border-(--border) px-4 py-3">
           <div className="mb-1 flex items-center justify-between text-xs">
-            <span className="text-[var(--muted)]">Progress</span>
+            <span className="text-(--muted)">Progress</span>
             <span className={statusConfig.color}>{statusConfig.progress}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-[var(--surface-elevated)]">
+          <div className="h-2 overflow-hidden rounded-full bg-(--surface-elevated)">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${statusConfig.progress}%` }}
-              className="h-full rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)]"
+              className="h-full rounded-full bg-linear-to-r from-(--accent) to-(--accent-hover)"
             />
           </div>
         </div>
@@ -240,16 +240,16 @@ function QuickPreviewModal({
         {/* Content */}
         <div className="max-h-[50vh] overflow-y-auto p-4">
           {song.lyrics ? (
-            <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-[var(--text-secondary)]">
+            <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-(--text-secondary)">
               {song.lyrics}
             </pre>
           ) : (
-            <div className="py-12 text-center text-[var(--muted-soft)]">
+            <div className="py-12 text-center text-(--muted-soft)">
               <Music className="mx-auto mb-3 h-12 w-12 opacity-50" />
               <p>No lyrics yet</p>
               <button
                 onClick={onEdit}
-                className="mt-3 text-sm text-[var(--accent)] hover:text-[var(--accent-hover)]"
+                className="mt-3 text-sm text-(--accent) hover:text-(--accent-hover)"
               >
                 Add lyrics →
               </button>
@@ -258,13 +258,13 @@ function QuickPreviewModal({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-[var(--border)] px-4 py-3">
-          <div className="flex items-center justify-between text-xs text-[var(--muted-soft)]">
+        <div className="border-t border-(--border) px-4 py-3">
+          <div className="flex items-center justify-between text-xs text-(--muted-soft)">
             <span>Last edited {formatRelativeTime(song.updatedAt)}</span>
             {song.project && (
               <Link
                 href={`/projects/${song.project.slug}`}
-                className="flex items-center gap-1 text-[var(--accent)] hover:text-[var(--accent-hover)]"
+                className="flex items-center gap-1 text-(--accent) hover:text-(--accent-hover)"
               >
                 <Folder className="h-3 w-3" />
                 {song.project.name}
@@ -322,10 +322,10 @@ function SongCard({
         animate={{ opacity: 1, x: 0 }}
         className={`group flex items-center gap-4 rounded-xl border p-4 transition-all ${
           isFocused
-            ? 'border-orange-500 bg-[var(--accent)]/5'
+            ? 'border-orange-500 bg-(--accent)/5'
             : isSelected
-              ? 'border-[var(--accent)]/50 bg-[var(--accent-muted)]'
-              : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-strong)]'
+              ? 'border-(--accent)/50 bg-(--accent-muted)'
+              : 'border-(--border) bg-(--surface) hover:border-(--border-strong)'
         }`}
       >
         {/* Selection Checkbox */}
@@ -334,12 +334,12 @@ function SongCard({
             e.stopPropagation();
             onSelect();
           }}
-          className="shrink-0 rounded p-1 hover:bg-[var(--surface-elevated)]"
+          className="shrink-0 rounded p-1 hover:bg-(--surface-elevated)"
         >
           {isSelected ? (
-            <CheckSquare className="h-5 w-5 text-[var(--accent)]" />
+            <CheckSquare className="h-5 w-5 text-(--accent)" />
           ) : (
-            <Square className="h-5 w-5 text-[var(--muted-soft)] group-hover:text-[var(--muted)]" />
+            <Square className="h-5 w-5 text-(--muted-soft) group-hover:text-(--muted)" />
           )}
         </button>
 
@@ -349,13 +349,13 @@ function SongCard({
             e.stopPropagation();
             onToggleFavorite();
           }}
-          className="shrink-0 rounded p-1 hover:bg-[var(--surface-elevated)]"
+          className="shrink-0 rounded p-1 hover:bg-(--surface-elevated)"
         >
           <Star
             className={`h-5 w-5 ${
               song.isFavorite
                 ? 'fill-yellow-500 text-yellow-500'
-                : 'text-[var(--muted-soft)] hover:text-yellow-500'
+                : 'text-(--muted-soft) hover:text-yellow-500'
             }`}
           />
         </button>
@@ -363,7 +363,7 @@ function SongCard({
         {/* Icon/Cover */}
         <button
           onClick={handleOpenSong}
-          className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-[var(--surface-elevated)]"
+          className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-(--surface-elevated)"
           aria-label={`Open ${song.title}`}
         >
           {song.project?.coverImage ? (
@@ -373,32 +373,32 @@ function SongCard({
               className="h-full w-full rounded-lg object-cover"
             />
           ) : (
-            <Music className="h-6 w-6 text-[var(--accent)]" />
+            <Music className="h-6 w-6 text-(--accent)" />
           )}
         </button>
 
         {/* Info */}
         <button className="min-w-0 flex-1 cursor-pointer text-left" onClick={handleOpenSong}>
-          <h3 className="truncate font-semibold text-[var(--text)] group-hover:text-[var(--accent)]">
+          <h3 className="truncate font-semibold text-(--text) group-hover:text-(--accent)">
             {song.title}
           </h3>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-[var(--muted)]">
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-(--muted)">
             {song.key && <span>{song.key}</span>}
             {song.tempo && <span>{song.tempo} BPM</span>}
-            <span className="text-[var(--muted-soft)]">•</span>
-            <span className="text-[var(--muted-soft)]">{formatRelativeTime(song.updatedAt)}</span>
+            <span className="text-(--muted-soft)">•</span>
+            <span className="text-(--muted-soft)">{formatRelativeTime(song.updatedAt)}</span>
             {lyricsPreview && (
-              <span className="hidden truncate text-[var(--muted-soft)] lg:inline">{lyricsPreview}...</span>
+              <span className="hidden truncate text-(--muted-soft) lg:inline">{lyricsPreview}...</span>
             )}
           </div>
         </button>
 
         {/* Progress Bar */}
         <div className="hidden w-24 shrink-0 md:block">
-          <div className="mb-1 text-right text-xs text-[var(--muted-soft)]">{statusConfig.progress}%</div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-[var(--surface-elevated)]">
+          <div className="mb-1 text-right text-xs text-(--muted-soft)">{statusConfig.progress}%</div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-(--surface-elevated)">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)]"
+              className="h-full rounded-full bg-linear-to-r from-(--accent) to-(--accent-hover)"
               style={{ width: `${statusConfig.progress}%` }}
             />
           </div>
@@ -408,7 +408,7 @@ function SongCard({
         {song.project ? (
           <Link
             href={`/projects/${song.project.slug}`}
-            className="hidden items-center gap-2 rounded-lg bg-[var(--surface-elevated)] px-3 py-1.5 text-xs text-[var(--text-secondary)] hover:bg-white/5 sm:flex"
+            className="hidden items-center gap-2 rounded-lg bg-(--surface-elevated) px-3 py-1.5 text-xs text-(--text-secondary) hover:bg-white/5 sm:flex"
           >
             <Folder className="h-3 w-3" />
             {song.project.name}
@@ -438,14 +438,14 @@ function SongCard({
               e.stopPropagation();
               onPreview();
             }}
-            className="rounded-lg p-2 text-[var(--muted-soft)] hover:bg-[var(--surface-elevated)] hover:text-[var(--text)]"
+            className="rounded-lg p-2 text-(--muted-soft) hover:bg-(--surface-elevated) hover:text-(--text)"
             title="Quick Preview (P)"
           >
             <Eye className="h-4 w-4" />
           </button>
           <button
             onClick={handleOpenSong}
-            className="rounded-lg bg-[var(--accent)]/10 p-2 text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--text)]"
+            className="rounded-lg bg-(--accent)/10 p-2 text-(--accent) hover:bg-(--accent) hover:text-(--text)"
             title="Open Song (Enter)"
           >
             <ExternalLink className="h-4 w-4" />
@@ -462,10 +462,10 @@ function SongCard({
       animate={{ opacity: 1, y: 0 }}
       className={`group relative rounded-xl border p-4 transition-all ${
         isFocused
-          ? 'border-orange-500 bg-[var(--accent)]/5'
+          ? 'border-orange-500 bg-(--accent)/5'
           : isSelected
-            ? 'border-[var(--accent)]/50 bg-[var(--accent-muted)]'
-            : 'border-[var(--border)] bg-[var(--surface)] hover:border-[var(--border-strong)]'
+            ? 'border-(--accent)/50 bg-(--accent-muted)'
+            : 'border-(--border) bg-(--surface) hover:border-(--border-strong)'
       }`}
     >
       {/* Top Row: Checkbox, Favorite, Status */}
@@ -476,12 +476,12 @@ function SongCard({
               e.stopPropagation();
               onSelect();
             }}
-            className="rounded p-1 hover:bg-[var(--surface-elevated)]"
+            className="rounded p-1 hover:bg-(--surface-elevated)"
           >
             {isSelected ? (
-              <CheckSquare className="h-4 w-4 text-[var(--accent)]" />
+              <CheckSquare className="h-4 w-4 text-(--accent)" />
             ) : (
-              <Square className="h-4 w-4 text-[var(--muted-soft)] group-hover:text-[var(--muted)]" />
+              <Square className="h-4 w-4 text-(--muted-soft) group-hover:text-(--muted)" />
             )}
           </button>
           <button
@@ -489,13 +489,13 @@ function SongCard({
               e.stopPropagation();
               onToggleFavorite();
             }}
-            className="rounded p-1 hover:bg-[var(--surface-elevated)]"
+            className="rounded p-1 hover:bg-(--surface-elevated)"
           >
             <Star
               className={`h-4 w-4 ${
                 song.isFavorite
                   ? 'fill-yellow-500 text-yellow-500'
-                  : 'text-[var(--muted-soft)] hover:text-yellow-500'
+                  : 'text-(--muted-soft) hover:text-yellow-500'
               }`}
             />
           </button>
@@ -507,48 +507,48 @@ function SongCard({
 
       {/* Content */}
       <button className="w-full cursor-pointer text-left" onClick={handleOpenSong}>
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--surface-elevated)]">
-          <Music className="h-6 w-6 text-[var(--accent)]" />
+        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-(--surface-elevated)">
+          <Music className="h-6 w-6 text-(--accent)" />
         </div>
 
-        <h3 className="mb-1 truncate font-semibold text-[var(--text)] group-hover:text-[var(--accent)]">
+        <h3 className="mb-1 truncate font-semibold text-(--text) group-hover:text-(--accent)">
           {song.title}
         </h3>
 
         {/* Metadata */}
-        <div className="mb-2 flex flex-wrap gap-1.5 text-xs text-[var(--muted-soft)]">
-          {song.key && <span className="rounded bg-[var(--surface-elevated)] px-2 py-0.5">{song.key}</span>}
-          {song.tempo && <span className="rounded bg-[var(--surface-elevated)] px-2 py-0.5">{song.tempo} BPM</span>}
+        <div className="mb-2 flex flex-wrap gap-1.5 text-xs text-(--muted-soft)">
+          {song.key && <span className="rounded bg-(--surface-elevated) px-2 py-0.5">{song.key}</span>}
+          {song.tempo && <span className="rounded bg-(--surface-elevated) px-2 py-0.5">{song.tempo} BPM</span>}
         </div>
 
         {/* Last edited */}
-        <p className="mb-2 text-xs text-[var(--muted-soft)]">{formatRelativeTime(song.updatedAt)}</p>
+        <p className="mb-2 text-xs text-(--muted-soft)">{formatRelativeTime(song.updatedAt)}</p>
       </button>
 
       {/* Progress Bar */}
       <div className="mb-3">
-        <div className="h-1 overflow-hidden rounded-full bg-[var(--surface-elevated)]">
+        <div className="h-1 overflow-hidden rounded-full bg-(--surface-elevated)">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-hover)]"
+            className="h-full rounded-full bg-linear-to-r from-(--accent) to-(--accent-hover)"
             style={{ width: `${statusConfig.progress}%` }}
           />
         </div>
       </div>
 
       {/* Project Info */}
-      <div className="border-t border-[var(--border)] pt-3">
+      <div className="border-t border-(--border) pt-3">
         {song.project ? (
           <Link
             href={`/projects/${song.project.slug}`}
-            className="flex items-center gap-2 text-xs text-[var(--muted)] hover:text-[var(--text)]"
+            className="flex items-center gap-2 text-xs text-(--muted) hover:text-(--text)"
           >
-            <Folder className="h-3 w-3 text-[var(--accent)]" />
+            <Folder className="h-3 w-3 text-(--accent)" />
             <span className="truncate">{song.project.name}</span>
             <ChevronRight className="ml-auto h-3 w-3" />
           </Link>
         ) : (
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-xs text-[var(--muted-soft)]">
+            <span className="flex items-center gap-2 text-xs text-(--muted-soft)">
               <FolderOpen className="h-3 w-3" />
               Not in project
             </span>
@@ -557,7 +557,7 @@ function SongCard({
                 e.stopPropagation();
                 onPreview();
               }}
-              className="rounded p-1 text-[var(--muted-soft)] hover:bg-[var(--surface-elevated)] hover:text-[var(--text)]"
+              className="rounded p-1 text-(--muted-soft) hover:bg-(--surface-elevated) hover:text-(--text)"
               title="Preview"
             >
               <Eye className="h-3.5 w-3.5" />
@@ -596,17 +596,17 @@ function BulkActionsBar({
       exit={{ opacity: 0, y: 20 }}
       className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2"
     >
-      <div className="flex items-center gap-3 rounded-2xl border border-[var(--border-strong)] bg-[var(--surface)]/95 px-4 py-3 shadow-2xl">
+      <div className="flex items-center gap-3 rounded-2xl border border-(--border-strong) bg-(--surface)/95 px-4 py-3 shadow-2xl">
         <div className="flex items-center gap-2">
-          <CheckSquare className="h-5 w-5 text-[var(--accent)]" />
-          <span className="font-medium text-[var(--text)]">{selectedCount} selected</span>
+          <CheckSquare className="h-5 w-5 text-(--accent)" />
+          <span className="font-medium text-(--text)">{selectedCount} selected</span>
         </div>
 
         <div className="h-6 w-px bg-gray-700" />
 
         <button
           onClick={selectedCount === totalCount ? onClearSelection : onSelectAll}
-          className="text-sm text-[var(--muted)] hover:text-[var(--text)]"
+          className="text-sm text-(--muted) hover:text-(--text)"
         >
           {selectedCount === totalCount ? 'Deselect All' : 'Select All'}
         </button>
@@ -617,13 +617,13 @@ function BulkActionsBar({
         <div className="relative">
           <button
             onClick={() => setShowStatusMenu(!showStatusMenu)}
-            className="flex items-center gap-2 rounded-lg bg-[var(--surface-elevated)] px-3 py-1.5 text-sm text-[var(--text)] hover:bg-white/5"
+            className="flex items-center gap-2 rounded-lg bg-(--surface-elevated) px-3 py-1.5 text-sm text-(--text) hover:bg-white/5"
           >
             <RefreshCw className="h-4 w-4" />
             Change Status
           </button>
           {showStatusMenu && (
-            <div className="absolute bottom-full left-0 mb-2 w-40 rounded-lg border border-[var(--border-strong)] bg-[var(--surface-elevated)] py-1 shadow-xl">
+            <div className="absolute bottom-full left-0 mb-2 w-40 rounded-lg border border-(--border-strong) bg-(--surface-elevated) py-1 shadow-xl">
               {Object.entries(STATUS_CONFIG).map(([key, config]) => (
                 <button
                   key={key}
@@ -631,7 +631,7 @@ function BulkActionsBar({
                     onBulkStatusChange(key);
                     setShowStatusMenu(false);
                   }}
-                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-[var(--text-secondary)] hover:bg-white/5"
+                  className="flex w-full items-center gap-2 px-3 py-2 text-sm text-(--text-secondary) hover:bg-white/5"
                 >
                   <config.icon className={`h-4 w-4 ${config.color}`} />
                   {config.label}
@@ -645,13 +645,13 @@ function BulkActionsBar({
         <ProjectSelector
           songId={undefined}
           allowNavigation={false}
-          className="!bg-[var(--surface-elevated)] hover:!bg-gray-700"
+          className="bg-(--surface-elevated)! hover:bg-gray-700!"
         />
 
         {/* Export */}
         <button
           onClick={onBulkExport}
-          className="flex items-center gap-2 rounded-lg bg-[var(--surface-elevated)] px-3 py-1.5 text-sm text-[var(--text)] hover:bg-white/5"
+          className="flex items-center gap-2 rounded-lg bg-(--surface-elevated) px-3 py-1.5 text-sm text-(--text) hover:bg-white/5"
         >
           <Download className="h-4 w-4" />
           Export
@@ -661,7 +661,7 @@ function BulkActionsBar({
 
         <button
           onClick={onClearSelection}
-          className="rounded-lg p-1.5 text-[var(--muted)] hover:bg-[var(--surface-elevated)] hover:text-[var(--text)]"
+          className="rounded-lg p-1.5 text-(--muted) hover:bg-(--surface-elevated) hover:text-(--text)"
         >
           <X className="h-5 w-5" />
         </button>
@@ -691,24 +691,24 @@ function KeyboardShortcutsHelp({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs"
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.95 }}
-        className="w-full max-w-md rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6"
+        className="w-full max-w-md rounded-2xl border border-(--border) bg-(--surface) p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-2 text-lg font-semibold text-[var(--text)]">
-            <Keyboard className="h-5 w-5 text-[var(--accent)]" />
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-(--text)">
+            <Keyboard className="h-5 w-5 text-(--accent)" />
             Keyboard Shortcuts
           </h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-[var(--muted)] hover:bg-[var(--surface-elevated)] hover:text-[var(--text)]"
+            className="rounded-lg p-1 text-(--muted) hover:bg-(--surface-elevated) hover:text-(--text)"
           >
             <X className="h-5 w-5" />
           </button>
@@ -717,10 +717,10 @@ function KeyboardShortcutsHelp({ onClose }: { onClose: () => void }) {
           {shortcuts.map(({ key, desc }) => (
             <div
               key={key}
-              className="flex items-center justify-between rounded-lg bg-[var(--surface-elevated)]/50 px-3 py-2"
+              className="flex items-center justify-between rounded-lg bg-(--surface-elevated)/50 px-3 py-2"
             >
-              <span className="text-sm text-[var(--muted)]">{desc}</span>
-              <kbd className="rounded bg-gray-700 px-2 py-0.5 text-xs text-[var(--text)]">{key}</kbd>
+              <span className="text-sm text-(--muted)">{desc}</span>
+              <kbd className="rounded bg-gray-700 px-2 py-0.5 text-xs text-(--text)">{key}</kbd>
             </div>
           ))}
         </div>
@@ -1033,14 +1033,14 @@ export default function SongsPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="mb-2 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)]/20">
-                  <Music2 className="h-6 w-6 text-[var(--accent)]" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--accent)/20">
+                  <Music2 className="h-6 w-6 text-(--accent)" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-[var(--text)] sm:text-3xl">My Songs</h1>
-                  <p className="text-sm text-[var(--muted)]">
+                  <h1 className="text-2xl font-bold text-(--text) sm:text-3xl">My Songs</h1>
+                  <p className="text-sm text-(--muted)">
                     {stats?.total || 0} songs • Press{' '}
-                    <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5 text-xs">?</kbd> for shortcuts
+                    <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5 text-xs">?</kbd> for shortcuts
                   </p>
                 </div>
               </div>
@@ -1049,13 +1049,13 @@ export default function SongsPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowShortcuts(true)}
-                className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[var(--muted)] hover:bg-[var(--surface-elevated)] hover:text-[var(--text)]"
+                className="flex items-center gap-2 rounded-xl border border-(--border) bg-(--surface) px-3 py-2.5 text-(--muted) hover:bg-(--surface-elevated) hover:text-(--text)"
               >
                 <Keyboard className="h-4 w-4" />
               </button>
               <Link
                 href="/songwriting"
-                className="flex items-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 font-medium text-[var(--text)] transition-all hover:opacity-90"
+                className="flex items-center gap-2 rounded-xl bg-(--accent) px-4 py-2.5 font-medium text-(--text) transition-all hover:opacity-90"
               >
                 <Plus className="h-4 w-4" />
                 New Song
@@ -1127,24 +1127,24 @@ export default function SongsPage() {
           <div className="flex gap-3">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-soft)]" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted-soft)" />
               <input
                 type="text"
                 placeholder="Search songs by title... (type to filter)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] py-3 pl-10 pr-4 text-[var(--text)] placeholder:text-[var(--muted-soft)] focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                className="w-full rounded-xl border border-(--border) bg-(--surface) py-3 pl-10 pr-4 text-(--text) placeholder:text-(--muted-soft) focus:border-orange-500 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
               />
             </div>
 
             {/* View Toggle */}
-            <div className="flex rounded-xl bg-[var(--surface)] p-1">
+            <div className="flex rounded-xl bg-(--surface) p-1">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`rounded-lg p-2.5 transition-all ${
                   viewMode === 'grid'
-                    ? 'bg-[var(--accent)] text-[var(--text)]'
-                    : 'text-[var(--muted)] hover:text-[var(--text)]'
+                    ? 'bg-(--accent) text-(--text)'
+                    : 'text-(--muted) hover:text-(--text)'
                 }`}
                 title="Grid view (G)"
               >
@@ -1154,8 +1154,8 @@ export default function SongsPage() {
                 onClick={() => setViewMode('list')}
                 className={`rounded-lg p-2.5 transition-all ${
                   viewMode === 'list'
-                    ? 'bg-[var(--accent)] text-[var(--text)]'
-                    : 'text-[var(--muted)] hover:text-[var(--text)]'
+                    ? 'bg-(--accent) text-(--text)'
+                    : 'text-(--muted) hover:text-(--text)'
                 }`}
                 title="List view (L)"
               >
@@ -1168,8 +1168,8 @@ export default function SongsPage() {
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 rounded-xl border px-4 py-2.5 transition-all ${
                 showFilters
-                  ? 'border-[var(--accent)] bg-[var(--accent-muted)] text-[var(--accent)]'
-                  : 'border-[var(--border)] bg-[var(--surface)] text-[var(--muted)] hover:bg-[var(--surface-elevated)]'
+                  ? 'border-(--accent) bg-(--accent-muted) text-(--accent)'
+                  : 'border-(--border) bg-(--surface) text-(--muted) hover:bg-(--surface-elevated)'
               }`}
             >
               <SlidersHorizontal className="h-4 w-4" />
@@ -1184,13 +1184,13 @@ export default function SongsPage() {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)]/50"
+                className="overflow-hidden rounded-xl border border-(--border) bg-(--surface)/50"
               >
                 <div className="grid gap-4 p-4 sm:grid-cols-3">
                   <div>
                     <label
                       htmlFor="status-filter"
-                      className="mb-2 block text-xs font-medium text-[var(--muted)]"
+                      className="mb-2 block text-xs font-medium text-(--muted)"
                     >
                       Status
                     </label>
@@ -1198,7 +1198,7 @@ export default function SongsPage() {
                       id="status-filter"
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-                      className="w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--text)]"
+                      className="w-full rounded-lg border border-(--border-strong) bg-(--surface-elevated) px-3 py-2 text-sm text-(--text)"
                     >
                       <option value="all">All Statuses</option>
                       <option value="draft">Draft</option>
@@ -1210,7 +1210,7 @@ export default function SongsPage() {
                   <div>
                     <label
                       htmlFor="sort-by"
-                      className="mb-2 block text-xs font-medium text-[var(--muted)]"
+                      className="mb-2 block text-xs font-medium text-(--muted)"
                     >
                       Sort By
                     </label>
@@ -1218,7 +1218,7 @@ export default function SongsPage() {
                       id="sort-by"
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                      className="w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--text)]"
+                      className="w-full rounded-lg border border-(--border-strong) bg-(--surface-elevated) px-3 py-2 text-sm text-(--text)"
                     >
                       <option value="updatedAt">Last Updated</option>
                       <option value="createdAt">Date Created</option>
@@ -1228,7 +1228,7 @@ export default function SongsPage() {
                   <div>
                     <label
                       htmlFor="sort-order"
-                      className="mb-2 block text-xs font-medium text-[var(--muted)]"
+                      className="mb-2 block text-xs font-medium text-(--muted)"
                     >
                       Order
                     </label>
@@ -1236,7 +1236,7 @@ export default function SongsPage() {
                       id="sort-order"
                       value={sortOrder}
                       onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-                      className="w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface-elevated)] px-3 py-2 text-sm text-[var(--text)]"
+                      className="w-full rounded-lg border border-(--border-strong) bg-(--surface-elevated) px-3 py-2 text-sm text-(--text)"
                     >
                       <option value="desc">Newest First</option>
                       <option value="asc">Oldest First</option>
@@ -1258,8 +1258,8 @@ export default function SongsPage() {
             className="rounded-xl border border-red-500/30 bg-red-500/10 p-8 text-center"
           >
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-red-400" />
-            <h3 className="mb-2 text-lg font-semibold text-[var(--text)]">Error Loading Songs</h3>
-            <p className="text-[var(--muted)]">{error}</p>
+            <h3 className="mb-2 text-lg font-semibold text-(--text)">Error Loading Songs</h3>
+            <p className="text-(--muted)">{error}</p>
             <button
               onClick={fetchSongs}
               className="mt-4 rounded-lg bg-red-500/20 px-4 py-2 text-red-400 hover:bg-red-500/30"
@@ -1326,14 +1326,14 @@ export default function SongsPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="mt-8 text-center text-xs text-[var(--muted-soft)]"
+          className="mt-8 text-center text-xs text-(--muted-soft)"
         >
-          <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5">j</kbd>/
-          <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5">k</kbd> Navigate •{' '}
-          <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5">Space</kbd> Select •{' '}
-          <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5">Enter</kbd> Open •{' '}
-          <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5">p</kbd> Preview •{' '}
-          <kbd className="rounded bg-[var(--surface-elevated)] px-1.5 py-0.5">?</kbd> All shortcuts
+          <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5">j</kbd>/
+          <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5">k</kbd> Navigate •{' '}
+          <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5">Space</kbd> Select •{' '}
+          <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5">Enter</kbd> Open •{' '}
+          <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5">p</kbd> Preview •{' '}
+          <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5">?</kbd> All shortcuts
         </motion.div>
       </div>
 

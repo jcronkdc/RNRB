@@ -148,7 +148,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
               </div>
 
               {/* Info Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+              <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
                 <div className="flex items-center gap-2">
                   {featured.type && (
                     <span
@@ -343,7 +343,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
                   onClick={() => setPlayingVideo(video)}
                 >
                   {/* Thumbnail */}
-                  <div className="relative aspect-video w-48 flex-shrink-0 overflow-hidden rounded-lg">
+                  <div className="relative aspect-video w-48 shrink-0 overflow-hidden rounded-lg">
                     <img
                       src={video.thumbnail}
                       alt={video.title}

@@ -55,7 +55,7 @@ function ComingSoonView() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="mb-12 overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] p-8 text-center md:p-12"
+        className="mb-12 overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 p-8 text-center md:p-12"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -97,7 +97,7 @@ function ComingSoonView() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-orange-500/50 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-orange-500/50 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
                 required
               />
             </div>
@@ -106,7 +106,7 @@ function ComingSoonView() {
               disabled={isSubmitting}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-orange-500/30 disabled:opacity-50"
+              className="flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-orange-500 to-red-500 px-6 py-3 font-semibold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:shadow-xl hover:shadow-orange-500/30 disabled:opacity-50"
             >
               <Bell className="h-4 w-4" />
               {isSubmitting ? 'Joining...' : 'Notify Me'}
@@ -143,9 +143,9 @@ function ComingSoonView() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 + index * 0.1 }}
-              className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${item.gradient} p-6 transition-all duration-300 hover:border-white/20`}
+              className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br ${item.gradient} p-6 transition-all duration-300 hover:border-white/20`}
             >
-              <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+              <div className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <div className="relative z-10">
                 <h4 className="mb-1 text-lg font-semibold text-white">{item.name}</h4>
                 <p className="text-sm text-white/50">{item.description}</p>
@@ -163,11 +163,11 @@ function ComingSoonView() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.9 }}
-        className="overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-8"
+        className="overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/6 to-white/2 p-8"
       >
         <div className="grid gap-8 text-center md:grid-cols-3">
           <div className="group">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 transition-transform duration-300 group-hover:scale-110">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500/20 to-red-500/20 transition-transform duration-300 group-hover:scale-110">
               <span className="text-2xl font-bold text-orange-400">01</span>
             </div>
             <h4 className="mb-2 font-semibold text-white">Premium Quality</h4>
@@ -176,7 +176,7 @@ function ComingSoonView() {
             </p>
           </div>
           <div className="group">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 transition-transform duration-300 group-hover:scale-110">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500/20 to-indigo-500/20 transition-transform duration-300 group-hover:scale-110">
               <span className="text-2xl font-bold text-purple-400">02</span>
             </div>
             <h4 className="mb-2 font-semibold text-white">Made for Musicians</h4>
@@ -185,7 +185,7 @@ function ComingSoonView() {
             </p>
           </div>
           <div className="group">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 transition-transform duration-300 group-hover:scale-110">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500/20 to-teal-500/20 transition-transform duration-300 group-hover:scale-110">
               <span className="text-2xl font-bold text-emerald-400">03</span>
             </div>
             <h4 className="mb-2 font-semibold text-white">Community Driven</h4>
@@ -207,9 +207,9 @@ export default function MerchStorePage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-gradient-to-br from-red-500/5 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-red-500/5 to-transparent blur-3xl" />
       </div>
 
       {/* Logo & Header Section */}

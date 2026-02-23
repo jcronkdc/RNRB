@@ -317,7 +317,7 @@ export function GearInventory() {
       {/* Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-slate-500 to-zinc-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-slate-500 to-zinc-600">
             <Package className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -332,7 +332,7 @@ export function GearInventory() {
           </Button>
           <Button
             onClick={() => setShowAddModal(true)}
-            className="gap-2 bg-gradient-to-r from-slate-500 to-zinc-600"
+            className="gap-2 bg-linear-to-r from-slate-500 to-zinc-600"
           >
             <Plus className="h-4 w-4" />
             Add Gear
@@ -342,22 +342,22 @@ export function GearInventory() {
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-        <div className="rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 p-4">
+        <div className="rounded-xl bg-linear-to-br from-emerald-500/20 to-teal-500/20 p-4">
           <DollarSign className="mb-2 h-5 w-5 text-emerald-400" />
           <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
           <div className="text-xs text-muted-foreground">Total Value</div>
         </div>
-        <div className="rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 p-4">
+        <div className="rounded-xl bg-linear-to-br from-blue-500/20 to-cyan-500/20 p-4">
           <Shield className="mb-2 h-5 w-5 text-blue-400" />
           <div className="text-2xl font-bold">${totalInsured.toLocaleString()}</div>
           <div className="text-xs text-muted-foreground">Insured Value</div>
         </div>
-        <div className="rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-4">
+        <div className="rounded-xl bg-linear-to-br from-purple-500/20 to-pink-500/20 p-4">
           <Package className="mb-2 h-5 w-5 text-purple-400" />
           <div className="text-2xl font-bold">{gear.length}</div>
           <div className="text-xs text-muted-foreground">Total Items</div>
         </div>
-        <div className="rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 p-4">
+        <div className="rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20 p-4">
           <Wrench className="mb-2 h-5 w-5 text-orange-400" />
           <div className="text-2xl font-bold">{needsMaintenance.length}</div>
           <div className="text-xs text-muted-foreground">Need Service</div>
@@ -373,7 +373,7 @@ export function GearInventory() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search gear..."
-            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-none"
+            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-hidden"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -712,7 +712,7 @@ export function GearInventory() {
                       required
                       defaultValue={editingItem?.name ?? ''}
                       placeholder="e.g. Fender Stratocaster"
-                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -726,7 +726,7 @@ export function GearInventory() {
                         type="text"
                         defaultValue={editingItem?.brand ?? ''}
                         placeholder="Fender"
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                     <div>
@@ -739,7 +739,7 @@ export function GearInventory() {
                         type="text"
                         defaultValue={editingItem?.model ?? ''}
                         placeholder="American Pro II"
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                   </div>
@@ -753,7 +753,7 @@ export function GearInventory() {
                         name="category"
                         required
                         defaultValue={editingItem?.category ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       >
                         <option value="" disabled>
                           Select category
@@ -773,7 +773,7 @@ export function GearInventory() {
                         id="gear-condition"
                         name="condition"
                         defaultValue={editingItem?.condition ?? 'good'}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       >
                         <option value="excellent">Excellent</option>
                         <option value="good">Good</option>
@@ -795,7 +795,7 @@ export function GearInventory() {
                       name="serialNumber"
                       type="text"
                       defaultValue={editingItem?.serialNumber ?? ''}
-                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
                     />
                   </div>
                   <div>
@@ -808,7 +808,7 @@ export function GearInventory() {
                       type="text"
                       defaultValue={editingItem?.location ?? ''}
                       placeholder="Studio, Home, etc."
-                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                     />
                   </div>
                 </div>
@@ -829,7 +829,7 @@ export function GearInventory() {
                         name="purchaseDate"
                         type="date"
                         defaultValue={editingItem?.purchaseDate ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                     <div>
@@ -843,7 +843,7 @@ export function GearInventory() {
                         min="0"
                         step="0.01"
                         defaultValue={editingItem?.purchasePrice ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                     <div>
@@ -857,7 +857,7 @@ export function GearInventory() {
                         min="0"
                         step="0.01"
                         defaultValue={editingItem?.currentValue ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                   </div>
@@ -888,7 +888,7 @@ export function GearInventory() {
                         name="policyNumber"
                         type="text"
                         defaultValue={editingItem?.insurance?.policyNumber ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                     <div>
@@ -902,7 +902,7 @@ export function GearInventory() {
                         min="0"
                         step="0.01"
                         defaultValue={editingItem?.insurance?.insuredValue ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                   </div>
@@ -924,7 +924,7 @@ export function GearInventory() {
                         name="lastService"
                         type="date"
                         defaultValue={editingItem?.maintenance?.lastService ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                     <div>
@@ -936,7 +936,7 @@ export function GearInventory() {
                         name="nextService"
                         type="date"
                         defaultValue={editingItem?.maintenance?.nextService ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                       />
                     </div>
                   </div>
@@ -950,7 +950,7 @@ export function GearInventory() {
                       rows={2}
                       defaultValue={editingItem?.maintenance?.serviceNotes ?? ''}
                       placeholder="Any maintenance notes..."
-                      className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                     />
                   </div>
                 </div>
@@ -966,7 +966,7 @@ export function GearInventory() {
                     rows={3}
                     defaultValue={editingItem?.notes ?? ''}
                     placeholder="Additional notes about this item..."
-                    className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                    className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
                   />
                 </div>
 

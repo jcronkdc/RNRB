@@ -165,7 +165,7 @@ const SortableBlock = memo(function SortableBlock({
         ...(editor && { borderColor: editor.userColor, outlineColor: editor.userColor }),
       }}
       className={`rnrb-card group relative mb-4 rounded p-4 transition-all hover:shadow-xl ${getColor()} border ${
-        editor ? 'outline outline-2 outline-offset-2' : ''
+        editor ? 'outline-solid outline-2 outline-offset-2' : ''
       }`}
     >
       {/* Active Editor Indicator */}
@@ -221,7 +221,7 @@ const SortableBlock = memo(function SortableBlock({
               onFocus={onFocus}
               onBlur={onBlur}
               placeholder={`Write your ${block.type}...`}
-              className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 text-sm text-foreground outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="w-full resize-none rounded-lg border border-border/50 bg-surface/50 px-3 py-2 text-sm text-foreground outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
               rows={3}
             />
           )}
@@ -778,7 +778,7 @@ function CollaborativeVisualBuilderInner({
                   onChange={(e) => setInviteEmail(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && sendInvite()}
                   placeholder="friend@email.com"
-                  className="flex-1 rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
+                  className="flex-1 rounded-xl border-2 border-border bg-surface px-4 py-3 text-foreground outline-hidden transition placeholder:text-muted-foreground focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10"
                 />
                 <Button
                   onClick={sendInvite}

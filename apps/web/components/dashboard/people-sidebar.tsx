@@ -141,7 +141,7 @@ export function PeopleSidebar() {
             >
               <div className="flex items-start gap-3">
                 {/* Avatar */}
-                <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-white/10 transition-all group-hover:ring-orange-500/50">
+                <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-white/10 transition-all group-hover:ring-orange-500/50">
                   {user.image ? (
                     <Image
                       src={user.image}
@@ -150,7 +150,7 @@ export function PeopleSidebar() {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-red-600">
+                    <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-orange-500 to-red-600">
                       <span className="text-lg font-bold text-white">
                         {user.name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
                       </span>
@@ -186,7 +186,7 @@ export function PeopleSidebar() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-shrink-0 items-center gap-1.5">
+                <div className="flex shrink-0 items-center gap-1.5">
                   <button
                     onClick={(e) => handleFollow(user.id, e)}
                     className={`rounded-full px-2.5 py-1.5 text-xs font-medium transition-all ${

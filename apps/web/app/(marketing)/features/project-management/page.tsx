@@ -19,7 +19,7 @@ export default function ProjectManagementFeaturePage() {
     <div className="min-h-screen bg-background">
       {/* Hero */}
       <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
         <div className="absolute inset-0">
           <div className="absolute left-1/3 top-0 h-96 w-96 rounded-full bg-green-500/10 blur-3xl" />
         </div>
@@ -135,7 +135,7 @@ export default function ProjectManagementFeaturePage() {
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   {feature.features.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-brand-primary" />
+                      <CheckCircle className="h-4 w-4 shrink-0 text-brand-primary" />
                       {item}
                     </li>
                   ))}
@@ -235,7 +235,7 @@ export default function ProjectManagementFeaturePage() {
                 className="text-center"
               >
                 <div
-                  className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${useCase.gradient}`}
+                  className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br ${useCase.gradient}`}
                 >
                   <useCase.icon className="h-8 w-8 text-white" />
                 </div>

@@ -222,7 +222,7 @@ export function ChromaticTuner() {
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600">
             <Music2 className="h-5 w-5 text-white" />
           </div>
           <div>
@@ -297,7 +297,7 @@ export function ChromaticTuner() {
       )}
 
       {/* Tuner Display */}
-      <div className="relative mx-auto mb-6 aspect-[2/1] max-w-md">
+      <div className="relative mx-auto mb-6 aspect-2/1 max-w-md">
         {/* Tuner Arc Background */}
         <svg viewBox="0 0 200 100" className="h-full w-full">
           {/* Gradient definitions */}
@@ -437,7 +437,7 @@ export function ChromaticTuner() {
           className={`gap-2 rounded-full px-8 py-6 text-lg font-bold transition-all ${
             isListening
               ? 'bg-red-500 hover:bg-red-600'
-              : 'bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'
+              : 'bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700'
           }`}
         >
           {isListening ? (

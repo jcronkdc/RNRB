@@ -190,7 +190,7 @@ export function VoiceMessageRecorder({
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
-              className="flex-shrink-0"
+              className="shrink-0"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-500/20">
                 <Mic className="h-5 w-5 text-red-500" />
@@ -211,7 +211,7 @@ export function VoiceMessageRecorder({
             </div>
 
             {/* Duration counter */}
-            <div className="flex-shrink-0 font-mono text-sm font-medium text-foreground">
+            <div className="shrink-0 font-mono text-sm font-medium text-foreground">
               {formatDuration(duration)}
             </div>
 
@@ -245,7 +245,7 @@ export function VoiceMessageRecorder({
                 onClick={handlePlayPreview}
                 variant="secondary"
                 size="sm"
-                className="flex-shrink-0"
+                className="shrink-0"
               >
                 {isPlaying ? (
                   <Pause className="h-4 w-4" />
@@ -269,7 +269,7 @@ export function VoiceMessageRecorder({
               </div>
 
               {/* Duration */}
-              <div className="flex-shrink-0 font-mono text-sm text-muted-foreground">
+              <div className="shrink-0 font-mono text-sm text-muted-foreground">
                 {formatDuration(recordedDataRef.current?.duration || 0)}
               </div>
             </div>

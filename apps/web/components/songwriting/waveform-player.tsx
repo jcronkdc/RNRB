@@ -160,7 +160,7 @@ export function WaveformPlayer({
   };
 
   return (
-    <Card className="border-gray-800 bg-gradient-to-b from-gray-900 to-black p-6">
+    <Card className="border-gray-800 bg-linear-to-b from-gray-900 to-black p-6">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/20">
@@ -250,7 +250,7 @@ export function WaveformPlayer({
             onChange={(e) => setVolume(parseFloat(e.target.value))}
             className="flex-1"
           />
-          <span className="min-w-[3rem] text-right font-mono text-sm text-gray-400">
+          <span className="min-w-12 text-right font-mono text-sm text-gray-400">
             {Math.round(volume * 100)}%
           </span>
         </div>

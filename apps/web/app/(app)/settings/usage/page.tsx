@@ -82,7 +82,7 @@ function CreditCard({
   const isCritical = percentage >= 95;
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-gray-900/90 to-gray-950/95 p-6 transition-all hover:border-white/20 hover:shadow-lg">
+    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-gray-900/90 to-gray-950/95 p-6 transition-all hover:border-white/20 hover:shadow-lg">
       {/* Header */}
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
@@ -254,7 +254,7 @@ export default function UsagePage() {
   return (
     <div className="min-h-screen pb-12">
       {/* Hero Section */}
-      <div className="relative border-b border-white/5 bg-gradient-to-b from-gray-900/50 to-transparent">
+      <div className="relative border-b border-white/5 bg-linear-to-b from-gray-900/50 to-transparent">
         <div className="mx-auto max-w-5xl px-6 py-10">
           {/* Logo */}
           <div className="mb-6 flex justify-center">
@@ -495,7 +495,7 @@ export default function UsagePage() {
 
         {/* Upgrade CTA */}
         {usage.tier !== 'studio' && (
-          <div className="mt-8 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-500/10 to-orange-500/10 p-6 text-center">
+          <div className="mt-8 rounded-2xl border border-purple-500/20 bg-linear-to-r from-purple-500/10 to-orange-500/10 p-6 text-center">
             <h2 className="mt-2 text-xl font-bold text-white">
               Unlock {usage.tier === 'free' ? 'More Power' : 'Maximum Power'}
             </h2>
@@ -508,13 +508,13 @@ export default function UsagePage() {
             <div className="mt-4 flex flex-wrap justify-center gap-3">
               {usage.tier === 'free' && (
                 <Link href="/settings/billing">
-                  <Button className="bg-gradient-to-r from-orange-500 to-orange-600 font-semibold">
+                  <Button className="bg-linear-to-r from-orange-500 to-orange-600 font-semibold">
                     Creator - $17.99/mo
                   </Button>
                 </Link>
               )}
               <Link href="/settings/billing">
-                <Button className="bg-gradient-to-r from-purple-500 to-purple-600 font-semibold">
+                <Button className="bg-linear-to-r from-purple-500 to-purple-600 font-semibold">
                   {usage.tier === 'free' ? 'Studio' : 'Upgrade'} - $34.99/mo
                 </Button>
               </Link>

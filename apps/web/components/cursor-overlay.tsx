@@ -28,7 +28,7 @@ type CursorOverlayProps = {
 
 export function CursorOverlay({ cursors }: CursorOverlayProps) {
   return (
-    <div className="pointer-events-none fixed inset-0 z-[9999]">
+    <div className="pointer-events-none fixed inset-0 z-9999">
       <AnimatePresence>
         {cursors.map((cursor) => (
           <RemoteCursor key={cursor.userId} cursor={cursor} />

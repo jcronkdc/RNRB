@@ -103,7 +103,7 @@ export default function BecomeProviderPage() {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="border-b border-white/10 bg-gradient-to-r from-brand-primary/10 via-purple-500/10 to-transparent">
+      <header className="border-b border-white/10 bg-linear-to-r from-brand-primary/10 via-purple-500/10 to-transparent">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <Link href="/">
@@ -132,7 +132,7 @@ export default function BecomeProviderPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-16 text-center"
         >
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-brand-primary to-purple-500">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-r from-brand-primary to-purple-500">
             <Sparkles className="h-10 w-10 text-white" />
           </div>
           <h2 className="mb-4 text-4xl font-bold text-foreground">Turn Your Talent Into Income</h2>
@@ -180,7 +180,7 @@ export default function BecomeProviderPage() {
                   className="relative"
                 >
                   {index < STEPS.length - 1 && (
-                    <div className="absolute right-0 top-8 hidden h-0.5 w-full translate-x-1/2 bg-gradient-to-r from-border to-transparent md:block" />
+                    <div className="absolute right-0 top-8 hidden h-0.5 w-full translate-x-1/2 bg-linear-to-r from-border to-transparent md:block" />
                   )}
                   <Card className="relative z-10 p-6">
                     <div className="mb-4 flex items-center gap-3">
@@ -205,7 +205,7 @@ export default function BecomeProviderPage() {
           transition={{ delay: 0.5 }}
         >
           <Card className="mx-auto max-w-lg overflow-hidden">
-            <div className="bg-gradient-to-r from-brand-primary/20 to-purple-500/20 p-6">
+            <div className="bg-linear-to-r from-brand-primary/20 to-purple-500/20 p-6">
               <h3 className="text-xl font-bold text-foreground">Get Started</h3>
               <p className="text-sm text-muted-foreground">
                 Create your provider profile in minutes
@@ -223,7 +223,7 @@ export default function BecomeProviderPage() {
                     setFormData((prev) => ({ ...prev, displayName: e.target.value }))
                   }
                   placeholder="e.g. John Smith Audio"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
               <div>
@@ -233,7 +233,7 @@ export default function BecomeProviderPage() {
                   value={formData.tagline}
                   onChange={(e) => setFormData((prev) => ({ ...prev, tagline: e.target.value }))}
                   placeholder="e.g. Grammy-nominated mixing engineer"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
                 />
               </div>
               <div>
@@ -243,7 +243,7 @@ export default function BecomeProviderPage() {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-brand-primary focus:outline-none"
+                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-brand-primary focus:outline-hidden"
                 >
                   <option value="">Select category...</option>
                   <option value="mixing">Mixing</option>

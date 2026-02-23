@@ -111,7 +111,7 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
             {project.name}
           </h3>
           <ArrowRight
-            className="h-4 w-4 flex-shrink-0 transition-all group-hover:translate-x-1 sm:h-5 sm:w-5"
+            className="h-4 w-4 shrink-0 transition-all group-hover:translate-x-1 sm:h-5 sm:w-5"
             style={{ color: 'var(--muted)' }}
           />
         </div>

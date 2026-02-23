@@ -294,20 +294,20 @@ export default function SetlistsPage() {
                 ← Back to Setlists
               </Button>
               <h1 className="font-display mb-2 text-4xl font-bold">{selectedSetlist.name}</h1>
-              <p className="text-[color:var(--muted)]">Collaborative setlist builder</p>
+              <p className="text-(--muted)">Collaborative setlist builder</p>
 
               {/* Linked Show Display */}
               {selectedSetlist.show ? (
                 <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-brand-primary/30 bg-brand-primary/10 px-4 py-2">
-                  <Calendar className="h-4 w-4 text-[color:var(--accent)]" />
+                  <Calendar className="h-4 w-4 text-(--accent)" />
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/shows`}
-                      className="text-sm font-medium transition hover:text-[color:var(--accent)]"
+                      className="text-sm font-medium transition hover:text-(--accent)"
                     >
                       {selectedSetlist.show.name}
                     </Link>
-                    <span className="text-xs text-[color:var(--muted)]">
+                    <span className="text-xs text-(--muted)">
                       • {formatDateLong(selectedSetlist.show.date)}
                       {selectedSetlist.show.venue && ` • ${selectedSetlist.show.venue.name}`}
                     </span>
@@ -416,12 +416,12 @@ export default function SetlistsPage() {
 
                 {loadingShows ? (
                   <div className="py-12 text-center">
-                    <p className="text-[color:var(--muted)]">Loading upcoming shows...</p>
+                    <p className="text-(--muted)">Loading upcoming shows...</p>
                   </div>
                 ) : shows.length === 0 ? (
                   <div className="py-12 text-center">
-                    <Calendar className="text-[color:var(--muted)]/50 mx-auto mb-4 h-16 w-16" />
-                    <p className="mb-4 text-[color:var(--muted)]">No upcoming shows scheduled</p>
+                    <Calendar className="text-(--muted)/50 mx-auto mb-4 h-16 w-16" />
+                    <p className="mb-4 text-(--muted)">No upcoming shows scheduled</p>
                     <Link href="/shows/new">
                       <Button className="rnrb-button-primary">
                         <Plus className="mr-2 h-4 w-4" />
@@ -440,9 +440,9 @@ export default function SetlistsPage() {
                       >
                         <div className="mb-2 flex items-start justify-between">
                           <h3 className="font-semibold">{show.name}</h3>
-                          <LinkIcon className="h-4 w-4 shrink-0 text-[color:var(--muted)]" />
+                          <LinkIcon className="h-4 w-4 shrink-0 text-(--muted)" />
                         </div>
-                        <div className="space-y-1 text-sm text-[color:var(--muted)]">
+                        <div className="space-y-1 text-sm text-(--muted)">
                           <div className="flex items-center gap-2">
                             <Calendar className="h-3.5 w-3.5" />
                             <span>{formatDateWithDay(show.date)}</span>

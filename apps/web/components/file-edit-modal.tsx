@@ -235,7 +235,7 @@ export function FileEditModal({
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                   />
                 </div>
 
@@ -255,7 +255,7 @@ export function FileEditModal({
                         placeholder="120"
                         min="20"
                         max="300"
-                        className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                       />
                     </div>
 
@@ -268,7 +268,7 @@ export function FileEditModal({
                       <select
                         value={musicalKey}
                         onChange={(e) => setMusicalKey(e.target.value)}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden"
                       >
                         <option value="">Select key...</option>
                         {MUSICAL_KEYS.map((key) => (
@@ -288,7 +288,7 @@ export function FileEditModal({
                       <select
                         value={mood}
                         onChange={(e) => setMood(e.target.value)}
-                        className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden"
                       >
                         <option value="">Select mood...</option>
                         {MOODS.map((m) => (
@@ -310,7 +310,7 @@ export function FileEditModal({
                   <select
                     value={collectionId}
                     onChange={(e) => setCollectionId(e.target.value)}
-                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden"
                   >
                     <option value="">No collection</option>
                     {collections.map((c) => (
@@ -383,7 +383,7 @@ export function FileEditModal({
                           }
                         }}
                         placeholder="Add tag..."
-                        className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                        className="rounded-lg border border-gray-700 bg-gray-900 px-3 py-1.5 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                       />
                       <button
                         onClick={addTag}
@@ -423,7 +423,7 @@ export function FileEditModal({
                   value={lyrics}
                   onChange={(e) => setLyrics(e.target.value)}
                   placeholder="Enter lyrics, chords, or notes..."
-                  className="h-80 w-full resize-none rounded-lg border border-gray-700 bg-gray-900 p-4 font-mono text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                  className="h-80 w-full resize-none rounded-lg border border-gray-700 bg-gray-900 p-4 font-mono text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                 />
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{lyrics.length} characters</span>
@@ -453,7 +453,7 @@ export function FileEditModal({
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Add notes about this file..."
-                  className="h-60 w-full resize-none rounded-lg border border-gray-700 bg-gray-900 p-4 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-none"
+                  className="h-60 w-full resize-none rounded-lg border border-gray-700 bg-gray-900 p-4 text-sm text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                 />
               </div>
             )}

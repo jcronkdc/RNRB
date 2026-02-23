@@ -371,7 +371,7 @@ export default function MeetingRoomPage() {
   // Pre-join screen
   if (!hasJoined) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-black via-zinc-950 to-black p-4">
+      <div className="flex min-h-screen items-center justify-center bg-linear-to-b from-black via-zinc-950 to-black p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -426,7 +426,7 @@ export default function MeetingRoomPage() {
               onClick={initializeCall}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full max-w-xs rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 py-4 text-lg font-bold text-white shadow-lg shadow-purple-500/30"
+              className="w-full max-w-xs rounded-xl bg-linear-to-r from-purple-500 to-pink-500 py-4 text-lg font-bold text-white shadow-lg shadow-purple-500/30"
             >
               Join Meeting
             </motion.button>
@@ -450,7 +450,7 @@ export default function MeetingRoomPage() {
       {/* Top bar */}
       <div className="flex h-14 items-center justify-between border-b border-white/10 bg-zinc-900/50 px-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex-shrink-0 transition-transform hover:scale-105">
+          <Link href="/" className="shrink-0 transition-transform hover:scale-105">
             <Image
               src="/logo-dark.png"
               alt="RNRB"
@@ -549,7 +549,7 @@ export default function MeetingRoomPage() {
                     <div className="flex-1 space-y-3 overflow-y-auto p-4">
                       {chatMessages.map((msg) => (
                         <div key={msg.id} className="flex gap-2">
-                          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-500/20">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-500/20">
                             <span className="text-xs font-medium text-purple-400">
                               {msg.senderName.charAt(0)}
                             </span>
@@ -582,7 +582,7 @@ export default function MeetingRoomPage() {
                           onChange={(e) => setNewMessage(e.target.value)}
                           onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
                           placeholder="Send a message..."
-                          className="flex-1 rounded-lg border border-white/10 bg-black/50 px-4 py-2 text-sm text-white placeholder-white/30 focus:border-purple-500/50 focus:outline-none"
+                          className="flex-1 rounded-lg border border-white/10 bg-black/50 px-4 py-2 text-sm text-white placeholder-white/30 focus:border-purple-500/50 focus:outline-hidden"
                         />
                         <button
                           onClick={sendMessage}
@@ -744,7 +744,7 @@ export default function MeetingRoomPage() {
           onClick={handleLeave}
           className="flex items-center gap-2 rounded-full bg-red-500 px-6 py-3 font-medium text-white transition-colors hover:bg-red-600"
         >
-          <Phone className="h-5 w-5 rotate-[135deg]" />
+          <Phone className="h-5 w-5 rotate-135" />
           Leave
         </button>
       </div>

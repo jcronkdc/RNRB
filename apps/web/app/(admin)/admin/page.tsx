@@ -78,7 +78,7 @@ export default function AdminPage() {
         {/* Bug Summary */}
         <Link
           href="/admin/bugs"
-          className="group relative overflow-hidden rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10"
+          className="group relative overflow-hidden rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10"
         >
           <div className="flex items-center justify-between">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/20">
@@ -103,7 +103,7 @@ export default function AdminPage() {
         </Link>
 
         {/* High Priority */}
-        <div className="rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6">
+        <div className="rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-red-500/20">
             <Zap className="h-6 w-6 text-red-400" />
           </div>
@@ -116,7 +116,7 @@ export default function AdminPage() {
         </div>
 
         {/* Total Tracked */}
-        <div className="rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6">
+        <div className="rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20">
             <BarChart3 className="h-6 w-6 text-blue-400" />
           </div>
@@ -129,7 +129,7 @@ export default function AdminPage() {
         </div>
 
         {/* System Status */}
-        <div className="rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6">
+        <div className="rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20">
             <TrendingUp className="h-6 w-6 text-emerald-400" />
           </div>
@@ -141,7 +141,7 @@ export default function AdminPage() {
       </div>
 
       {/* Recent Bugs */}
-      <div className="rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6">
+      <div className="rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-white">Recent Bugs</h2>
@@ -206,7 +206,7 @@ export default function AdminPage() {
       <div className="grid gap-6 md:grid-cols-3">
         <Link
           href="/admin/users"
-          className="group rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-blue-500/50"
+          className="group rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-blue-500/50"
         >
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500/20">
@@ -221,7 +221,7 @@ export default function AdminPage() {
 
         <Link
           href="/admin/analytics"
-          className="group rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-purple-500/50"
+          className="group rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-purple-500/50"
         >
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500/20">
@@ -236,7 +236,7 @@ export default function AdminPage() {
 
         <Link
           href="/admin/reports"
-          className="group rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-emerald-500/50"
+          className="group rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/50 to-zinc-800/30 p-6 transition-all hover:border-emerald-500/50"
         >
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/20">

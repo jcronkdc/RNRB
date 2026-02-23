@@ -21,7 +21,7 @@ export default function ToolsLoading() {
         {/* Tools Grid skeleton */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 9 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
+            <div key={i} className="rounded-xl border border-white/10 bg-white/2 p-6">
               <div className="mb-4 flex items-center gap-4">
                 <div className="h-12 w-12 animate-pulse rounded-xl bg-white/5" />
                 <div>

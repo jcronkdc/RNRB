@@ -262,7 +262,7 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('name')}
                 onBlur={() => unlockField('name')}
                 disabled={isFieldLocked('name')}
-                className="w-full rounded-xl border-2 px-4 py-3 outline-none transition disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 px-4 py-3 outline-hidden transition disabled:cursor-not-allowed disabled:opacity-50"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',
@@ -275,7 +275,7 @@ export default function ProjectSettingsPage() {
             <div>
               <label
                 htmlFor="project-tagline"
-                className="mb-2 block text-sm font-medium text-[color:var(--muted)]"
+                className="mb-2 block text-sm font-medium text-(--muted)"
               >
                 Tagline
                 {isFieldLocked('tagline') && (
@@ -297,7 +297,7 @@ export default function ProjectSettingsPage() {
                 onBlur={() => unlockField('tagline')}
                 disabled={isFieldLocked('tagline')}
                 placeholder="A short description of your project"
-                className="w-full rounded-xl border-2 border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -305,7 +305,7 @@ export default function ProjectSettingsPage() {
             <div>
               <label
                 htmlFor="project-description"
-                className="mb-2 block text-sm font-medium text-[color:var(--muted)]"
+                className="mb-2 block text-sm font-medium text-(--muted)"
               >
                 Description
                 {isFieldLocked('description') && (
@@ -327,7 +327,7 @@ export default function ProjectSettingsPage() {
                 disabled={isFieldLocked('description')}
                 rows={4}
                 placeholder="Tell the story of this project..."
-                className="w-full resize-none rounded-xl border-2 border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition placeholder:text-[color:var(--muted)] focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full resize-none rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -335,7 +335,7 @@ export default function ProjectSettingsPage() {
             <div>
               <label
                 htmlFor="project-visibility"
-                className="mb-2 block text-sm font-medium text-[color:var(--muted)]"
+                className="mb-2 block text-sm font-medium text-(--muted)"
               >
                 Visibility
                 {isFieldLocked('visibility') && (
@@ -354,7 +354,7 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('visibility')}
                 onBlur={() => unlockField('visibility')}
                 disabled={isFieldLocked('visibility')}
-                className="w-full rounded-xl border-2 border-[color:var(--border)] bg-[color:var(--surface)] px-4 py-3 text-[color:var(--text)] outline-none transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="private">Private (Only invited members)</option>
                 <option value="org">Organization (All org members)</option>
@@ -369,8 +369,8 @@ export default function ProjectSettingsPage() {
           <h2 className="mb-4 text-xl font-semibold text-red-400">Danger Zone</h2>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-[color:var(--text)]">Delete this project</p>
-              <p className="text-sm text-[color:var(--muted)]">
+              <p className="font-medium text-(--text)">Delete this project</p>
+              <p className="text-sm text-(--muted)">
                 Once deleted, it cannot be recovered
               </p>
             </div>
@@ -386,9 +386,9 @@ export default function ProjectSettingsPage() {
         </Card>
 
         {/* Info card */}
-        <Card className="bg-[color:var(--accent)]/5 mt-6 border-brand-primary/20 p-4">
-          <p className="flex items-center gap-2 text-sm text-[color:var(--muted)]">
-            <Check className="h-4 w-4 text-[color:var(--accent)]" />
+        <Card className="bg-(--accent)/5 mt-6 border-brand-primary/20 p-4">
+          <p className="flex items-center gap-2 text-sm text-(--muted)">
+            <Check className="h-4 w-4 text-(--accent)" />
             Changes are automatically saved as you type. Field locks prevent conflicts with other
             editors.
           </p>

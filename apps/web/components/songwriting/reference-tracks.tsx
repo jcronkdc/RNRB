@@ -123,7 +123,7 @@ export function ReferenceTracks({
                 value={newTrack.title}
                 onChange={(e) => setNewTrack({ ...newTrack, title: e.target.value })}
                 placeholder="Song title"
-                className="rounded-lg px-3 py-2 text-sm outline-none"
+                className="rounded-lg px-3 py-2 text-sm outline-hidden"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -135,7 +135,7 @@ export function ReferenceTracks({
                 value={newTrack.artist}
                 onChange={(e) => setNewTrack({ ...newTrack, artist: e.target.value })}
                 placeholder="Artist"
-                className="rounded-lg px-3 py-2 text-sm outline-none"
+                className="rounded-lg px-3 py-2 text-sm outline-hidden"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -148,7 +148,7 @@ export function ReferenceTracks({
               value={newTrack.url}
               onChange={(e) => setNewTrack({ ...newTrack, url: e.target.value })}
               placeholder="Link (Spotify, YouTube, etc.) - optional"
-              className="mb-2 w-full rounded-lg px-3 py-2 text-sm outline-none"
+              className="mb-2 w-full rounded-lg px-3 py-2 text-sm outline-hidden"
               style={{
                 background: 'var(--panel)',
                 border: '1px solid var(--border)',
@@ -160,7 +160,7 @@ export function ReferenceTracks({
               onChange={(e) => setNewTrack({ ...newTrack, notes: e.target.value })}
               placeholder="Notes (e.g., 'Love the chord progression in the chorus')"
               rows={2}
-              className="mb-3 w-full resize-none rounded-lg px-3 py-2 text-sm outline-none"
+              className="mb-3 w-full resize-none rounded-lg px-3 py-2 text-sm outline-hidden"
               style={{
                 background: 'var(--panel)',
                 border: '1px solid var(--border)',

@@ -33,7 +33,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/"
-            className="w-full rounded-lg border px-5 py-2.5 text-center text-sm font-medium transition-colors hover:bg-white/[0.03] sm:w-auto"
+            className="w-full rounded-lg border px-5 py-2.5 text-center text-sm font-medium transition-colors hover:bg-white/3 sm:w-auto"
             style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
           >
             Back to home

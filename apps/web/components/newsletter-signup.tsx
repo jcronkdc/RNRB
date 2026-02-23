@@ -205,13 +205,13 @@ export function NewsletterSignup({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+                className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
                 required
               />
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 flex items-center gap-2 rounded-lg bg-gradient-to-r px-4 py-2 text-sm font-medium text-black transition-all disabled:opacity-50"
+                className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 flex items-center gap-2 rounded-lg bg-linear-to-r px-4 py-2 text-sm font-medium text-black transition-all disabled:opacity-50"
               >
                 {status === 'loading' ? (
                   <span className="animate-spin">⚙</span>
@@ -238,7 +238,7 @@ export function NewsletterSignup({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl border border-zinc-800/50 bg-gradient-to-br from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 p-8 md:p-10"
+          className="relative overflow-hidden rounded-2xl border border-zinc-800/50 bg-linear-to-br from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 p-8 md:p-10"
         >
           {/* Background decoration */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -287,21 +287,21 @@ export function NewsletterSignup({
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder="First name (optional)"
-                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
                     />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
                       required
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={status === 'loading'}
-                    className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 shadow-gold-500/20 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r py-3 font-semibold text-black shadow-lg transition-all disabled:opacity-50"
+                    className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 shadow-gold-500/20 flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r py-3 font-semibold text-black shadow-lg transition-all disabled:opacity-50"
                   >
                     {status === 'loading' ? (
                       <>
@@ -396,13 +396,13 @@ export function NewsletterSignup({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-none focus:ring-2"
+              className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
               required
             />
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 w-full rounded-lg bg-gradient-to-r py-2.5 text-sm font-medium text-black transition-all disabled:opacity-50"
+              className="from-gold-500 to-gold-600 hover:from-gold-400 hover:to-gold-500 w-full rounded-lg bg-linear-to-r py-2.5 text-sm font-medium text-black transition-all disabled:opacity-50"
             >
               {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
             </button>

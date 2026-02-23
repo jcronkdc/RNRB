@@ -258,7 +258,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
   };
 
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-black/60 via-purple-900/10 to-black/60 p-6 transition-all hover:border-purple-500/30">
+    <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-black/60 via-purple-900/10 to-black/60 p-6 transition-all hover:border-purple-500/30">
       {/* Repost Header */}
       {isRepost && (
         <div className="mb-4 flex items-center gap-2 text-sm text-white/60">
@@ -272,7 +272,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
       {/* Author Header */}
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative h-12 w-12 overflow-hidden rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+          <div className="relative h-12 w-12 overflow-hidden rounded-full bg-linear-to-br from-purple-500 to-pink-500">
             {localPost.author.image ? (
               <Image
                 src={localPost.author.image}
@@ -297,7 +297,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
                   className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium transition-all ${
                     isFollowing
                       ? 'bg-white/10 text-white/70 hover:bg-white/20'
-                      : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90'
+                      : 'bg-linear-to-r from-purple-500 to-pink-500 text-white hover:opacity-90'
                   }`}
                 >
                   {isFollowLoading ? (
@@ -429,7 +429,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
       {localPost.contentType === 'audio' && localPost.audioUrl && (
         <div className="mb-4 rounded-xl border border-white/10 bg-black/40 p-4">
           <div className="mb-3 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-pink-500">
               <Music className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -619,7 +619,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
             {/* Modal Body */}
             <div className="px-6 py-6">
               <div className="mb-4 flex items-center gap-3 rounded-xl bg-red-500/10 p-4">
-                <AlertTriangle className="h-6 w-6 flex-shrink-0 text-red-400" />
+                <AlertTriangle className="h-6 w-6 shrink-0 text-red-400" />
                 <p className="text-sm text-white/80">
                   Are you sure you want to delete this post? This action cannot be undone.
                 </p>
@@ -687,7 +687,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="min-h-[150px] w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-none transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
+                className="min-h-[150px] w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-white placeholder-white/40 outline-hidden transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
                 placeholder="What's on your mind?"
                 autoFocus
               />
@@ -704,7 +704,7 @@ export function FeedPost({ post, onDeleted, onUpdated }: FeedPostProps) {
               <button
                 onClick={handleEdit}
                 disabled={!editContent.trim() || editContent === localPost.content}
-                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-linear-to-r from-purple-500 to-pink-500 px-5 py-2.5 text-sm font-medium text-white transition-all hover:opacity-90 disabled:opacity-50"
               >
                 <Edit3 className="h-4 w-4" />
                 <span>Save Changes</span>

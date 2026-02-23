@@ -227,8 +227,8 @@ export default function ListingDetailPage() {
     <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-amber-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-amber-500/10 to-transparent blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -266,7 +266,7 @@ export default function ListingDetailPage() {
                 />
               ) : (
                 <>
-                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-transparent" />
+                  <div className="absolute inset-0 bg-linear-to-br from-amber-500/20 to-transparent" />
                   <div className="flex h-full items-center justify-center">
                     <Package className="h-24 w-24 text-white/20" />
                   </div>
@@ -304,7 +304,7 @@ export default function ListingDetailPage() {
                   <button
                     key={img.id}
                     onClick={() => setCurrentImageIndex(idx)}
-                    className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
+                    className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${
                       idx === currentImageIndex
                         ? 'border-brand-primary'
                         : 'border-transparent opacity-60 hover:opacity-100'
@@ -381,7 +381,7 @@ export default function ListingDetailPage() {
                 <div className="space-y-3">
                   <button
                     onClick={() => setShowOfferModal(true)}
-                    className="w-full rounded-xl bg-gradient-to-r from-brand-primary to-orange-500 py-3 text-center font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:shadow-xl hover:shadow-brand-primary/30"
+                    className="w-full rounded-xl bg-linear-to-r from-brand-primary to-orange-500 py-3 text-center font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:shadow-xl hover:shadow-brand-primary/30"
                   >
                     {listing.acceptsOffers ? 'Make an Offer' : 'Contact Seller'}
                   </button>
@@ -457,7 +457,7 @@ export default function ListingDetailPage() {
             <div className="rounded-xl border border-white/10 bg-white/5 p-5">
               <h3 className="mb-4 font-semibold text-white">Seller</h3>
               <div className="flex items-center gap-4">
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-orange-500">
+                <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-brand-primary to-orange-500">
                   {listing.seller?.image ? (
                     <img
                       src={listing.seller.image}
@@ -612,15 +612,15 @@ export default function ListingDetailPage() {
               </div>
               <ul className="space-y-2 text-sm text-white/60">
                 <li className="flex items-start gap-2">
-                  <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400/60" />
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400/60" />
                   Meet in public places for local transactions
                 </li>
                 <li className="flex items-start gap-2">
-                  <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400/60" />
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400/60" />
                   Use secure payment methods
                 </li>
                 <li className="flex items-start gap-2">
-                  <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-400/60" />
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-400/60" />
                   Verify item condition before completing purchase
                 </li>
               </ul>
@@ -646,7 +646,7 @@ export default function ListingDetailPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--surface)] p-6"
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-(--surface) p-6"
           >
             <h3 className="mb-4 text-xl font-semibold text-white">Make an Offer</h3>
 
@@ -680,7 +680,7 @@ export default function ListingDetailPage() {
                     value={offerAmount}
                     onChange={(e) => setOfferAmount(e.target.value)}
                     placeholder="Enter amount"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-none focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
                   />
                 </div>
                 {listing.price && (
@@ -699,7 +699,7 @@ export default function ListingDetailPage() {
                   onChange={(e) => setTradeItems(e.target.value)}
                   placeholder="Describe what you're offering to trade..."
                   rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
                 />
               </div>
             )}
@@ -713,7 +713,7 @@ export default function ListingDetailPage() {
                 onChange={(e) => setOfferMessage(e.target.value)}
                 placeholder="Add a message to the seller..."
                 rows={3}
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-none focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
               />
             </div>
 
@@ -727,7 +727,7 @@ export default function ListingDetailPage() {
               <button
                 onClick={handleMakeOffer}
                 disabled={makeOfferMutation.isPending || (offerType !== 'trade' && !offerAmount)}
-                className="flex-1 rounded-xl bg-gradient-to-r from-brand-primary to-orange-500 py-3 font-semibold text-white disabled:opacity-50"
+                className="flex-1 rounded-xl bg-linear-to-r from-brand-primary to-orange-500 py-3 font-semibold text-white disabled:opacity-50"
               >
                 {makeOfferMutation.isPending ? 'Sending...' : 'Send Offer'}
               </button>
@@ -742,7 +742,7 @@ export default function ListingDetailPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-md rounded-2xl border border-white/10 bg-[var(--surface)] p-6"
+            className="w-full max-w-md rounded-2xl border border-white/10 bg-(--surface) p-6"
           >
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-xl font-semibold text-white">Report Listing</h3>
@@ -798,7 +798,7 @@ export default function ListingDetailPage() {
                 onChange={(e) => setReportDescription(e.target.value)}
                 placeholder="Provide details about why you're reporting this listing..."
                 rows={4}
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-none focus:border-rose-500/50"
+                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden focus:border-rose-500/50"
               />
               <p className="mt-1 text-xs text-white/40">
                 Minimum 10 characters. {reportDescription.length}/10
@@ -817,7 +817,7 @@ export default function ListingDetailPage() {
                 disabled={
                   reportMutation.isPending || !reportReason || reportDescription.length < 10
                 }
-                className="flex-1 rounded-xl bg-gradient-to-r from-rose-500 to-red-500 py-3 font-semibold text-white disabled:opacity-50"
+                className="flex-1 rounded-xl bg-linear-to-r from-rose-500 to-red-500 py-3 font-semibold text-white disabled:opacity-50"
               >
                 {reportMutation.isPending ? 'Submitting...' : 'Submit Report'}
               </button>

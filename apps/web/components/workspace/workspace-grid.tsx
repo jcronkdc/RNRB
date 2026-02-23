@@ -188,7 +188,7 @@ export function WorkspaceGrid({ onOpenCatalog }: WorkspaceGridProps) {
         >
           <button
             onClick={onOpenCatalog}
-            className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed px-4 py-2 text-sm font-medium transition-all hover:border-[var(--accent)] hover:bg-[var(--accent-glow)]"
+            className="inline-flex items-center gap-2 rounded-xl border-2 border-dashed px-4 py-2 text-sm font-medium transition-all hover:border-(--accent) hover:bg-(--accent-glow)"
             style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
           >
             <Plus className="h-4 w-4" />
@@ -238,9 +238,9 @@ function ToolCard({
       className={`group relative flex flex-col items-center gap-2 rounded-xl ${sizeConfig.padding} transition-all ${
         isEditMode
           ? isDragging
-            ? 'scale-105 shadow-xl ring-2 ring-[var(--accent)]'
-            : 'cursor-grab hover:bg-[var(--panel-hover)]'
-          : 'hover:bg-[var(--panel-hover)]'
+            ? 'scale-105 shadow-xl ring-2 ring-(--accent)'
+            : 'cursor-grab hover:bg-(--panel-hover)'
+          : 'hover:bg-(--panel-hover)'
       } ${size === 'large' ? 'h-full min-h-[120px] justify-center' : ''}`}
       style={{ background: isDragging ? 'var(--panel)' : undefined }}
     >

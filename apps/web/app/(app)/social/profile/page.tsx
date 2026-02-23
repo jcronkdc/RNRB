@@ -225,7 +225,7 @@ export default function MyProfilePage() {
                     href={profile.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 hover:text-[var(--accent)]"
+                    className="flex items-center gap-1 hover:text-(--accent)"
                   >
                     <LinkIcon className="h-4 w-4" />
                     Website

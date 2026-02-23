@@ -15,7 +15,7 @@ export default function FeedLoading() {
           <div className="mt-2 h-5 w-52 animate-pulse rounded bg-white/5" />
         </div>
         {/* Post composer skeleton */}
-        <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+        <div className="mb-6 rounded-xl border border-white/10 bg-white/2 p-4">
           <div className="flex items-start gap-3">
             <div className="h-10 w-10 animate-pulse rounded-full bg-white/5" />
             <div className="flex-1">
