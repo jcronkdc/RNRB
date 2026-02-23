@@ -170,7 +170,7 @@ export function ToolCatalogModal({
             {/* Search */}
             <div className="relative mb-4">
               <Search
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -178,7 +178,7 @@ export function ToolCatalogModal({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search tools..."
-                className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm outline-hidden transition-colors focus:border-(--accent)"
+                className="w-full rounded-xl border py-2.5 pr-4 pl-10 text-sm outline-hidden transition-colors focus:border-(--accent)"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',
@@ -262,7 +262,7 @@ export function ToolCatalogModal({
           >
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all ${
                 selectedCategory === null
                   ? 'bg-(--accent) text-white'
                   : 'text-(--muted) hover:bg-(--panel-hover)'
@@ -274,7 +274,7 @@ export function ToolCatalogModal({
               <button
                 key={key}
                 onClick={() => setSelectedCategory(key)}
-                className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all ${
                   selectedCategory === key
                     ? 'bg-(--accent) text-white'
                     : 'text-(--muted) hover:bg-(--panel-hover)'
@@ -366,10 +366,8 @@ function ToolCard({
 
       {/* Add indicator */}
       <div
-        className={`absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-full transition-all ${
-          isAdded
-            ? 'bg-green-500 text-white'
-            : 'bg-(--panel) opacity-0 group-hover:opacity-100'
+        className={`absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full transition-all ${
+          isAdded ? 'bg-green-500 text-white' : 'bg-(--panel) opacity-0 group-hover:opacity-100'
         }`}
       >
         {isAdded ? (
@@ -382,7 +380,7 @@ function ToolCard({
       {/* Suggested badge */}
       {isSuggested && !isAdded && (
         <div
-          className="absolute -left-1 -top-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+          className="absolute -top-1 -left-1 flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
           style={{ background: 'var(--accent)', color: 'white' }}
         >
           <Sparkles className="h-3 w-3" />

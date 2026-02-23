@@ -115,7 +115,7 @@ export function WorkshopPageHeader({
               <div>
                 {label && (
                   <p
-                    className={`text-xs font-medium uppercase tracking-wide ${
+                    className={`text-xs font-medium tracking-wide uppercase ${
                       isHero ? 'mb-2' : ''
                     }`}
                     style={{ color: 'var(--accent)' }}

@@ -27,28 +27,19 @@ describe('createLogger', () => {
   it('includes context in log messages', () => {
     const log = createLogger('API');
     log.error('something failed');
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining('[API]'),
-      expect.anything()
-    );
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('[API]'), expect.anything());
   });
 
   it('includes level in log messages', () => {
     const log = createLogger('DB');
     log.warn('connection slow');
-    expect(console.warn).toHaveBeenCalledWith(
-      expect.stringContaining('[WARN]'),
-      expect.anything()
-    );
+    expect(console.warn).toHaveBeenCalledWith(expect.stringContaining('[WARN]'), expect.anything());
   });
 
   it('passes data as second argument', () => {
     const log = createLogger('Auth');
     const data = { userId: '123' };
     log.error('auth failed', data);
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining('[Auth]'),
-      data
-    );
+    expect(console.error).toHaveBeenCalledWith(expect.stringContaining('[Auth]'), data);
   });
 });

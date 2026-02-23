@@ -1,6 +1,6 @@
 /**
  * useWorkspaceBuilder Hook
- * 
+ *
  * A hook for interacting with the AI Workspace Builder API.
  * Can be used standalone or integrated with other components.
  */
@@ -45,87 +45,91 @@ export function useWorkspaceBuilder(): UseWorkspaceBuilderReturn {
   /**
    * Send a message to the AI Workspace Builder
    */
-  const buildWorkspace = useCallback(async (message: string) => {
-    if (!message.trim()) return;
+  const buildWorkspace = useCallback(
+    async (message: string) => {
+      if (!message.trim()) return;
 
-    setState(prev => ({ 
-      ...prev, 
-      isLoading: true, 
-      error: null 
-    }));
-
-    try {
-      // Prepare existing workspaces for context
-      const existingWorkspaces = workspaces.map(w => ({
-        id: w.id,
-        name: w.name,
-        tools: w.tools.map(t => t.toolKey),
+      setState((prev) => ({
+        ...prev,
+        isLoading: true,
+        error: null,
       }));
 
-      const response = await fetch('/api/assistant/workspace-builder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message,
-          existingWorkspaces,
-        }),
-      });
+      try {
+        // Prepare existing workspaces for context
+        const existingWorkspaces = workspaces.map((w) => ({
+          id: w.id,
+          name: w.name,
+          tools: w.tools.map((t) => t.toolKey),
+        }));
 
-      const data = await response.json();
+        const response = await fetch('/api/assistant/workspace-builder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message,
+            existingWorkspaces,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to get response');
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to get response');
+        }
+
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          lastResponse: data.response,
+          previews: data.previews || (data.preview ? [data.preview] : []),
+          suggestions: data.suggestions || [],
+        }));
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: errorMessage,
+        }));
       }
-
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        lastResponse: data.response,
-        previews: data.previews || (data.preview ? [data.preview] : []),
-        suggestions: data.suggestions || [],
-      }));
-
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Something went wrong';
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: errorMessage,
-      }));
-    }
-  }, [workspaces]);
+    },
+    [workspaces]
+  );
 
   /**
    * Create a workspace from a preview
    */
-  const createFromPreview = useCallback(async (preview: WorkspacePreview) => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+  const createFromPreview = useCallback(
+    async (preview: WorkspacePreview) => {
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-    try {
-      // Create the workspace
-      const workspace = await createWorkspace(preview.name, preview.icon);
+      try {
+        // Create the workspace
+        const workspace = await createWorkspace(preview.name, preview.icon);
 
-      // Add all tools
-      for (const toolKey of preview.tools) {
-        await addToolToWorkspace(workspace.id, toolKey);
+        // Add all tools
+        for (const toolKey of preview.tools) {
+          await addToolToWorkspace(workspace.id, toolKey);
+        }
+
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          lastResponse: `Created "${preview.name}" workspace with ${preview.tools.length} tools!`,
+          previews: [],
+        }));
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to create workspace';
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: errorMessage,
+        }));
       }
-
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        lastResponse: `Created "${preview.name}" workspace with ${preview.tools.length} tools!`,
-        previews: [],
-      }));
-
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create workspace';
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: errorMessage,
-      }));
-    }
-  }, [createWorkspace, addToolToWorkspace]);
+    },
+    [createWorkspace, addToolToWorkspace]
+  );
 
   /**
    * Reset the builder state
@@ -147,4 +151,3 @@ export function useWorkspaceBuilder(): UseWorkspaceBuilderReturn {
     reset,
   };
 }
-

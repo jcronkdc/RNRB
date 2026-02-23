@@ -48,8 +48,16 @@ interface UseCollaborativeSongOptions {
 // Consistent color from userId
 function generateColor(userId: string): string {
   const colors = [
-    '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6',
-    '#EC4899', '#14B8A6', '#F97316', '#6366F1', '#84CC16',
+    '#3B82F6',
+    '#10B981',
+    '#F59E0B',
+    '#EF4444',
+    '#8B5CF6',
+    '#EC4899',
+    '#14B8A6',
+    '#F97316',
+    '#6366F1',
+    '#84CC16',
   ];
   let hash = 0;
   for (let i = 0; i < userId.length; i++) {
@@ -175,17 +183,14 @@ export function useCollaborativeSong({
   }, [enabled, userId, userName, color]);
 
   // Update cursor position in awareness
-  const setCursor = useCallback(
-    (position: number, selection?: { start: number; end: number }) => {
-      if (!awarenessRef.current) return;
+  const setCursor = useCallback((position: number, selection?: { start: number; end: number }) => {
+    if (!awarenessRef.current) return;
 
-      awarenessRef.current.setLocalStateField('cursor', {
-        position,
-        selection,
-      });
-    },
-    []
-  );
+    awarenessRef.current.setLocalStateField('cursor', {
+      position,
+      selection,
+    });
+  }, []);
 
   // Get the Yjs text types for direct manipulation
   const getLyricsText = useCallback((): Y.Text | null => {

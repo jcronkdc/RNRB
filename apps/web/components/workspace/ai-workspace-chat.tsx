@@ -411,7 +411,7 @@ export function AIWorkspaceChat() {
           onClick={handleExpand}
           data-ai-floating-btn="true"
           className={cn(
-            'fixed bottom-24 right-6 z-40',
+            'fixed right-6 bottom-24 z-40',
             'flex items-center gap-2 rounded-full',
             'shadow-lg',
             'ai-floating-btn',
@@ -437,7 +437,7 @@ export function AIWorkspaceChat() {
               </text>
             </svg>
           )}
-          <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full border-2 border-white bg-green-400" />
+          <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full border-2 border-white bg-green-400" />
         </motion.button>
       </div>
     );
@@ -450,7 +450,7 @@ export function AIWorkspaceChat() {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 20 }}
       className={cn(
-        'fixed bottom-6 right-6 z-50',
+        'fixed right-6 bottom-6 z-50',
         'w-[440px] max-w-[calc(100vw-2rem)]',
         'overflow-hidden rounded-2xl shadow-2xl',
         'flex flex-col',
@@ -474,7 +474,7 @@ export function AIWorkspaceChat() {
           <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500 to-purple-600 shadow-lg shadow-purple-500/30">
             <Wand2 className="h-5 w-5 text-white" />
             <div
-              className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 bg-green-400"
+              className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 bg-green-400"
               style={{ borderColor: 'var(--panel)' }}
             />
           </div>
@@ -529,7 +529,7 @@ export function AIWorkspaceChat() {
             {/* Suggested prompts */}
             <div className="mb-4 space-y-2">
               <p
-                className="text-xs font-medium uppercase tracking-wider"
+                className="text-xs font-medium tracking-wider uppercase"
                 style={{ color: 'var(--muted)' }}
               >
                 Try saying
@@ -547,10 +547,7 @@ export function AIWorkspaceChat() {
                   )}
                   style={{ border: '1px solid var(--border)' }}
                 >
-                  <prompt.icon
-                    className="h-4 w-4 shrink-0"
-                    style={{ color: 'var(--accent)' }}
-                  />
+                  <prompt.icon className="h-4 w-4 shrink-0" style={{ color: 'var(--accent)' }} />
                   <span style={{ color: 'var(--text)' }}>{prompt.text}</span>
                   <ChevronRight
                     className="ml-auto h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100"
@@ -754,7 +751,7 @@ export function AIWorkspaceChat() {
             className={cn(
               'flex-1 resize-none rounded-xl px-4 py-3',
               'text-sm',
-              'focus:outline-hidden focus:ring-2 focus:ring-purple-500/50',
+              'focus:ring-2 focus:ring-purple-500/50 focus:outline-hidden',
               'max-h-24'
             )}
             style={{
@@ -814,7 +811,7 @@ function WorkspacePreviewCard({
       animate={{ opacity: 1, scale: 1 }}
       className={cn(
         'cursor-pointer overflow-hidden rounded-xl transition-all',
-        isSelected ? 'shadow-lg shadow-purple-500/20 ring-2 ring-purple-500' : ''
+        isSelected ? 'shadow-lg ring-2 shadow-purple-500/20 ring-purple-500' : ''
       )}
       style={{
         background: 'var(--panel)',

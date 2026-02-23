@@ -221,7 +221,7 @@ export function WorkspaceCustomizer({ isOpen, onClose }: WorkspaceCustomizerProp
                       />
                       <button
                         onClick={previewImage ? () => setPreviewImage(null) : handleRemoveImage}
-                        className="absolute right-2 top-2 rounded-lg bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+                        className="absolute top-2 right-2 rounded-lg bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

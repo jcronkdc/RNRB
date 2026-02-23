@@ -6,11 +6,7 @@ import { useCallback, useRef } from 'react';
  * Simple undo/redo stack for any serializable state.
  * Stores snapshots as JSON strings for deep comparison.
  */
-export function useUndoRedo<T>(
-  currentState: T,
-  setState: (state: T) => void,
-  maxHistory = 50
-) {
+export function useUndoRedo<T>(currentState: T, setState: (state: T) => void, maxHistory = 50) {
   const undoStack = useRef<string[]>([]);
   const redoStack = useRef<string[]>([]);
   const lastSnapshot = useRef<string>(JSON.stringify(currentState));

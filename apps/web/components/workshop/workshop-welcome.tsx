@@ -139,7 +139,7 @@ export function WorkshopWelcome({ className = '', showActions = true }: Workshop
               <Bell className="h-5 w-5" />
               {notificationCount > 0 && (
                 <span
-                  className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
+                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white"
                   style={{ background: 'var(--accent)' }}
                 >
                   {notificationCount > 9 ? '9+' : notificationCount}

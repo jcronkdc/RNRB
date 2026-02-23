@@ -34,7 +34,16 @@ export const WORKSPACE_TEMPLATES: WorkspaceTemplate[] = [
     description: 'Full production toolkit for recording and mixing',
     tools: ['studio', 'library', 'songs', 'collaboration', 'tools'],
     gradient: 'from-violet-500 via-purple-500 to-fuchsia-500',
-    keywords: ['produce', 'producer', 'production', 'record', 'recording', 'mix', 'mixing', 'studio'],
+    keywords: [
+      'produce',
+      'producer',
+      'production',
+      'record',
+      'recording',
+      'mix',
+      'mixing',
+      'studio',
+    ],
   },
   {
     id: 'session',
@@ -189,11 +198,11 @@ export const TEMPLATE_ICONS: Record<string, string> = {
 export function findMatchingTemplates(query: string, limit = 3): WorkspaceTemplate[] {
   const normalizedQuery = query.toLowerCase();
   const words = normalizedQuery.split(/\s+/);
-  
+
   // Score each template based on keyword matches
-  const scored = WORKSPACE_TEMPLATES.map(template => {
+  const scored = WORKSPACE_TEMPLATES.map((template) => {
     let score = 0;
-    
+
     // Check direct keyword matches
     for (const keyword of template.keywords) {
       if (normalizedQuery.includes(keyword)) {
@@ -206,35 +215,35 @@ export function findMatchingTemplates(query: string, limit = 3): WorkspaceTempla
         }
       }
     }
-    
+
     // Check name matches
     if (normalizedQuery.includes(template.name.toLowerCase())) {
       score += 20;
     }
-    
+
     // Check description matches
     for (const word of words) {
       if (template.description.toLowerCase().includes(word)) {
         score += 2;
       }
     }
-    
+
     return { template, score };
   });
-  
+
   // Sort by score and return top matches
   return scored
-    .filter(s => s.score > 0)
+    .filter((s) => s.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
-    .map(s => s.template);
+    .map((s) => s.template);
 }
 
 /**
  * Get a template by ID
  */
 export function getTemplateById(id: string): WorkspaceTemplate | undefined {
-  return WORKSPACE_TEMPLATES.find(t => t.id === id);
+  return WORKSPACE_TEMPLATES.find((t) => t.id === id);
 }
 
 /**
@@ -247,7 +256,7 @@ export function parseWorkspaceDescription(description: string): {
   matchedTemplate?: WorkspaceTemplate;
 } {
   const matches = findMatchingTemplates(description, 1);
-  
+
   if (matches.length > 0) {
     const template = matches[0];
     return {
@@ -257,7 +266,7 @@ export function parseWorkspaceDescription(description: string): {
       matchedTemplate: template,
     };
   }
-  
+
   // Default fallback
   return {
     suggestedName: 'My Workspace',
@@ -265,4 +274,3 @@ export function parseWorkspaceDescription(description: string): {
     suggestedTools: ['songwriting', 'library', 'messages', 'tools'],
   };
 }
-

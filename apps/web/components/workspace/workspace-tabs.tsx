@@ -153,7 +153,7 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                         </button>
                       </div>
                     ) : (
-                      <span className="whitespace-nowrap text-sm font-medium">
+                      <span className="text-sm font-medium whitespace-nowrap">
                         {workspace.name}
                       </span>
                     )}
@@ -162,7 +162,7 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                     {isActive && !isEditMode && (
                       <motion.div
                         layoutId="activeTab"
-                        className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full"
+                        className="absolute right-2 bottom-0 left-2 h-0.5 rounded-full"
                         style={{ background: 'var(--accent)' }}
                       />
                     )}
@@ -172,7 +172,7 @@ export function WorkspaceTabs({ onCreateWorkspace }: WorkspaceTabsProps) {
                   {!workspace.isDefault && (
                     <button
                       onClick={(e) => handleDeleteTab(workspace.id, e)}
-                      className="absolute -right-1 -top-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity hover:opacity-100 group-hover:opacity-100"
+                      className="absolute -top-1 -right-1 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:opacity-100"
                       title="Delete tab"
                     >
                       <X className="h-3 w-3" />

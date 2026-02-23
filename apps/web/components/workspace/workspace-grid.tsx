@@ -5,7 +5,16 @@ import { motion, AnimatePresence, Reorder } from 'motion/react';
 import Link from 'next/link';
 import { useWorkspace } from './workspace-context';
 import { getToolByKey, type ToolDefinition } from './tool-catalog';
-import { ChevronRight, X, Plus, GripVertical, Sparkles, Minimize2, Square, Maximize2 } from '@/components/ui/custom-icons';
+import {
+  ChevronRight,
+  X,
+  Plus,
+  GripVertical,
+  Sparkles,
+  Minimize2,
+  Square,
+  Maximize2,
+} from '@/components/ui/custom-icons';
 
 // Size configurations
 const SIZE_CONFIG = {
@@ -21,14 +30,18 @@ interface WorkspaceGridProps {
 }
 
 export function WorkspaceGrid({ onOpenCatalog }: WorkspaceGridProps) {
-  const { activeWorkspace, isEditMode, removeToolFromWorkspace, reorderTools, updateToolSize } = useWorkspace();
+  const { activeWorkspace, isEditMode, removeToolFromWorkspace, reorderTools, updateToolSize } =
+    useWorkspace();
 
   const [draggedId, setDraggedId] = useState<string | null>(null);
 
   // Handle tool size change
-  const handleSizeChange = useCallback((toolId: string, newSize: ToolSize) => {
-    updateToolSize(toolId, newSize);
-  }, [updateToolSize]);
+  const handleSizeChange = useCallback(
+    (toolId: string, newSize: ToolSize) => {
+      updateToolSize(toolId, newSize);
+    },
+    [updateToolSize]
+  );
 
   // Get tool definitions with their workspace tool data
   const tools = activeWorkspace?.tools
@@ -169,10 +182,7 @@ export function WorkspaceGrid({ onOpenCatalog }: WorkspaceGridProps) {
               transition={{ delay: index * 0.03 }}
               className={tool.size === 'large' ? 'col-span-2 row-span-2' : ''}
             >
-              <ToolCard 
-                tool={tool.definition} 
-                size={(tool.size as ToolSize) || 'normal'}
-              />
+              <ToolCard tool={tool.definition} size={(tool.size as ToolSize) || 'normal'} />
             </motion.div>
           ))}
         </div>
@@ -246,7 +256,7 @@ function ToolCard({
     >
       {/* Drag handle in edit mode */}
       {isEditMode && (
-        <div className="absolute left-1 top-1 opacity-50">
+        <div className="absolute top-1 left-1 opacity-50">
           <GripVertical className="h-3 w-3" style={{ color: 'var(--muted)' }} />
         </div>
       )}
@@ -255,7 +265,7 @@ function ToolCard({
       {isEditMode && onRemove && (
         <button
           onClick={onRemove}
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white opacity-0 transition-opacity group-hover:opacity-100"
         >
           <X className="h-3 w-3" />
         </button>
@@ -265,7 +275,7 @@ function ToolCard({
       {isEditMode && onSizeChange && toolId && (
         <button
           onClick={handleSizeClick}
-          className="absolute -left-1 -bottom-1 flex h-5 w-5 items-center justify-center rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute -bottom-1 -left-1 flex h-5 w-5 items-center justify-center rounded-full text-white opacity-0 transition-opacity group-hover:opacity-100"
           style={{ background: 'var(--accent)' }}
           title={`Size: ${size} → ${nextSize}`}
         >
@@ -280,17 +290,23 @@ function ToolCard({
         className={`rounded-lg ${size === 'large' ? 'p-3' : 'p-2'} transition-transform group-hover:scale-110`}
         style={{ background: 'var(--surface)' }}
       >
-        <tool.icon className={`${sizeConfig.iconSize} transition-colors`} style={{ color: tool.color }} />
+        <tool.icon
+          className={`${sizeConfig.iconSize} transition-colors`}
+          style={{ color: tool.color }}
+        />
       </div>
 
       {/* Label */}
-      <span className={`text-center ${sizeConfig.labelSize} font-medium`} style={{ color: 'var(--text)' }}>
+      <span
+        className={`text-center ${sizeConfig.labelSize} font-medium`}
+        style={{ color: 'var(--text)' }}
+      >
         {tool.label}
       </span>
 
       {/* Description for large size */}
       {size === 'large' && tool.description && (
-        <span className="text-center text-xs line-clamp-2" style={{ color: 'var(--muted)' }}>
+        <span className="line-clamp-2 text-center text-xs" style={{ color: 'var(--muted)' }}>
           {tool.description}
         </span>
       )}
@@ -298,7 +314,7 @@ function ToolCard({
       {/* Hover arrow (normal mode only) */}
       {!isEditMode && (
         <ChevronRight
-          className="absolute bottom-1 right-1 h-3 w-3 opacity-0 transition-all group-hover:opacity-100"
+          className="absolute right-1 bottom-1 h-3 w-3 opacity-0 transition-all group-hover:opacity-100"
           style={{ color: 'var(--accent)' }}
         />
       )}

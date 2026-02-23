@@ -84,7 +84,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
 
       {/* Toast Container */}
-      <div className="fixed bottom-4 right-4 z-9999 space-y-2">
+      <div className="fixed right-4 bottom-4 z-9999 space-y-2">
         <AnimatePresence>
           {toasts.map((toast) => {
             const colors = getColors(toast.type);
@@ -95,7 +95,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, x: 100, scale: 0.9 }}
                 transition={{ duration: 0.2 }}
-                className="flex min-w-[320px] max-w-[420px] items-center justify-between gap-3 rounded-xl p-4 shadow-2xl"
+                className="flex max-w-[420px] min-w-[320px] items-center justify-between gap-3 rounded-xl p-4 shadow-2xl"
                 style={{
                   background: colors.bg,
                   border: `1px solid ${colors.border}`,

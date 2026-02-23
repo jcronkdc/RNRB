@@ -38,14 +38,17 @@ export function useAppFeedback() {
     setMessages((prev) => prev.filter((m) => m.id !== id));
   }, []);
 
-  const show = useCallback((type: FeedbackType, text: string, duration = 4000) => {
-    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-    setMessages((prev) => [...prev.slice(-4), { id, type, text }]);
-    if (duration > 0) {
-      setTimeout(() => dismiss(id), duration);
-    }
-    return id;
-  }, [dismiss]);
+  const show = useCallback(
+    (type: FeedbackType, text: string, duration = 4000) => {
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      setMessages((prev) => [...prev.slice(-4), { id, type, text }]);
+      if (duration > 0) {
+        setTimeout(() => dismiss(id), duration);
+      }
+      return id;
+    },
+    [dismiss]
+  );
 
   const showSuccess = useCallback((text: string) => show('success', text), [show]);
   const showError = useCallback((text: string) => show('error', text, 6000), [show]);
@@ -57,12 +60,15 @@ export function useAppFeedback() {
     });
   }, []);
 
-  const handleConfirm = useCallback((value: boolean) => {
-    if (confirmState) {
-      confirmState.resolve(value);
-      setConfirmState(null);
-    }
-  }, [confirmState]);
+  const handleConfirm = useCallback(
+    (value: boolean) => {
+      if (confirmState) {
+        confirmState.resolve(value);
+        setConfirmState(null);
+      }
+    },
+    [confirmState]
+  );
 
   return {
     messages,

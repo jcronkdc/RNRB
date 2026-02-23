@@ -95,11 +95,11 @@ export function CustomizableDashboard() {
       {/* Subtle ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div
-          className="absolute -left-64 top-0 h-[500px] w-[500px] rounded-full blur-[150px]"
+          className="absolute top-0 -left-64 h-[500px] w-[500px] rounded-full blur-[150px]"
           style={{ background: 'var(--accent-glow)', opacity: 0.3 }}
         />
         <div
-          className="absolute -right-64 top-1/3 h-[400px] w-[400px] rounded-full blur-[150px]"
+          className="absolute top-1/3 -right-64 h-[400px] w-[400px] rounded-full blur-[150px]"
           style={{ background: 'var(--gold-dim)', opacity: 0.2 }}
         />
       </div>
