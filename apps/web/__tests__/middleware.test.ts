@@ -44,14 +44,14 @@ describe('Middleware', () => {
   });
 
   it('allows access to non-protected paths without session', async () => {
-    const { middleware } = await import('../middleware');
+    const { proxy: middleware } = await import('../proxy');
     const req = createRequest('/');
     const res = await middleware(req);
     expect(res).toHaveProperty('type', 'next');
   });
 
   it('redirects to /auth for protected paths without session', async () => {
-    const { middleware } = await import('../middleware');
+    const { proxy: middleware } = await import('../proxy');
     const req = createRequest('/dashboard');
     const res = await middleware(req);
     expect(res).toHaveProperty('type', 'redirect');
@@ -59,7 +59,7 @@ describe('Middleware', () => {
 
   it('allows access to protected paths with session cookie', async () => {
     (process.env as Record<string, string>).NODE_ENV = 'development';
-    const { middleware } = await import('../middleware');
+    const { proxy: middleware } = await import('../proxy');
     const req = createRequest('/dashboard', {
       cookies: { 'next-auth.session-token': 'valid-session-token' },
     });
@@ -69,7 +69,7 @@ describe('Middleware', () => {
 
   it('redirects authenticated users away from /auth', async () => {
     (process.env as Record<string, string>).NODE_ENV = 'development';
-    const { middleware } = await import('../middleware');
+    const { proxy: middleware } = await import('../proxy');
     const req = createRequest('/auth', {
       cookies: { 'next-auth.session-token': 'valid-session-token' },
     });
@@ -78,7 +78,7 @@ describe('Middleware', () => {
   });
 
   it('rewrites artist subdomain requests to /s/ route', async () => {
-    const { middleware } = await import('../middleware');
+    const { proxy: middleware } = await import('../proxy');
     const req = createRequest('/', {
       host: 'myband.rnrb.band',
       headers: { host: 'myband.rnrb.band' },
@@ -88,7 +88,7 @@ describe('Middleware', () => {
   });
 
   it('rewrites profile subdomain requests to /u/ route', async () => {
-    const { middleware } = await import('../middleware');
+    const { proxy: middleware } = await import('../proxy');
     const req = createRequest('/', {
       host: 'johndoe.rnrb.bio',
       headers: { host: 'johndoe.rnrb.bio' },
