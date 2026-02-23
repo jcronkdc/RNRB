@@ -200,7 +200,7 @@ export default function SharePage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-gray-500 transition-colors hover:bg-gray-700 hover:text-gray-300"
+                className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 text-gray-500 transition-colors hover:bg-gray-700 hover:text-gray-300"
                 tabIndex={-1}
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
@@ -273,7 +273,7 @@ export default function SharePage() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-400">Type</span>
-              <span className="capitalize text-white">{shareData.file.type.replace('_', ' ')}</span>
+              <span className="text-white capitalize">{shareData.file.type.replace('_', ' ')}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-gray-400">Size</span>

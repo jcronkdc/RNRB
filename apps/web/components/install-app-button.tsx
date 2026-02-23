@@ -345,7 +345,7 @@ function IOSInstructionsModal({ isOpen, onClose }: { isOpen: boolean; onClose: (
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 rounded-full p-2 transition-colors hover:bg-white/10"
+            className="absolute top-4 right-4 rounded-full p-2 transition-colors hover:bg-white/10"
             style={{ color: 'var(--muted)' }}
           >
             <svg
@@ -505,7 +505,7 @@ export function InstallAppBanner({ onDismiss }: { onDismiss?: () => void }) {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 50 }}
-      className="fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-lg rounded-2xl p-4 shadow-2xl md:bottom-6 md:left-auto md:right-6"
+      className="fixed right-4 bottom-4 left-4 z-50 mx-auto max-w-lg rounded-2xl p-4 shadow-2xl md:right-6 md:bottom-6 md:left-auto"
       style={{
         background: 'linear-gradient(135deg, var(--bg-elevated) 0%, rgba(34, 197, 94, 0.05) 100%)',
         border: '1px solid rgba(34, 197, 94, 0.3)',
@@ -513,7 +513,7 @@ export function InstallAppBanner({ onDismiss }: { onDismiss?: () => void }) {
     >
       <button
         onClick={handleDismiss}
-        className="absolute right-3 top-3 rounded-full p-1 transition-colors hover:bg-white/10"
+        className="absolute top-3 right-3 rounded-full p-1 transition-colors hover:bg-white/10"
         style={{ color: 'var(--muted)' }}
       >
         <svg

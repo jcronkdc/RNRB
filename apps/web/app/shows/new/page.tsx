@@ -241,7 +241,7 @@ export default function NewShowPage() {
                   Date <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted)" />
+                  <Calendar className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted)" />
                   <input
                     type="date"
                     required
@@ -276,7 +276,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Venue</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted)" />
+                <MapPin className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted)" />
                 <select
                   value={formData.venueId}
                   onChange={(e) => setFormData({ ...formData, venueId: e.target.value })}
@@ -327,7 +327,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Doors Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted)" />
+                  <Clock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted)" />
                   <input
                     type="time"
                     value={formData.doors_time}
@@ -340,7 +340,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Soundcheck</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted)" />
+                  <Clock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted)" />
                   <input
                     type="time"
                     value={formData.soundcheck_time}
@@ -353,7 +353,7 @@ export default function NewShowPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium">Show Time</label>
                 <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted)" />
+                  <Clock className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted)" />
                   <input
                     type="time"
                     value={formData.show_time}
@@ -395,7 +395,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Guarantee</label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted)" />
+                <DollarSign className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="number"
                   step="0.01"
@@ -411,7 +411,7 @@ export default function NewShowPage() {
             <div>
               <label className="mb-2 block text-sm font-medium">Notes</label>
               <div className="relative">
-                <FileText className="absolute left-3 top-3 h-4 w-4 text-(--muted)" />
+                <FileText className="absolute top-3 left-3 h-4 w-4 text-(--muted)" />
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}

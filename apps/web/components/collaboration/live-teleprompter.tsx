@@ -187,7 +187,7 @@ export function LiveTeleprompter({
       >
         {/* Center Focus Line */}
         <div
-          className="pointer-events-none absolute left-0 right-0 top-1/2 z-10 h-16 -translate-y-1/2"
+          className="pointer-events-none absolute top-1/2 right-0 left-0 z-10 h-16 -translate-y-1/2"
           style={{
             background:
               'linear-gradient(to bottom, transparent, rgba(255,107,53,0.1), transparent)',
@@ -198,11 +198,11 @@ export function LiveTeleprompter({
 
         {/* Gradient overlays */}
         <div
-          className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-24"
+          className="pointer-events-none absolute top-0 right-0 left-0 z-10 h-24"
           style={{ background: 'linear-gradient(to bottom, #0a0a0a, transparent)' }}
         />
         <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24"
+          className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-24"
           style={{ background: 'linear-gradient(to top, #0a0a0a, transparent)' }}
         />
 
@@ -216,7 +216,7 @@ export function LiveTeleprompter({
               <motion.p
                 key={index}
                 className={`text-center transition-all ${
-                  isSectionHeader ? 'mb-2 mt-8 text-sm font-bold uppercase tracking-wider' : ''
+                  isSectionHeader ? 'mt-8 mb-2 text-sm font-bold tracking-wider uppercase' : ''
                 }`}
                 style={{
                   fontSize: isSectionHeader ? 14 : fontSize,

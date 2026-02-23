@@ -53,14 +53,14 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-600 text-xs font-bold text-white">
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-600 text-xs font-bold text-white">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-12 z-50 w-80 rounded-lg border border-white/10 bg-[#050816] shadow-xl">
+        <div className="absolute top-12 right-0 z-50 w-80 rounded-lg border border-white/10 bg-[#050816] shadow-xl">
           <div className="border-b border-white/10 p-4">
             <h3 className="text-sm font-semibold text-white">Notifications</h3>
           </div>
@@ -83,7 +83,7 @@ export function NotificationFeed({ channelName }: NotificationFeedProps) {
                     </div>
                     <button
                       onClick={() => clearNotification(notif.id)}
-                      className="absolute right-4 top-4 text-gray-500 opacity-0 transition hover:text-white group-hover:opacity-100"
+                      className="absolute top-4 right-4 text-gray-500 opacity-0 transition group-hover:opacity-100 hover:text-white"
                     >
                       <X className="h-4 w-4" />
                     </button>

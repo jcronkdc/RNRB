@@ -53,7 +53,7 @@ const securityHeaders = [
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
+      'upgrade-insecure-requests',
     ].join('; '),
   },
 ];
@@ -69,7 +69,7 @@ const nextConfig = {
   // Fix for monorepo: explicitly set the workspace root for file tracing
   outputFileTracingRoot: join(__dirname, '../../'),
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: true,
   },
   // Externalize packages that use Node.js built-ins (required for nodemailer/auth)
   // This prevents webpack from bundling these for Edge runtime
@@ -171,9 +171,12 @@ const nextConfig = {
   productionBrowserSourceMaps: false,
   // Optimize CSS
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production' ? {
-      exclude: ['error', 'warn'],
-    } : false,
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn'],
+          }
+        : false,
   },
   // Apply security headers to all routes
   async headers() {

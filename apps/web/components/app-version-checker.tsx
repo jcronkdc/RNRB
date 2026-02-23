@@ -178,7 +178,7 @@ export function AppVersionChecker() {
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
-          className="fixed left-4 right-4 top-4 z-9998 mx-auto max-w-lg rounded-2xl p-4 shadow-2xl md:left-auto md:right-4"
+          className="fixed top-4 right-4 left-4 z-9998 mx-auto max-w-lg rounded-2xl p-4 shadow-2xl md:right-4 md:left-auto"
           style={{
             background:
               'linear-gradient(135deg, var(--bg-elevated) 0%, rgba(34, 197, 94, 0.1) 100%)',
@@ -187,7 +187,7 @@ export function AppVersionChecker() {
         >
           <button
             onClick={handleDismiss}
-            className="absolute right-3 top-3 rounded-full p-1.5 transition-colors hover:bg-white/10"
+            className="absolute top-3 right-3 rounded-full p-1.5 transition-colors hover:bg-white/10"
             style={{ color: 'var(--muted)' }}
           >
             <svg

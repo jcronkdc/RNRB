@@ -119,11 +119,11 @@ export function ProjectSelector({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl"
+            className="absolute top-full right-0 z-50 mt-2 w-72 rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl"
           >
             <div className="max-h-80 overflow-y-auto p-2">
               <div className="mb-2 border-b border-zinc-800 pb-2">
-                <p className="px-2 py-1 text-xs font-medium uppercase tracking-wider text-zinc-500">
+                <p className="px-2 py-1 text-xs font-medium tracking-wider text-zinc-500 uppercase">
                   Your Projects
                 </p>
               </div>
@@ -171,7 +171,7 @@ export function ProjectSelector({
                           e.stopPropagation();
                           router.push(`/projects/${project.slug}`);
                         }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg bg-zinc-800/90 p-1.5 opacity-0 transition-opacity hover:bg-zinc-700 group-hover:opacity-100"
+                        className="absolute top-1/2 right-2 -translate-y-1/2 rounded-lg bg-zinc-800/90 p-1.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-zinc-700"
                         title="View Project"
                       >
                         <ExternalLink className="h-3.5 w-3.5 text-zinc-400" />

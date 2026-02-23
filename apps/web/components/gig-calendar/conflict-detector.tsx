@@ -77,7 +77,7 @@ export function ConflictDetector({
               {errors.length} {errors.length === 1 ? 'Conflict' : 'Conflicts'} Detected
             </h3>
             {warnings.length > 0 && (
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 + {warnings.length} {warnings.length === 1 ? 'warning' : 'warnings'}
               </span>
             )}
@@ -124,14 +124,14 @@ function ConflictCard({ conflict, shows }: { conflict: ShowConflict; shows: any[
           <p className="text-sm font-medium">{conflict.message}</p>
           <div className="mt-1 space-y-1">
             {conflictShows.map((show) => (
-              <div key={show.id} className="text-xs text-muted-foreground">
+              <div key={show.id} className="text-muted-foreground text-xs">
                 • {show.name}
                 {show.venue?.city && ` - ${show.venue.city}, ${show.venue.state || ''}`}
               </div>
             ))}
           </div>
           {conflict.distance && conflict.travelTime && (
-            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="text-muted-foreground mt-2 flex items-center gap-2 text-xs">
               <Car className="h-3 w-3" />
               <span>
                 {Math.round(conflict.distance)} miles • {formatTravelTime(conflict.travelTime)}{' '}
@@ -161,40 +161,40 @@ function TourAnalytics({
       {/* Travel Stats */}
       <Card className="rnrb-card p-4">
         <div className="mb-3 flex items-center gap-2">
-          <Car className="h-5 w-5 text-brand-primary" />
+          <Car className="text-brand-primary h-5 w-5" />
           <h3 className="font-semibold">Travel Statistics</h3>
         </div>
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Distance</span>
+            <span className="text-muted-foreground text-sm">Total Distance</span>
             <span className="font-semibold">{stats.totalMiles.toLocaleString()} mi</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Travel Time</span>
+            <span className="text-muted-foreground text-sm">Total Travel Time</span>
             <span className="font-semibold">{formatTravelTime(stats.totalTravelTime)}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Avg Miles/Day</span>
+            <span className="text-muted-foreground text-sm">Avg Miles/Day</span>
             <span className="font-semibold">{stats.averageMilesPerDay} mi</span>
           </div>
 
           {stats.longestDrive && (
-            <div className="border-t border-border pt-3">
-              <div className="mb-1 text-xs text-muted-foreground">Longest Drive</div>
+            <div className="border-border border-t pt-3">
+              <div className="text-muted-foreground mb-1 text-xs">Longest Drive</div>
               <div className="text-sm">
                 <div className="font-medium">{Math.round(stats.longestDrive.distance)} miles</div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-muted-foreground text-xs">
                   {stats.longestDrive.from} → {stats.longestDrive.to}
                 </div>
               </div>
             </div>
           )}
 
-          <div className="border-t border-border pt-3">
-            <div className="mb-1 text-xs text-muted-foreground">Coverage</div>
+          <div className="border-border border-t pt-3">
+            <div className="text-muted-foreground mb-1 text-xs">Coverage</div>
             <div className="text-sm">
               <span className="font-medium">{stats.statesVisited.size}</span> states •{' '}
               <span className="font-medium">{stats.citiesVisited.size}</span> cities
@@ -206,7 +206,7 @@ function TourAnalytics({
               href={directionsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-brand-primary hover:underline"
+              className="text-brand-primary flex items-center gap-2 text-sm hover:underline"
             >
               <Navigation className="h-4 w-4" />
               Open Route in Google Maps
@@ -225,17 +225,17 @@ function TourAnalytics({
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Total Days</span>
+            <span className="text-muted-foreground text-sm">Total Days</span>
             <span className="font-semibold">{perDiem.totalDays}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Band Members</span>
+            <span className="text-muted-foreground text-sm">Band Members</span>
             <span className="font-semibold">{perDiem.bandMembers}</span>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-muted-foreground">Rate per Person/Day</span>
+            <span className="text-muted-foreground text-sm">Rate per Person/Day</span>
             <span className="font-semibold">
               {new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -244,7 +244,7 @@ function TourAnalytics({
             </span>
           </div>
 
-          <div className="border-t border-border pt-3">
+          <div className="border-border border-t pt-3">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm font-medium">Total Budget</span>
               <span className="text-lg font-bold text-green-500">
@@ -257,8 +257,8 @@ function TourAnalytics({
             </div>
           </div>
 
-          <div className="space-y-2 border-t border-border pt-3">
-            <div className="mb-1 text-xs text-muted-foreground">Breakdown</div>
+          <div className="border-border space-y-2 border-t pt-3">
+            <div className="text-muted-foreground mb-1 text-xs">Breakdown</div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Meals (50%)</span>
               <span>

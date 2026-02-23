@@ -110,14 +110,14 @@ function MessageItem({
         </div>
 
         {/* Message text */}
-        <p className="wrap-break-word text-sm text-white/90">{message.message}</p>
+        <p className="text-sm wrap-break-word text-white/90">{message.message}</p>
       </div>
 
       {/* Reply button */}
       {onReply && (
         <button
           onClick={() => onReply(message.id)}
-          className="text-white/40 opacity-0 transition-opacity hover:text-white/80 group-hover:opacity-100"
+          className="text-white/40 opacity-0 transition-opacity group-hover:opacity-100 hover:text-white/80"
         >
           <span className="text-xs">Reply</span>
         </button>

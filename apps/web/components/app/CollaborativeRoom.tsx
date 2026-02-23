@@ -45,7 +45,7 @@ const VideoTile = memo(({ participant }: { participant: DailyParticipant }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="relative aspect-video overflow-hidden rounded-2xl border border-border bg-surface/50"
+      className="border-border bg-surface/50 relative aspect-video overflow-hidden rounded-2xl border"
     >
       {participant.video ? (
         <video
@@ -193,7 +193,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
   if (isJoining) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-border bg-surface p-8">
+      <div className="border-border bg-surface flex min-h-[400px] items-center justify-center rounded-2xl border p-8">
         <div className="text-center">
           <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
           <p className="text-muted-foreground">Joining {roomName}...</p>
@@ -205,12 +205,12 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
   return (
     <div className="relative flex flex-col gap-4">
       {/* Room Header */}
-      <div className="flex items-center justify-between rounded-2xl border border-border bg-surface p-4">
+      <div className="border-border bg-surface flex items-center justify-between rounded-2xl border p-4">
         <div className="flex items-center gap-3">
           <Users className="text-primary h-5 w-5" />
           <div>
-            <h3 className="font-semibold text-foreground">{roomName}</h3>
-            <p className="text-sm text-muted-foreground">
+            <h3 className="text-foreground font-semibold">{roomName}</h3>
+            <p className="text-muted-foreground text-sm">
               {Object.keys(participants).length}{' '}
               {Object.keys(participants).length === 1 ? 'participant' : 'participants'}
             </p>
@@ -231,7 +231,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
       </div>
 
       {/* Controls Bar */}
-      <div className="flex items-center justify-center gap-3 rounded-2xl border border-border bg-surface p-4">
+      <div className="border-border bg-surface flex items-center justify-center gap-3 rounded-2xl border p-4">
         <Button
           onClick={toggleVideo}
           variant={isVideoEnabled ? 'solid' : 'outline-solid'}
@@ -286,7 +286,7 @@ export default function CollaborativeRoom({ roomUrl, roomName, userName }: Colla
 
   if (!callObject) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-border bg-surface p-8">
+      <div className="border-border bg-surface flex min-h-[400px] items-center justify-center rounded-2xl border p-8">
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
       </div>
     );

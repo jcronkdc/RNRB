@@ -153,18 +153,33 @@ function PricingTier({
         </span>
       )}
       <div className="mb-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+        <h3
+          className="text-sm font-semibold tracking-wider uppercase"
+          style={{ color: 'var(--muted)' }}
+        >
           {name}
         </h3>
         <div className="mt-2 flex items-baseline gap-1">
-          <span className="text-3xl font-bold" style={{ color: 'var(--text)' }}>{price}</span>
-          {period && <span className="text-sm" style={{ color: 'var(--muted)' }}>/{period}</span>}
+          <span className="text-3xl font-bold" style={{ color: 'var(--text)' }}>
+            {price}
+          </span>
+          {period && (
+            <span className="text-sm" style={{ color: 'var(--muted)' }}>
+              /{period}
+            </span>
+          )}
         </div>
-        <p className="mt-2 text-sm" style={{ color: 'var(--muted)' }}>{description}</p>
+        <p className="mt-2 text-sm" style={{ color: 'var(--muted)' }}>
+          {description}
+        </p>
       </div>
       <ul className="mb-6 flex-1 space-y-2.5">
         {features.map((feature) => (
-          <li key={feature} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+          <li
+            key={feature}
+            className="flex items-start gap-2.5 text-sm"
+            style={{ color: 'var(--text-secondary)' }}
+          >
             <svg
               className="mt-0.5 h-4 w-4 shrink-0"
               style={{ color: 'var(--sage)' }}
@@ -172,7 +187,12 @@ function PricingTier({
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
             {feature}
           </li>
@@ -197,33 +217,93 @@ function PricingTier({
 
 const icons = {
   pen: (
-    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+      />
     </svg>
   ),
   users: (
-    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+      />
     </svg>
   ),
   sparkles: (
-    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"
+      />
     </svg>
   ),
   calendar: (
-    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+      />
     </svg>
   ),
   globe: (
-    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
+      />
     </svg>
   ),
   shield: (
-    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    <svg
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      strokeWidth={1.5}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+      />
     </svg>
   ),
 };
@@ -266,18 +346,19 @@ export default function HomePage() {
       <div ref={heroRef} className="relative overflow-hidden">
         {/* Ambient glow */}
         <div
-          className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2"
+          className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2"
           style={{
             width: '800px',
             height: '500px',
-            background: 'radial-gradient(ellipse at center, var(--accent-muted) 0%, transparent 70%)',
+            background:
+              'radial-gradient(ellipse at center, var(--accent-muted) 0%, transparent 70%)',
             filter: 'blur(80px)',
           }}
         />
 
         <motion.div
           style={{ opacity: heroOpacity, y: heroY }}
-          className="relative px-5 pb-20 pt-16 text-center sm:px-8 sm:pb-28 sm:pt-24"
+          className="relative px-5 pt-16 pb-20 text-center sm:px-8 sm:pt-24 sm:pb-28"
         >
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -297,7 +378,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.4, 0.25, 1] }}
-            className="mx-auto max-w-3xl text-4xl font-bold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl"
+            className="mx-auto max-w-3xl text-4xl leading-[1.15] font-bold tracking-tight sm:text-5xl md:text-6xl"
             style={{ color: 'var(--text)' }}
           >
             Your creative home.{' '}
@@ -311,8 +392,8 @@ export default function HomePage() {
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed sm:text-lg"
             style={{ color: 'var(--muted)' }}
           >
-            The all-in-one workspace where songwriters and musicians create, organize,
-            and build their careers — together or solo. No lock-in. Your music is always yours.
+            The all-in-one workspace where songwriters and musicians create, organize, and build
+            their careers — together or solo. No lock-in. Your music is always yours.
           </motion.p>
 
           <motion.div
@@ -346,21 +427,55 @@ export default function HomePage() {
             style={{ color: 'var(--muted-soft)' }}
           >
             <span className="flex items-center gap-1.5">
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                />
               </svg>
               No rights grabs, ever
             </span>
             <span className="flex items-center gap-1.5">
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                />
               </svg>
               Export everything, anytime
             </span>
             <span className="flex items-center gap-1.5">
-              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z" />
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"
+                />
               </svg>
               Free tier, forever
             </span>
@@ -371,10 +486,16 @@ export default function HomePage() {
       {/* ── Features ────────────────────────────────────────────────── */}
       <Section className="py-20 sm:py-28" id="features">
         <motion.div variants={fadeUp} className="mb-12 text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: 'var(--text)' }}>
+          <h2
+            className="text-2xl font-bold tracking-tight sm:text-3xl"
+            style={{ color: 'var(--text)' }}
+          >
             Everything you need, nothing you don&apos;t
           </h2>
-          <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+          <p
+            className="mx-auto mt-3 max-w-lg text-sm leading-relaxed"
+            style={{ color: 'var(--muted)' }}
+          >
             Built for the way musicians actually work. From first idea to final master.
           </p>
         </motion.div>
@@ -422,10 +543,16 @@ export default function HomePage() {
       {/* ── How It Works ────────────────────────────────────────────── */}
       <Section className="py-20 sm:py-28" id="how">
         <motion.div variants={fadeUp} className="mb-12 text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: 'var(--text)' }}>
+          <h2
+            className="text-2xl font-bold tracking-tight sm:text-3xl"
+            style={{ color: 'var(--text)' }}
+          >
             Get started in minutes
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+          <p
+            className="mx-auto mt-3 max-w-md text-sm leading-relaxed"
+            style={{ color: 'var(--muted)' }}
+          >
             No setup headaches. No learning curve. Just open it up and start making music.
           </p>
         </motion.div>
@@ -457,11 +584,12 @@ export default function HomePage() {
         >
           <motion.div variants={fadeUp}>
             <p
-              className="mx-auto max-w-2xl text-lg font-medium leading-relaxed sm:text-xl"
+              className="mx-auto max-w-2xl text-lg leading-relaxed font-medium sm:text-xl"
               style={{ color: 'var(--text-secondary)' }}
             >
-              &ldquo;I&apos;ve tried every tool out there. This is the first one that actually feels like it was
-              built by someone who writes songs. It stays out of your way and lets you create.&rdquo;
+              &ldquo;I&apos;ve tried every tool out there. This is the first one that actually feels
+              like it was built by someone who writes songs. It stays out of your way and lets you
+              create.&rdquo;
             </p>
             <div className="mt-6">
               <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
@@ -475,10 +603,16 @@ export default function HomePage() {
       {/* ── Pricing ─────────────────────────────────────────────────── */}
       <Section className="py-20 sm:py-28" id="pricing">
         <motion.div variants={fadeUp} className="mb-12 text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: 'var(--text)' }}>
+          <h2
+            className="text-2xl font-bold tracking-tight sm:text-3xl"
+            style={{ color: 'var(--text)' }}
+          >
             Simple, honest pricing
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+          <p
+            className="mx-auto mt-3 max-w-md text-sm leading-relaxed"
+            style={{ color: 'var(--muted)' }}
+          >
             Start free, upgrade when you&apos;re ready. No surprises, no hidden fees.
           </p>
         </motion.div>
@@ -537,11 +671,18 @@ export default function HomePage() {
       {/* ── Final CTA ───────────────────────────────────────────────── */}
       <Section className="py-20 sm:py-28">
         <motion.div variants={fadeUp} className="text-center">
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: 'var(--text)' }}>
+          <h2
+            className="text-2xl font-bold tracking-tight sm:text-3xl"
+            style={{ color: 'var(--text)' }}
+          >
             Your music deserves a home
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-            Whether you&apos;re writing your first song or your thousandth, the Basement is here for you.
+          <p
+            className="mx-auto mt-3 max-w-md text-sm leading-relaxed"
+            style={{ color: 'var(--muted)' }}
+          >
+            Whether you&apos;re writing your first song or your thousandth, the Basement is here for
+            you.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
@@ -561,9 +702,15 @@ export default function HomePage() {
           <div className="flex items-center gap-6">
             <FooterLogo />
             <div className="flex gap-5 text-xs" style={{ color: 'var(--muted)' }}>
-              <Link href="/terms" className="transition-colors hover:text-(--text)">Terms</Link>
-              <Link href="/privacy" className="transition-colors hover:text-(--text)">Privacy</Link>
-              <Link href="/contact" className="transition-colors hover:text-(--text)">Contact</Link>
+              <Link href="/terms" className="transition-colors hover:text-(--text)">
+                Terms
+              </Link>
+              <Link href="/privacy" className="transition-colors hover:text-(--text)">
+                Privacy
+              </Link>
+              <Link href="/contact" className="transition-colors hover:text-(--text)">
+                Contact
+              </Link>
             </div>
           </div>
           <p className="text-xs" style={{ color: 'var(--muted-soft)' }}>

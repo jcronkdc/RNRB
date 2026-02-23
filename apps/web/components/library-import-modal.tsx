@@ -225,7 +225,7 @@ export function LibraryImportModal({
             {/* Search */}
             <div className="relative mb-4">
               <Search
-                className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -233,7 +233,7 @@ export function LibraryImportModal({
                 placeholder="Search your library..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border-0 py-2.5 pl-10 pr-4 text-sm outline-hidden transition focus:ring-2"
+                className="w-full rounded-xl border-0 py-2.5 pr-4 pl-10 text-sm outline-hidden transition focus:ring-2"
                 style={{
                   background: 'var(--background)',
                   color: 'var(--text)',
@@ -461,7 +461,7 @@ export function LibraryImportModal({
               </div>
               <div className="flex-1 overflow-y-auto p-4">
                 <pre
-                  className="whitespace-pre-wrap text-xs leading-relaxed"
+                  className="text-xs leading-relaxed whitespace-pre-wrap"
                   style={{ color: 'var(--text)', fontFamily: 'inherit' }}
                 >
                   {selectedFile.lyrics}

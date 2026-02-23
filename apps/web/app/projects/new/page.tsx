@@ -108,10 +108,10 @@ export default function NewProjectPage() {
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Premium Hero Section */}
       <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-linear-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="bg-(--accent)/10 absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
-          <div className="bg-(--accent)/5 absolute bottom-0 left-1/4 h-96 w-96 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-1/4 h-96 w-96 rounded-full bg-(--accent)/10 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-(--accent)/5 blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-4xl px-4 py-16">
@@ -125,11 +125,11 @@ export default function NewProjectPage() {
               className="mb-6 inline-flex items-center gap-2 text-(--muted) transition-colors hover:text-(--accent)"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="font-mono text-xs uppercase tracking-wider">Back to Projects</span>
+              <span className="font-mono text-xs tracking-wider uppercase">Back to Projects</span>
             </Link>
 
             <div className="mb-4 flex items-center gap-3">
-              <div className="bg-(--accent)/10 flex h-12 w-12 items-center justify-center rounded-xl">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--accent)/10">
                 <Folder className="h-6 w-6 text-(--accent)" />
               </div>
               <div>
@@ -174,7 +174,7 @@ export default function NewProjectPage() {
                   value={projectData.name}
                   onChange={(e) => setProjectData({ ...projectData, name: e.target.value })}
                   placeholder="My Debut Album"
-                  className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-3 text-lg text-(--text) transition focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                  className="focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-3 text-lg text-(--text) transition focus:ring-2 focus:outline-hidden"
                 />
                 <p className="mt-1 text-xs text-(--muted)">
                   {projectData.name && `URL: /projects/${generateSlug(projectData.name)}`}
@@ -182,42 +182,36 @@ export default function NewProjectPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-(--text)">
-                  Tagline
-                </label>
+                <label className="mb-2 block text-sm font-medium text-(--text)">Tagline</label>
                 <input
                   type="text"
                   value={projectData.tagline}
                   onChange={(e) => setProjectData({ ...projectData, tagline: e.target.value })}
                   placeholder="The album that changed everything"
-                  className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                  className="focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:ring-2 focus:outline-hidden"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-(--text)">
-                  Description
-                </label>
+                <label className="mb-2 block text-sm font-medium text-(--text)">Description</label>
                 <textarea
                   value={projectData.description}
                   onChange={(e) => setProjectData({ ...projectData, description: e.target.value })}
                   placeholder="Describe your project, its vision, the story behind it..."
                   rows={4}
-                  className="w-full resize-none rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                  className="focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:ring-2 focus:outline-hidden"
                 />
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-(--text)">
-                    Genre
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-(--text)">Genre</label>
                   <input
                     type="text"
                     value={projectData.genre}
                     onChange={(e) => setProjectData({ ...projectData, genre: e.target.value })}
                     placeholder="Rock, Jazz, Hip-Hop..."
-                    className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                    className="focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:ring-2 focus:outline-hidden"
                   />
                 </div>
 
@@ -231,7 +225,7 @@ export default function NewProjectPage() {
                     onChange={(e) =>
                       setProjectData({ ...projectData, target_release_date: e.target.value })
                     }
-                    className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                    className="focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:ring-2 focus:outline-hidden"
                   />
                 </div>
               </div>
@@ -253,16 +247,14 @@ export default function NewProjectPage() {
                 onClick={() => setProjectData({ ...projectData, visibility: 'private' })}
                 className={`w-full rounded-xl border-2 p-4 text-left transition ${
                   projectData.visibility === 'private'
-                    ? 'bg-(--accent)/10 border-brand-primary'
-                    : 'border-(--border) bg-(--surface) hover:border-brand-primary/50'
+                    ? 'border-brand-primary bg-(--accent)/10'
+                    : 'hover:border-brand-primary/50 border-(--border) bg-(--surface)'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <Lock
                     className={`mt-1 h-5 w-5 ${
-                      projectData.visibility === 'private'
-                        ? 'text-(--accent)'
-                        : 'text-(--muted)'
+                      projectData.visibility === 'private' ? 'text-(--accent)' : 'text-(--muted)'
                     }`}
                   />
                   <div>
@@ -278,16 +270,14 @@ export default function NewProjectPage() {
                 onClick={() => setProjectData({ ...projectData, visibility: 'org' })}
                 className={`w-full rounded-xl border-2 p-4 text-left transition ${
                   projectData.visibility === 'org'
-                    ? 'bg-(--accent)/10 border-brand-primary'
-                    : 'border-(--border) bg-(--surface) hover:border-brand-primary/50'
+                    ? 'border-brand-primary bg-(--accent)/10'
+                    : 'hover:border-brand-primary/50 border-(--border) bg-(--surface)'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <Users
                     className={`mt-1 h-5 w-5 ${
-                      projectData.visibility === 'org'
-                        ? 'text-(--accent)'
-                        : 'text-(--muted)'
+                      projectData.visibility === 'org' ? 'text-(--accent)' : 'text-(--muted)'
                     }`}
                   />
                   <div>
@@ -303,16 +293,14 @@ export default function NewProjectPage() {
                 onClick={() => setProjectData({ ...projectData, visibility: 'public' })}
                 className={`w-full rounded-xl border-2 p-4 text-left transition ${
                   projectData.visibility === 'public'
-                    ? 'bg-(--accent)/10 border-brand-primary'
-                    : 'border-(--border) bg-(--surface) hover:border-brand-primary/50'
+                    ? 'border-brand-primary bg-(--accent)/10'
+                    : 'hover:border-brand-primary/50 border-(--border) bg-(--surface)'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <Globe
                     className={`mt-1 h-5 w-5 ${
-                      projectData.visibility === 'public'
-                        ? 'text-(--accent)'
-                        : 'text-(--muted)'
+                      projectData.visibility === 'public' ? 'text-(--accent)' : 'text-(--muted)'
                     }`}
                   />
                   <div>

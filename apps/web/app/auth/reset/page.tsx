@@ -138,12 +138,12 @@ function PasswordResetContent() {
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.25, 0.4, 0.25] }}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -left-24 -top-24 h-[420px] w-[420px] rounded-full bg-orange-600/20 blur-[120px]"
+          className="absolute -top-24 -left-24 h-[420px] w-[420px] rounded-full bg-orange-600/20 blur-[120px]"
         />
         <motion.div
           animate={{ scale: [1.1, 0.9, 1.1], opacity: [0.15, 0.3, 0.15] }}
           transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -bottom-32 -right-24 h-[520px] w-[520px] rounded-full bg-red-600/20 blur-[160px]"
+          className="absolute -right-24 -bottom-32 h-[520px] w-[520px] rounded-full bg-red-600/20 blur-[160px]"
         />
         <div
           className="absolute inset-0 opacity-[0.02]"
@@ -164,7 +164,7 @@ function PasswordResetContent() {
         >
           <div className="2xl rounded-2xl border border-zinc-800/60 bg-zinc-900/60 p-8">
             <div className="mb-8 text-center">
-              <p className="text-sm uppercase tracking-[0.3em] text-zinc-500">Account access</p>
+              <p className="text-sm tracking-[0.3em] text-zinc-500 uppercase">Account access</p>
               <h1 className="mt-3 text-3xl font-bold text-white">{headline}</h1>
               <p className="mt-3 text-sm text-zinc-500">{subheading}</p>
             </div>
@@ -186,7 +186,7 @@ function PasswordResetContent() {
                 <div>
                   <label
                     htmlFor="reset-email"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
+                    className="mb-1.5 block text-xs font-semibold tracking-[0.2em] text-zinc-500 uppercase"
                   >
                     Email address
                   </label>
@@ -198,7 +198,7 @@ function PasswordResetContent() {
                     placeholder="you@example.com"
                     required
                     disabled={loading}
-                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                    className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden disabled:opacity-60"
                   />
                 </div>
 
@@ -222,7 +222,7 @@ function PasswordResetContent() {
                 <div>
                   <label
                     htmlFor="new-password"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
+                    className="mb-1.5 block text-xs font-semibold tracking-[0.2em] text-zinc-500 uppercase"
                   >
                     New password
                   </label>
@@ -236,12 +236,12 @@ function PasswordResetContent() {
                       required
                       minLength={8}
                       disabled={loading}
-                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden disabled:opacity-60"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
+                      className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
                       tabIndex={-1}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
@@ -253,7 +253,7 @@ function PasswordResetContent() {
                 <div>
                   <label
                     htmlFor="confirm-password"
-                    className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500"
+                    className="mb-1.5 block text-xs font-semibold tracking-[0.2em] text-zinc-500 uppercase"
                   >
                     Confirm password
                   </label>
@@ -267,12 +267,12 @@ function PasswordResetContent() {
                       required
                       minLength={8}
                       disabled={loading}
-                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20 disabled:opacity-60"
+                      className="w-full rounded-lg border border-zinc-700/50 bg-zinc-800/50 px-4 py-3 pr-12 text-white transition-all placeholder:text-zinc-600 focus:border-orange-500/50 focus:bg-zinc-800 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden disabled:opacity-60"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
+                      className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 text-zinc-500 transition-colors hover:bg-zinc-700/50 hover:text-zinc-300"
                       tabIndex={-1}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >

@@ -183,7 +183,7 @@ export default function ProjectCollaboratePage() {
       <div className="relative overflow-hidden border-b border-gray-800">
         <div className="absolute inset-0 bg-linear-to-br from-orange-500/5 via-transparent to-orange-500/5" />
         <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
+          <div className="absolute top-0 right-1/4 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
           <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl" />
         </div>
 
@@ -199,7 +199,7 @@ export default function ProjectCollaboratePage() {
               className="mb-4 inline-flex items-center gap-2 text-gray-400 transition-colors hover:text-orange-500 sm:mb-6"
             >
               <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-              <span className="font-mono text-xs uppercase tracking-wider">Back to Project</span>
+              <span className="font-mono text-xs tracking-wider uppercase">Back to Project</span>
             </Link>
 
             <div className="mb-3 flex items-center gap-3 sm:mb-4">
@@ -316,7 +316,7 @@ export default function ProjectCollaboratePage() {
           >
             <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
             <span>AI Music</span>
-            <span className="absolute -right-0.5 -top-0.5 rounded bg-orange-500 px-1 py-0.5 text-[9px] font-bold uppercase text-white sm:-right-1 sm:-top-1 sm:px-1.5 sm:text-[10px]">
+            <span className="absolute -top-0.5 -right-0.5 rounded bg-orange-500 px-1 py-0.5 text-[9px] font-bold text-white uppercase sm:-top-1 sm:-right-1 sm:px-1.5 sm:text-[10px]">
               Beta
             </span>
           </button>
@@ -510,7 +510,7 @@ export default function ProjectCollaboratePage() {
             className="space-y-4 sm:space-y-6"
           >
             {/* Coming Soon Banner with R&R Labs - Mobile Responsive */}
-            <Card className="rounded-xl border-2 border-purple-500/30 bg-linear-to-br from-purple-500/10 via-transparent to-brand-primary/10 p-4 sm:p-6 lg:p-8">
+            <Card className="to-brand-primary/10 rounded-xl border-2 border-purple-500/30 bg-linear-to-br from-purple-500/10 via-transparent p-4 sm:p-6 lg:p-8">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500 to-purple-600 shadow-lg sm:h-16 sm:w-16">
                   <FlaskConical className="h-6 w-6 text-white sm:h-8 sm:w-8" />

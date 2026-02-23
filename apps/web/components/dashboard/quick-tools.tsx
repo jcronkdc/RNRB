@@ -77,7 +77,7 @@ export function QuickTools() {
               {tool.label}
             </span>
             {tool.badge && (
-              <span className="absolute -right-1 -top-1 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
+              <span className="absolute -top-1 -right-1 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
                 {tool.badge}
               </span>
             )}

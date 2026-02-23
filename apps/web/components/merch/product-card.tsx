@@ -74,8 +74,8 @@ export function ProductCard({ product, onQuickView }: ProductCardProps) {
         )}
 
         {/* Category Badge */}
-        <div className="absolute left-3 top-3">
-          <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium capitalize text-white">
+        <div className="absolute top-3 left-3">
+          <span className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white capitalize">
             {product.category.replace('-', ' ')}
           </span>
         </div>

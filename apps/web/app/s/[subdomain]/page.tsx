@@ -126,14 +126,16 @@ async function trackPageView(siteId: string) {
     });
 
     // Create a SitePageView record (used by analytics dashboard)
-    await prisma.sitePageView.create({
-      data: {
-        siteId,
-        path: '/',
-        visitorId: `anon-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        deviceType: 'desktop', // Would need user-agent parsing for accuracy
-      },
-    }).catch(() => {}); // Non-critical, don't fail the page load
+    await prisma.sitePageView
+      .create({
+        data: {
+          siteId,
+          path: '/',
+          visitorId: `anon-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          deviceType: 'desktop', // Would need user-agent parsing for accuracy
+        },
+      })
+      .catch(() => {}); // Non-critical, don't fail the page load
 
     // Upsert daily analytics
     await prisma.siteAnalytics.upsert({

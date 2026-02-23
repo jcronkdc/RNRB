@@ -297,7 +297,7 @@ export default function ProjectSettingsPage() {
                 onBlur={() => unlockField('tagline')}
                 disabled={isFieldLocked('tagline')}
                 placeholder="A short description of your project"
-                className="w-full rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -327,7 +327,7 @@ export default function ProjectSettingsPage() {
                 disabled={isFieldLocked('description')}
                 rows={4}
                 placeholder="Tell the story of this project..."
-                className="w-full resize-none rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="focus:border-brand-primary focus:ring-brand-primary/10 w-full resize-none rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
               />
             </div>
 
@@ -354,7 +354,7 @@ export default function ProjectSettingsPage() {
                 onFocus={() => lockField('visibility')}
                 onBlur={() => unlockField('visibility')}
                 disabled={isFieldLocked('visibility')}
-                className="w-full rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="focus:border-brand-primary focus:ring-brand-primary/10 w-full rounded-xl border-2 border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <option value="private">Private (Only invited members)</option>
                 <option value="org">Organization (All org members)</option>
@@ -370,9 +370,7 @@ export default function ProjectSettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="font-medium text-(--text)">Delete this project</p>
-              <p className="text-sm text-(--muted)">
-                Once deleted, it cannot be recovered
-              </p>
+              <p className="text-sm text-(--muted)">Once deleted, it cannot be recovered</p>
             </div>
             <Button
               onClick={handleDelete}
@@ -386,7 +384,7 @@ export default function ProjectSettingsPage() {
         </Card>
 
         {/* Info card */}
-        <Card className="bg-(--accent)/5 mt-6 border-brand-primary/20 p-4">
+        <Card className="border-brand-primary/20 mt-6 bg-(--accent)/5 p-4">
           <p className="flex items-center gap-2 text-sm text-(--muted)">
             <Check className="h-4 w-4 text-(--accent)" />
             Changes are automatically saved as you type. Field locks prevent conflicts with other

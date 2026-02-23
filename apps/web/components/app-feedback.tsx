@@ -33,7 +33,7 @@ export function FeedbackToasts({
   onDismiss: (id: string) => void;
 }) {
   return (
-    <div className="pointer-events-none fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+    <div className="pointer-events-none fixed right-6 bottom-6 z-50 flex flex-col gap-2">
       <AnimatePresence>
         {messages.map((msg) => {
           const Icon = ICONS[msg.type];
@@ -54,7 +54,9 @@ export function FeedbackToasts({
               >
                 <Icon className="h-3.5 w-3.5" style={{ color: colors.icon }} />
               </div>
-              <p className="text-sm" style={{ color: 'var(--text)' }}>{msg.text}</p>
+              <p className="text-sm" style={{ color: 'var(--text)' }}>
+                {msg.text}
+              </p>
               <button
                 onClick={() => onDismiss(msg.id)}
                 className="ml-2 shrink-0 rounded p-0.5 transition-colors hover:bg-white/5"
@@ -95,7 +97,9 @@ export function ConfirmDialog({
         style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="mb-6 text-sm leading-relaxed" style={{ color: 'var(--text)' }}>{text}</p>
+        <p className="mb-6 text-sm leading-relaxed" style={{ color: 'var(--text)' }}>
+          {text}
+        </p>
         <div className="flex justify-end gap-3">
           <button
             onClick={onCancel}

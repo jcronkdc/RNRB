@@ -286,7 +286,7 @@ export default function SongDetailPage() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab as any)}
-              className={`whitespace-nowrap px-6 py-3 font-medium capitalize transition ${
+              className={`px-6 py-3 font-medium whitespace-nowrap capitalize transition ${
                 activeTab === tab ? 'border-b-2' : ''
               }`}
               style={{
@@ -561,7 +561,7 @@ export default function SongDetailPage() {
                         >
                           {/* File Info Header */}
                           <div className="mb-4 flex items-center gap-4">
-                            <div className="bg-(--accent)/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-lg">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-(--accent)/10">
                               <Music className="h-6 w-6 text-(--accent)" />
                             </div>
                             <div className="min-w-0 flex-1">
@@ -571,7 +571,7 @@ export default function SongDetailPage() {
                                 {formatDateLong(file.uploadedAt)}
                               </p>
                             </div>
-                            <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium capitalize text-green-400">
+                            <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-400 capitalize">
                               {file.type}
                             </span>
                           </div>
@@ -583,9 +583,7 @@ export default function SongDetailPage() {
                             entityId={songId}
                             entityType="audio_track"
                             currentUserId={user?.id || ''}
-                            currentUserName={
-                              user?.name || user?.email?.split('@')[0] || 'User'
-                            }
+                            currentUserName={user?.name || user?.email?.split('@')[0] || 'User'}
                             currentUserAvatar={user?.image}
                           />
                         </motion.div>
@@ -762,7 +760,7 @@ export default function SongDetailPage() {
                   key={song.key}
                   tempo={song.tempo}
                 />
-                <div className="rnrb-card bg-(--accent)/5 mt-6 p-4">
+                <div className="rnrb-card mt-6 bg-(--accent)/5 p-4">
                   <p className="flex items-center gap-2 text-sm text-(--muted)">
                     <MessageSquare className="h-4 w-4 text-(--accent)" />
                     <strong>Collaborative:</strong> Share drafts in project chat for team feedback
@@ -804,13 +802,11 @@ export default function SongDetailPage() {
             </Button>
           </div>
           <div className="flex items-center gap-3">
-            <div className="bg-(--accent)/20 flex h-10 w-10 items-center justify-center rounded-full font-semibold text-(--accent)">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--accent)/20 font-semibold text-(--accent)">
               {user?.email?.[0]?.toUpperCase() || 'U'}
             </div>
             <div>
-              <p className="font-medium">
-                {user?.name || user?.email?.split('@')[0] || 'You'}
-              </p>
+              <p className="font-medium">{user?.name || user?.email?.split('@')[0] || 'You'}</p>
               <p className="text-xs text-(--muted)">Creator • Full Access</p>
             </div>
           </div>

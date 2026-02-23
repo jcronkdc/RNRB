@@ -140,7 +140,7 @@ export function FileViewer({ url, name, mimeType, onClose }: FileViewerProps) {
       return (
         <div className="relative flex h-full flex-col">
           {/* Copy button */}
-          <div className="absolute right-4 top-4 z-10">
+          <div className="absolute top-4 right-4 z-10">
             <button
               onClick={handleCopyText}
               className="flex items-center gap-2 rounded-lg bg-gray-800 px-3 py-2 text-sm text-white transition-all hover:bg-gray-700"
@@ -161,7 +161,7 @@ export function FileViewer({ url, name, mimeType, onClose }: FileViewerProps) {
 
           <div className="flex-1 overflow-auto p-6">
             <pre
-              className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-gray-200"
+              className="font-mono text-sm leading-relaxed whitespace-pre-wrap text-gray-200"
               style={{ fontSize: `${zoom}%` }}
             >
               {textContent || 'Loading...'}

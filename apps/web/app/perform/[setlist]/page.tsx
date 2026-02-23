@@ -203,7 +203,7 @@ export default function PerformerModePage() {
       onTouchEnd={handleTouchEnd}
     >
       {/* Header */}
-      <div className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-black/95">
+      <div className="fixed top-0 right-0 left-0 z-50 border-b border-white/10 bg-black/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <Button
             variant="ghost"
@@ -234,7 +234,7 @@ export default function PerformerModePage() {
         {/* Progress Bar */}
         <div className="h-1 w-full bg-white/10">
           <motion.div
-            className="h-full bg-brand-primary"
+            className="bg-brand-primary h-full"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.3 }}
@@ -243,7 +243,7 @@ export default function PerformerModePage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col pb-20 pt-16">
+      <div className="flex flex-1 flex-col pt-16 pb-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -325,14 +325,14 @@ export default function PerformerModePage() {
                 {!showDetails ? (
                   // Lyrics
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 lg:p-10">
-                    <pre className="whitespace-pre-wrap font-mono text-lg leading-relaxed sm:text-xl lg:text-2xl">
+                    <pre className="font-mono text-lg leading-relaxed whitespace-pre-wrap sm:text-xl lg:text-2xl">
                       {currentSong.song.lyrics || 'No lyrics available'}
                     </pre>
                   </div>
                 ) : (
                   // Chords
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 lg:p-10">
-                    <pre className="whitespace-pre-wrap font-mono text-lg font-semibold leading-relaxed text-(--accent) sm:text-xl lg:text-2xl">
+                    <pre className="font-mono text-lg leading-relaxed font-semibold whitespace-pre-wrap text-(--accent) sm:text-xl lg:text-2xl">
                       {currentSong.song.chords || 'No chords available'}
                     </pre>
                   </div>
@@ -362,7 +362,7 @@ export default function PerformerModePage() {
       </div>
 
       {/* Navigation Footer */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/95">
+      <div className="fixed right-0 bottom-0 left-0 z-50 border-t border-white/10 bg-black/95">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
           <Button
             onClick={goPrevious}
@@ -380,7 +380,7 @@ export default function PerformerModePage() {
                 onClick={() => setCurrentIndex(idx)}
                 className={`h-2 w-2 rounded-full transition ${
                   idx === currentIndex
-                    ? 'w-6 bg-brand-primary'
+                    ? 'bg-brand-primary w-6'
                     : completedSongs.has(setlist.songs[idx].song.id)
                       ? 'bg-green-500'
                       : 'bg-white/30'

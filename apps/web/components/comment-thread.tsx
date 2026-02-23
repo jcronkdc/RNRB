@@ -79,7 +79,7 @@ export function CommentThread({ trackId, currentUserId }: CommentThreadProps) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${depth > 0 ? 'ml-8 mt-3' : 'mt-4'}`}
+      className={`${depth > 0 ? 'mt-3 ml-8' : 'mt-4'}`}
     >
       <div className="flex gap-3">
         {/* Avatar */}

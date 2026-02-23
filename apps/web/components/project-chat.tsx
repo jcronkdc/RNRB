@@ -245,10 +245,10 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
   return (
     <div className="flex h-[600px] flex-col">
       {/* Chat Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
+      <div className="border-border flex items-center justify-between border-b pb-4">
         <div>
-          <h3 className="text-xl font-semibold text-foreground">Project Chat</h3>
-          <p className="text-sm text-muted-foreground">{projectName}</p>
+          <h3 className="text-foreground text-xl font-semibold">Project Chat</h3>
+          <p className="text-muted-foreground text-sm">{projectName}</p>
         </div>
         <Button variant="secondary" size="sm">
           <MoreVertical className="h-4 w-4" />
@@ -273,7 +273,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 {/* Avatar */}
                 <div className="shrink-0">
                   {showAvatar ? (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+                    <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
                       {message.avatar ? (
                         <img
                           src={message.avatar}
@@ -295,10 +295,10 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 >
                   {showAvatar && (
                     <div className="mb-1 flex items-center gap-2">
-                      <span className="text-sm font-medium text-foreground">
+                      <span className="text-foreground text-sm font-medium">
                         {message.userName}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {formatTime(message.timestamp)}
                       </span>
                     </div>
@@ -307,10 +307,10 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                     className={`rounded-2xl px-4 py-2 ${
                       isOwnMessage
                         ? 'bg-brand-primary text-brand-primary-foreground'
-                        : 'border border-border bg-surface text-foreground'
+                        : 'border-border bg-surface text-foreground border'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap wrap-break-word text-sm">{message.content}</p>
+                    <p className="text-sm wrap-break-word whitespace-pre-wrap">{message.content}</p>
                   </div>
                 </div>
               </motion.div>
@@ -331,20 +331,20 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: 0 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: 0.2 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: 0.4 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 {Array.from(typingUsers.values()).length === 1
                   ? `${Array.from(typingUsers.values())[0].userName} is typing...`
                   : `${Array.from(typingUsers.values()).length} people are typing...`}
@@ -357,7 +357,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border pt-4">
+      <div className="border-border border-t pt-4">
         <div className="flex items-end gap-2">
           <Button variant="secondary" size="sm" className="mb-2">
             <Paperclip className="h-4 w-4" />
@@ -369,7 +369,7 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-hidden focus:ring-2"
               style={{ minHeight: '48px', maxHeight: '120px' }}
             />
           </div>
@@ -379,12 +379,12 @@ export function ProjectChat({ projectSlug, projectName }: ProjectChatProps) {
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || sending}
-            className="mb-2 bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90"
+            className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 mb-2"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="text-muted-foreground mt-2 text-xs">
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>

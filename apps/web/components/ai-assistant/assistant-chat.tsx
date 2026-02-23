@@ -235,12 +235,12 @@ export function AssistantChat() {
         }}
         data-ai-floating-btn="true"
         className={cn(
-          'fixed bottom-6 right-6 z-50',
+          'fixed right-6 bottom-6 z-50',
           'flex items-center gap-2',
           'rounded-full',
           'ai-floating-btn',
-          'bg-linear-to-r from-brand-primary to-purple-600',
-          'shadow-lg shadow-brand-primary/25 hover:shadow-xl hover:shadow-brand-primary/40',
+          'from-brand-primary bg-linear-to-r to-purple-600',
+          'shadow-brand-primary/25 hover:shadow-brand-primary/40 shadow-lg hover:shadow-xl',
           'transition-all duration-300',
           'hover:scale-105 active:scale-95',
           'group',
@@ -252,7 +252,7 @@ export function AssistantChat() {
         <div className="relative">
           <Sparkles className="h-5 w-5 text-white transition-transform group-hover:rotate-12" />
           {isMinimized && (
-            <div className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
+            <div className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-green-400 ring-2 ring-purple-600" />
           )}
         </div>
         {!isMinimized && (
@@ -277,7 +277,7 @@ export function AssistantChat() {
   return (
     <div
       className={cn(
-        'fixed bottom-6 right-6 z-50',
+        'fixed right-6 bottom-6 z-50',
         'w-[420px] max-w-[calc(100vw-2rem)]',
         'rounded-2xl shadow-2xl',
         'flex flex-col',
@@ -290,14 +290,14 @@ export function AssistantChat() {
     >
       {/* Header */}
       <div
-        className="flex items-center justify-between rounded-t-2xl bg-linear-to-r from-brand-primary/10 via-purple-500/10 to-brand-primary/10 px-4 py-3"
+        className="from-brand-primary/10 to-brand-primary/10 flex items-center justify-between rounded-t-2xl bg-linear-to-r via-purple-500/10 px-4 py-3"
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
+          <div className="from-brand-primary shadow-brand-primary/30 relative flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br to-purple-600 shadow-lg">
             <Sparkles className="h-5 w-5 text-white" />
             <div
-              className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-green-400"
+              className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-400"
               style={{ border: '2px solid var(--panel)' }}
             />
           </div>
@@ -335,7 +335,7 @@ export function AssistantChat() {
             <div className="flex h-full flex-col px-2">
               {/* Welcome */}
               <div className="mb-6 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/30">
+                <div className="from-brand-primary shadow-brand-primary/30 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br to-purple-600 shadow-lg">
                   <Sparkles className="h-8 w-8 text-white" />
                 </div>
                 <h4 className="mb-1 text-lg font-semibold" style={{ color: 'var(--text)' }}>
@@ -348,8 +348,8 @@ export function AssistantChat() {
 
               {/* Proactive suggestion */}
               {showProactiveSuggestion && proactiveSuggestion && (
-                <div className="mb-4 rounded-xl border border-brand-primary/30 bg-brand-primary/10 p-4">
-                  <p className="mb-1 text-xs font-medium text-brand-primary">
+                <div className="border-brand-primary/30 bg-brand-primary/10 mb-4 rounded-xl border p-4">
+                  <p className="text-brand-primary mb-1 text-xs font-medium">
                     {proactiveSuggestion.trigger}
                   </p>
                   <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -361,7 +361,7 @@ export function AssistantChat() {
               {/* Quick actions */}
               <div className="mt-auto">
                 <p
-                  className="mb-3 text-xs font-medium uppercase tracking-wider"
+                  className="mb-3 text-xs font-medium tracking-wider uppercase"
                   style={{ color: 'var(--muted-soft)' }}
                 >
                   Quick Actions
@@ -384,7 +384,7 @@ export function AssistantChat() {
                         color: 'var(--text-secondary)',
                       }}
                     >
-                      <action.icon className="h-4 w-4 text-brand-primary transition-transform group-hover:scale-110" />
+                      <action.icon className="text-brand-primary h-4 w-4 transition-transform group-hover:scale-110" />
                       <span>{action.label}</span>
                     </button>
                   ))}
@@ -402,7 +402,7 @@ export function AssistantChat() {
                 className={cn(
                   'max-w-[85%] rounded-2xl px-4 py-3 text-sm',
                   message.role === 'user'
-                    ? 'bg-linear-to-r from-brand-primary to-purple-600 text-white shadow-lg shadow-brand-primary/20'
+                    ? 'from-brand-primary shadow-brand-primary/20 bg-linear-to-r to-purple-600 text-white shadow-lg'
                     : ''
                 )}
                 style={
@@ -417,10 +417,10 @@ export function AssistantChat() {
               >
                 {message.role === 'assistant' && (
                   <div className="mb-2 flex items-center gap-2">
-                    <div className="flex h-5 w-5 items-center justify-center rounded-md bg-linear-to-br from-brand-primary to-purple-600">
+                    <div className="from-brand-primary flex h-5 w-5 items-center justify-center rounded-md bg-linear-to-br to-purple-600">
                       <Sparkles className="h-3 w-3 text-white" />
                     </div>
-                    <span className="text-xs font-medium text-brand-primary">AI Assistant</span>
+                    <span className="text-brand-primary text-xs font-medium">AI Assistant</span>
                     {message.isStreaming && (
                       <span
                         className="ml-auto flex items-center gap-1 text-xs"
@@ -432,10 +432,10 @@ export function AssistantChat() {
                     )}
                   </div>
                 )}
-                <div className="whitespace-pre-wrap leading-relaxed">
+                <div className="leading-relaxed whitespace-pre-wrap">
                   {message.content}
                   {message.isStreaming && (
-                    <span className="ml-0.5 inline-block h-4 w-0.5 animate-pulse bg-brand-primary" />
+                    <span className="bg-brand-primary ml-0.5 inline-block h-4 w-0.5 animate-pulse" />
                   )}
                 </div>
               </div>
@@ -456,7 +456,7 @@ export function AssistantChat() {
                     {[0, 1, 2].map((i) => (
                       <div
                         key={i}
-                        className="h-2 w-2 animate-bounce rounded-full bg-brand-primary"
+                        className="bg-brand-primary h-2 w-2 animate-bounce rounded-full"
                         style={{ animationDelay: `${i * 150}ms` }}
                       />
                     ))}
@@ -544,7 +544,7 @@ export function AssistantChat() {
               className={cn(
                 'flex-1 resize-none rounded-xl px-4 py-3',
                 'text-sm',
-                'focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20',
+                'focus:border-brand-primary focus:ring-brand-primary/20 focus:ring-2 focus:outline-hidden',
                 'max-h-32'
               )}
               style={{
@@ -568,7 +568,7 @@ export function AssistantChat() {
                 onClick={() => handleSendMessage()}
                 disabled={isLoading || !inputValue.trim()}
                 size="icon"
-                className="shrink-0 bg-linear-to-r from-brand-primary to-purple-600 shadow-lg shadow-brand-primary/20 hover:from-brand-primary/90 hover:to-purple-600/90"
+                className="from-brand-primary shadow-brand-primary/20 hover:from-brand-primary/90 shrink-0 bg-linear-to-r to-purple-600 shadow-lg hover:to-purple-600/90"
               >
                 <Send className="h-4 w-4" />
               </Button>

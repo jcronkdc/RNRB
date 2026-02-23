@@ -631,7 +631,7 @@ export function NotificationToggleButton() {
 
         {/* Dot indicator */}
         <span
-          className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full"
+          className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full"
           style={{ background: '#f59e0b' }}
         />
       </motion.button>
@@ -642,7 +642,7 @@ export function NotificationToggleButton() {
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
-            className="absolute right-0 top-full z-50 mt-2 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-medium shadow-xl"
+            className="absolute top-full right-0 z-50 mt-2 rounded-lg px-3 py-2 text-xs font-medium whitespace-nowrap shadow-xl"
             style={{
               background: 'var(--bg-elevated)',
               border: '1px solid var(--border)',

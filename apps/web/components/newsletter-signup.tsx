@@ -205,7 +205,7 @@ export function NewsletterSignup({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-white placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
+                className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-lg border border-zinc-800 bg-zinc-900 px-4 py-2 text-sm text-white placeholder:text-zinc-500 focus:ring-2 focus:outline-hidden"
                 required
               />
               <button
@@ -242,7 +242,7 @@ export function NewsletterSignup({
         >
           {/* Background decoration */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="bg-gold-500/10 absolute -right-24 -top-24 h-48 w-48 rounded-full blur-3xl" />
+            <div className="bg-gold-500/10 absolute -top-24 -right-24 h-48 w-48 rounded-full blur-3xl" />
             <div className="bg-gold-500/5 absolute -bottom-24 -left-24 h-48 w-48 rounded-full blur-3xl" />
           </div>
 
@@ -287,14 +287,14 @@ export function NewsletterSignup({
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder="First name (optional)"
-                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
+                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:ring-2 focus:outline-hidden"
                     />
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Enter your email"
-                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
+                      className="focus:ring-gold-500/50 focus:border-gold-500 flex-1 rounded-xl border border-zinc-800 bg-zinc-950/50 px-4 py-3 text-white transition-all placeholder:text-zinc-500 focus:ring-2 focus:outline-hidden"
                       required
                     />
                   </div>
@@ -396,7 +396,7 @@ export function NewsletterSignup({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:outline-hidden focus:ring-2"
+              className="focus:ring-gold-500/50 focus:border-gold-500 w-full rounded-lg border border-zinc-800 bg-zinc-950/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-zinc-500 focus:ring-2 focus:outline-hidden"
               required
             />
             <button

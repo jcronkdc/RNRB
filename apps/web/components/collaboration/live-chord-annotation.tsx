@@ -109,7 +109,7 @@ export function LiveChordAnnotation({
       return (
         <div
           key={lineIndex}
-          className="mb-2 mt-6 text-sm font-bold uppercase tracking-wider"
+          className="mt-6 mb-2 text-sm font-bold tracking-wider uppercase"
           style={{ color: 'var(--accent)' }}
         >
           {line}

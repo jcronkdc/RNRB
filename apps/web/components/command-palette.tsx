@@ -152,17 +152,17 @@ export function CommandPalette() {
               className="mx-4 w-full max-w-2xl"
             >
               <div
-                className="overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+                className="border-border bg-card overflow-hidden rounded-xl border shadow-2xl"
                 style={{
                   boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
                 }}
               >
                 {/* Search Input */}
-                <div className="flex items-center gap-3 border-b border-border p-4">
+                <div className="border-border flex items-center gap-3 border-b p-4">
                   {isSearching ? (
-                    <Loader2 className="h-5 w-5 animate-spin text-brand-primary" />
+                    <Loader2 className="text-brand-primary h-5 w-5 animate-spin" />
                   ) : (
-                    <Search className="h-5 w-5 text-muted-foreground" />
+                    <Search className="text-muted-foreground h-5 w-5" />
                   )}
                   <input
                     ref={inputRef}
@@ -170,9 +170,9 @@ export function CommandPalette() {
                     placeholder="Search everything... projects, songs, people, messages"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 bg-transparent text-foreground outline-hidden placeholder:text-muted-foreground"
+                    className="text-foreground placeholder:text-muted-foreground flex-1 bg-transparent outline-hidden"
                   />
-                  <div className="flex items-center gap-1 rounded bg-muted/50 px-2 py-1 text-xs text-muted-foreground">
+                  <div className="bg-muted/50 text-muted-foreground flex items-center gap-1 rounded px-2 py-1 text-xs">
                     <CommandIcon className="h-3 w-3" />
                     <span>K</span>
                   </div>
@@ -180,8 +180,8 @@ export function CommandPalette() {
 
                 {/* Search Status Banner */}
                 {search.length >= 2 && hasSearchResults && (
-                  <div className="flex items-center justify-between border-b border-border bg-brand-primary/10 px-4 py-2">
-                    <span className="text-sm font-medium text-brand-primary">
+                  <div className="border-border bg-brand-primary/10 flex items-center justify-between border-b px-4 py-2">
+                    <span className="text-brand-primary text-sm font-medium">
                       Found {totalSearchResults} result
                       {totalSearchResults !== 1 ? 's' : ''} for "{search}"
                     </span>
@@ -198,7 +198,7 @@ export function CommandPalette() {
                 {/* Results */}
                 <div ref={listRef} className="max-h-[500px] overflow-y-auto">
                   {filteredCommands.length === 0 && !isSearching ? (
-                    <div className="p-12 text-center text-muted-foreground">
+                    <div className="text-muted-foreground p-12 text-center">
                       <Search className="mx-auto mb-3 h-12 w-12 opacity-50" />
                       <p>No results found</p>
                       <p className="mt-1 text-sm">
@@ -208,7 +208,7 @@ export function CommandPalette() {
                       </p>
                     </div>
                   ) : isSearching && search.length >= 2 ? (
-                    <div className="p-12 text-center text-muted-foreground">
+                    <div className="text-muted-foreground p-12 text-center">
                       <Loader2 className="mx-auto mb-3 h-12 w-12 animate-spin opacity-50" />
                       <p>Searching...</p>
                     </div>
@@ -221,7 +221,7 @@ export function CommandPalette() {
                         return (
                           <div key={category} className="mb-4 last:mb-0">
                             {/* Category Header */}
-                            <div className="px-3 py-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                            <div className="text-muted-foreground px-3 py-2 text-xs font-medium tracking-wide uppercase">
                               {getCategoryLabel(category)}
                             </div>
 
@@ -254,7 +254,7 @@ export function CommandPalette() {
                                         />
                                       </div>
                                     ) : cmd.icon ? (
-                                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted/50 text-lg">
+                                      <span className="bg-muted/50 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-lg">
                                         {cmd.icon}
                                       </span>
                                     ) : null}
@@ -316,19 +316,19 @@ export function CommandPalette() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between border-t border-border bg-muted/30 px-4 py-3 text-xs text-muted-foreground">
+                <div className="border-border bg-muted/30 text-muted-foreground flex items-center justify-between border-t px-4 py-3 text-xs">
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">↑</kbd>
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">↓</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">↑</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">↓</kbd>
                       Navigate
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">Enter</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">Enter</kbd>
                       Select
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="rounded bg-muted px-1.5 py-0.5">Esc</kbd>
+                      <kbd className="bg-muted rounded px-1.5 py-0.5">Esc</kbd>
                       Close
                     </span>
                   </div>
@@ -356,12 +356,12 @@ export function CommandPaletteTrigger() {
   return (
     <button
       onClick={open}
-      className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
+      className="text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm transition-colors"
       title="Open command palette (Cmd+K)"
     >
       <Search className="h-4 w-4" />
       <span className="hidden md:inline">Search...</span>
-      <div className="hidden items-center gap-0.5 rounded bg-muted px-1.5 py-0.5 text-xs md:flex">
+      <div className="bg-muted hidden items-center gap-0.5 rounded px-1.5 py-0.5 text-xs md:flex">
         <CommandIcon className="h-3 w-3" />
         <span>K</span>
       </div>

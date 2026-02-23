@@ -44,7 +44,14 @@ export default function GlobalError({
           <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>
             Something went wrong
           </h1>
-          <p style={{ fontSize: '0.875rem', color: '#78716c', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+          <p
+            style={{
+              fontSize: '0.875rem',
+              color: '#78716c',
+              marginBottom: '1.5rem',
+              lineHeight: 1.6,
+            }}
+          >
             A critical error occurred. Please try refreshing the page.
           </p>
           {error.digest && (

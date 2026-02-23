@@ -72,8 +72,8 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning/20">
-              <Clock className="h-8 w-8 text-warning" />
+            <div className="bg-warning/20 flex h-16 w-16 items-center justify-center rounded-full">
+              <Clock className="text-warning h-8 w-8" />
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-(--text)">Invitation Expired</h1>
@@ -94,14 +94,12 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/20">
-              <CheckCircle2 className="h-8 w-8 text-success" />
+            <div className="bg-success/20 flex h-16 w-16 items-center justify-center rounded-full">
+              <CheckCircle2 className="text-success h-8 w-8" />
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-(--text)">Already Accepted</h1>
-          <p className="mt-2 text-sm text-(--muted)">
-            You've already accepted this invitation.
-          </p>
+          <p className="mt-2 text-sm text-(--muted)">You've already accepted this invitation.</p>
           <Link href="/dashboard">
             <Button className="mt-6">Go to Dashboard</Button>
           </Link>
@@ -116,8 +114,8 @@ export default async function InvitePage({ params }: InvitePageProps) {
       <main className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-md text-center">
           <div className="mb-4 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-warning/20">
-              <XCircle className="h-8 w-8 text-warning" />
+            <div className="bg-warning/20 flex h-16 w-16 items-center justify-center rounded-full">
+              <XCircle className="text-warning h-8 w-8" />
             </div>
           </div>
           <h1 className="text-2xl font-semibold text-(--text)">Email Mismatch</h1>
@@ -190,19 +188,17 @@ export default async function InvitePage({ params }: InvitePageProps) {
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
-        <div className="rounded-3xl border border-(--border) bg-(--surface) p-8 shadow-soft">
+        <div className="shadow-soft rounded-3xl border border-(--border) bg-(--surface) p-8">
           <div className="mb-6 flex justify-center">
             <div className="bg-primary/20 flex h-16 w-16 items-center justify-center rounded-full">
               <Mail className="text-primary h-8 w-8" />
             </div>
           </div>
 
-          <h1 className="text-center text-2xl font-semibold text-(--text)">
-            You've Been Invited!
-          </h1>
+          <h1 className="text-center text-2xl font-semibold text-(--text)">You've Been Invited!</h1>
 
           <div className="mt-6 space-y-4">
-            <div className="rounded-2xl border border-(--border) bg-muted/50 p-4">
+            <div className="bg-muted/50 rounded-2xl border border-(--border) p-4">
               <p className="text-sm text-(--muted)">
                 <strong className="text-(--text)">
                   {invitation.sender.name || invitation.sender.email}
@@ -213,9 +209,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
                 {invitation.org?.name || invitation.project?.name}
               </p>
               {invitation.project && (
-                <p className="text-sm text-(--muted)">
-                  in {invitation.project.org.name}
-                </p>
+                <p className="text-sm text-(--muted)">in {invitation.project.org.name}</p>
               )}
               <p className="text-primary mt-2 text-sm">as {invitation.role}</p>
             </div>

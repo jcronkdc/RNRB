@@ -117,7 +117,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Copyright className="h-5 w-5 text-brand-primary" />
+          <Copyright className="text-brand-primary h-5 w-5" />
           <h2 className="text-xl font-semibold">Copyright & Publishing</h2>
         </div>
         <Button onClick={handleSaveCopyright} disabled={saving} className="rnrb-button-primary">
@@ -128,36 +128,36 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
       {/* Copyright Info */}
       <Card className="p-6">
         <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-          <FileText className="h-5 w-5 text-brand-primary" />
+          <FileText className="text-brand-primary h-5 w-5" />
           Song Information
         </h3>
 
         <div className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm text-muted-foreground">Copyright Year</label>
+            <label className="text-muted-foreground mb-2 block text-sm">Copyright Year</label>
             <input
               type="number"
               value={copyrightInfo.year || new Date().getFullYear()}
               onChange={(e) =>
                 setCopyrightInfo({ ...copyrightInfo, year: parseInt(e.target.value) })
               }
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+              className="border-border bg-surface w-full rounded-lg border px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-muted-foreground">Copyright Holder</label>
+            <label className="text-muted-foreground mb-2 block text-sm">Copyright Holder</label>
             <input
               type="text"
               value={copyrightInfo.holder || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, holder: e.target.value })}
               placeholder="Your Name or Company"
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+              className="border-border bg-surface w-full rounded-lg border px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-muted-foreground">
+            <label className="text-muted-foreground mb-2 block text-sm">
               ISWC (International Standard Musical Work Code)
             </label>
             <input
@@ -165,12 +165,12 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
               value={copyrightInfo.iswc || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, iswc: e.target.value })}
               placeholder="T-123.456.789-0"
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+              className="border-border bg-surface w-full rounded-lg border px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-muted-foreground">
+            <label className="text-muted-foreground mb-2 block text-sm">
               ISRC (International Standard Recording Code)
             </label>
             <input
@@ -178,16 +178,16 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
               value={copyrightInfo.isrc || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, isrc: e.target.value })}
               placeholder="USRC17607839"
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+              className="border-border bg-surface w-full rounded-lg border px-3 py-2"
             />
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-muted-foreground">PRO Affiliation</label>
+            <label className="text-muted-foreground mb-2 block text-sm">PRO Affiliation</label>
             <select
               value={copyrightInfo.pro || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, pro: e.target.value })}
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+              className="border-border bg-surface w-full rounded-lg border px-3 py-2"
             >
               <option value="">Select PRO</option>
               <option value="BMI">BMI</option>
@@ -201,7 +201,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-muted-foreground">
+            <label className="text-muted-foreground mb-2 block text-sm">
               IPI Number (Interested Party Info)
             </label>
             <input
@@ -209,7 +209,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
               value={copyrightInfo.ipiNumber || ''}
               onChange={(e) => setCopyrightInfo({ ...copyrightInfo, ipiNumber: e.target.value })}
               placeholder="00123456789"
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2"
+              className="border-border bg-surface w-full rounded-lg border px-3 py-2"
             />
           </div>
         </div>
@@ -220,10 +220,10 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h3 className="flex items-center gap-2 text-lg font-semibold">
-              <DollarSign className="h-5 w-5 text-brand-primary" />
+              <DollarSign className="text-brand-primary h-5 w-5" />
               Revenue Splits
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Total: {totalSplits.toFixed(1)}% {splitsValid ? '✓' : '(Must equal 100%)'}
             </p>
           </div>
@@ -244,9 +244,9 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
 
         {splits.length === 0 ? (
           <div className="py-8 text-center">
-            <Users className="mx-auto mb-3 h-12 w-12 text-muted-foreground/50" />
-            <p className="mb-2 text-muted-foreground">No splits defined</p>
-            <p className="mb-4 text-sm text-muted-foreground">
+            <Users className="text-muted-foreground/50 mx-auto mb-3 h-12 w-12" />
+            <p className="text-muted-foreground mb-2">No splits defined</p>
+            <p className="text-muted-foreground mb-4 text-sm">
               Add collaborators and define revenue split percentages
             </p>
             <Button onClick={handleAddSplit} className="rnrb-button-primary">
@@ -266,8 +266,8 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
                 <Card className="border-border bg-surface p-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/10">
-                        <span className="font-semibold text-brand-primary">
+                      <div className="bg-brand-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
+                        <span className="text-brand-primary font-semibold">
                           {split.percentage}%
                         </span>
                       </div>
@@ -277,11 +277,11 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
                           <p className="font-semibold">{split.user.name || split.user.email}</p>
                           {split.confirmed && <Check className="h-4 w-4 text-green-500" />}
                         </div>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           {split.role} • {split.splitType.replace(/_/g, ' ')}
                         </p>
                         {split.proAffiliation && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             PRO: {split.proAffiliation}
                             {split.ipiNumber && ` • IPI: ${split.ipiNumber}`}
                           </p>
@@ -315,7 +315,7 @@ export function CopyrightManager({ songId, songTitle, currentCopyright }: Copyri
       {splitsValid && splits.length > 0 && (
         <Card className="p-6">
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-            <Download className="h-5 w-5 text-brand-primary" />
+            <Download className="text-brand-primary h-5 w-5" />
             Export & Agreements
           </h3>
 

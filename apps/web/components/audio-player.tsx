@@ -218,7 +218,7 @@ export const AudioPlayer = memo(
         <div className="group mb-4">
           <div className="relative h-2 w-full cursor-pointer rounded-full bg-gray-800">
             <div
-              className="absolute left-0 top-0 h-full rounded-full bg-orange-500 transition-all"
+              className="absolute top-0 left-0 h-full rounded-full bg-orange-500 transition-all"
               style={{ width: `${progressPercentage}%` }}
             />
             <input
@@ -227,7 +227,7 @@ export const AudioPlayer = memo(
               max={duration || 0}
               value={currentTime}
               onChange={handleSeek}
-              className="absolute left-0 top-0 h-full w-full cursor-pointer opacity-0"
+              className="absolute top-0 left-0 h-full w-full cursor-pointer opacity-0"
               disabled={isLoading}
             />
           </div>

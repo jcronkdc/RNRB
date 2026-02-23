@@ -161,7 +161,7 @@ function AuthForm() {
     <div className="relative flex min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Background glow */}
       <div
-        className="pointer-events-none absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2"
+        className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2"
         style={{
           width: '600px',
           height: '600px',
@@ -180,8 +180,15 @@ function AuthForm() {
         >
           {/* Logo */}
           <div className="relative mb-8">
-            <div className="absolute inset-0 scale-125 blur-3xl opacity-30">
-              <Image src="/rnrdark.png" alt="" aria-hidden="true" width={280} height={280} className="h-full w-full object-contain" />
+            <div className="absolute inset-0 scale-125 opacity-30 blur-3xl">
+              <Image
+                src="/rnrdark.png"
+                alt=""
+                aria-hidden="true"
+                width={280}
+                height={280}
+                className="h-full w-full object-contain"
+              />
             </div>
             <Image
               src="/rnrdark.png"
@@ -205,10 +212,7 @@ function AuthForm() {
           </p>
 
           {/* Stats */}
-          <div
-            className="mt-14 flex items-center gap-10"
-            style={{ color: 'var(--muted-soft)' }}
-          >
+          <div className="mt-14 flex items-center gap-10" style={{ color: 'var(--muted-soft)' }}>
             {[
               { value: '50+', label: 'Participants' },
               { value: 'HD', label: 'Video' },
@@ -217,8 +221,10 @@ function AuthForm() {
               <div key={stat.label} className="flex items-center gap-10">
                 {i > 0 && <div className="h-8 w-px" style={{ background: 'var(--border)' }} />}
                 <div className="text-center">
-                  <div className="text-2xl font-bold" style={{ color: 'var(--text)' }}>{stat.value}</div>
-                  <div className="text-[10px] uppercase tracking-widest">{stat.label}</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] tracking-widest uppercase">{stat.label}</div>
                 </div>
               </div>
             ))}
@@ -392,12 +398,16 @@ function AuthForm() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 transition-colors hover:bg-white/5"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 transition-colors hover:bg-white/5"
                     style={{ color: 'var(--muted)' }}
                     tabIndex={-1}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4.5 w-4.5" />
+                    ) : (
+                      <Eye className="h-4.5 w-4.5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -454,11 +464,19 @@ function AuthForm() {
 
           <p className="mt-6 text-center text-xs" style={{ color: 'var(--muted-soft)' }}>
             By continuing, you agree to our{' '}
-            <Link href="/terms" className="transition-colors hover:text-(--muted)" style={{ color: 'var(--muted-soft)' }}>
+            <Link
+              href="/terms"
+              className="transition-colors hover:text-(--muted)"
+              style={{ color: 'var(--muted-soft)' }}
+            >
               Terms
             </Link>{' '}
             and{' '}
-            <Link href="/privacy" className="transition-colors hover:text-(--muted)" style={{ color: 'var(--muted-soft)' }}>
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-(--muted)"
+              style={{ color: 'var(--muted-soft)' }}
+            >
               Privacy Policy
             </Link>
           </p>

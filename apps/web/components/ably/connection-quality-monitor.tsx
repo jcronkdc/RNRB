@@ -179,10 +179,10 @@ export function ConnectionQualityMonitor({
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="fixed right-4 top-20 z-50"
+      className="fixed top-20 right-4 z-50"
     >
       <div
-        className={`cursor-pointer rounded-lg border border-border bg-surface/95 p-2 shadow-lg transition-all ${
+        className={`border-border bg-surface/95 cursor-pointer rounded-lg border p-2 shadow-lg transition-all ${
           isExpanded ? 'w-64' : 'w-auto'
         }`}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -191,7 +191,7 @@ export function ConnectionQualityMonitor({
           <div className={getStatusColor(metrics.level)}>{getStatusIcon(metrics.level)}</div>
 
           {!isExpanded && (
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-muted-foreground text-xs font-medium">
               {metrics.level === 'offline' ? 'Offline' : `${metrics.latency}ms`}
             </span>
           )}
@@ -203,7 +203,7 @@ export function ConnectionQualityMonitor({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="mt-2 space-y-1 text-xs text-muted-foreground"
+              className="text-muted-foreground mt-2 space-y-1 text-xs"
             >
               <div className="flex justify-between">
                 <span>Status:</span>
@@ -222,7 +222,7 @@ export function ConnectionQualityMonitor({
                 <span className="font-medium">{metrics.reconnectAttempts}</span>
               </div>
               {metrics.lastPing && (
-                <div className="flex justify-between text-[10px] text-muted-foreground/60">
+                <div className="text-muted-foreground/60 flex justify-between text-[10px]">
                   <span>Last ping:</span>
                   <span>{new Date(metrics.lastPing).toLocaleTimeString()}</span>
                 </div>

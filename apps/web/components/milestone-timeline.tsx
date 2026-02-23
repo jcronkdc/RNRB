@@ -212,10 +212,10 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       {/* Header with Stats */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-brand-primary" />
+          <Calendar className="text-brand-primary h-5 w-5" />
           <div>
             <h2 className="text-xl font-semibold">Project Roadmap</h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {completionRate}% complete • {grouped.in_progress.length} in progress
             </p>
           </div>
@@ -236,12 +236,12 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
             <span className="text-muted-foreground">Overall Progress</span>
             <span className="font-semibold">{completionRate}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
+          <div className="bg-surface-muted h-2 overflow-hidden rounded-full">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${completionRate}%` }}
               transition={{ duration: 1, ease: 'easeOut' }}
-              className="h-full rounded-full bg-brand-primary"
+              className="bg-brand-primary h-full rounded-full"
             />
           </div>
         </Card>
@@ -250,9 +250,9 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
       {/* Milestones */}
       {milestones.length === 0 ? (
         <Card className="p-8 text-center">
-          <Calendar className="mx-auto mb-3 h-12 w-12 text-muted-foreground/50" />
-          <p className="mb-2 text-muted-foreground">No milestones yet</p>
-          <p className="mb-6 text-sm text-muted-foreground">
+          <Calendar className="text-muted-foreground/50 mx-auto mb-3 h-12 w-12" />
+          <p className="text-muted-foreground mb-2">No milestones yet</p>
+          <p className="text-muted-foreground mb-6 text-sm">
             Create milestones to track your project's progress and deadlines
           </p>
           <Button onClick={handleCreateMilestone} className="rnrb-button-primary">
@@ -287,12 +287,12 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                       </div>
 
                       {milestone.description && (
-                        <p className="mb-2 text-sm text-muted-foreground">
+                        <p className="text-muted-foreground mb-2 text-sm">
                           {milestone.description}
                         </p>
                       )}
 
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <div className="text-muted-foreground flex items-center gap-3 text-xs">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           Due {new Date(milestone.dueDate).toLocaleDateString()}
@@ -315,13 +315,13 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                       {/* Progress Bar */}
                       {milestone.status === 'in_progress' && (
                         <div className="mt-2">
-                          <div className="h-1.5 overflow-hidden rounded-full bg-surface-muted">
+                          <div className="bg-surface-muted h-1.5 overflow-hidden rounded-full">
                             <div
                               className="h-full rounded-full bg-blue-500 transition-all"
                               style={{ width: `${milestone.progress}%` }}
                             />
                           </div>
-                          <span className="mt-1 text-xs text-muted-foreground">
+                          <span className="text-muted-foreground mt-1 text-xs">
                             {milestone.progress}% complete
                           </span>
                         </div>
@@ -348,7 +348,7 @@ export function MilestoneTimeline({ projectSlug, onMilestoneClick }: MilestoneTi
                             status: e.target.value as Milestone['status'],
                           });
                         }}
-                        className="rounded border border-border bg-surface px-2 py-1 text-sm"
+                        className="border-border bg-surface rounded border px-2 py-1 text-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <option value="not_started">Not Started</option>

@@ -408,7 +408,7 @@ function BackgroundCard({
 
         {/* Selected indicator */}
         {isSelected && (
-          <div className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-purple-500">
+          <div className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-purple-500">
             <Check className="h-3 w-3 text-white" />
           </div>
         )}
@@ -424,7 +424,7 @@ function BackgroundCard({
             e.stopPropagation();
             onDelete(background.id);
           }}
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 opacity-0 transition-opacity group-hover:opacity-100"
+          className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 opacity-0 transition-opacity group-hover:opacity-100"
         >
           <Trash2 className="h-3 w-3 text-white" />
         </button>

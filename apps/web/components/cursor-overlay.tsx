@@ -59,7 +59,7 @@ function RemoteCursor({ cursor }: RemoteCursorProps) {
         damping: 30,
         mass: 0.5,
       }}
-      className="absolute left-0 top-0"
+      className="absolute top-0 left-0"
       style={{
         transformOrigin: 'top left',
       }}
@@ -81,7 +81,7 @@ function RemoteCursor({ cursor }: RemoteCursorProps) {
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="absolute left-2 top-6 whitespace-nowrap"
+          className="absolute top-6 left-2 whitespace-nowrap"
         >
           <div
             className="rounded-md px-2 py-1 text-xs font-medium text-white shadow-lg"
@@ -99,7 +99,7 @@ function RemoteCursor({ cursor }: RemoteCursorProps) {
             initial={{ scale: 0.5, opacity: 1 }}
             animate={{ scale: 3, opacity: 0 }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
-            className="absolute left-0 top-0 h-6 w-6 rounded-full border-2"
+            className="absolute top-0 left-0 h-6 w-6 rounded-full border-2"
             style={{
               borderColor: cursor.userColor,
             }}

@@ -82,7 +82,7 @@ const ProjectCard = memo(({ project, index }: { project: Project; index: number 
           ) : (
             <Music className="h-12 w-12 sm:h-16 sm:w-16" style={{ color: 'var(--accent)' }} />
           )}
-          <div className="absolute right-2 top-2">
+          <div className="absolute top-2 right-2">
             {project.visibility === 'private' && (
               <div
                 className="rounded-lg border p-1 sm:p-1.5"
@@ -283,7 +283,7 @@ function ProjectsPageContent() {
         />
         <div className="absolute inset-0">
           <div
-            className="absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl"
+            className="absolute top-0 right-1/4 h-96 w-96 rounded-full blur-3xl"
             style={{ background: 'var(--accent-glow)' }}
           />
           <div

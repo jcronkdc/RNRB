@@ -252,10 +252,10 @@ export function OptimizedChat({
   return (
     <div className="flex h-[700px] flex-col">
       {/* Chat Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
+      <div className="border-border flex items-center justify-between border-b pb-4">
         <div>
-          <h3 className="text-xl font-semibold text-foreground">Project Chat</h3>
-          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+          <h3 className="text-foreground text-xl font-semibold">Project Chat</h3>
+          <p className="text-muted-foreground flex items-center gap-2 text-sm">
             {projectName}
             {isDisconnected && (
               <span className="flex items-center gap-1 text-xs text-yellow-500">
@@ -301,11 +301,11 @@ export function OptimizedChat({
                   key={i}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
-                  className="h-2 w-2 rounded-full bg-brand-primary"
+                  className="bg-brand-primary h-2 w-2 rounded-full"
                 />
               ))}
             </div>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-muted-foreground text-sm">
               {Array.from(typingUsers.values()).length === 1
                 ? `${Array.from(typingUsers.values())[0].userName} is typing...`
                 : `${Array.from(typingUsers.values()).length} people are typing...`}
@@ -315,7 +315,7 @@ export function OptimizedChat({
       </AnimatePresence>
 
       {/* Input Area */}
-      <div className="space-y-3 border-t border-border pt-4">
+      <div className="border-border space-y-3 border-t pt-4">
         {/* Voice Recorder */}
         {showVoiceRecorder && (
           <VoiceMessageRecorder
@@ -342,7 +342,7 @@ export function OptimizedChat({
               onKeyPress={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-hidden focus:ring-2"
               style={{ minHeight: '48px', maxHeight: '120px' }}
               disabled={isDisconnected}
             />
@@ -350,12 +350,12 @@ export function OptimizedChat({
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || sending || isDisconnected}
-            className="mb-2 bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90"
+            className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 mb-2"
           >
             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-xs">
           Press Enter to send, Shift+Enter for new line • Type @ to mention someone
         </p>
       </div>

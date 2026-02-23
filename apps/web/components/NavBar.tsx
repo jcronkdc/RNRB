@@ -17,14 +17,46 @@ const NAV_LINKS = [
 
 // Routes that use the app shell (sidebar/topbar) instead of this marketing nav
 const APP_ROUTE_PREFIXES = [
-  '/dashboard', '/songwriting', '/create', '/projects', '/studio', '/tours',
-  '/shows', '/setlists', '/library', '/explore', '/discover', '/design',
-  '/distribute', '/messages', '/notifications', '/network', '/collaboration',
-  '/collaboration-needs', '/credits', '/settings', '/onboarding', '/community',
-  '/sites', '/songs', '/feed', '/social', '/tools', '/meet',
-  '/marketplace', '/masterclasses', '/merch', '/my-merch',
-  '/opportunities', '/share', '/submit', '/revenue', '/admin',
-  '/help', '/u/', '/setlist/',
+  '/dashboard',
+  '/songwriting',
+  '/create',
+  '/projects',
+  '/studio',
+  '/tours',
+  '/shows',
+  '/setlists',
+  '/library',
+  '/explore',
+  '/discover',
+  '/design',
+  '/distribute',
+  '/messages',
+  '/notifications',
+  '/network',
+  '/collaboration',
+  '/collaboration-needs',
+  '/credits',
+  '/settings',
+  '/onboarding',
+  '/community',
+  '/sites',
+  '/songs',
+  '/feed',
+  '/social',
+  '/tools',
+  '/meet',
+  '/marketplace',
+  '/masterclasses',
+  '/merch',
+  '/my-merch',
+  '/opportunities',
+  '/share',
+  '/submit',
+  '/revenue',
+  '/admin',
+  '/help',
+  '/u/',
+  '/setlist/',
 ];
 
 // ─── Mobile Menu ─────────────────────────────────────────────────────────────
@@ -36,11 +68,15 @@ function MobileMenu({ isOpen, onClose }: { isOpen: boolean; onClose: () => void 
     } else {
       document.body.style.overflow = '';
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [isOpen]);
 
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
@@ -109,8 +145,7 @@ export function NavBar() {
   const [scrolled, setScrolled] = useState(false);
 
   const isAppRoute =
-    pathname === '/' ||
-    APP_ROUTE_PREFIXES.some((prefix) => pathname?.startsWith(prefix));
+    pathname === '/' || APP_ROUTE_PREFIXES.some((prefix) => pathname?.startsWith(prefix));
 
   useEffect(() => {
     if (isAppRoute) return;
@@ -145,9 +180,7 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               className={`relative rounded-md px-3.5 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
-                isActive(link.href)
-                  ? 'text-(--text)'
-                  : 'text-(--muted) hover:text-(--text)'
+                isActive(link.href) ? 'text-(--text)' : 'text-(--muted) hover:text-(--text)'
               }`}
             >
               {link.label}
@@ -181,7 +214,7 @@ export function NavBar() {
                 style={{ backgroundColor: 'var(--text)' }}
               />
               <span
-                className={`absolute left-0 top-[7px] block h-[1.5px] w-5 rounded-full transition-all duration-300 ${
+                className={`absolute top-[7px] left-0 block h-[1.5px] w-5 rounded-full transition-all duration-300 ${
                   mobileOpen ? 'opacity-0' : 'opacity-100'
                 }`}
                 style={{ backgroundColor: 'var(--text)' }}

@@ -170,9 +170,7 @@ function InviteAcceptContent() {
               <Music className="h-10 w-10 text-white" />
             </div>
             <h1 className="font-display mb-2 text-3xl font-bold">Project Invitation</h1>
-            <p className="text-(--muted)">
-              You've been invited to collaborate on a music project
-            </p>
+            <p className="text-(--muted)">You've been invited to collaborate on a music project</p>
           </div>
 
           {/* Project Info */}
@@ -205,8 +203,7 @@ function InviteAcceptContent() {
             {inviteEmail && (
               <div className="mt-4 rounded-lg border border-(--border) bg-(--surface) p-3">
                 <p className="text-xs text-(--muted)">
-                  Invited:{' '}
-                  <span className="font-medium text-(--text)">{inviteEmail}</span>
+                  Invited: <span className="font-medium text-(--text)">{inviteEmail}</span>
                 </p>
               </div>
             )}

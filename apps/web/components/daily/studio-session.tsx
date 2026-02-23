@@ -284,7 +284,7 @@ export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSes
             {isSharingScreen ? <MonitorX className="h-4 w-4" /> : <MonitorUp className="h-4 w-4" />}
           </Button>
 
-          <div className="mx-2 h-8 w-px bg-border" />
+          <div className="bg-border mx-2 h-8 w-px" />
 
           {/* Recording */}
           <Button
@@ -329,7 +329,7 @@ export function StudioSession({ roomUrl, token, onRecordingComplete }: StudioSes
             </Button>
           )}
 
-          <div className="mx-2 h-8 w-px bg-border" />
+          <div className="bg-border mx-2 h-8 w-px" />
 
           {/* Leave Call */}
           <Button variant="destructive" onClick={leaveCall} className="gap-2">

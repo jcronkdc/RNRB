@@ -342,7 +342,7 @@ export default function ProjectSessionsPage() {
                       </div>
 
                       {session.notes && (
-                        <p className="ml-13 mb-3 text-sm" style={{ color: 'var(--muted)' }}>
+                        <p className="mb-3 ml-13 text-sm" style={{ color: 'var(--muted)' }}>
                           {session.notes}
                         </p>
                       )}

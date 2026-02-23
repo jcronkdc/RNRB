@@ -284,7 +284,7 @@ export function RecordingControls({ onRecordingComplete }: RecordingControlsProp
 
         {/* Info */}
         {!isRecording && participantCounts.present === 0 && (
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-center text-sm">
             Join the session to start recording
           </p>
         )}

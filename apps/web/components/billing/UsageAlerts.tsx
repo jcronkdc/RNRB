@@ -143,7 +143,7 @@ export function UsageAlerts() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        className="fixed bottom-4 right-4 z-50 flex max-w-sm flex-col gap-2"
+        className="fixed right-4 bottom-4 z-50 flex max-w-sm flex-col gap-2"
       >
         {activeAlerts.map((config) => {
           const data = usage[config.type];

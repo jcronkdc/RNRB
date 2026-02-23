@@ -72,7 +72,7 @@ export default function SongRequestPage() {
 
   if (submitted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-brand-primary/10 via-background to-background px-4 py-12">
+      <div className="from-brand-primary/10 via-background to-background flex min-h-screen items-center justify-center bg-linear-to-br px-4 py-12">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -103,7 +103,7 @@ export default function SongRequestPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-brand-primary/10 via-background to-background px-4 py-12">
+    <div className="from-brand-primary/10 via-background to-background min-h-screen bg-linear-to-br px-4 py-12">
       <div className="rnrb-container mx-auto max-w-3xl">
         {/* Header */}
         <motion.div
@@ -111,7 +111,7 @@ export default function SongRequestPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 text-center"
         >
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-brand-primary/10">
+          <div className="bg-brand-primary/10 mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full">
             <Music className="h-10 w-10 text-(--accent)" />
           </div>
           <h1 className="font-display mb-3 text-4xl font-bold sm:text-5xl">Request a Song</h1>

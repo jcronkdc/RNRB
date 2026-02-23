@@ -139,8 +139,8 @@ function ArtistStoreContent() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -263,7 +263,7 @@ function ArtistStoreContent() {
                       </div>
                     )}
                     {product.isFeatured && (
-                      <span className="absolute left-3 top-3 rounded-full bg-orange-500 px-2 py-0.5 text-xs font-medium text-white">
+                      <span className="absolute top-3 left-3 rounded-full bg-orange-500 px-2 py-0.5 text-xs font-medium text-white">
                         Featured
                       </span>
                     )}

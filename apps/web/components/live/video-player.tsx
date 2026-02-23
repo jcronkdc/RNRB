@@ -283,7 +283,7 @@ export function VideoPlayer({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute left-4 top-4 z-10 flex items-center gap-3"
+            className="absolute top-4 left-4 z-10 flex items-center gap-3"
           >
             {isLive && (
               <div className="flex items-center gap-2 rounded-full bg-red-600/90 px-3 py-1.5">
@@ -306,7 +306,7 @@ export function VideoPlayer({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute right-4 top-4 z-10 flex items-center gap-2"
+            className="absolute top-4 right-4 z-10 flex items-center gap-2"
           >
             {/* Connection Quality Indicator */}
             <div
@@ -337,10 +337,10 @@ export function VideoPlayer({
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 top-full mt-2 min-w-[180px] overflow-hidden rounded-xl border border-white/10 bg-gray-900/95 shadow-xl"
+                    className="absolute top-full right-0 mt-2 min-w-[180px] overflow-hidden rounded-xl border border-white/10 bg-gray-900/95 shadow-xl"
                   >
                     <div className="p-2">
-                      <p className="px-3 py-1.5 text-xs uppercase tracking-wider text-white/50">
+                      <p className="px-3 py-1.5 text-xs tracking-wider text-white/50 uppercase">
                         Quality
                       </p>
                       {QUALITY_OPTIONS.map((option) => (
@@ -385,7 +385,7 @@ export function VideoPlayer({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="absolute bottom-0 left-0 right-0 z-10 bg-linear-to-t from-black/80 to-transparent px-4 pb-4"
+          className="absolute right-0 bottom-0 left-0 z-10 bg-linear-to-t from-black/80 to-transparent px-4 pb-4"
         >
           <div className="flex items-center gap-3 text-sm text-white">
             <span>{formatTime(currentTime)}</span>

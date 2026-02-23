@@ -388,7 +388,7 @@ export function LibraryShareModal({
             <div className="max-h-[60vh] overflow-y-auto p-4">
               {/* Files being shared */}
               <div className="mb-4 rounded-lg border border-gray-800 bg-gray-800/50 p-3">
-                <p className="mb-2 text-xs font-medium uppercase text-gray-500">File</p>
+                <p className="mb-2 text-xs font-medium text-gray-500 uppercase">File</p>
                 <div className="flex items-center gap-2">
                   <span className="rounded-full bg-gray-700 px-3 py-1 text-sm text-white">
                     {fileNames[0]}
@@ -560,7 +560,7 @@ export function LibraryShareModal({
                           <button
                             type="button"
                             onClick={() => setShowLinkPassword(!showLinkPassword)}
-                            className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-500 transition-colors hover:bg-gray-700 hover:text-gray-300"
+                            className="absolute top-1/2 right-2 -translate-y-1/2 rounded p-0.5 text-gray-500 transition-colors hover:bg-gray-700 hover:text-gray-300"
                             tabIndex={-1}
                             aria-label={showLinkPassword ? 'Hide password' : 'Show password'}
                           >
@@ -641,7 +641,7 @@ export function LibraryShareModal({
               {/* Existing Links */}
               {existingLinks.length > 0 && !generatedLink && (
                 <div className="mt-4">
-                  <p className="mb-2 text-xs font-medium uppercase text-gray-500">
+                  <p className="mb-2 text-xs font-medium text-gray-500 uppercase">
                     Existing Links ({existingLinks.length})
                   </p>
                   <div className="space-y-2">
@@ -739,7 +739,7 @@ export function LibraryShareModal({
               <div className="max-h-[60vh] overflow-y-auto p-4">
                 {/* Files being shared */}
                 <div className="mb-4 rounded-lg border border-gray-800 bg-gray-800/50 p-3">
-                  <p className="mb-2 text-xs font-medium uppercase text-gray-500">Files</p>
+                  <p className="mb-2 text-xs font-medium text-gray-500 uppercase">Files</p>
                   <div className="flex flex-wrap gap-2">
                     {fileNames.slice(0, 5).map((name, i) => (
                       <span
@@ -759,22 +759,22 @@ export function LibraryShareModal({
 
                 {/* Search */}
                 <div className="relative mb-4">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+                  <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by name or email..."
-                    className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
+                    className="w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-4 pl-10 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden"
                   />
                   {searching && (
-                    <Loader2 className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-gray-500" />
+                    <Loader2 className="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin text-gray-500" />
                   )}
                 </div>
 
                 {/* User List */}
                 <div className="mb-4 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-medium uppercase text-gray-500">
+                  <div className="flex items-center gap-2 text-xs font-medium text-gray-500 uppercase">
                     <Users className="h-3 w-3" />
                     {searchQuery.length >= 2 ? 'Search Results' : 'Recent Collaborators'}
                   </div>
@@ -843,7 +843,7 @@ export function LibraryShareModal({
 
                 {/* Options */}
                 <div className="space-y-3 rounded-lg border border-gray-800 bg-gray-800/50 p-3">
-                  <p className="text-xs font-medium uppercase text-gray-500">Options</p>
+                  <p className="text-xs font-medium text-gray-500 uppercase">Options</p>
 
                   {/* Permissions */}
                   <div className="flex flex-wrap gap-2">

@@ -122,20 +122,20 @@ export function FirstTimeOnboarding() {
             className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4"
           >
             <div
-              className="rnrb-card pointer-events-auto w-full max-w-2xl border-2 border-brand-primary/30 p-8 shadow-2xl"
+              className="rnrb-card border-brand-primary/30 pointer-events-auto w-full max-w-2xl border-2 p-8 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
                 onClick={handleSkip}
-                className="absolute right-4 top-4 text-muted-foreground transition hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground absolute top-4 right-4 transition"
               >
                 <X className="h-5 w-5" />
               </button>
 
               {/* Icon */}
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-brand-primary/10">
-                <currentStepData.icon className="h-8 w-8 text-brand-primary" />
+              <div className="bg-brand-primary/10 mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-xl">
+                <currentStepData.icon className="text-brand-primary h-8 w-8" />
               </div>
 
               {/* Content */}
@@ -143,7 +143,7 @@ export function FirstTimeOnboarding() {
                 <h2 className="font-display mb-4 text-2xl font-bold md:text-3xl">
                   {currentStepData.title}
                 </h2>
-                <p className="text-lg leading-relaxed text-muted-foreground">
+                <p className="text-muted-foreground text-lg leading-relaxed">
                   {currentStepData.description}
                 </p>
               </div>
@@ -155,10 +155,10 @@ export function FirstTimeOnboarding() {
                     key={index}
                     className={`h-2 rounded-full transition-all ${
                       index === currentStep
-                        ? 'w-8 bg-brand-primary'
+                        ? 'bg-brand-primary w-8'
                         : index < currentStep
-                          ? 'w-2 bg-brand-primary/50'
-                          : 'w-2 bg-muted-foreground/30'
+                          ? 'bg-brand-primary/50 w-2'
+                          : 'bg-muted-foreground/30 w-2'
                     }`}
                   />
                 ))}
@@ -168,7 +168,7 @@ export function FirstTimeOnboarding() {
               <div className="flex items-center justify-between gap-4">
                 <button
                   onClick={handleSkip}
-                  className="text-sm text-muted-foreground transition hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground text-sm transition"
                 >
                   Skip tour
                 </button>
@@ -192,7 +192,7 @@ export function FirstTimeOnboarding() {
               </div>
 
               {/* Step Counter */}
-              <p className="mt-4 text-center text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-4 text-center text-xs">
                 Step {currentStep + 1} of {onboardingSteps.length}
               </p>
             </div>

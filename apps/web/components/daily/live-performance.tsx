@@ -290,7 +290,7 @@ export function LivePerformance({
         <div className="flex items-start justify-between">
           <div>
             <h2 className="mb-2 text-2xl font-bold">{performanceName}</h2>
-            {description && <p className="mb-4 text-muted-foreground">{description}</p>}
+            {description && <p className="text-muted-foreground mb-4">{description}</p>}
             {scheduledTime && !isLiveStreaming && (
               <p className="text-sm">Scheduled for: {formatDateTime(scheduledTime)}</p>
             )}
@@ -354,7 +354,7 @@ export function LivePerformance({
 
             {/* Overlay Stats */}
             {isLiveStreaming && (
-              <div className="absolute right-4 top-4 rounded-lg bg-black/70 px-3 py-2 text-white">
+              <div className="absolute top-4 right-4 rounded-lg bg-black/70 px-3 py-2 text-white">
                 <p className="text-xs">Stream Health</p>
                 <p className="font-mono text-sm">{connectionQuality.toUpperCase()}</p>
               </div>
@@ -504,17 +504,17 @@ export function LivePerformance({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Peak Viewers</span>
+                <span className="text-muted-foreground text-sm">Peak Viewers</span>
                 <span className="font-semibold">{formattedPeakViewers}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Chat Messages</span>
+                <span className="text-muted-foreground text-sm">Chat Messages</span>
                 <span className="font-semibold">{chatMessages.length}</span>
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Reactions</span>
+                <span className="text-muted-foreground text-sm">Reactions</span>
                 <span className="font-semibold">{formattedReactions}</span>
               </div>
             </div>

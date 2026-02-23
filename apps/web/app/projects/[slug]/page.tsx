@@ -93,13 +93,13 @@ export default function ProjectDetailPage() {
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Premium Hero Section */}
       <div className="relative overflow-hidden border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-linear-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="bg-(--accent)/10 absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl" />
-          <div className="bg-(--accent)/5 absolute bottom-0 left-1/4 h-96 w-96 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-1/4 h-96 w-96 rounded-full bg-(--accent)/10 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 h-96 w-96 rounded-full bg-(--accent)/5 blur-3xl" />
         </div>
 
-        <div className="container relative z-10 mx-auto max-w-7xl px-4 py-16">
+        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -111,14 +111,14 @@ export default function ProjectDetailPage() {
               className="mb-6 inline-flex items-center gap-2 text-(--muted) transition-colors hover:text-(--accent)"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="font-mono text-xs uppercase tracking-wider">All Projects</span>
+              <span className="font-mono text-xs tracking-wider uppercase">All Projects</span>
             </Link>
 
             {/* Project Header */}
             <div className="mb-8 flex items-start justify-between">
               <div className="flex items-center gap-4">
                 {/* Cover Art */}
-                <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-linear-to-br from-brand-primary/20 to-brand-primary/5">
+                <div className="from-brand-primary/20 to-brand-primary/5 flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-linear-to-br">
                   {project.cover_image ? (
                     <img
                       src={project.cover_image}
@@ -126,7 +126,7 @@ export default function ProjectDetailPage() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <Music className="text-(--accent)/50 h-10 w-10" />
+                    <Music className="h-10 w-10 text-(--accent)/50" />
                   )}
                 </div>
 
@@ -149,9 +149,7 @@ export default function ProjectDetailPage() {
                       </span>
                     )}
                   </div>
-                  {project.description && (
-                    <p className="text-(--muted)">{project.description}</p>
-                  )}
+                  {project.description && <p className="text-(--muted)">{project.description}</p>}
                 </div>
               </div>
 
@@ -195,9 +193,9 @@ export default function ProjectDetailPage() {
           className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"
         >
           <Link href={`/projects/${slug}/songs/new`}>
-            <div className="rnrb-card rnrb-hover-lift group h-full cursor-pointer border border-(--border) p-6 transition-all hover:border-brand-primary/50">
+            <div className="rnrb-card rnrb-hover-lift group hover:border-brand-primary/50 h-full cursor-pointer border border-(--border) p-6 transition-all">
               <div className="mb-4 flex items-start justify-between">
-                <div className="bg-(--accent)/10 group-hover:bg-(--accent)/20 flex h-12 w-12 items-center justify-center rounded-xl transition-colors">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--accent)/10 transition-colors group-hover:bg-(--accent)/20">
                   <Music className="h-6 w-6 text-(--accent)" />
                 </div>
                 <ArrowRight className="h-5 w-5 text-(--muted) transition-all group-hover:translate-x-1 group-hover:text-(--accent)" />
@@ -208,9 +206,9 @@ export default function ProjectDetailPage() {
           </Link>
 
           <Link href={`/projects/${slug}/collaborate`}>
-            <div className="rnrb-card rnrb-hover-lift group h-full cursor-pointer border border-(--border) p-6 transition-all hover:border-brand-primary/50">
+            <div className="rnrb-card rnrb-hover-lift group hover:border-brand-primary/50 h-full cursor-pointer border border-(--border) p-6 transition-all">
               <div className="mb-4 flex items-start justify-between">
-                <div className="bg-(--accent)/10 group-hover:bg-(--accent)/20 flex h-12 w-12 items-center justify-center rounded-xl transition-colors">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--accent)/10 transition-colors group-hover:bg-(--accent)/20">
                   <MessageSquare className="h-6 w-6 text-(--accent)" />
                 </div>
                 <ArrowRight className="h-5 w-5 text-(--muted) transition-all group-hover:translate-x-1 group-hover:text-(--accent)" />
@@ -221,9 +219,9 @@ export default function ProjectDetailPage() {
           </Link>
 
           <Link href={`/projects/${slug}/sessions`}>
-            <div className="rnrb-card rnrb-hover-lift group h-full cursor-pointer border border-(--border) p-6 transition-all hover:border-brand-primary/50">
+            <div className="rnrb-card rnrb-hover-lift group hover:border-brand-primary/50 h-full cursor-pointer border border-(--border) p-6 transition-all">
               <div className="mb-4 flex items-start justify-between">
-                <div className="bg-(--accent)/10 group-hover:bg-(--accent)/20 flex h-12 w-12 items-center justify-center rounded-xl transition-colors">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--accent)/10 transition-colors group-hover:bg-(--accent)/20">
                   <Calendar className="h-6 w-6 text-(--accent)" />
                 </div>
                 <ArrowRight className="h-5 w-5 text-(--muted) transition-all group-hover:translate-x-1 group-hover:text-(--accent)" />
@@ -234,9 +232,9 @@ export default function ProjectDetailPage() {
           </Link>
 
           <Link href={`/projects/${slug}/setlists`}>
-            <div className="rnrb-card rnrb-hover-lift group h-full cursor-pointer border border-(--border) p-6 transition-all hover:border-brand-primary/50">
+            <div className="rnrb-card rnrb-hover-lift group hover:border-brand-primary/50 h-full cursor-pointer border border-(--border) p-6 transition-all">
               <div className="mb-4 flex items-start justify-between">
-                <div className="bg-(--accent)/10 group-hover:bg-(--accent)/20 flex h-12 w-12 items-center justify-center rounded-xl transition-colors">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--accent)/10 transition-colors group-hover:bg-(--accent)/20">
                   <FileText className="h-6 w-6 text-(--accent)" />
                 </div>
                 <ArrowRight className="h-5 w-5 text-(--muted) transition-all group-hover:translate-x-1 group-hover:text-(--accent)" />
@@ -272,7 +270,7 @@ export default function ProjectDetailPage() {
 
               {(project.song_count || 0) === 0 ? (
                 <div className="py-12 text-center">
-                  <Music className="text-(--accent)/30 mx-auto mb-4 h-16 w-16" />
+                  <Music className="mx-auto mb-4 h-16 w-16 text-(--accent)/30" />
                   <p className="mb-2 text-(--muted)">No songs yet</p>
                   <p className="mb-6 text-sm text-(--muted)">
                     Create your first song to get started with this project
@@ -294,10 +292,10 @@ export default function ProjectDetailPage() {
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
                       <Link href={`/projects/${slug}/songs/${song.id}`}>
-                        <div className="hover:bg-[color:var(--surface)]-muted group cursor-pointer rounded-xl border border-(--border) bg-(--surface) p-4 transition-all hover:border-brand-primary/50">
+                        <div className="hover:bg-[color:var(--surface)]-muted group hover:border-brand-primary/50 cursor-pointer rounded-xl border border-(--border) bg-(--surface) p-4 transition-all">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="bg-(--accent)/10 flex h-10 w-10 items-center justify-center rounded-lg">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--accent)/10">
                                 <Music className="h-5 w-5 text-(--accent)" />
                               </div>
                               <div>
@@ -346,7 +344,7 @@ export default function ProjectDetailPage() {
               </h3>
               <div className="space-y-3">
                 <div className="bg-[color:var(--surface)]-muted flex items-center gap-3 rounded-lg border border-(--border) p-3">
-                  <div className="bg-(--accent)/20 flex h-10 w-10 items-center justify-center rounded-full font-semibold text-(--text)">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-(--accent)/20 font-semibold text-(--text)">
                     {session?.user?.email?.[0]?.toUpperCase() || '?'}
                   </div>
                   <div>

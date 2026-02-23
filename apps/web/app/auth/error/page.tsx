@@ -11,11 +11,13 @@ const ERROR_MESSAGES: Record<string, { title: string; message: string }> = {
   },
   AccessDenied: {
     title: 'Access denied',
-    message: 'You do not have permission to sign in. If you think this is a mistake, please contact support.',
+    message:
+      'You do not have permission to sign in. If you think this is a mistake, please contact support.',
   },
   Verification: {
     title: 'Verification failed',
-    message: 'The verification link may have expired or already been used. Please request a new one.',
+    message:
+      'The verification link may have expired or already been used. Please request a new one.',
   },
   OAuthSignin: {
     title: 'Sign-in error',
@@ -27,7 +29,8 @@ const ERROR_MESSAGES: Record<string, { title: string; message: string }> = {
   },
   OAuthCreateAccount: {
     title: 'Account creation failed',
-    message: 'Could not create your account. This email may already be registered with a different sign-in method.',
+    message:
+      'Could not create your account. This email may already be registered with a different sign-in method.',
   },
   EmailCreateAccount: {
     title: 'Account creation failed',
@@ -39,7 +42,8 @@ const ERROR_MESSAGES: Record<string, { title: string; message: string }> = {
   },
   OAuthAccountNotLinked: {
     title: 'Account already exists',
-    message: 'This email is already associated with another sign-in method. Please sign in using your original method.',
+    message:
+      'This email is already associated with another sign-in method. Please sign in using your original method.',
   },
   CredentialsSignin: {
     title: 'Sign-in failed',
@@ -126,7 +130,10 @@ export default function AuthErrorPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg)' }}>
+        <div
+          className="flex min-h-screen items-center justify-center"
+          style={{ background: 'var(--bg)' }}
+        >
           <div
             className="h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"
             style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}

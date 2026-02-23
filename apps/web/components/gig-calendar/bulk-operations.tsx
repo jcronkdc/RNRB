@@ -88,10 +88,10 @@ export function BulkOperations({
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
         >
-          <div className="rnrb-card flex items-center gap-4 rounded-2xl border-2 border-brand-primary bg-background p-4 shadow-2xl">
+          <div className="rnrb-card border-brand-primary bg-background flex items-center gap-4 rounded-2xl border-2 p-4 shadow-2xl">
             {/* Count */}
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 font-bold text-brand-primary">
+              <div className="bg-brand-primary/20 text-brand-primary flex h-10 w-10 items-center justify-center rounded-full font-bold">
                 {selectedCount}
               </div>
               <span className="text-sm font-medium">
@@ -100,7 +100,7 @@ export function BulkOperations({
             </div>
 
             {/* Divider */}
-            <div className="h-8 w-px border-border" />
+            <div className="border-border h-8 w-px" />
 
             {/* Actions */}
             <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export function BulkOperations({
               </Button>
 
               {/* Divider */}
-              <div className="h-8 w-px border-border" />
+              <div className="border-border h-8 w-px" />
 
               {/* Clear */}
               <Button onClick={onClearSelection} disabled={isProcessing} size="sm" variant="ghost">
@@ -177,7 +177,7 @@ export function BulkOperations({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="max-w-md rounded-2xl bg-background p-6 shadow-2xl"
+              className="bg-background max-w-md rounded-2xl p-6 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="mb-4 flex items-center gap-3">
@@ -186,27 +186,27 @@ export function BulkOperations({
                 </div>
                 <div>
                   <h3 className="font-semibold">Confirm Action</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     This action affects {selectedCount} {selectedCount === 1 ? 'show' : 'shows'}
                   </p>
                 </div>
               </div>
 
-              <div className="mb-6 max-h-48 overflow-y-auto rounded-lg bg-muted/30 p-3">
+              <div className="bg-muted/30 mb-6 max-h-48 overflow-y-auto rounded-lg p-3">
                 {selectedShowsData.slice(0, 5).map((show) => (
                   <div key={show.id} className="text-sm">
                     • {show.name}
                   </div>
                 ))}
                 {selectedShowsData.length > 5 && (
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     + {selectedShowsData.length - 5} more
                   </div>
                 )}
               </div>
 
               {showConfirm.type === 'delete' && (
-                <p className="mb-6 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mb-6 text-sm">
                   Are you sure you want to delete these shows? This action cannot be undone.
                 </p>
               )}

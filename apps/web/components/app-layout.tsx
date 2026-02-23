@@ -99,7 +99,10 @@ function AppLayoutContent({
 
   if (status === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center" style={{ background: 'var(--bg)' }}>
+      <div
+        className="flex min-h-screen items-center justify-center"
+        style={{ background: 'var(--bg)' }}
+      >
         <div
           className="h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"
           style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }}
@@ -108,7 +111,11 @@ function AppLayoutContent({
     );
   }
 
-  const sidebarWidth = isFocusMode ? '0px' : sidebarCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)';
+  const sidebarWidth = isFocusMode
+    ? '0px'
+    : sidebarCollapsed
+      ? 'var(--sidebar-collapsed-width)'
+      : 'var(--sidebar-width)';
 
   return (
     <MobileMenuProvider>
@@ -137,9 +144,7 @@ function AppLayoutContent({
           )}
 
           {/* Page content */}
-          <div className={isFocusMode ? 'p-4' : 'p-5 lg:p-7'}>
-            {children}
-          </div>
+          <div className={isFocusMode ? 'p-4' : 'p-5 lg:p-7'}>{children}</div>
         </main>
 
         {showTransport && !isFocusMode && (
@@ -155,7 +160,9 @@ function AppLayoutContent({
         {/* Mobile sidebar override */}
         <style jsx global>{`
           @media (max-width: 1024px) {
-            main { margin-left: 0 !important; }
+            main {
+              margin-left: 0 !important;
+            }
           }
         `}</style>
       </div>

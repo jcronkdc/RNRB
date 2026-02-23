@@ -157,7 +157,7 @@ export function PeopleSidebar() {
                     </div>
                   )}
                   {user.isAvailable && (
-                    <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-gray-900 bg-green-500" />
+                    <div className="absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full border-2 border-gray-900 bg-green-500" />
                   )}
                 </div>
 

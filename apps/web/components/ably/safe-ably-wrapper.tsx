@@ -56,7 +56,7 @@ export function AblyUnavailableFallback({
   message?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+    <div className="bg-muted/50 text-muted-foreground flex items-center gap-2 rounded-lg px-3 py-2 text-sm">
       <div className="h-2 w-2 rounded-full bg-gray-400" />
       <span>{message}</span>
     </div>

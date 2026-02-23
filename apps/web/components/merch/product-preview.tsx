@@ -86,7 +86,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
+            className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 text-white transition-colors hover:bg-black/70"
           >
             <X className="h-5 w-5" />
           </button>
@@ -116,13 +116,13 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:scale-110 hover:bg-black/70"
+                      className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:scale-110 hover:bg-black/70"
                     >
                       <ChevronLeft className="h-6 w-6" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:scale-110 hover:bg-black/70"
+                      className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white transition-all hover:scale-110 hover:bg-black/70"
                     >
                       <ChevronRight className="h-6 w-6" />
                     </button>
@@ -131,7 +131,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
 
                 {/* Zoom Hint */}
                 {!isZoomed && (
-                  <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
+                  <div className="absolute right-4 bottom-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
                     <ZoomIn className="h-4 w-4" />
                     Click to zoom
                   </div>
@@ -146,7 +146,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
 
                 {/* Color Badge */}
                 {currentMockup?.productColor && (
-                  <div className="absolute left-4 top-4 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
+                  <div className="absolute top-4 left-4 rounded-full bg-black/50 px-4 py-2 text-sm text-white">
                     {currentMockup.productColor}
                   </div>
                 )}
@@ -180,7 +180,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
               <div className="mb-4">
                 <h2 className="mb-2 text-2xl font-bold text-white">{product.name}</h2>
                 {product.description && <p className="text-white/60">{product.description}</p>}
-                <div className="mt-4 inline-block rounded-full bg-white/10 px-3 py-1 text-sm capitalize text-white/70">
+                <div className="mt-4 inline-block rounded-full bg-white/10 px-3 py-1 text-sm text-white/70 capitalize">
                   {product.category}
                 </div>
               </div>
@@ -193,7 +193,7 @@ export function ProductPreviewModal({ product, onClose }: ProductPreviewProps) {
 
               {/* Product Features */}
               <div className="mb-6 space-y-3 rounded-xl bg-white/5 p-4">
-                <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-white/50">
+                <h3 className="mb-2 text-sm font-semibold tracking-wider text-white/50 uppercase">
                   Product Details
                 </h3>
                 <div className="flex items-start gap-3 text-sm text-white/70">
@@ -267,7 +267,7 @@ export function ProductCardWithPreview({ product }: { product: ProductPreviewPro
 
           {/* Multiple Images Badge */}
           {product.mockups && product.mockups.length > 1 && (
-            <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
+            <div className="absolute top-3 right-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
               {product.mockups.length} views
             </div>
           )}
@@ -282,7 +282,7 @@ export function ProductCardWithPreview({ product }: { product: ProductPreviewPro
 
           <div className="flex items-center justify-between">
             <span className="text-lg font-bold text-orange-400">{formatPrice(product.price)}</span>
-            <span className="text-sm capitalize text-white/50">{product.category}</span>
+            <span className="text-sm text-white/50 capitalize">{product.category}</span>
           </div>
         </div>
       </motion.div>

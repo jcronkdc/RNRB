@@ -2,13 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Home,
-  Music2,
-  FolderOpen,
-  Library,
-  Video,
-} from '@/components/ui/custom-icons';
+import { Home, Music2, FolderOpen, Library, Video } from '@/components/ui/custom-icons';
 
 interface NavItem {
   href: string;
@@ -60,7 +54,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 lg:hidden"
+      className="fixed right-0 bottom-0 left-0 z-50 lg:hidden"
       style={{
         background: 'var(--panel)',
         borderTop: '1px solid var(--border)',

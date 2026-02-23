@@ -480,11 +480,11 @@ export default function PublicProfilePage() {
       {/* Animated Background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div
-          className="absolute -left-1/4 -top-1/4 h-[600px] w-[600px] rounded-full opacity-20 blur-[120px]"
+          className="absolute -top-1/4 -left-1/4 h-[600px] w-[600px] rounded-full opacity-20 blur-[120px]"
           style={{ background: 'radial-gradient(circle, var(--accent), transparent)' }}
         />
         <div
-          className="absolute -bottom-1/4 -right-1/4 h-[500px] w-[500px] rounded-full opacity-15 blur-[100px]"
+          className="absolute -right-1/4 -bottom-1/4 h-[500px] w-[500px] rounded-full opacity-15 blur-[100px]"
           style={{ background: 'radial-gradient(circle, #ffd700, transparent)' }}
         />
       </div>
@@ -568,7 +568,7 @@ export default function PublicProfilePage() {
                   {/* Availability indicator */}
                   {(profile.availableForCollaboration || profile.availableForGigs) && (
                     <div
-                      className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full"
+                      className="absolute -right-2 -bottom-2 flex h-8 w-8 items-center justify-center rounded-full"
                       style={{
                         background: 'linear-gradient(135deg, #22c55e, #16a34a)',
                         boxShadow: '0 4px 12px rgba(34, 197, 94, 0.4)',
@@ -801,7 +801,7 @@ export default function PublicProfilePage() {
                     About
                   </h2>
                   <p
-                    className="whitespace-pre-wrap leading-relaxed"
+                    className="leading-relaxed whitespace-pre-wrap"
                     style={{ color: 'var(--text-secondary)' }}
                   >
                     {profile.bio}
@@ -1086,7 +1086,7 @@ export default function PublicProfilePage() {
                           </div>
 
                           {/* Duration badge */}
-                          <div className="absolute bottom-2 right-2 rounded-md bg-black/70 px-2 py-1 text-xs font-medium text-white">
+                          <div className="absolute right-2 bottom-2 rounded-md bg-black/70 px-2 py-1 text-xs font-medium text-white">
                             {formatDuration(track.duration)}
                           </div>
                         </div>

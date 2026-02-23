@@ -64,7 +64,7 @@ export default function OfflinePage() {
         }}
       >
         <h2
-          className="mb-4 text-center text-sm font-semibold uppercase tracking-wider"
+          className="mb-4 text-center text-sm font-semibold tracking-wider uppercase"
           style={{ color: 'var(--muted, #888)' }}
         >
           What still works

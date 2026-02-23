@@ -44,7 +44,7 @@ export function TransactionSkeleton() {
       </div>
       <div className="text-right">
         <Skeleton className="ml-auto h-5 w-20" />
-        <Skeleton className="ml-auto mt-1 h-3 w-16" />
+        <Skeleton className="mt-1 ml-auto h-3 w-16" />
       </div>
     </div>
   );
@@ -985,10 +985,7 @@ export function LiveStreamSkeleton() {
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="overflow-hidden rounded-xl border border-white/10 bg-white/2"
-              >
+              <div key={i} className="overflow-hidden rounded-xl border border-white/10 bg-white/2">
                 <Skeleton className="h-40 w-full rounded-none" />
                 <div className="p-4">
                   <div className="mb-2 flex items-center gap-3">
@@ -1355,7 +1352,7 @@ export function VideoPlayerSkeleton() {
           <div className="h-16 w-16 animate-pulse rounded-full bg-white/10" />
         </div>
         {/* Controls overlay */}
-        <div className="absolute bottom-0 left-0 right-0 flex items-center gap-4 bg-linear-to-t from-black/80 to-transparent p-4">
+        <div className="absolute right-0 bottom-0 left-0 flex items-center gap-4 bg-linear-to-t from-black/80 to-transparent p-4">
           <Skeleton className="h-8 w-8 rounded" />
           <Skeleton className="h-1 flex-1 rounded-full" />
           <Skeleton className="h-4 w-16" />

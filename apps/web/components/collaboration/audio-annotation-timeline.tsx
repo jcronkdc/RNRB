@@ -135,7 +135,7 @@ export function AudioAnnotationTimeline({
       >
         {/* Progress indicator */}
         <div
-          className="absolute left-0 top-0 h-full rounded-l-xl"
+          className="absolute top-0 left-0 h-full rounded-l-xl"
           style={{
             width: `${(currentTime / duration) * 100}%`,
             background: 'var(--accent-soft)',
@@ -180,7 +180,7 @@ export function AudioAnnotationTimeline({
         <div className="absolute bottom-1 left-2 text-xs" style={{ color: 'var(--muted)' }}>
           {formatTime(0)}
         </div>
-        <div className="absolute bottom-1 right-2 text-xs" style={{ color: 'var(--muted)' }}>
+        <div className="absolute right-2 bottom-1 text-xs" style={{ color: 'var(--muted)' }}>
           {formatTime(duration)}
         </div>
       </div>
@@ -202,7 +202,7 @@ export function AudioAnnotationTimeline({
             }}
           />
           <span
-            className="absolute right-4 top-1/2 -translate-y-1/2 font-mono text-xs"
+            className="absolute top-1/2 right-4 -translate-y-1/2 font-mono text-xs"
             style={{ color: 'var(--muted)' }}
           >
             {formatTime(currentTime)}

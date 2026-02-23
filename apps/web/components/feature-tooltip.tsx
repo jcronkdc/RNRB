@@ -64,12 +64,12 @@ export function FeatureTooltip({
               <div
                 className={`absolute h-3 w-3 rotate-45 border border-orange-500/30 bg-zinc-900/95 ${
                   placement === 'top'
-                    ? 'bottom-[-6px] left-1/2 -translate-x-1/2 border-b border-r'
+                    ? 'bottom-[-6px] left-1/2 -translate-x-1/2 border-r border-b'
                     : placement === 'bottom'
-                      ? 'left-1/2 top-[-6px] -translate-x-1/2 border-l border-t'
+                      ? 'top-[-6px] left-1/2 -translate-x-1/2 border-t border-l'
                       : placement === 'left'
-                        ? 'right-[-6px] top-1/2 -translate-y-1/2 border-r border-t'
-                        : 'left-[-6px] top-1/2 -translate-y-1/2 border-b border-l'
+                        ? 'top-1/2 right-[-6px] -translate-y-1/2 border-t border-r'
+                        : 'top-1/2 left-[-6px] -translate-y-1/2 border-b border-l'
                 }`}
               />
             </div>
@@ -156,7 +156,7 @@ export function OnboardingTour({ steps, onComplete, onSkip }: OnboardingTourProp
           {/* Header */}
           <div className="mb-4 flex items-start justify-between">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-orange-400">
+              <p className="text-xs font-medium tracking-wide text-orange-400 uppercase">
                 Step {currentStep + 1} of {steps.length}
               </p>
               <h3 className="mt-1 text-xl font-bold text-white">{step.title}</h3>

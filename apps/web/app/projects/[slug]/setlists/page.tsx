@@ -298,7 +298,7 @@ export default function SetlistsPage() {
 
               {/* Linked Show Display */}
               {selectedSetlist.show ? (
-                <div className="mt-4 inline-flex items-center gap-2 rounded-xl border border-brand-primary/30 bg-brand-primary/10 px-4 py-2">
+                <div className="border-brand-primary/30 bg-brand-primary/10 mt-4 inline-flex items-center gap-2 rounded-xl border px-4 py-2">
                   <Calendar className="h-4 w-4 text-(--accent)" />
                   <div className="flex items-center gap-2">
                     <Link
@@ -420,7 +420,7 @@ export default function SetlistsPage() {
                   </div>
                 ) : shows.length === 0 ? (
                   <div className="py-12 text-center">
-                    <Calendar className="text-(--muted)/50 mx-auto mb-4 h-16 w-16" />
+                    <Calendar className="mx-auto mb-4 h-16 w-16 text-(--muted)/50" />
                     <p className="mb-4 text-(--muted)">No upcoming shows scheduled</p>
                     <Link href="/shows/new">
                       <Button className="rnrb-button-primary">
@@ -436,7 +436,7 @@ export default function SetlistsPage() {
                         key={show.id}
                         onClick={() => handleLinkToShow(show.id)}
                         disabled={linkingShow}
-                        className="rnrb-card w-full p-4 text-left transition hover:border-brand-primary/50 disabled:opacity-50"
+                        className="rnrb-card hover:border-brand-primary/50 w-full p-4 text-left transition disabled:opacity-50"
                       >
                         <div className="mb-2 flex items-start justify-between">
                           <h3 className="font-semibold">{show.name}</h3>

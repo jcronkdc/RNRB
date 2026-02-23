@@ -39,7 +39,7 @@ const ActivityItem = memo(({ activity }: { activity: ActivityEvent }) => {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
-      className="flex items-start gap-3 rounded-2xl border border-border/50 bg-surface/50 p-3 transition-colors hover:bg-surface"
+      className="border-border/50 bg-surface/50 hover:bg-surface flex items-start gap-3 rounded-2xl border p-3 transition-colors"
     >
       {/* Icon */}
       <div className="bg-primary/10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg">
@@ -51,7 +51,7 @@ const ActivityItem = memo(({ activity }: { activity: ActivityEvent }) => {
         <p className={`text-sm font-medium ${getActivityColor(activity.type)}`}>
           {getActivityMessage(activity)}
         </p>
-        <p className="mt-0.5 text-xs text-muted-foreground">{formattedTime}</p>
+        <p className="text-muted-foreground mt-0.5 text-xs">{formattedTime}</p>
       </div>
     </motion.div>
   );
@@ -71,7 +71,7 @@ export function ActivityFeed({
       <div className="flex flex-col items-center justify-center py-8 text-center">
         <AlertCircle className="text-danger mb-2 h-8 w-8" />
         <p className="text-danger-foreground text-sm">Activity feed offline</p>
-        <p className="mt-1 text-xs text-muted-foreground">{error}</p>
+        <p className="text-muted-foreground mt-1 text-xs">{error}</p>
       </div>
     );
   }
@@ -81,7 +81,7 @@ export function ActivityFeed({
       {/* Header */}
       {showHeader && (
         <div className="flex items-center justify-between">
-          <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+          <h3 className="text-foreground flex items-center gap-2 text-lg font-semibold">
             <Activity className="text-primary h-5 w-5" />
             Activity Stream
           </h3>
@@ -91,7 +91,7 @@ export function ActivityFeed({
               animate={isConnected ? { scale: [1, 1.2, 1], opacity: [1, 0.7, 1] } : {}}
               transition={{ duration: 2, repeat: Infinity }}
             />
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               {isConnected ? 'Live' : 'Connecting...'}
             </span>
           </div>
@@ -105,9 +105,9 @@ export function ActivityFeed({
       >
         {activities.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Activity className="mb-3 h-12 w-12 text-muted-foreground/30" />
-            <p className="text-sm text-muted-foreground">No activity yet</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <Activity className="text-muted-foreground/30 mb-3 h-12 w-12" />
+            <p className="text-muted-foreground text-sm">No activity yet</p>
+            <p className="text-muted-foreground mt-1 text-xs">
               Start collaborating to see updates here
             </p>
           </div>
@@ -122,8 +122,8 @@ export function ActivityFeed({
 
       {/* Footer */}
       {activities.length > 0 && (
-        <div className="border-t border-border/50 pt-2">
-          <p className="text-center text-xs text-muted-foreground">
+        <div className="border-border/50 border-t pt-2">
+          <p className="text-muted-foreground text-center text-xs">
             Showing {activities.length} recent {activities.length === 1 ? 'activity' : 'activities'}
           </p>
         </div>

@@ -145,11 +145,11 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
     <div className="mx-auto max-w-2xl space-y-4 p-4">
       {/* Header */}
       <Card className="rnrb-card p-6">
-        <div className="mb-2 text-sm font-medium uppercase tracking-wide text-brand-primary">
+        <div className="text-brand-primary mb-2 text-sm font-medium tracking-wide uppercase">
           Today's Show
         </div>
         <h1 className="font-display mb-2 text-3xl font-bold">{show.name}</h1>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="text-muted-foreground flex items-center gap-2 text-sm">
           <Calendar className="h-4 w-4" />
           <span>{formatDateWithDay(show.date)}</span>
         </div>
@@ -180,7 +180,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
           <div className="space-y-3">
             <div>
               <div className="text-lg font-semibold">{show.venue.name}</div>
-              {venueAddress && <div className="text-sm text-muted-foreground">{venueAddress}</div>}
+              {venueAddress && <div className="text-muted-foreground text-sm">{venueAddress}</div>}
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -204,8 +204,8 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
             </div>
 
             {show.venue.capacity && (
-              <div className="border-t border-border pt-3">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="border-border border-t pt-3">
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
                   <Users className="h-4 w-4" />
                   <span>Capacity: {show.venue.capacity.toLocaleString()}</span>
                 </div>
@@ -227,13 +227,13 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
             <motion.button
               key={task.id}
               onClick={() => toggleTask(task.id)}
-              className="flex w-full items-center gap-3 rounded-lg p-3 text-left transition hover:bg-muted/30"
+              className="hover:bg-muted/30 flex w-full items-center gap-3 rounded-lg p-3 text-left transition"
               whileTap={{ scale: 0.98 }}
             >
               {completedTasks.has(task.id) ? (
                 <CheckCircle className="h-5 w-5 shrink-0 text-green-500" />
               ) : (
-                <Circle className="h-5 w-5 shrink-0 text-muted-foreground" />
+                <Circle className="text-muted-foreground h-5 w-5 shrink-0" />
               )}
               <span
                 className={`${
@@ -246,7 +246,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
           ))}
         </div>
 
-        <div className="mt-4 text-center text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-4 text-center text-sm">
           {completedTasks.size} of {checklist.length} completed
         </div>
       </Card>
@@ -276,7 +276,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
             Notes
           </h2>
 
-          <div className="whitespace-pre-wrap rounded-lg bg-muted/30 p-4 text-sm">{show.notes}</div>
+          <div className="bg-muted/30 rounded-lg p-4 text-sm whitespace-pre-wrap">{show.notes}</div>
         </Card>
       )}
 
@@ -291,7 +291,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
           <div className="space-y-2">
             {show.guarantee && (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Guarantee</span>
+                <span className="text-muted-foreground text-sm">Guarantee</span>
                 <span className="font-semibold">
                   {new Intl.NumberFormat('en-US', {
                     style: 'currency',
@@ -302,7 +302,7 @@ export function DayOfShowView({ show, onComplete }: DayOfShowViewProps) {
             )}
             {show.ticketPrice && (
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">Ticket Price</span>
+                <span className="text-muted-foreground text-sm">Ticket Price</span>
                 <span className="font-semibold">
                   {show.ticketPrice.min && show.ticketPrice.max
                     ? `$${show.ticketPrice.min} - $${show.ticketPrice.max}`
@@ -371,7 +371,7 @@ function TimelineEvent({
             isPast
               ? 'bg-green-500/20 text-green-500'
               : isSoon
-                ? 'animate-pulse bg-brand-primary/20 text-brand-primary'
+                ? 'bg-brand-primary/20 text-brand-primary animate-pulse'
                 : 'bg-muted text-muted-foreground'
           }`}
         >
@@ -387,9 +387,9 @@ function TimelineEvent({
       <div className="flex-1 pb-4">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold">{event.label}</span>
-          {isSoon && <span className="text-xs font-medium uppercase text-brand-primary">Soon</span>}
+          {isSoon && <span className="text-brand-primary text-xs font-medium uppercase">Soon</span>}
         </div>
-        <div className="text-sm text-muted-foreground">{formatTime(event.time.toISOString())}</div>
+        <div className="text-muted-foreground text-sm">{formatTime(event.time.toISOString())}</div>
       </div>
     </div>
   );

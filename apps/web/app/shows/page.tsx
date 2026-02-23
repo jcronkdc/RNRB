@@ -192,13 +192,13 @@ export default function ShowsPage() {
         {/* Search & Filter */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted) sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted) sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search shows, venues, cities..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="rnrb-input w-full rounded-xl py-2.5 pl-10 pr-4 sm:py-3 sm:pl-12"
+              className="rnrb-input w-full rounded-xl py-2.5 pr-4 pl-10 sm:py-3 sm:pl-12"
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto">
@@ -219,7 +219,7 @@ export default function ShowsPage() {
         {/* Empty State */}
         {shows.length === 0 ? (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <Calendar className="text-(--muted)/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+            <Calendar className="mx-auto mb-6 h-20 w-20 text-(--muted)/50 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Shows Scheduled Yet
             </h2>
@@ -300,7 +300,7 @@ function ShowCard({
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <Card
-        className={`rnrb-card group p-4 transition hover:border-brand-primary/30 sm:p-6 ${
+        className={`rnrb-card group hover:border-brand-primary/30 p-4 transition sm:p-6 ${
           isPast ? 'opacity-75' : ''
         }`}
       >
@@ -316,9 +316,7 @@ function ShowCard({
               >
                 {show.status}
               </span>
-              {show.tour && (
-                <span className="text-xs text-(--muted)">• {show.tour.name}</span>
-              )}
+              {show.tour && <span className="text-xs text-(--muted)">• {show.tour.name}</span>}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -335,7 +333,7 @@ function ShowCard({
               variant="ghost"
               size="sm"
               onClick={() => onDelete(show.id, show.name)}
-              className="opacity-0 transition hover:text-red-500 group-hover:opacity-100"
+              className="opacity-0 transition group-hover:opacity-100 hover:text-red-500"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -371,10 +369,7 @@ function ShowCard({
           {show.setlist && (
             <div className="flex items-center gap-2 text-sm text-(--muted)">
               <Music className="h-4 w-4 shrink-0" />
-              <Link
-                href={`/setlists`}
-                className="transition hover:text-(--accent)"
-              >
+              <Link href={`/setlists`} className="transition hover:text-(--accent)">
                 {show.setlist.name}
               </Link>
             </div>

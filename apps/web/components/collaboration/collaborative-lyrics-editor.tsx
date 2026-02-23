@@ -202,7 +202,7 @@ export function CollaborativeLyricsEditor({
                 <div className="h-6 w-0.5" style={{ background: cursor.userColor }} />
                 {/* Name tag */}
                 <div
-                  className="-translate-y-full whitespace-nowrap rounded px-1.5 py-0.5 text-[10px] font-medium text-white"
+                  className="-translate-y-full rounded px-1.5 py-0.5 text-[10px] font-medium whitespace-nowrap text-white"
                   style={{ background: cursor.userColor }}
                 >
                   {cursor.userName}

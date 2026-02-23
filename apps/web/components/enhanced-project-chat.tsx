@@ -409,10 +409,10 @@ export function EnhancedChat({
   return (
     <div className="flex h-[700px] flex-col">
       {/* Chat Header */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
+      <div className="border-border flex items-center justify-between border-b pb-4">
         <div>
-          <h3 className="text-xl font-semibold text-foreground">Project Chat</h3>
-          <p className="text-sm text-muted-foreground">{projectName}</p>
+          <h3 className="text-foreground text-xl font-semibold">Project Chat</h3>
+          <p className="text-muted-foreground text-sm">{projectName}</p>
         </div>
         <Button variant="secondary" size="sm">
           <MoreVertical className="h-4 w-4" />
@@ -437,7 +437,7 @@ export function EnhancedChat({
                 {/* Avatar */}
                 <div className="shrink-0">
                   {showAvatar ? (
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+                    <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
                       {message.senderAvatar ? (
                         <img
                           src={message.senderAvatar}
@@ -459,10 +459,10 @@ export function EnhancedChat({
                 >
                   {showAvatar && (
                     <div className="mb-1 flex items-center gap-2">
-                      <span className="text-sm font-medium text-foreground">
+                      <span className="text-foreground text-sm font-medium">
                         {message.senderName}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {formatTime(message.timestamp)}
                       </span>
                     </div>
@@ -474,10 +474,12 @@ export function EnhancedChat({
                       className={`rounded-2xl px-4 py-2 ${
                         isOwnMessage
                           ? 'bg-brand-primary text-brand-primary-foreground'
-                          : 'border border-border bg-surface text-foreground'
+                          : 'border-border bg-surface text-foreground border'
                       }`}
                     >
-                      <p className="whitespace-pre-wrap wrap-break-word text-sm">{message.content}</p>
+                      <p className="text-sm wrap-break-word whitespace-pre-wrap">
+                        {message.content}
+                      </p>
                     </div>
                   )}
 
@@ -501,7 +503,7 @@ export function EnhancedChat({
                           className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs transition-colors ${
                             userIds.includes(currentUserId)
                               ? 'bg-brand-primary/20 text-brand-primary'
-                              : 'border border-border bg-surface hover:bg-surface-hover'
+                              : 'border-border bg-surface hover:bg-surface-hover border'
                           }`}
                         >
                           <span>{emoji}</span>
@@ -517,7 +519,7 @@ export function EnhancedChat({
                       onClick={() =>
                         setShowReactionPicker(showReactionPicker === message.id ? null : message.id)
                       }
-                      className="flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-surface group-hover:opacity-100"
+                      className="text-muted-foreground hover:bg-surface flex h-6 w-6 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100"
                     >
                       <Smile className="h-4 w-4" />
                     </button>
@@ -527,7 +529,7 @@ export function EnhancedChat({
                       <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className={`absolute z-10 flex gap-1 rounded-lg border border-border bg-background p-2 shadow-lg ${
+                        className={`border-border bg-background absolute z-10 flex gap-1 rounded-lg border p-2 shadow-lg ${
                           isOwnMessage ? 'right-0' : 'left-0'
                         }`}
                       >
@@ -535,7 +537,7 @@ export function EnhancedChat({
                           <button
                             key={emoji}
                             onClick={() => addReaction(message.id, emoji)}
-                            className="rounded p-1 text-lg transition-transform hover:scale-125 hover:bg-surface"
+                            className="hover:bg-surface rounded p-1 text-lg transition-transform hover:scale-125"
                           >
                             {emoji}
                           </button>
@@ -564,11 +566,11 @@ export function EnhancedChat({
                     key={i}
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
-                    className="h-2 w-2 rounded-full bg-brand-primary"
+                    className="bg-brand-primary h-2 w-2 rounded-full"
                   />
                 ))}
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 {Array.from(typingUsers.values()).length === 1
                   ? `${Array.from(typingUsers.values())[0].userName} is typing...`
                   : `${Array.from(typingUsers.values()).length} people are typing...`}
@@ -581,7 +583,7 @@ export function EnhancedChat({
       </div>
 
       {/* Input Area */}
-      <div className="space-y-3 border-t border-border pt-4">
+      <div className="border-border space-y-3 border-t pt-4">
         {/* Voice Recorder */}
         {showVoiceRecorder && (
           <VoiceMessageRecorder
@@ -593,10 +595,10 @@ export function EnhancedChat({
 
         {/* Reply indicator */}
         {replyingTo && (
-          <div className="flex items-center justify-between rounded-lg border border-border bg-surface p-2">
+          <div className="border-border bg-surface flex items-center justify-between rounded-lg border p-2">
             <div className="flex items-center gap-2">
-              <Reply className="h-4 w-4 text-brand-primary" />
-              <span className="text-sm text-muted-foreground">
+              <Reply className="text-brand-primary h-4 w-4" />
+              <span className="text-muted-foreground text-sm">
                 Replying to {replyingTo.senderName}
               </span>
             </div>
@@ -623,19 +625,19 @@ export function EnhancedChat({
               onKeyDown={handleKeyPress}
               placeholder="Type a message..."
               rows={1}
-              className="w-full resize-none rounded-xl border border-border bg-surface px-4 py-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border px-4 py-3 outline-hidden focus:ring-2"
               style={{ minHeight: '48px', maxHeight: '120px' }}
             />
           </div>
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || sending}
-            className="mb-2 bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90"
+            className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 mb-2"
           >
             <Send className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-muted-foreground text-xs">
           Press Enter to send, Shift+Enter for new line • Type @ to mention someone
         </p>
       </div>

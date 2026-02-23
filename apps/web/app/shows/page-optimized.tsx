@@ -141,10 +141,10 @@ export default function ShowsPage() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="bg-background flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
-          <p className="text-lg text-muted-foreground">Loading...</p>
+          <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
+          <p className="text-muted-foreground text-lg">Loading...</p>
         </div>
       </div>
     );
@@ -155,7 +155,7 @@ export default function ShowsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-4 py-12">
+    <div className="bg-background min-h-screen px-4 py-12">
       <div className="rnrb-container mx-auto max-w-7xl">
         {/* Toast Notifications */}
         <ToastNotification toasts={toasts} onRemove={removeToast} />
@@ -164,7 +164,7 @@ export default function ShowsPage() {
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <h1 className="font-display mb-2 text-3xl font-bold sm:text-4xl lg:text-5xl">Shows</h1>
-            <p className="text-base text-muted-foreground sm:text-lg lg:text-xl">
+            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl">
               Manage your gigs, tours, and performances
             </p>
           </div>
@@ -187,17 +187,17 @@ export default function ShowsPage() {
         {/* Search & Filter */}
         <div className="mb-6 flex flex-col gap-3 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search shows, venues, cities..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="rnrb-input w-full rounded-xl py-2.5 pl-10 pr-4 sm:py-3 sm:pl-12"
+              className="rnrb-input w-full rounded-xl py-2.5 pr-4 pl-10 sm:py-3 sm:pl-12"
             />
           </div>
           <div className="flex items-center gap-2 overflow-x-auto">
-            <Filter className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <Filter className="text-muted-foreground h-4 w-4 shrink-0" />
             {['all', 'scheduled', 'confirmed', 'completed', 'cancelled'].map((status) => (
               <Button
                 key={status}
@@ -215,19 +215,19 @@ export default function ShowsPage() {
         {total > 0 && (
           <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
             <Card className="p-4">
-              <p className="mb-1 text-sm text-muted-foreground">Total Shows</p>
+              <p className="text-muted-foreground mb-1 text-sm">Total Shows</p>
               <p className="text-2xl font-bold">{total}</p>
             </Card>
             <Card className="p-4">
-              <p className="mb-1 text-sm text-muted-foreground">Upcoming</p>
+              <p className="text-muted-foreground mb-1 text-sm">Upcoming</p>
               <p className="text-2xl font-bold">{upcomingShows.length}</p>
             </Card>
             <Card className="p-4">
-              <p className="mb-1 text-sm text-muted-foreground">Past</p>
+              <p className="text-muted-foreground mb-1 text-sm">Past</p>
               <p className="text-2xl font-bold">{pastShows.length}</p>
             </Card>
             <Card className="p-4">
-              <p className="mb-1 text-sm text-muted-foreground">Filtered</p>
+              <p className="text-muted-foreground mb-1 text-sm">Filtered</p>
               <p className="text-2xl font-bold">{filteredShows.length}</p>
             </Card>
           </div>
@@ -239,11 +239,11 @@ export default function ShowsPage() {
         {/* Empty State */}
         {!showsLoading && shows.length === 0 && (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <Calendar className="mx-auto mb-6 h-20 w-20 text-muted-foreground/50 sm:h-24 sm:w-24" />
+            <Calendar className="text-muted-foreground/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Shows Scheduled Yet
             </h2>
-            <p className="mx-auto mb-6 max-w-2xl text-base text-muted-foreground sm:text-lg">
+            <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-base sm:text-lg">
               Start building your touring schedule. Add shows, link them to venues and setlists, and
               keep your band organized for the road ahead.
             </p>
@@ -341,7 +341,7 @@ const ShowCard = memo(function ShowCard({
       transition={{ duration: 0.3 }}
     >
       <Card
-        className={`rnrb-card group p-4 transition hover:border-brand-primary/30 sm:p-6 ${
+        className={`rnrb-card group hover:border-brand-primary/30 p-4 transition sm:p-6 ${
           isPast ? 'opacity-75' : ''
         }`}
       >
@@ -358,7 +358,7 @@ const ShowCard = memo(function ShowCard({
                 {show.status}
               </span>
               {show.tour && (
-                <span className="text-xs text-muted-foreground">• {show.tour.name}</span>
+                <span className="text-muted-foreground text-xs">• {show.tour.name}</span>
               )}
             </div>
           </div>
@@ -376,7 +376,7 @@ const ShowCard = memo(function ShowCard({
               variant="ghost"
               size="sm"
               onClick={() => onDelete(show.id, show.name)}
-              className="opacity-0 transition hover:text-red-500 group-hover:opacity-100"
+              className="opacity-0 transition group-hover:opacity-100 hover:text-red-500"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -385,13 +385,13 @@ const ShowCard = memo(function ShowCard({
 
         {/* Details */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 shrink-0" />
             <span>{formatDateWithDay(show.date)}</span>
           </div>
 
           {show.venue && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <MapPin className="h-4 w-4 shrink-0" />
               <span className="truncate">
                 {show.venue.name}
@@ -402,18 +402,18 @@ const ShowCard = memo(function ShowCard({
           )}
 
           {show.doorsTime && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Clock className="h-4 w-4 shrink-0" />
               <span>Doors at {new Date(show.doorsTime).toLocaleTimeString()}</span>
             </div>
           )}
 
           {show.setlist && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-2 text-sm">
               <Music className="h-4 w-4 shrink-0" />
               <Link
                 href={`/projects/${show.setlist.id}`}
-                className="transition hover:text-brand-primary"
+                className="hover:text-brand-primary transition"
               >
                 {show.setlist.name}
               </Link>
@@ -423,15 +423,15 @@ const ShowCard = memo(function ShowCard({
 
         {/* Stats */}
         {(show.attendance || show.grossRevenue) && (
-          <div className="mt-4 flex flex-wrap gap-3 border-t border-border pt-4">
+          <div className="border-border mt-4 flex flex-wrap gap-3 border-t pt-4">
             {show.attendance && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
                 <Users className="h-3.5 w-3.5" />
                 <span>{formatNumber(show.attendance)} attended</span>
               </div>
             )}
             {show.grossRevenue && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-1.5 text-xs">
                 <DollarSign className="h-3.5 w-3.5" />
                 <span>${formatNumber(Number(show.grossRevenue))}</span>
               </div>

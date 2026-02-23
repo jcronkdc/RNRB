@@ -82,7 +82,8 @@ export function FeaturePageWrapper({
                 priority
                 className="transition-all duration-300 group-hover:scale-105"
                 style={{
-                  filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.15)) drop-shadow(0 0 40px var(--accent-glow))',
+                  filter:
+                    'drop-shadow(0 0 20px rgba(255, 255, 255, 0.15)) drop-shadow(0 0 40px var(--accent-glow))',
                 }}
               />
               {/* Subtle glow on hover */}

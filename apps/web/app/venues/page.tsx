@@ -157,13 +157,13 @@ export default function VenuesPage() {
         {/* Search */}
         <div className="mb-6">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted) sm:left-4 sm:h-5 sm:w-5" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted) sm:left-4 sm:h-5 sm:w-5" />
             <input
               type="text"
               placeholder="Search venues by name, city, state..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="rnrb-input w-full rounded-xl py-2.5 pl-10 pr-4 sm:py-3 sm:pl-12"
+              className="rnrb-input w-full rounded-xl py-2.5 pr-4 pl-10 sm:py-3 sm:pl-12"
             />
           </div>
         </div>
@@ -182,7 +182,7 @@ export default function VenuesPage() {
         {/* Empty State */}
         {venues.length === 0 ? (
           <Card className="rnrb-card p-12 text-center sm:p-16">
-            <MapPin className="text-(--muted)/50 mx-auto mb-6 h-20 w-20 sm:h-24 sm:w-24" />
+            <MapPin className="mx-auto mb-6 h-20 w-20 text-(--muted)/50 sm:h-24 sm:w-24" />
             <h2 className="font-display mb-4 text-2xl font-bold sm:text-3xl">
               No Venues in Database
             </h2>
@@ -219,7 +219,7 @@ function VenueCard({
 }) {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className="rnrb-card group p-4 transition hover:border-brand-primary/30 sm:p-6">
+      <Card className="rnrb-card group hover:border-brand-primary/30 p-4 transition sm:p-6">
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
           <div className="min-w-0 flex-1">
@@ -244,7 +244,7 @@ function VenueCard({
               variant="ghost"
               size="sm"
               onClick={() => onDelete(venue.id, venue.name)}
-              className="opacity-0 transition hover:text-red-500 group-hover:opacity-100"
+              className="opacity-0 transition group-hover:opacity-100 hover:text-red-500"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -279,10 +279,7 @@ function VenueCard({
           {venue.email && (
             <div className="flex items-center gap-2 text-sm text-(--muted)">
               <Mail className="h-4 w-4 shrink-0" />
-              <a
-                href={`mailto:${venue.email}`}
-                className="truncate hover:text-(--accent)"
-              >
+              <a href={`mailto:${venue.email}`} className="truncate hover:text-(--accent)">
                 {venue.email}
               </a>
             </div>
