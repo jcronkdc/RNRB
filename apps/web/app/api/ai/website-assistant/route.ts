@@ -2,9 +2,9 @@ import { auth } from '@cronkwaters/auth';
 import { type NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+}
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
@@ -132,7 +132,7 @@ For example:
     ];
 
     // Call OpenAI
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: conversationMessages,
       max_tokens: 1000,

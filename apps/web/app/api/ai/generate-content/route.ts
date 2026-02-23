@@ -6,9 +6,9 @@ import { getCurrentUserId } from '@/lib/session';
 import { requireFeatureAccess } from '@/lib/subscription-access';
 import { requireUsageQuota, trackUsage } from '@/lib/usage-tracking';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+}
 
 interface GenerateRequest {
   templateId: string;
@@ -214,7 +214,7 @@ export async function POST(request: NextRequest) {
       contextInfo = `\n\nExisting content for reference (improve upon this):\n${context.existingContent}`;
     }
 
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {

@@ -2,9 +2,9 @@ import { auth } from '@cronkwaters/auth';
 import { type NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+}
 
 interface GenerateWebsiteRequest {
   artistInfo: {
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     // Generate bio content
     let bioContent = '';
     if (sectionsToGenerate.includes('bio_split') || sectionsToGenerate.includes('bio_full')) {
-      const bioResponse = await openai.chat.completions.create({
+      const bioResponse = await getOpenAI().chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [
           {
@@ -110,7 +110,7 @@ Write 2-3 paragraphs that capture their essence. Be authentic and engaging.`,
 
     // Generate tagline
     let tagline = '';
-    const taglineResponse = await openai.chat.completions.create({
+    const taglineResponse = await getOpenAI().chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         {
