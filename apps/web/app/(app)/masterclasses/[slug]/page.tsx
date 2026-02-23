@@ -197,7 +197,7 @@ function ReviewCard({ review }: { review: Review }) {
       <div className="mb-3 flex items-start gap-3">
         <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
           {review.user.image ? (
-            <Image src={review.user.image} alt="" fill className="object-cover" />
+            <Image src={review.user.image} alt={`${review.user.name || 'User'} avatar`} fill className="object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--accent)] to-[var(--gold)] font-bold text-white">
               {review.user.name?.charAt(0) || '?'}

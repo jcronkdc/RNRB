@@ -45,9 +45,9 @@ export default [
       'react-hooks': reactHooksPlugin,
     },
     rules: {
-      // Relaxed rules for lint-staged to not block commits
       'no-unused-vars': 'warn',
-      'no-undef': 'off', // TypeScript handles this
+      'no-undef': 'off',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/jsx-uses-react': 'off',

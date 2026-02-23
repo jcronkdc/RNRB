@@ -147,7 +147,7 @@ function AuthForm() {
           {/* Logo */}
           <div className="relative mb-8">
             <div className="absolute inset-0 scale-125 blur-3xl opacity-30">
-              <Image src="/rnrdark.png" alt="" width={280} height={280} className="h-full w-full object-contain" />
+              <Image src="/rnrdark.png" alt="" aria-hidden="true" width={280} height={280} className="h-full w-full object-contain" />
             </div>
             <Image
               src="/rnrdark.png"

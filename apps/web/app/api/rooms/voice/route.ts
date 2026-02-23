@@ -15,7 +15,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
-const DAILY_API_URL = 'https://api.daily.co/v1';
+const DAILY_API_URL = process.env.DAILY_API_URL || 'https://api.daily.co/v1';
 
 export async function POST(request: NextRequest) {
   try {

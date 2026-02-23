@@ -39,7 +39,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!masterclass.dailyRoomId) {
       const roomName = `mc-${masterclass.id}-${Date.now()}`;
 
-      const roomResponse = await fetch('https://api.daily.co/v1/rooms', {
+      const dailyApiUrl = process.env.DAILY_API_URL || 'https://api.daily.co/v1';
+      const roomResponse = await fetch(`${dailyApiUrl}/rooms`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -138,7 +139,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     });
 
     // Generate Daily.co meeting token
-    const tokenResponse = await fetch('https://api.daily.co/v1/meeting-tokens', {
+    const dailyApiUrl = process.env.DAILY_API_URL || 'https://api.daily.co/v1';
+    const tokenResponse = await fetch(`${dailyApiUrl}/meeting-tokens`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

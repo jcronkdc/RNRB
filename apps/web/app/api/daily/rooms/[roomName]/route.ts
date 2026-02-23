@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { requireFeatureAccess } from '@/lib/subscription-access';
 
 const DAILY_API_KEY = process.env.DAILY_API_KEY;
-const DAILY_API_URL = 'https://api.daily.co/v1';
+const DAILY_API_URL = process.env.DAILY_API_URL || 'https://api.daily.co/v1';
 
 export async function GET(
   request: NextRequest,

@@ -236,6 +236,14 @@ export function validateOrigin(request: Request): boolean {
     process.env.NEXT_PUBLIC_APP_URL,
     'https://cronkwaters.com',
     'https://www.cronkwaters.com',
+    'https://rnrb.me',
+    'https://www.rnrb.me',
+    'https://rnrb.app',
+    'https://www.rnrb.app',
+    'https://rnrb.rocks',
+    'https://www.rnrb.rocks',
+    'https://rocknrollbasement.com',
+    'https://www.rocknrollbasement.com',
   ].filter(Boolean);
 
   if (origin && allowedOrigins.some((allowed) => origin.startsWith(allowed!))) {
