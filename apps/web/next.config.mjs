@@ -72,7 +72,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   // Externalize packages that use Node.js built-ins (required for nodemailer/auth)
-  // This prevents webpack from bundling these for Edge runtime
   serverExternalPackages: ['nodemailer', 'bcryptjs'],
   experimental: {
     optimizePackageImports: [

@@ -3,12 +3,6 @@
   "installCommand": "pnpm install",
   "buildCommand": "pnpm --filter @cronkwaters/db run build && cd apps/web && pnpm run build",
   "outputDirectory": "apps/web/.next",
-  "functions": {
-    "apps/web/app/api/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 30
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
