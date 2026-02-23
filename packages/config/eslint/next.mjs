@@ -18,6 +18,11 @@ export default [
       react: reactPlugin,
       'react-hooks': reactHooksPlugin
     },
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    },
     languageOptions: {
       globals: {
         React: false

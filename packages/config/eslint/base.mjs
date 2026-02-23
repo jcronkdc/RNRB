@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import pluginImport from 'eslint-plugin-import';
 import pluginJsxA11y from 'eslint-plugin-jsx-a11y';
 import pluginPromise from 'eslint-plugin-promise';
-import pluginTailwind from 'eslint-plugin-tailwindcss';
 import pluginUnusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
@@ -40,16 +39,7 @@ export default tseslint.config(
       import: pluginImport,
       'jsx-a11y': pluginJsxA11y,
       promise: pluginPromise,
-      tailwindcss: pluginTailwind,
       'unused-imports': pluginUnusedImports
-    },
-    settings: {
-      tailwindcss: {
-        callees: ['cn', 'classnames', 'ctl'],
-        config: 'tailwind.config.ts',
-        cssFiles: ['**/*.css'],
-        removeDuplicates: true
-      }
     },
     rules: {
       ...importRecommendedRules,
@@ -79,8 +69,8 @@ export default tseslint.config(
         }
       ],
       'import/no-default-export': 'error',
-      'tailwindcss/classnames-order': 'warn',
-      'tailwindcss/no-custom-classname': 'off'
+      'no-useless-assignment': 'warn',
+      'no-unassigned-vars': 'warn'
     }
   },
   prettier
