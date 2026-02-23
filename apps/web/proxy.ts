@@ -105,7 +105,7 @@ const protectedPaths = [
 // Routes that should redirect to dashboard if already authenticated
 const authPaths = ['/auth'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
 

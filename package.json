@@ -5,8 +5,8 @@
   "packageManager": "pnpm@9.11.0",
   "pnpm": {
     "overrides": {
-      "@types/react": "18.3.12",
-      "@types/react-dom": "18.3.1"
+      "@types/react": "19.2.14",
+      "@types/react-dom": "19.2.3"
     }
   },
   "scripts": {
@@ -58,11 +58,11 @@
     "keyv": "^5.5.4",
     "lucide-react": "^0.344.0",
     "motion": "^12.34.3",
-    "next": "^15.5.3",
+    "next": "^16.1.6",
     "next-auth": "5.0.0-beta.30",
     "pg": "^8.18.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "replicate": "^1.4.0",
     "superjson": "^2.2.1",
     "wavesurfer.js": "^7.11.1",
@@ -70,11 +70,11 @@
   },
   "devDependencies": {
     "@cronkwaters/config": "workspace:*",
-    "@next/bundle-analyzer": "^15.5.3",
+    "@next/bundle-analyzer": "^16.1.6",
     "@rollup/rollup-darwin-arm64": "4.53.2",
     "@types/node": "^22.15.3",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.0.8",
     "autoprefixer": "^10.4.20",
     "eslint": "^10.0.1",
