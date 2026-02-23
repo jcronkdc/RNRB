@@ -528,15 +528,11 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
-              Shows This Year
-            </div>
+            <div className="mb-1 text-xs font-medium text-(--muted) uppercase">Shows This Year</div>
             <div className="text-3xl font-bold">{stats.thisYear}</div>
-            <div className="mt-1 text-xs text-(--muted)">
-              {stats.lastMonth} last month
-            </div>
+            <div className="mt-1 text-xs text-(--muted)">{stats.lastMonth} last month</div>
           </div>
-          <div className="rounded-lg bg-brand-primary/10 p-2 text-(--accent)">
+          <div className="bg-brand-primary/10 rounded-lg p-2 text-(--accent)">
             <Calendar className="h-5 w-5" />
           </div>
         </div>
@@ -546,9 +542,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
-              Upcoming Shows
-            </div>
+            <div className="mb-1 text-xs font-medium text-(--muted) uppercase">Upcoming Shows</div>
             <div className="text-3xl font-bold">{stats.upcoming}</div>
             <div className="mt-1 text-xs text-green-500">{stats.confirmed} confirmed</div>
           </div>
@@ -562,9 +556,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
-              Total Revenue
-            </div>
+            <div className="mb-1 text-xs font-medium text-(--muted) uppercase">Total Revenue</div>
             <div className="text-3xl font-bold">
               {new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -585,7 +577,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
       <Card className="rnrb-card p-4">
         <div className="flex items-start justify-between">
           <div>
-            <div className="mb-1 text-xs font-medium uppercase text-(--muted)">
+            <div className="mb-1 text-xs font-medium text-(--muted) uppercase">
               Total Attendance
             </div>
             <div className="text-3xl font-bold">{stats.totalAttendance.toLocaleString()}</div>
@@ -608,7 +600,7 @@ function StatsDashboard({ shows }: { shows: Show[] }) {
           </div>
           <div className="flex flex-wrap gap-3">
             {stats.topCities.map(([city, count]) => (
-              <div key={city} className="flex items-center gap-2 rounded-lg bg-muted/30 px-4 py-2">
+              <div key={city} className="bg-muted/30 flex items-center gap-2 rounded-lg px-4 py-2">
                 <span className="font-medium">{city}</span>
                 <span className="text-sm font-semibold text-(--accent)">
                   {count} {count === 1 ? 'show' : 'shows'}
@@ -672,9 +664,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
             <div className="space-y-4">
               {/* Date & Time */}
               <div>
-                <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
-                  Date & Time
-                </div>
+                <div className="mb-2 text-xs font-medium text-(--muted) uppercase">Date & Time</div>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4 text-(--muted)" />
                   <span className="font-medium">{formatDateWithDay(show.date)}</span>
@@ -694,9 +684,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Venue */}
               {show.venue && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
-                    Venue
-                  </div>
+                  <div className="mb-2 text-xs font-medium text-(--muted) uppercase">Venue</div>
                   <div className="flex items-start gap-2 text-sm">
                     <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-(--muted)" />
                     <div>
@@ -721,9 +709,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Setlist */}
               {show.setlist && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
-                    Setlist
-                  </div>
+                  <div className="mb-2 text-xs font-medium text-(--muted) uppercase">Setlist</div>
                   <div className="flex items-center gap-2 text-sm">
                     <Music className="h-4 w-4 text-(--muted)" />
                     <Link
@@ -739,7 +725,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Stats */}
               {(show.attendance || show.grossRevenue) && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
+                  <div className="mb-2 text-xs font-medium text-(--muted) uppercase">
                     Statistics
                   </div>
                   <div className="flex flex-wrap gap-4">
@@ -774,7 +760,7 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Description */}
               {show.description && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
+                  <div className="mb-2 text-xs font-medium text-(--muted) uppercase">
                     Description
                   </div>
                   <p className="text-sm">{show.description}</p>
@@ -784,19 +770,15 @@ function ShowDetailModal({ show, onClose, onDelete, onEdit }: any) {
               {/* Notes */}
               {show.notes && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
-                    Notes
-                  </div>
-                  <div className="rounded-lg bg-muted/30 p-3 text-sm">{show.notes}</div>
+                  <div className="mb-2 text-xs font-medium text-(--muted) uppercase">Notes</div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-sm">{show.notes}</div>
                 </div>
               )}
 
               {/* Tickets */}
               {show.ticketUrl && (
                 <div>
-                  <div className="mb-2 text-xs font-medium uppercase text-(--muted)">
-                    Tickets
-                  </div>
+                  <div className="mb-2 text-xs font-medium text-(--muted) uppercase">Tickets</div>
                   <a
                     href={show.ticketUrl}
                     target="_blank"

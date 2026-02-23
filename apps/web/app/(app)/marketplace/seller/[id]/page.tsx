@@ -94,7 +94,7 @@ function ReviewCard({
 
       {review.title && <h4 className="mb-2 font-semibold text-white">{review.title}</h4>}
 
-      <p className="whitespace-pre-wrap text-sm text-white/70">{review.content}</p>
+      <p className="text-sm whitespace-pre-wrap text-white/70">{review.content}</p>
 
       {(review.pros?.length > 0 || review.cons?.length > 0) && (
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -240,8 +240,8 @@ export default function SellerProfilePage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -top-40 -left-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
+        <div className="absolute -right-20 -bottom-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-8">
@@ -294,7 +294,7 @@ export default function SellerProfilePage() {
                 )}
               </div>
               {profile.isVerified && (
-                <div className="absolute -bottom-1 -right-1 rounded-full bg-emerald-500 p-1.5">
+                <div className="absolute -right-1 -bottom-1 rounded-full bg-emerald-500 p-1.5">
                   <Check className="h-4 w-4 text-white" />
                 </div>
               )}

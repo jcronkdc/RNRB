@@ -59,7 +59,9 @@ export async function GET(req: NextRequest) {
       select: { userId: true },
       distinct: ['userId'],
     });
-    songCollaborators.forEach((c) => { if (c.userId) collaboratorIds.add(c.userId); });
+    songCollaborators.forEach((c) => {
+      if (c.userId) collaboratorIds.add(c.userId);
+    });
 
     // Get full user details
     const collaborators = await prisma.user.findMany({

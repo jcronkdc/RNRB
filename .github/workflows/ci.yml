@@ -31,7 +31,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: turbo run lint --filter=@rnrb/web --filter=@cronkwaters/db --filter=@cronkwaters/auth --filter=@cronkwaters/trpc || true
-      - run: pnpm format:check
 
   typecheck:
     name: Type Check

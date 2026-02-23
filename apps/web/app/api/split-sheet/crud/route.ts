@@ -105,10 +105,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (totalPercentage > 100) {
-      return NextResponse.json(
-        { error: 'Total percentage cannot exceed 100%' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Total percentage cannot exceed 100%' }, { status: 400 });
     }
 
     const splitSheet = await prisma.splitSheet.create({

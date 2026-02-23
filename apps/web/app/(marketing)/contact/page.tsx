@@ -189,7 +189,7 @@ export default function ContactPage() {
               style={{ borderColor: 'var(--accent)' }}
             >
               <div
-                className="absolute right-4 top-4 rounded-full px-3 py-1 text-xs font-semibold"
+                className="absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-semibold"
                 style={{ background: 'var(--accent)', color: 'var(--bg)' }}
               >
                 Paid Members
@@ -501,12 +501,24 @@ export default function ContactPage() {
             className="flex flex-wrap items-center justify-center gap-6 text-sm"
             style={{ color: 'var(--muted)' }}
           >
-            <Link href="/" className="nav-link">Home</Link>
-            <Link href="/features" className="nav-link">Features</Link>
-            <Link href="/pricing" className="nav-link">Pricing</Link>
-            <Link href="/privacy" className="nav-link">Privacy</Link>
-            <Link href="/terms" className="nav-link">Terms</Link>
-            <Link href="/dmca" className="nav-link">DMCA</Link>
+            <Link href="/" className="nav-link">
+              Home
+            </Link>
+            <Link href="/features" className="nav-link">
+              Features
+            </Link>
+            <Link href="/pricing" className="nav-link">
+              Pricing
+            </Link>
+            <Link href="/privacy" className="nav-link">
+              Privacy
+            </Link>
+            <Link href="/terms" className="nav-link">
+              Terms
+            </Link>
+            <Link href="/dmca" className="nav-link">
+              DMCA
+            </Link>
           </div>
           <p className="mt-4 text-center text-xs" style={{ color: 'var(--muted)' }}>
             © {new Date().getFullYear()} Rock N' Roll Basement. All rights reserved.

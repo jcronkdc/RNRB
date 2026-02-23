@@ -26,7 +26,10 @@ export async function POST(request: NextRequest) {
   const signature = request.headers.get('stripe-signature');
 
   if (!signature || !stripe) {
-    return NextResponse.json({ error: !stripe ? 'Payment service not configured' : 'No signature' }, { status: !stripe ? 503 : 400 });
+    return NextResponse.json(
+      { error: !stripe ? 'Payment service not configured' : 'No signature' },
+      { status: !stripe ? 503 : 400 }
+    );
   }
 
   let event: Stripe.Event;
@@ -148,10 +151,9 @@ async function handleArtistMerchOrder(session: Stripe.Checkout.Session) {
       stripeSessionId: session.id,
       stripePaymentIntentId: session.payment_intent as string | undefined,
       shippingName: session.shipping_details?.name,
-      shippingAddress:
-        session.shipping_details?.address
-          ? (JSON.parse(JSON.stringify(session.shipping_details.address)) as Prisma.InputJsonValue)
-          : undefined,
+      shippingAddress: session.shipping_details?.address
+        ? (JSON.parse(JSON.stringify(session.shipping_details.address)) as Prisma.InputJsonValue)
+        : undefined,
       shippingMethod: 'standard',
       shippingCost: session.shipping_cost?.amount_total || 0,
       subtotal: session.amount_subtotal || 0,

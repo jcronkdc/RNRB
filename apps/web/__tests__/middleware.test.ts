@@ -18,7 +18,15 @@ vi.mock('next/server', async () => {
   };
 });
 
-function createRequest(path: string, options: { host?: string; cookies?: Record<string, string>; method?: string; headers?: Record<string, string> } = {}) {
+function createRequest(
+  path: string,
+  options: {
+    host?: string;
+    cookies?: Record<string, string>;
+    method?: string;
+    headers?: Record<string, string>;
+  } = {}
+) {
   const url = `http://${options.host || 'www.cronkwaters.com'}${path}`;
   const req = new NextRequest(url, { method: options.method || 'GET' });
 

@@ -80,7 +80,7 @@ export default function DisplaySettingsPage() {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full"
+                        className="absolute top-3 right-3 flex h-6 w-6 items-center justify-center rounded-full"
                         style={{ background: 'var(--accent)' }}
                       >
                         <Check className="h-4 w-4 text-white" />

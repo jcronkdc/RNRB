@@ -99,15 +99,13 @@ function StatCard({
       className="rounded-xl border border-(--border) bg-(--panel) p-6"
     >
       <div className="mb-4 flex items-start justify-between">
-        <div className="bg-(--accent)/10 rounded-xl p-3">
+        <div className="rounded-xl bg-(--accent)/10 p-3">
           <Icon className="h-6 w-6 text-(--accent)" />
         </div>
         {change !== undefined && (
           <div
             className={`flex items-center gap-1 rounded-full px-2 py-1 text-sm ${
-              change >= 0
-                ? 'bg-(--sage)/10 text-(--sage)'
-                : 'bg-(--error)/10 text-(--error)'
+              change >= 0 ? 'bg-(--sage)/10 text-(--sage)' : 'bg-(--error)/10 text-(--error)'
             }`}
           >
             {change >= 0 ? (
@@ -147,7 +145,7 @@ function RevenueChart({
         {data.map((item, index) => (
           <div key={item.month} className="flex flex-1 flex-col items-center">
             <div
-              className="from-(--accent)/50 hover:from-(--accent)/70 w-full rounded-t-lg bg-linear-to-t to-(--accent) transition-all hover:to-(--accent-hover)"
+              className="w-full rounded-t-lg bg-linear-to-t from-(--accent)/50 to-(--accent) transition-all hover:from-(--accent)/70 hover:to-(--accent-hover)"
               style={{ height: `${(item.revenue / maxRevenue) * 100}%`, minHeight: 4 }}
             />
             <div className="mt-2 text-xs text-(--muted)">{item.month}</div>
@@ -170,10 +168,7 @@ function TopCoursesTable({ courses }: { courses: AnalyticsData['topCourses'] }) 
     <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="font-bold text-(--text)">Top Performing Courses</h3>
-        <Link
-          href="/masterclasses/instructor"
-          className="text-sm text-(--accent) hover:underline"
-        >
+        <Link href="/masterclasses/instructor" className="text-sm text-(--accent) hover:underline">
           View All
         </Link>
       </div>

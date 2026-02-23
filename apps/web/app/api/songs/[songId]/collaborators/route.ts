@@ -97,10 +97,7 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     const existing = await db.songCollaborator.findFirst({
       where: {
         songId,
-        OR: [
-          ...(email ? [{ email }] : []),
-          ...(inviteUserId ? [{ userId: inviteUserId }] : []),
-        ],
+        OR: [...(email ? [{ email }] : []), ...(inviteUserId ? [{ userId: inviteUserId }] : [])],
       },
     });
 

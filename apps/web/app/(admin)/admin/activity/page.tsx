@@ -85,7 +85,7 @@ function ActivityItem({ activity }: ActivityItemProps) {
             <Clock className="h-3 w-3" />
             {formatTimeAgo(activity.timestamp)}
           </span>
-          <span className="rounded bg-white/5 px-2 py-0.5 text-xs capitalize text-zinc-500">
+          <span className="rounded bg-white/5 px-2 py-0.5 text-xs text-zinc-500 capitalize">
             {activity.type.replace('_', ' ')}
           </span>
         </div>

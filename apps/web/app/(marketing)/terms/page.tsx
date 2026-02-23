@@ -36,7 +36,7 @@ export default function TermsPage() {
               Rock N' Roll Basement provides a collaborative platform for musicians to create,
               share, and collaborate on music projects. Our services include:
             </p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Project management and organization tools</li>
               <li>Real-time collaboration features (chat, video, screen sharing)</li>
               <li>AI-powered songwriting and music generation tools</li>
@@ -65,7 +65,7 @@ export default function TermsPage() {
           <section>
             <h2 className="mb-4 text-2xl font-semibold text-orange-400">4. User Accounts</h2>
             <p>You are responsible for:</p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Maintaining the security of your account credentials</li>
               <li>All activities that occur under your account</li>
               <li>Notifying us immediately of any unauthorized access</li>
@@ -76,7 +76,7 @@ export default function TermsPage() {
           <section>
             <h2 className="mb-4 text-2xl font-semibold text-orange-400">5. Acceptable Use</h2>
             <p>You agree not to:</p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Upload content that infringes on others' intellectual property rights</li>
               <li>Share or distribute copyrighted material without permission</li>
               <li>Use the platform for any illegal or unauthorized purpose</li>

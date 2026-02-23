@@ -255,7 +255,7 @@ export default function PublicSetlistPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+          <div className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-gray-500 uppercase">
             <Music className="h-4 w-4 text-orange-500" />
             Set List
           </div>
@@ -298,7 +298,7 @@ export default function PublicSetlistPage() {
             transition={{ delay: 0.7 }}
             className="mt-8"
           >
-            <div className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-purple-400">
+            <div className="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-purple-400 uppercase">
               <Star className="h-4 w-4" />
               Encore
             </div>

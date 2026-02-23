@@ -607,12 +607,12 @@ export default function MeetingRoomPage() {
                             </span>
                           </div>
                           {p.isOnline && (
-                            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-zinc-900 bg-green-500" />
+                            <div className="absolute -right-0.5 -bottom-0.5 h-3 w-3 rounded-full border-2 border-zinc-900 bg-green-500" />
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-white">{p.name}</p>
-                          <p className="text-xs capitalize text-white/50">{p.role}</p>
+                          <p className="text-xs text-white/50 capitalize">{p.role}</p>
                         </div>
                         <div className="flex items-center gap-1">
                           {!p.audioOn && <MicOff className="h-4 w-4 text-red-400" />}
@@ -720,7 +720,7 @@ export default function MeetingRoomPage() {
           className={`relative rounded-full p-4 transition-all ${showParticipants ? 'bg-purple-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'} `}
         >
           <Users className="h-6 w-6" />
-          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-xs">
+          <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-xs">
             {participants.length}
           </span>
         </button>

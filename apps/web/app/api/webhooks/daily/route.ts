@@ -51,7 +51,9 @@ export async function POST(request: NextRequest) {
       event = JSON.parse(body);
     } else {
       if (process.env.NODE_ENV === 'production') {
-        console.error('[Daily Webhook] DAILY_WEBHOOK_SECRET not configured — rejecting in production');
+        console.error(
+          '[Daily Webhook] DAILY_WEBHOOK_SECRET not configured — rejecting in production'
+        );
         return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
       }
       event = await request.json();

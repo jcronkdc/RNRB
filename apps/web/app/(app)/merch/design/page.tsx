@@ -256,8 +256,8 @@ export default function MerchDesignerPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -366,7 +366,7 @@ export default function MerchDesignerPage() {
                       {(product.suggestedRetail - product.basePrice).toFixed(2)}
                     </div>
                     {selectedProduct.id === product.id && (
-                      <div className="absolute right-4 top-4">
+                      <div className="absolute top-4 right-4">
                         <CheckCircle className="h-5 w-5 text-orange-400" />
                       </div>
                     )}
@@ -434,7 +434,7 @@ export default function MerchDesignerPage() {
                     />
                     <button
                       onClick={() => setDesign({ ...design, designUrl: null })}
-                      className="absolute right-2 top-2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                      className="absolute top-2 right-2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                     >
                       <X className="h-4 w-4" />
                     </button>
@@ -593,7 +593,7 @@ export default function MerchDesignerPage() {
                     />
                   </div>
                 )}
-                <div className="absolute bottom-4 left-4 right-4 rounded-xl bg-black/50 p-3">
+                <div className="absolute right-4 bottom-4 left-4 rounded-xl bg-black/50 p-3">
                   <p className="text-center text-sm text-white">
                     {selectedProduct.name} • {selectedColor || 'Select color'}
                   </p>

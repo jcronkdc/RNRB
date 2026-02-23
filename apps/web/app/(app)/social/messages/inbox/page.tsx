@@ -339,7 +339,7 @@ export default function MessagesInboxPage() {
             />
             {isSearching && (
               <Loader2
-                className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin"
+                className="absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 animate-spin"
                 style={{ color: 'var(--muted)' }}
               />
             )}
@@ -491,7 +491,7 @@ export default function MessagesInboxPage() {
                 >
                   {/* Pinned/Muted Indicators */}
                   {(conversation.isPinned || conversation.isMuted) && (
-                    <div className="absolute left-2 top-2 flex gap-1">
+                    <div className="absolute top-2 left-2 flex gap-1">
                       {conversation.isPinned && (
                         <Pin className="h-3 w-3" style={{ color: 'var(--accent)' }} />
                       )}
@@ -592,7 +592,7 @@ export default function MessagesInboxPage() {
                       showContextMenu === conversation.id ? null : conversation.id
                     );
                   }}
-                  className="absolute right-4 top-4 rounded-lg p-2 opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute top-4 right-4 rounded-lg p-2 opacity-0 transition-opacity group-hover:opacity-100"
                   style={{ backgroundColor: 'var(--bg)' }}
                 >
                   <MoreVertical className="h-4 w-4" style={{ color: 'var(--muted)' }} />
@@ -605,7 +605,7 @@ export default function MessagesInboxPage() {
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
-                      className="absolute right-4 top-14 z-50 min-w-[200px] rounded-xl shadow-lg"
+                      className="absolute top-14 right-4 z-50 min-w-[200px] rounded-xl shadow-lg"
                       style={{
                         backgroundColor: 'var(--panel)',
                         border: '1px solid var(--border)',

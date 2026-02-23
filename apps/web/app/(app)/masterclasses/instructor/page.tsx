@@ -81,7 +81,7 @@ function StatCard({
   return (
     <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
       <div className="mb-4 flex items-start justify-between">
-        <div className="bg-(--accent)/10 rounded-lg p-3">
+        <div className="rounded-lg bg-(--accent)/10 p-3">
           <Icon className="h-6 w-6 text-(--accent)" />
         </div>
         {trend && (
@@ -100,7 +100,7 @@ function StatCard({
 function ClassCard({ masterclass }: { masterclass: InstructorProfile['masterclasses'][0] }) {
   return (
     <Link href={`/masterclasses/instructor/${masterclass.id}/edit`}>
-      <div className="hover:border-(--accent)/50 flex items-center gap-4 rounded-xl border border-(--border) bg-(--panel) p-4 transition-all">
+      <div className="flex items-center gap-4 rounded-xl border border-(--border) bg-(--panel) p-4 transition-all hover:border-(--accent)/50">
         <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg">
           {masterclass.thumbnailUrl ? (
             <Image
@@ -111,7 +111,7 @@ function ClassCard({ masterclass }: { masterclass: InstructorProfile['masterclas
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-[#2a2620] to-[#352f28]">
-              <GraduationCap className="text-(--accent)/30 h-6 w-6" />
+              <GraduationCap className="h-6 w-6 text-(--accent)/30" />
             </div>
           )}
         </div>
@@ -260,7 +260,7 @@ export default function InstructorDashboardPage() {
             </div>
           </div>
 
-          <div className="border-(--accent)/20 from-(--accent)/15 to-(--gold)/15 rounded-2xl border bg-linear-to-r p-8">
+          <div className="rounded-2xl border border-(--accent)/20 bg-linear-to-r from-(--accent)/15 to-(--gold)/15 p-8">
             <h2 className="mb-6 text-2xl font-bold text-(--text)">Get Started</h2>
             <Link href="/masterclasses/instructor/setup">
               <motion.button
@@ -327,7 +327,7 @@ export default function InstructorDashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-(--warning)/30 bg-(--warning)/10 mb-8 flex items-start gap-4 rounded-xl border p-4"
+            className="mb-8 flex items-start gap-4 rounded-xl border border-(--warning)/30 bg-(--warning)/10 p-4"
           >
             <AlertCircle className="mt-0.5 h-6 w-6 shrink-0 text-(--warning)" />
             <div className="flex-1">
@@ -403,9 +403,7 @@ export default function InstructorDashboardPage() {
             ) : (
               <div className="py-12 text-center">
                 <GraduationCap className="mx-auto mb-4 h-12 w-12 text-(--muted)" />
-                <h3 className="mb-2 text-lg font-medium text-(--text)">
-                  No Masterclasses Yet
-                </h3>
+                <h3 className="mb-2 text-lg font-medium text-(--text)">No Masterclasses Yet</h3>
                 <p className="mb-6 text-(--muted)">
                   Create your first masterclass and start teaching!
                 </p>

@@ -213,8 +213,8 @@ export default function PricingPage() {
       <section className="relative overflow-hidden py-24">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 via-transparent to-pink-500/10" />
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-orange-500/20 blur-[128px]" />
-          <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-pink-500/20 blur-[128px]" />
+          <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-orange-500/20 blur-[128px]" />
+          <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-pink-500/20 blur-[128px]" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-6 text-center">
@@ -283,7 +283,7 @@ export default function PricingPage() {
                 }}
               >
                 {tier.popular && (
-                  <div className="absolute right-4 top-4 rounded-full bg-linear-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
+                  <div className="absolute top-4 right-4 rounded-full bg-linear-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
                     MOST POPULAR
                   </div>
                 )}

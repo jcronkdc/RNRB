@@ -21,10 +21,18 @@ export async function GET(request: NextRequest) {
 
     let daysBack = 30;
     switch (range) {
-      case '7d': daysBack = 7; break;
-      case '30d': daysBack = 30; break;
-      case '90d': daysBack = 90; break;
-      case 'all': daysBack = 365 * 10; break;
+      case '7d':
+        daysBack = 7;
+        break;
+      case '30d':
+        daysBack = 30;
+        break;
+      case '90d':
+        daysBack = 90;
+        break;
+      case 'all':
+        daysBack = 365 * 10;
+        break;
     }
 
     const startDate = new Date();
@@ -58,12 +66,15 @@ export async function GET(request: NextRequest) {
 
     const totalMeetings = meetings.length;
     const totalParticipants = meetings.reduce(
-      (sum: number, m: any) => sum + (Number(m.participant_count) || 0), 0
+      (sum: number, m: any) => sum + (Number(m.participant_count) || 0),
+      0
     );
 
     const totalMinutes = meetings.reduce((sum: number, m: any) => {
       if (m.actual_start_at && m.actual_end_at) {
-        const mins = (new Date(m.actual_end_at).getTime() - new Date(m.actual_start_at).getTime()) / (1000 * 60);
+        const mins =
+          (new Date(m.actual_end_at).getTime() - new Date(m.actual_start_at).getTime()) /
+          (1000 * 60);
         return sum + Math.max(0, mins);
       }
       return sum;
@@ -83,9 +94,13 @@ export async function GET(request: NextRequest) {
           id: m.id,
           title: m.title || 'Untitled Meeting',
           date: m.actual_start_at || m.created_at,
-          duration: m.actual_start_at && m.actual_end_at
-            ? Math.round((new Date(m.actual_end_at).getTime() - new Date(m.actual_start_at).getTime()) / (1000 * 60))
-            : 0,
+          duration:
+            m.actual_start_at && m.actual_end_at
+              ? Math.round(
+                  (new Date(m.actual_end_at).getTime() - new Date(m.actual_start_at).getTime()) /
+                    (1000 * 60)
+                )
+              : 0,
           participants: Number(m.participant_count) || 0,
         })),
       },

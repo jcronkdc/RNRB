@@ -156,7 +156,7 @@ export default function PostOpportunityPage() {
     <div className="min-h-screen">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="bg-(--accent)/5 absolute -left-64 top-0 h-[600px] w-[600px] rounded-full blur-[120px]" />
+        <div className="absolute top-0 -left-64 h-[600px] w-[600px] rounded-full bg-(--accent)/5 blur-[120px]" />
         <div className="absolute -right-64 bottom-0 h-[500px] w-[500px] rounded-full bg-emerald-500/5 blur-[120px]" />
       </div>
 
@@ -177,9 +177,7 @@ export default function PostOpportunityPage() {
               priority
             />
           </Link>
-          <h1 className="mb-3 text-3xl font-bold text-(--text) md:text-4xl">
-            Post an Opportunity
-          </h1>
+          <h1 className="mb-3 text-3xl font-bold text-(--text) md:text-4xl">Post an Opportunity</h1>
           <p className="mx-auto max-w-2xl text-(--text-secondary)">
             Share a gig, session work, or other opportunity with the community
           </p>
@@ -248,9 +246,7 @@ export default function PostOpportunityPage() {
 
               {/* Description */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-(--text)">
-                  Description
-                </label>
+                <label className="mb-2 block text-sm font-medium text-(--text)">Description</label>
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -309,9 +305,7 @@ export default function PostOpportunityPage() {
                     />
                   </div>
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-(--text)">
-                      Pay Type
-                    </label>
+                    <label className="mb-2 block text-sm font-medium text-(--text)">Pay Type</label>
                     <select
                       value={formData.payType}
                       onChange={(e) => setFormData({ ...formData, payType: e.target.value })}
@@ -358,10 +352,7 @@ export default function PostOpportunityPage() {
                   onChange={(e) => setFormData({ ...formData, isRemote: e.target.checked })}
                   className="h-5 w-5 rounded border-white/20 bg-(--panel) text-(--accent) focus:ring-2 focus:ring-(--accent-glow)"
                 />
-                <label
-                  htmlFor="isRemote"
-                  className="flex items-center gap-2 text-sm text-(--text)"
-                >
+                <label htmlFor="isRemote" className="flex items-center gap-2 text-sm text-(--text)">
                   <Globe className="h-4 w-4" />
                   This is a remote opportunity
                 </label>
@@ -384,9 +375,7 @@ export default function PostOpportunityPage() {
 
                   <div className="grid gap-4 sm:grid-cols-3">
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-(--text)">
-                        City
-                      </label>
+                      <label className="mb-2 block text-sm font-medium text-(--text)">City</label>
                       <input
                         type="text"
                         value={formData.city}
@@ -396,9 +385,7 @@ export default function PostOpportunityPage() {
                       />
                     </div>
                     <div>
-                      <label className="mb-2 block text-sm font-medium text-(--text)">
-                        State
-                      </label>
+                      <label className="mb-2 block text-sm font-medium text-(--text)">State</label>
                       <input
                         type="text"
                         value={formData.state}
@@ -448,9 +435,7 @@ export default function PostOpportunityPage() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-(--text)">
-                    Start Time
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-(--text)">Start Time</label>
                   <input
                     type="time"
                     value={formData.startTime}
@@ -459,9 +444,7 @@ export default function PostOpportunityPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-(--text)">
-                    End Time
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-(--text)">End Time</label>
                   <input
                     type="time"
                     value={formData.endTime}
@@ -559,9 +542,7 @@ export default function PostOpportunityPage() {
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-(--text)">
-                  Dress Code
-                </label>
+                <label className="mb-2 block text-sm font-medium text-(--text)">Dress Code</label>
                 <input
                   type="text"
                   value={formData.dressCode}
@@ -643,7 +624,7 @@ export default function PostOpportunityPage() {
             <button
               type="submit"
               disabled={loading}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-8 py-4 text-lg font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-8 py-4 text-lg font-medium text-(--text) shadow-(--accent-glow) shadow-lg transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
             >
               {loading ? (
                 <>

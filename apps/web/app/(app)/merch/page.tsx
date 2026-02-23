@@ -68,7 +68,7 @@ function ComingSoonView() {
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             className="h-2 w-2 rounded-full bg-orange-500"
           />
-          <span className="text-sm font-semibold uppercase tracking-wider text-orange-400">
+          <span className="text-sm font-semibold tracking-wider text-orange-400 uppercase">
             Coming Soon
           </span>
         </motion.div>
@@ -89,7 +89,7 @@ function ComingSoonView() {
           >
             <div className="relative flex-1">
               <Mail
-                className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2"
+                className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -97,7 +97,7 @@ function ComingSoonView() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-orange-500/50 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-12 text-white placeholder:text-white/40 focus:border-orange-500/50 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden"
                 required
               />
             </div>
@@ -133,7 +133,7 @@ function ComingSoonView() {
         transition={{ delay: 0.5 }}
         className="mb-12"
       >
-        <h3 className="mb-6 text-center text-sm font-semibold uppercase tracking-wider text-white/50">
+        <h3 className="mb-6 text-center text-sm font-semibold tracking-wider text-white/50 uppercase">
           What's Coming
         </h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -150,7 +150,7 @@ function ComingSoonView() {
                 <h4 className="mb-1 text-lg font-semibold text-white">{item.name}</h4>
                 <p className="text-sm text-white/50">{item.description}</p>
               </div>
-              <div className="absolute bottom-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
+              <div className="absolute right-4 bottom-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
                 <span className="text-xs text-white/40">Soon</span>
               </div>
             </motion.div>
@@ -207,9 +207,9 @@ export default function MerchStorePage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-red-500/5 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-red-500/5 to-transparent blur-3xl" />
       </div>
 
       {/* Logo & Header Section */}

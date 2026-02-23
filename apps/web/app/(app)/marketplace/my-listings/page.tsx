@@ -132,7 +132,7 @@ function ListingCard({
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="absolute right-0 top-full z-20 mt-1 w-48 overflow-hidden rounded-xl border border-white/10 bg-[#1a1a2e] py-1 shadow-xl"
+                    className="absolute top-full right-0 z-20 mt-1 w-48 overflow-hidden rounded-xl border border-white/10 bg-[#1a1a2e] py-1 shadow-xl"
                   >
                     <Link
                       href={`/marketplace/${listing.id}`}
@@ -217,7 +217,7 @@ function ListingCard({
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}
-                className="absolute left-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-xl border border-white/10 bg-[#1a1a2e] py-1 shadow-xl"
+                className="absolute top-full left-0 z-20 mt-1 w-44 overflow-hidden rounded-xl border border-white/10 bg-[#1a1a2e] py-1 shadow-xl"
               >
                 {(['active', 'pending', 'sold', 'traded', 'removed'] as const).map((status) => {
                   const config = STATUS_CONFIG[status];
@@ -340,8 +340,8 @@ export default function MyListingsPage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -top-40 -left-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
+        <div className="absolute -right-20 -bottom-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-4 py-8">
@@ -407,7 +407,7 @@ export default function MyListingsPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
+              className={`rounded-xl px-4 py-2.5 text-sm font-medium whitespace-nowrap transition-all ${
                 activeTab === tab.id
                   ? 'bg-linear-to-r from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/25'
                   : 'border border-white/10 bg-white/3 text-white/60 hover:border-white/20 hover:text-white'

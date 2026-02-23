@@ -180,7 +180,7 @@ function QuickPreviewModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs"
       onClick={onClose}
     >
       <motion.div
@@ -240,7 +240,7 @@ function QuickPreviewModal({
         {/* Content */}
         <div className="max-h-[50vh] overflow-y-auto p-4">
           {song.lyrics ? (
-            <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-(--text-secondary)">
+            <pre className="font-sans text-sm leading-relaxed whitespace-pre-wrap text-(--text-secondary)">
               {song.lyrics}
             </pre>
           ) : (
@@ -388,14 +388,18 @@ function SongCard({
             <span className="text-(--muted-soft)">•</span>
             <span className="text-(--muted-soft)">{formatRelativeTime(song.updatedAt)}</span>
             {lyricsPreview && (
-              <span className="hidden truncate text-(--muted-soft) lg:inline">{lyricsPreview}...</span>
+              <span className="hidden truncate text-(--muted-soft) lg:inline">
+                {lyricsPreview}...
+              </span>
             )}
           </div>
         </button>
 
         {/* Progress Bar */}
         <div className="hidden w-24 shrink-0 md:block">
-          <div className="mb-1 text-right text-xs text-(--muted-soft)">{statusConfig.progress}%</div>
+          <div className="mb-1 text-right text-xs text-(--muted-soft)">
+            {statusConfig.progress}%
+          </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-(--surface-elevated)">
             <div
               className="h-full rounded-full bg-linear-to-r from-(--accent) to-(--accent-hover)"
@@ -517,8 +521,12 @@ function SongCard({
 
         {/* Metadata */}
         <div className="mb-2 flex flex-wrap gap-1.5 text-xs text-(--muted-soft)">
-          {song.key && <span className="rounded bg-(--surface-elevated) px-2 py-0.5">{song.key}</span>}
-          {song.tempo && <span className="rounded bg-(--surface-elevated) px-2 py-0.5">{song.tempo} BPM</span>}
+          {song.key && (
+            <span className="rounded bg-(--surface-elevated) px-2 py-0.5">{song.key}</span>
+          )}
+          {song.tempo && (
+            <span className="rounded bg-(--surface-elevated) px-2 py-0.5">{song.tempo} BPM</span>
+          )}
         </div>
 
         {/* Last edited */}
@@ -1040,7 +1048,8 @@ export default function SongsPage() {
                   <h1 className="text-2xl font-bold text-(--text) sm:text-3xl">My Songs</h1>
                   <p className="text-sm text-(--muted)">
                     {stats?.total || 0} songs • Press{' '}
-                    <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5 text-xs">?</kbd> for shortcuts
+                    <kbd className="rounded bg-(--surface-elevated) px-1.5 py-0.5 text-xs">?</kbd>{' '}
+                    for shortcuts
                   </p>
                 </div>
               </div>
@@ -1127,13 +1136,13 @@ export default function SongsPage() {
           <div className="flex gap-3">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-(--muted-soft)" />
+              <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-(--muted-soft)" />
               <input
                 type="text"
                 placeholder="Search songs by title... (type to filter)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-(--border) bg-(--surface) py-3 pl-10 pr-4 text-(--text) placeholder:text-(--muted-soft) focus:border-orange-500 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
+                className="w-full rounded-xl border border-(--border) bg-(--surface) py-3 pr-4 pl-10 text-(--text) placeholder:text-(--muted-soft) focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden"
               />
             </div>
 

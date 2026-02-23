@@ -56,7 +56,7 @@ function CollaborationNeedCard({ need }: { need: any }) {
         className="group relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 p-5 transition-all hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10"
       >
         {/* Glow effect */}
-        <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-blue-500/0 blur-3xl transition-all duration-500 group-hover:bg-blue-500/20" />
+        <div className="absolute -top-16 -right-16 h-32 w-32 rounded-full bg-blue-500/0 blur-3xl transition-all duration-500 group-hover:bg-blue-500/20" />
 
         <div className="relative">
           {/* Header */}
@@ -74,7 +74,7 @@ function CollaborationNeedCard({ need }: { need: any }) {
                 </span>
               )}
             </div>
-            <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-xs capitalize text-purple-400">
+            <span className="rounded-full bg-purple-500/20 px-2 py-0.5 text-xs text-purple-400 capitalize">
               {need.needType.replace('_', ' ')}
             </span>
           </div>
@@ -201,7 +201,7 @@ export default function CollaborationNeedsPage() {
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div
-          className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full blur-[120px]"
+          className="absolute top-0 -left-64 h-[600px] w-[600px] rounded-full blur-[120px]"
           style={{ background: 'var(--accent-glow)' }}
         />
         <div
@@ -247,7 +247,7 @@ export default function CollaborationNeedsPage() {
           <div className="flex gap-3">
             <div className="relative flex-1">
               <Search
-                className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2"
+                className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -255,7 +255,7 @@ export default function CollaborationNeedsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search collaboration needs..."
-                className="w-full rounded-xl border py-3 pl-12 pr-4 outline-hidden transition-all focus:ring-2"
+                className="w-full rounded-xl border py-3 pr-4 pl-12 outline-hidden transition-all focus:ring-2"
                 style={{
                   background: 'var(--surface)',
                   borderColor: 'var(--border)',

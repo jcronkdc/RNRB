@@ -121,7 +121,7 @@ function OrderCard({ order }: { order: Order }) {
         >
           {/* Order Items */}
           <div className="p-6">
-            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/50">
+            <h4 className="mb-4 text-sm font-semibold tracking-wider text-white/50 uppercase">
               Items
             </h4>
             <div className="space-y-3">
@@ -178,7 +178,7 @@ function OrderCard({ order }: { order: Order }) {
           {/* Shipping Info */}
           {order.shippingAddress && (
             <div className="border-t border-white/10 p-6">
-              <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white/50">
+              <h4 className="mb-3 text-sm font-semibold tracking-wider text-white/50 uppercase">
                 Shipping Address
               </h4>
               <p className="text-white">{order.shippingName}</p>
@@ -208,7 +208,7 @@ function OrderCard({ order }: { order: Order }) {
 
           {/* Timeline */}
           <div className="border-t border-white/10 p-6">
-            <h4 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/50">
+            <h4 className="mb-4 text-sm font-semibold tracking-wider text-white/50 uppercase">
               Order Timeline
             </h4>
             <div className="space-y-3">

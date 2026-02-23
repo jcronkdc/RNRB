@@ -17,12 +17,12 @@ import Link from 'next/link';
 
 export default function CollaborationFeaturePage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Hero */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+      <div className="border-border/50 relative overflow-hidden border-b">
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-linear-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="absolute right-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
+          <div className="bg-brand-primary/10 absolute top-0 right-1/4 h-96 w-96 rounded-full blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-6xl px-4 py-20">
@@ -40,7 +40,7 @@ export default function CollaborationFeaturePage() {
             <h1 className="font-display mb-6 text-5xl font-bold md:text-6xl">
               Collaborate Like You're in the Same Room
             </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-xl leading-relaxed text-muted-foreground">
+            <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl leading-relaxed">
               Zoom-style HD video meetings with screen sharing, live streaming to fans,
               masterclasses from industry pros, and instant messaging powered by Daily.co and Ably.
               Work together on music from anywhere in the world.
@@ -133,11 +133,11 @@ export default function CollaborationFeaturePage() {
                   <feature.icon className={`text- h-6 w-6${feature.color}`} />
                 </div>
                 <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
-                <p className="mb-4 text-muted-foreground">{feature.description}</p>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <p className="text-muted-foreground mb-4">{feature.description}</p>
+                <ul className="text-muted-foreground space-y-2 text-sm">
                   {feature.features.map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 shrink-0 text-brand-primary" />
+                      <CheckCircle className="text-brand-primary h-4 w-4 shrink-0" />
                       {item}
                     </li>
                   ))}
@@ -215,7 +215,7 @@ export default function CollaborationFeaturePage() {
       </div>
 
       {/* Quote Section */}
-      <div className="border-t border-border/50 bg-surface/30">
+      <div className="border-border/50 bg-surface/30 border-t">
         <div className="rnrb-container max-w-4xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -225,7 +225,7 @@ export default function CollaborationFeaturePage() {
             <h2 className="font-display mb-4 text-3xl font-bold">
               "The video quality is incredible. It's like we're jamming in the same garage."
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-muted-foreground text-lg">
               Rock & Roll Basement uses best-in-class infrastructure from Daily.co for video and
               Ably for messaging to ensure your collaboration experience is seamless.
             </p>
@@ -234,7 +234,7 @@ export default function CollaborationFeaturePage() {
       </div>
 
       {/* CTA */}
-      <div className="border-t border-border/50">
+      <div className="border-border/50 border-t">
         <div className="rnrb-container max-w-3xl px-4 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -242,7 +242,7 @@ export default function CollaborationFeaturePage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="font-display mb-4 text-4xl font-bold">Start Collaborating Today</h2>
-            <p className="mb-8 text-xl text-muted-foreground">
+            <p className="text-muted-foreground mb-8 text-xl">
               Free plan includes unlimited chat and 60-minute video sessions.
             </p>
             <Link href="/auth?signup=true">

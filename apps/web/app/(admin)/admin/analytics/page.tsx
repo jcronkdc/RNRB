@@ -394,19 +394,19 @@ export default function AnalyticsPage() {
               <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Tier
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       AI Requests
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Video Minutes
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Image Credits
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-4 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Avg Storage
                     </th>
                   </tr>

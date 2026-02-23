@@ -263,7 +263,9 @@ export async function DELETE(request: NextRequest) {
 
     // Delete from Supabase Storage
     const supabase = getSupabaseStorageClient();
-    const { error: deleteError } = await supabase.storage.from('audio-files').remove([normalizedPath]);
+    const { error: deleteError } = await supabase.storage
+      .from('audio-files')
+      .remove([normalizedPath]);
 
     if (deleteError) {
       console.error('Delete error:', deleteError);

@@ -135,16 +135,21 @@ export default function MessagesPage() {
             name: conv.participant?.name || 'Unknown',
             channelName: conv.id,
             lastMessage: conv.lastMessage?.content || 'Start chatting...',
-            lastMessageTime: conv.lastMessage?.createdAt || conv.updatedAt || new Date().toISOString(),
+            lastMessageTime:
+              conv.lastMessage?.createdAt || conv.updatedAt || new Date().toISOString(),
             unreadCount: conv.unreadCount || 0,
             isPinned: conv.isPinned || false,
             isMuted: conv.isMuted || false,
-            participants: conv.participant ? [{
-              id: conv.participant.id,
-              name: conv.participant.name || 'Unknown',
-              email: '',
-              avatarUrl: conv.participant.image,
-            }] : [],
+            participants: conv.participant
+              ? [
+                  {
+                    id: conv.participant.id,
+                    name: conv.participant.name || 'Unknown',
+                    email: '',
+                    avatarUrl: conv.participant.image,
+                  },
+                ]
+              : [],
           }));
           setConversations(apiConversations);
         }
@@ -508,7 +513,7 @@ export default function MessagesPage() {
                 {/* Search */}
                 <div className="relative mb-4">
                   <Search
-                    className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2"
+                    className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
                     style={{ color: 'var(--muted)' }}
                   />
                   <input
@@ -519,7 +524,7 @@ export default function MessagesPage() {
                     onFocus={() => setIsSearchFocused(true)}
                     onBlur={() => setIsSearchFocused(false)}
                     placeholder="Search conversations... (⌘K)"
-                    className="w-full rounded-xl border py-2.5 pl-10 pr-4 text-sm transition-all focus:outline-hidden focus:ring-2"
+                    className="w-full rounded-xl border py-2.5 pr-4 pl-10 text-sm transition-all focus:ring-2 focus:outline-hidden"
                     style={{
                       borderColor: isSearchFocused ? 'var(--accent)' : 'var(--border)',
                       background: 'var(--bg)',
@@ -529,7 +534,7 @@ export default function MessagesPage() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2"
+                      className="absolute top-1/2 right-3 -translate-y-1/2"
                     >
                       <X className="h-4 w-4" style={{ color: 'var(--muted)' }} />
                     </button>
@@ -620,7 +625,7 @@ export default function MessagesPage() {
                               {/* Online indicator */}
                               {conv.type === 'direct' && (
                                 <span
-                                  className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 bg-green-500"
+                                  className="absolute right-0 bottom-0 h-3 w-3 rounded-full border-2 bg-green-500"
                                   style={{ borderColor: 'var(--panel)' }}
                                 />
                               )}
@@ -673,7 +678,7 @@ export default function MessagesPage() {
                               contextMenuConversation === conv.id ? null : conv.id
                             );
                           }}
-                          className="absolute right-2 top-2 rounded-lg p-2 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100"
+                          className="absolute top-2 right-2 rounded-lg p-2 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/10"
                           style={{ color: 'var(--muted)' }}
                         >
                           <MoreVertical className="h-4 w-4" />
@@ -686,7 +691,7 @@ export default function MessagesPage() {
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.95 }}
-                              className="absolute right-2 top-10 z-50 w-48 rounded-xl border shadow-lg"
+                              className="absolute top-10 right-2 z-50 w-48 rounded-xl border shadow-lg"
                               style={{ background: 'var(--panel)', borderColor: 'var(--border)' }}
                             >
                               <div className="p-1">
@@ -861,7 +866,10 @@ export default function MessagesPage() {
                   Real-time messaging powered by Ably • Messages sync instantly
                   {selectedConversation.type === 'project' && (
                     <span className="ml-auto">
-                      <Sparkles className="mr-1 inline h-3 w-3" style={{ color: 'var(--violet)' }} />
+                      <Sparkles
+                        className="mr-1 inline h-3 w-3"
+                        style={{ color: 'var(--violet)' }}
+                      />
                       AI Assistant available
                     </span>
                   )}
@@ -1029,7 +1037,7 @@ export default function MessagesPage() {
                     value={newUserEmail}
                     onChange={(e) => setNewUserEmail(e.target.value)}
                     placeholder="colleague@example.com"
-                    className="w-full rounded-xl border px-4 py-3 text-sm focus:outline-hidden focus:ring-2"
+                    className="w-full rounded-xl border px-4 py-3 text-sm focus:ring-2 focus:outline-hidden"
                     style={{
                       borderColor: 'var(--border)',
                       background: 'var(--bg)',

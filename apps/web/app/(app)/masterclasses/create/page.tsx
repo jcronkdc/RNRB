@@ -308,8 +308,8 @@ export default function CreateMasterclassPage() {
                       onClick={() => setCourseType('pre_recorded')}
                       className={`rounded-xl border-2 p-4 text-left transition-colors ${
                         courseType === 'pre_recorded'
-                          ? 'bg-(--accent)/10 border-(--accent)'
-                          : 'hover:border-(--accent)/50 border-(--border)'
+                          ? 'border-(--accent) bg-(--accent)/10'
+                          : 'border-(--border) hover:border-(--accent)/50'
                       }`}
                     >
                       <Video className="mb-2 h-8 w-8 text-(--accent)" />
@@ -320,8 +320,8 @@ export default function CreateMasterclassPage() {
                       onClick={() => setCourseType('live')}
                       className={`rounded-xl border-2 p-4 text-left transition-colors ${
                         courseType === 'live'
-                          ? 'bg-(--accent)/10 border-(--accent)'
-                          : 'hover:border-(--accent)/50 border-(--border)'
+                          ? 'border-(--accent) bg-(--accent)/10'
+                          : 'border-(--border) hover:border-(--accent)/50'
                       }`}
                     >
                       <Play className="mb-2 h-8 w-8 text-(--accent)" />
@@ -345,7 +345,7 @@ export default function CreateMasterclassPage() {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g., Complete Guitar Mastery"
-                        className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                        className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                       />
                     </div>
 
@@ -359,11 +359,9 @@ export default function CreateMasterclassPage() {
                         onChange={(e) => setShortDescription(e.target.value)}
                         placeholder="A brief one-liner about your course"
                         maxLength={160}
-                        className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                        className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                       />
-                      <p className="mt-1 text-xs text-(--muted)">
-                        {shortDescription.length}/160
-                      </p>
+                      <p className="mt-1 text-xs text-(--muted)">{shortDescription.length}/160</p>
                     </div>
 
                     <div>
@@ -375,7 +373,7 @@ export default function CreateMasterclassPage() {
                         onChange={(e) => setDescription(e.target.value)}
                         placeholder="Describe what students will learn, prerequisites, and what makes your course unique..."
                         rows={6}
-                        className="w-full resize-none rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                        className="w-full resize-none rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                       />
                     </div>
 
@@ -387,7 +385,7 @@ export default function CreateMasterclassPage() {
                         <select
                           value={category}
                           onChange={(e) => setCategory(e.target.value)}
-                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                         >
                           <option value="">Select category</option>
                           {CATEGORIES.map((cat) => (
@@ -404,7 +402,7 @@ export default function CreateMasterclassPage() {
                         <select
                           value={skillLevel}
                           onChange={(e) => setSkillLevel(e.target.value)}
-                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                         >
                           {SKILL_LEVELS.map((level) => (
                             <option key={level.value} value={level.value}>
@@ -430,7 +428,7 @@ export default function CreateMasterclassPage() {
                           type="datetime-local"
                           value={scheduledAt}
                           onChange={(e) => setScheduledAt(e.target.value)}
-                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                         />
                       </div>
                       <div>
@@ -443,7 +441,7 @@ export default function CreateMasterclassPage() {
                           onChange={(e) => setMaxParticipants(parseInt(e.target.value) || 100)}
                           min={1}
                           max={1000}
-                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                          className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                         />
                       </div>
                     </div>
@@ -489,7 +487,7 @@ export default function CreateMasterclassPage() {
                     value={trailerUrl}
                     onChange={(e) => setTrailerUrl(e.target.value)}
                     placeholder="YouTube or Vimeo URL"
-                    className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                    className="w-full rounded-lg border border-(--border) bg-(--bg) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                   />
                 </div>
 
@@ -503,9 +501,7 @@ export default function CreateMasterclassPage() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-(--muted)">Total Duration</span>
-                      <span className="text-(--text)">
-                        {Math.round(totalDuration / 60)} min
-                      </span>
+                      <span className="text-(--text)">{Math.round(totalDuration / 60)} min</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-(--muted)">Price</span>
@@ -568,7 +564,7 @@ export default function CreateMasterclassPage() {
                           }
                         >
                           <GripVertical className="h-5 w-5 text-(--muted)" />
-                          <div className="bg-(--accent)/20 flex h-8 w-8 items-center justify-center rounded-full">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-(--accent)/20">
                             <span className="text-sm text-(--accent)">{index + 1}</span>
                           </div>
                           <div className="min-w-0 flex-1">
@@ -637,7 +633,7 @@ export default function CreateMasterclassPage() {
                                       updateLesson(lesson.id, { title: e.target.value })
                                     }
                                     placeholder="e.g., Introduction to Chord Progressions"
-                                    className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                                    className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                                   />
                                 </div>
                                 <div>
@@ -651,7 +647,7 @@ export default function CreateMasterclassPage() {
                                     }
                                     placeholder="What will students learn in this lesson?"
                                     rows={3}
-                                    className="w-full resize-none rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                                    className="w-full resize-none rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                                   />
                                 </div>
                                 <div className="grid grid-cols-2 gap-4">
@@ -666,7 +662,7 @@ export default function CreateMasterclassPage() {
                                         updateLesson(lesson.id, { videoUrl: e.target.value })
                                       }
                                       placeholder="https://..."
-                                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                                     />
                                   </div>
                                   <div>
@@ -685,7 +681,7 @@ export default function CreateMasterclassPage() {
                                       }
                                       placeholder="10"
                                       min={1}
-                                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                                      className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-2 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                                     />
                                   </div>
                                 </div>
@@ -742,8 +738,8 @@ export default function CreateMasterclassPage() {
                     onClick={() => setIsFree(false)}
                     className={`rounded-xl border-2 p-4 text-left transition-colors ${
                       !isFree
-                        ? 'bg-(--accent)/10 border-(--accent)'
-                        : 'hover:border-(--accent)/50 border-(--border)'
+                        ? 'border-(--accent) bg-(--accent)/10'
+                        : 'border-(--border) hover:border-(--accent)/50'
                     }`}
                   >
                     <div className="font-medium text-(--text)">Paid</div>
@@ -758,7 +754,7 @@ export default function CreateMasterclassPage() {
                       Price (USD)
                     </label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-(--muted)">
+                      <span className="absolute top-1/2 left-4 -translate-y-1/2 text-(--muted)">
                         $
                       </span>
                       <input
@@ -768,7 +764,7 @@ export default function CreateMasterclassPage() {
                         placeholder="49"
                         min={0}
                         step={1}
-                        className="w-full rounded-lg border border-(--border) bg-(--bg) py-3 pl-8 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                        className="w-full rounded-lg border border-(--border) bg-(--bg) py-3 pr-4 pl-8 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                       />
                     </div>
                   </div>
@@ -798,9 +794,7 @@ export default function CreateMasterclassPage() {
                             ${(price * 0.82).toFixed(2)}
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-(--muted)">
-                          Per enrollment, before taxes
-                        </p>
+                        <p className="mt-1 text-xs text-(--muted)">Per enrollment, before taxes</p>
                       </div>
                     </div>
                   </div>
@@ -827,7 +821,7 @@ export default function CreateMasterclassPage() {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <div className="absolute right-0 bottom-0 left-0 p-6">
                     <span className="mb-3 inline-block rounded-full bg-(--accent) px-3 py-1 text-sm text-(--text)">
                       {category || 'Category'}
                     </span>
@@ -844,9 +838,7 @@ export default function CreateMasterclassPage() {
                   <div className="mb-6 flex items-center gap-6">
                     <div className="flex items-center gap-2">
                       <Clock className="h-5 w-5 text-(--muted)" />
-                      <span className="text-(--text)">
-                        {Math.round(totalDuration / 60)} min
-                      </span>
+                      <span className="text-(--text)">{Math.round(totalDuration / 60)} min</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="h-5 w-5 text-(--muted)" />

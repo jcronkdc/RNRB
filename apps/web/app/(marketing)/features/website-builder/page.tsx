@@ -29,7 +29,7 @@ export default function WebsiteBuilderFeaturePage() {
         <div className="absolute inset-0" style={{ background: 'var(--panel)' }} />
         <div className="absolute inset-0">
           <div
-            className="absolute right-1/4 top-0 h-96 w-96 rounded-full blur-3xl"
+            className="absolute top-0 right-1/4 h-96 w-96 rounded-full blur-3xl"
             style={{ background: 'rgba(255, 99, 71, 0.05)' }}
           />
           <div
@@ -38,7 +38,7 @@ export default function WebsiteBuilderFeaturePage() {
           />
         </div>
 
-        <div className="container relative z-10 mx-auto max-w-6xl px-4 py-20">
+        <div className="relative z-10 container mx-auto max-w-6xl px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -375,7 +375,7 @@ export default function WebsiteBuilderFeaturePage() {
                   <div className="relative flex h-full flex-col p-4">
                     {/* Spotlight effect */}
                     <div
-                      className="absolute left-1/2 top-0 h-32 w-20 -translate-x-1/2"
+                      className="absolute top-0 left-1/2 h-32 w-20 -translate-x-1/2"
                       style={{
                         background:
                           'linear-gradient(180deg, rgba(255,200,0,0.3) 0%, transparent 100%)',
@@ -560,7 +560,7 @@ export default function WebsiteBuilderFeaturePage() {
                   <div className="relative flex h-full flex-col p-4">
                     {/* Glass reflection */}
                     <div
-                      className="absolute right-0 top-0 h-full w-1/2"
+                      className="absolute top-0 right-0 h-full w-1/2"
                       style={{
                         background:
                           'linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',

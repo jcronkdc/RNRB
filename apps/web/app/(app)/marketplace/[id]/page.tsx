@@ -32,7 +32,10 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { trpc as api } from '@cronkwaters/trpc/client/react';
 
-function formatPrice(price: number | { toNumber?: () => number } | null | undefined, currency: string = 'USD'): string {
+function formatPrice(
+  price: number | { toNumber?: () => number } | null | undefined,
+  currency: string = 'USD'
+): string {
   if (price && typeof price === 'object' && 'toNumber' in price) price = price.toNumber?.() ?? null;
   if (price === null || price === undefined) return 'Trade Only';
   return new Intl.NumberFormat('en-US', {
@@ -184,7 +187,7 @@ export default function ListingDetailPage() {
         style={{ background: 'var(--bg)' }}
       >
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+          <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
           <div className="text-white/60">Loading listing...</div>
         </div>
       </div>
@@ -227,8 +230,8 @@ export default function ListingDetailPage() {
     <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-amber-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-amber-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -278,13 +281,13 @@ export default function ListingDetailPage() {
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                    className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                    className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>
@@ -381,7 +384,7 @@ export default function ListingDetailPage() {
                 <div className="space-y-3">
                   <button
                     onClick={() => setShowOfferModal(true)}
-                    className="w-full rounded-xl bg-linear-to-r from-brand-primary to-orange-500 py-3 text-center font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:shadow-xl hover:shadow-brand-primary/30"
+                    className="from-brand-primary shadow-brand-primary/25 hover:shadow-brand-primary/30 w-full rounded-xl bg-linear-to-r to-orange-500 py-3 text-center font-semibold text-white shadow-lg transition-all hover:shadow-xl"
                   >
                     {listing.acceptsOffers ? 'Make an Offer' : 'Contact Seller'}
                   </button>
@@ -457,7 +460,7 @@ export default function ListingDetailPage() {
             <div className="rounded-xl border border-white/10 bg-white/5 p-5">
               <h3 className="mb-4 font-semibold text-white">Seller</h3>
               <div className="flex items-center gap-4">
-                <div className="relative flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-brand-primary to-orange-500">
+                <div className="from-brand-primary relative flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br to-orange-500">
                   {listing.seller?.image ? (
                     <img
                       src={listing.seller.image}
@@ -468,7 +471,7 @@ export default function ListingDetailPage() {
                     <User className="h-7 w-7 text-white" />
                   )}
                   {(listing.seller as any)?.isVerified && (
-                    <div className="absolute -bottom-1 -right-1 rounded-full bg-emerald-500 p-1">
+                    <div className="absolute -right-1 -bottom-1 rounded-full bg-emerald-500 p-1">
                       <Check className="h-3 w-3 text-white" />
                     </div>
                   )}
@@ -578,7 +581,7 @@ export default function ListingDetailPage() {
                 )}
                 <div className="flex justify-between">
                   <dt className="text-white/50">Category</dt>
-                  <dd className="font-medium capitalize text-white">{listing.category}</dd>
+                  <dd className="font-medium text-white capitalize">{listing.category}</dd>
                 </div>
                 {listing.serialNumber && (
                   <div className="flex justify-between">
@@ -674,13 +677,13 @@ export default function ListingDetailPage() {
               <div className="mb-4">
                 <label className="mb-2 block text-sm font-medium text-white/70">Your Offer</label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                  <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                   <input
                     type="number"
                     value={offerAmount}
                     onChange={(e) => setOfferAmount(e.target.value)}
                     placeholder="Enter amount"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                    className="focus:border-brand-primary/50 focus:ring-brand-primary/20 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden focus:ring-2"
                   />
                 </div>
                 {listing.price && (
@@ -699,7 +702,7 @@ export default function ListingDetailPage() {
                   onChange={(e) => setTradeItems(e.target.value)}
                   placeholder="Describe what you're offering to trade..."
                   rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
             )}
@@ -713,7 +716,7 @@ export default function ListingDetailPage() {
                 onChange={(e) => setOfferMessage(e.target.value)}
                 placeholder="Add a message to the seller..."
                 rows={3}
-                className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                className="focus:border-brand-primary/50 focus:ring-brand-primary/20 w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder-white/40 outline-hidden focus:ring-2"
               />
             </div>
 
@@ -727,7 +730,7 @@ export default function ListingDetailPage() {
               <button
                 onClick={handleMakeOffer}
                 disabled={makeOfferMutation.isPending || (offerType !== 'trade' && !offerAmount)}
-                className="flex-1 rounded-xl bg-linear-to-r from-brand-primary to-orange-500 py-3 font-semibold text-white disabled:opacity-50"
+                className="from-brand-primary flex-1 rounded-xl bg-linear-to-r to-orange-500 py-3 font-semibold text-white disabled:opacity-50"
               >
                 {makeOfferMutation.isPending ? 'Sending...' : 'Send Offer'}
               </button>

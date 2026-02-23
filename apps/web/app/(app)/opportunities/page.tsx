@@ -62,7 +62,7 @@ function OpportunityCard({ opportunity }: { opportunity: any }) {
       >
         {/* Glow effect on hover */}
         <div
-          className="absolute -right-16 -top-16 h-32 w-32 rounded-full opacity-0 blur-3xl transition-all duration-500 group-hover:opacity-100"
+          className="absolute -top-16 -right-16 h-32 w-32 rounded-full opacity-0 blur-3xl transition-all duration-500 group-hover:opacity-100"
           style={{ background: 'var(--accent-glow)' }}
         />
 
@@ -80,7 +80,7 @@ function OpportunityCard({ opportunity }: { opportunity: any }) {
                 </span>
               )}
             </div>
-            <span className="rounded-full bg-(--panel-hover) px-2 py-0.5 text-xs capitalize text-(--text-secondary)">
+            <span className="rounded-full bg-(--panel-hover) px-2 py-0.5 text-xs text-(--text-secondary) capitalize">
               {opportunity.type.replace('_', ' ')}
             </span>
           </div>
@@ -207,7 +207,7 @@ export default function OpportunitiesPage() {
       {/* Ambient background - workshop feel */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div
-          className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full opacity-30 blur-[120px]"
+          className="absolute top-0 -left-64 h-[600px] w-[600px] rounded-full opacity-30 blur-[120px]"
           style={{ background: 'var(--accent-glow)' }}
         />
         <div
@@ -252,13 +252,13 @@ export default function OpportunitiesPage() {
           {/* Search Bar */}
           <div className="flex gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+              <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-(--muted)" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search opportunities..."
-                className="w-full rounded-xl py-3 pl-12 pr-4 outline-hidden transition-all"
+                className="w-full rounded-xl py-3 pr-4 pl-12 outline-hidden transition-all"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -267,13 +267,13 @@ export default function OpportunitiesPage() {
               />
             </div>
             <div className="relative">
-              <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+              <MapPin className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-(--muted)" />
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="Location..."
-                className="w-48 rounded-xl py-3 pl-12 pr-4 outline-hidden transition-all"
+                className="w-48 rounded-xl py-3 pr-4 pl-12 outline-hidden transition-all"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -353,10 +353,7 @@ export default function OpportunitiesPage() {
               icon: Clock,
             },
           ].map((stat, i) => (
-            <div
-              key={stat.label}
-              className="rounded-xl border border-(--border) bg-(--panel) p-4"
-            >
+            <div key={stat.label} className="rounded-xl border border-(--border) bg-(--panel) p-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-(--accent-glow)">
                   <stat.icon className="h-5 w-5 text-(--accent)" />
@@ -420,7 +417,7 @@ export default function OpportunitiesPage() {
           </p>
           <Link
             href="/opportunities/post"
-            className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-(--accent-glow) shadow-lg transition-all hover:from-green-600 hover:to-emerald-700"
           >
             <Plus className="h-5 w-5" />
             Post an Opportunity

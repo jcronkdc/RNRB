@@ -164,9 +164,7 @@ function LiveSessionContent({
               <div className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
               <span className="text-sm text-red-400">LIVE</span>
               <span className="text-sm text-(--muted)">•</span>
-              <span className="text-sm text-(--muted)">
-                {masterclass.instructor.displayName}
-              </span>
+              <span className="text-sm text-(--muted)">{masterclass.instructor.displayName}</span>
             </div>
           </div>
         </div>
@@ -219,7 +217,7 @@ function LiveSessionContent({
                   <input
                     type="text"
                     placeholder="Send a message..."
-                    className="w-full rounded-lg border border-white/10 bg-[#111] px-4 py-2 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                    className="w-full rounded-lg border border-white/10 bg-[#111] px-4 py-2 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                   />
                 </div>
               </div>
@@ -390,9 +388,7 @@ export default function LiveSessionPage() {
       <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <AlertCircle className="mx-auto mb-4 h-16 w-16 text-red-400" />
-          <h2 className="mb-2 text-2xl font-bold text-(--text)">
-            {error || 'Session not found'}
-          </h2>
+          <h2 className="mb-2 text-2xl font-bold text-(--text)">{error || 'Session not found'}</h2>
           <Link href="/masterclasses">
             <button className="mt-4 rounded-full bg-(--accent) px-6 py-3 text-(--text)">
               Browse Masterclasses
@@ -417,7 +413,7 @@ export default function LiveSessionPage() {
           </Link>
 
           <div className="max-w-md rounded-2xl border border-(--border) bg-(--panel) p-8">
-            <div className="bg-(--accent)/20 mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-(--accent)/20">
               <Clock className="h-8 w-8 text-(--accent)" />
             </div>
 

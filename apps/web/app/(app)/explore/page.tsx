@@ -221,13 +221,13 @@ export default function ExplorePage() {
           className="flex flex-col gap-4 sm:flex-row"
         >
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-500" />
+            <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-500" />
             <input
               type="text"
               placeholder="Search tracks, styles, or moods..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white outline-hidden transition placeholder:text-gray-500 focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
+              className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-12 text-white outline-hidden transition placeholder:text-gray-500 focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20"
             />
           </div>
 
@@ -335,7 +335,7 @@ export default function ExplorePage() {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-black/90 p-4"
+            className="fixed right-0 bottom-0 left-0 z-50 border-t border-white/10 bg-black/90 p-4"
           >
             <div className="mx-auto max-w-4xl">
               <div className="flex items-center gap-4">

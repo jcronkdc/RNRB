@@ -167,7 +167,7 @@ export async function GET(request: NextRequest) {
     // Get follow status for current user if logged in
     let followingSet = new Set<string>();
     if (currentUserId && users.length > 0) {
-      const userIds = users.map(u => u.id);
+      const userIds = users.map((u) => u.id);
       const following = await prisma.userFollow.findMany({
         where: {
           followerId: currentUserId,
@@ -175,7 +175,7 @@ export async function GET(request: NextRequest) {
         },
         select: { followingId: true },
       });
-      followingSet = new Set(following.map(f => f.followingId));
+      followingSet = new Set(following.map((f) => f.followingId));
     }
 
     // Transform data for response

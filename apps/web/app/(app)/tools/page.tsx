@@ -240,9 +240,9 @@ function ToolsContent() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-emerald-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-purple-500/5 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-emerald-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-purple-500/5 to-transparent blur-3xl" />
       </div>
 
       {/* Logo & Header Section */}
@@ -293,7 +293,7 @@ function ToolsContent() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={`rounded-full px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat.id
-                    ? 'bg-linear-to-r from-brand-primary to-orange-500 text-white shadow-lg shadow-brand-primary/25'
+                    ? 'from-brand-primary shadow-brand-primary/25 bg-linear-to-r to-orange-500 text-white shadow-lg'
                     : ''
                 }`}
                 style={
@@ -390,7 +390,7 @@ function ToolsContent() {
 
                 {/* Top accent line */}
                 <div
-                  className={`absolute left-4 right-4 top-0 h-[2px] rounded-full bg-linear-to-r ${tool.gradient} opacity-0 transition-all duration-300 group-hover:opacity-100`}
+                  className={`absolute top-0 right-4 left-4 h-[2px] rounded-full bg-linear-to-r ${tool.gradient} opacity-0 transition-all duration-300 group-hover:opacity-100`}
                 />
 
                 <div
@@ -501,7 +501,7 @@ function ToolsContent() {
               </div>
             </div>
             <div className="group">
-              <div className="bg-linear-to-br from-brand-primary to-rose-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
+              <div className="from-brand-primary bg-linear-to-br to-rose-500 bg-clip-text text-4xl font-bold text-transparent transition-transform duration-300 group-hover:scale-110">
                 100%
               </div>
               <div className="mt-1 text-sm font-medium" style={{ color: 'var(--muted)' }}>

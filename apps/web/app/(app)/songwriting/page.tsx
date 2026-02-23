@@ -21,7 +21,9 @@ export default function SongwritingPage() {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSavedRef = useRef<string>('');
-  const [collaborators, setCollaborators] = useState<Array<{ userId: string; userName: string; userColor: string }>>([]);
+  const [collaborators, setCollaborators] = useState<
+    Array<{ userId: string; userName: string; userColor: string }>
+  >([]);
   const [showInvite, setShowInvite] = useState(false);
   const [showTools, setShowTools] = useState(false);
 
@@ -176,7 +178,7 @@ export default function SongwritingPage() {
     <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
       <div className="px-6 py-12">
         {/* Save status — tiny LED indicator */}
-        <div className="fixed right-6 top-20 z-10 flex items-center gap-2">
+        <div className="fixed top-20 right-6 z-10 flex items-center gap-2">
           <div
             className="h-2 w-2 rounded-full transition-colors duration-500"
             style={{
@@ -199,7 +201,7 @@ export default function SongwritingPage() {
 
         {/* Invite button — always available */}
         {songId && (
-          <div className="fixed right-6 top-28 z-10 flex items-center gap-2">
+          <div className="fixed top-28 right-6 z-10 flex items-center gap-2">
             {/* Collaborator avatars */}
             {collaborators.map((c) => (
               <div
@@ -319,7 +321,8 @@ function parseLyricsToSections(lyrics: string): SongSection[] {
       if (label.startsWith('verse')) currentType = 'verse';
       else if (label.startsWith('chorus')) currentType = 'chorus';
       else if (label.startsWith('bridge')) currentType = 'bridge';
-      else if (label.startsWith('pre-chorus') || label.startsWith('pre chorus')) currentType = 'pre-chorus';
+      else if (label.startsWith('pre-chorus') || label.startsWith('pre chorus'))
+        currentType = 'pre-chorus';
       else if (label.startsWith('intro')) currentType = 'intro';
       else if (label.startsWith('outro')) currentType = 'outro';
       else currentType = 'freeform';
@@ -335,15 +338,16 @@ function parseLyricsToSections(lyrics: string): SongSection[] {
     currentType = 'freeform'; // Reset after using
   }
 
-  return sections.length > 0 ? sections : [{ id: Math.random().toString(36).substring(2, 10), type: 'freeform', content: '' }];
+  return sections.length > 0
+    ? sections
+    : [{ id: Math.random().toString(36).substring(2, 10), type: 'freeform', content: '' }];
 }
 
 function sectionsToLyrics(sections: SongSection[]): string {
   return sections
     .map((s) => {
-      const label = s.type !== 'freeform'
-        ? `[${s.type.charAt(0).toUpperCase() + s.type.slice(1)}]\n`
-        : '';
+      const label =
+        s.type !== 'freeform' ? `[${s.type.charAt(0).toUpperCase() + s.type.slice(1)}]\n` : '';
       return `${label}${s.content}`;
     })
     .join('\n\n');

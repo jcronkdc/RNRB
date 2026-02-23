@@ -260,7 +260,7 @@ export default function MeetAnalyticsPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="absolute right-0 top-full z-10 mt-2 min-w-[160px] overflow-hidden rounded-xl border border-white/10 bg-gray-900 shadow-xl"
+                  className="absolute top-full right-0 z-10 mt-2 min-w-[160px] overflow-hidden rounded-xl border border-white/10 bg-gray-900 shadow-xl"
                 >
                   {TIME_RANGES.map((range) => (
                     <button
@@ -311,7 +311,7 @@ export default function MeetAnalyticsPage() {
             >
               {/* Background Gradient */}
               <div
-                className={`absolute right-0 top-0 h-24 w-24 bg-linear-to-br ${stat.color} -translate-y-1/2 translate-x-1/2 rounded-full opacity-10 blur-2xl`}
+                className={`absolute top-0 right-0 h-24 w-24 bg-linear-to-br ${stat.color} translate-x-1/2 -translate-y-1/2 rounded-full opacity-10 blur-2xl`}
               />
 
               <div className="relative">

@@ -381,7 +381,7 @@ export default function ReportsPage() {
                     <Check className="h-5 w-5 text-emerald-400" />
                   </div>
                   <div>
-                    <p className="font-medium capitalize text-white">{report.type} Report</p>
+                    <p className="font-medium text-white capitalize">{report.type} Report</p>
                     <p className="text-sm text-zinc-500">
                       {new Date(report.generatedAt).toLocaleString()} •{' '}
                       {report.format.toUpperCase()}

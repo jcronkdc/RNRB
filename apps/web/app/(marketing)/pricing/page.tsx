@@ -21,17 +21,20 @@ export const metadata: Metadata = generateSEOMetadata({
 const pricingSchemas = [
   generateProductSchema({
     name: "Rock N' Roll Basement - Free Plan",
-    description: 'Free music collaboration platform with 3 projects, 1GB storage, and basic songwriting tools.',
+    description:
+      'Free music collaboration platform with 3 projects, 1GB storage, and basic songwriting tools.',
     price: '0',
   }),
   generateProductSchema({
     name: "Rock N' Roll Basement - Creator Plan",
-    description: 'Music collaboration platform with AI assists, tour management, and copyright tools.',
+    description:
+      'Music collaboration platform with AI assists, tour management, and copyright tools.',
     price: '17.99',
   }),
   generateProductSchema({
     name: "Rock N' Roll Basement - Studio Plan",
-    description: 'Professional music platform with unlimited projects, HD video, and 100GB storage.',
+    description:
+      'Professional music platform with unlimited projects, HD video, and 100GB storage.',
     price: '34.99',
   }),
 ];
@@ -51,10 +54,18 @@ function FeatureRow({
 }) {
   return (
     <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-      <td className="py-3 pr-6 text-sm" style={{ color: 'var(--text-secondary)' }}>{feature}</td>
-      <td className="px-4 py-3 text-center text-sm" style={{ color: 'var(--muted)' }}>{explorer}</td>
-      <td className="px-4 py-3 text-center text-sm" style={{ color: 'var(--muted)' }}>{creator}</td>
-      <td className="py-3 pl-4 text-center text-sm" style={{ color: 'var(--muted)' }}>{studio}</td>
+      <td className="py-3 pr-6 text-sm" style={{ color: 'var(--text-secondary)' }}>
+        {feature}
+      </td>
+      <td className="px-4 py-3 text-center text-sm" style={{ color: 'var(--muted)' }}>
+        {explorer}
+      </td>
+      <td className="px-4 py-3 text-center text-sm" style={{ color: 'var(--muted)' }}>
+        {creator}
+      </td>
+      <td className="py-3 pl-4 text-center text-sm" style={{ color: 'var(--muted)' }}>
+        {studio}
+      </td>
     </tr>
   );
 }
@@ -71,7 +82,7 @@ export default function PricingPage() {
       <JsonLd data={pricingSchemas} />
       <div className="min-h-screen" style={{ background: 'var(--bg)' }}>
         {/* Header */}
-        <section className="px-5 pb-16 pt-28 text-center sm:px-8 sm:pb-20 sm:pt-32">
+        <section className="px-5 pt-28 pb-16 text-center sm:px-8 sm:pt-32 sm:pb-20">
           <div className="mx-auto max-w-2xl">
             <h1
               className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl"
@@ -79,9 +90,12 @@ export default function PricingPage() {
             >
               Simple, honest pricing
             </h1>
-            <p className="mt-4 text-base leading-relaxed sm:text-lg" style={{ color: 'var(--muted)' }}>
-              Everything you need to create, collaborate, and manage your music career.
-              Start free, upgrade when you&apos;re ready.
+            <p
+              className="mt-4 text-base leading-relaxed sm:text-lg"
+              style={{ color: 'var(--muted)' }}
+            >
+              Everything you need to create, collaborate, and manage your music career. Start free,
+              upgrade when you&apos;re ready.
             </p>
           </div>
         </section>
@@ -97,15 +111,32 @@ export default function PricingPage() {
               itemType="https://schema.org/Offer"
             >
               <div className="mb-5">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                <h2
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--text)' }}
+                  itemProp="name"
+                >
                   Explorer
                 </h2>
-                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }} itemProp="description">
+                <p
+                  className="mt-1 text-sm"
+                  style={{ color: 'var(--muted)' }}
+                  itemProp="description"
+                >
                   Perfect for getting started
                 </p>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-4xl font-bold" style={{ color: 'var(--text)' }} itemProp="price" content="0">$0</span>
-                  <span className="text-sm" style={{ color: 'var(--muted)' }}>forever</span>
+                  <span
+                    className="text-4xl font-bold"
+                    style={{ color: 'var(--text)' }}
+                    itemProp="price"
+                    content="0"
+                  >
+                    $0
+                  </span>
+                  <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                    forever
+                  </span>
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
               </div>
@@ -118,13 +149,21 @@ export default function PricingPage() {
                   'Community access',
                   '1 collaborator per project',
                 ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                  <li
+                    key={f}
+                    className="flex items-start gap-2.5 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
                     <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--sage)' }} />
                     {f}
                   </li>
                 ))}
                 {['No AI features', 'No video collaboration'].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--muted-soft)' }}>
+                  <li
+                    key={f}
+                    className="flex items-start gap-2.5 text-sm"
+                    style={{ color: 'var(--muted-soft)' }}
+                  >
                     <X className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--muted-soft)' }} />
                     {f}
                   </li>
@@ -155,15 +194,32 @@ export default function PricingPage() {
               </span>
 
               <div className="mb-5">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                <h2
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--text)' }}
+                  itemProp="name"
+                >
                   Creator
                 </h2>
-                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }} itemProp="description">
+                <p
+                  className="mt-1 text-sm"
+                  style={{ color: 'var(--muted)' }}
+                  itemProp="description"
+                >
                   For serious musicians & songwriters
                 </p>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-4xl font-bold" style={{ color: 'var(--text)' }} itemProp="price" content="17.99">$17.99</span>
-                  <span className="text-sm" style={{ color: 'var(--muted)' }}>/month</span>
+                  <span
+                    className="text-4xl font-bold"
+                    style={{ color: 'var(--text)' }}
+                    itemProp="price"
+                    content="17.99"
+                  >
+                    $17.99
+                  </span>
+                  <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                    /month
+                  </span>
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
               </div>
@@ -182,7 +238,11 @@ export default function PricingPage() {
                   const text = typeof f === 'string' ? f : f.text;
                   const bold = typeof f === 'object' && f.bold;
                   return (
-                    <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <li
+                      key={text}
+                      className="flex items-start gap-2.5 text-sm"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
                       <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--sage)' }} />
                       {bold ? <strong>{text}</strong> : text}
                     </li>
@@ -207,15 +267,32 @@ export default function PricingPage() {
               itemType="https://schema.org/Offer"
             >
               <div className="mb-5">
-                <h2 className="text-lg font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                <h2
+                  className="text-lg font-semibold"
+                  style={{ color: 'var(--text)' }}
+                  itemProp="name"
+                >
                   Studio
                 </h2>
-                <p className="mt-1 text-sm" style={{ color: 'var(--muted)' }} itemProp="description">
+                <p
+                  className="mt-1 text-sm"
+                  style={{ color: 'var(--muted)' }}
+                  itemProp="description"
+                >
                   For bands, studios & professionals
                 </p>
                 <div className="mt-4 flex items-baseline gap-1">
-                  <span className="text-4xl font-bold" style={{ color: 'var(--text)' }} itemProp="price" content="34.99">$34.99</span>
-                  <span className="text-sm" style={{ color: 'var(--muted)' }}>/month</span>
+                  <span
+                    className="text-4xl font-bold"
+                    style={{ color: 'var(--text)' }}
+                    itemProp="price"
+                    content="34.99"
+                  >
+                    $34.99
+                  </span>
+                  <span className="text-sm" style={{ color: 'var(--muted)' }}>
+                    /month
+                  </span>
                 </div>
                 <meta itemProp="priceCurrency" content="USD" />
               </div>
@@ -234,8 +311,15 @@ export default function PricingPage() {
                   const text = typeof f === 'string' ? f : f.text;
                   const bold = typeof f === 'object' && f.bold;
                   return (
-                    <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      <Check className="mt-0.5 h-4 w-4 shrink-0" style={{ color: 'var(--violet)' }} />
+                    <li
+                      key={text}
+                      className="flex items-start gap-2.5 text-sm"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0"
+                        style={{ color: 'var(--violet)' }}
+                      />
                       {bold ? <strong>{text}</strong> : text}
                     </li>
                   );
@@ -263,22 +347,67 @@ export default function PricingPage() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b" style={{ borderColor: 'var(--border)' }}>
-                    <th className="pb-3 pr-6 text-sm font-semibold" style={{ color: 'var(--text)' }}>Feature</th>
-                    <th className="px-4 pb-3 text-center text-sm font-semibold" style={{ color: 'var(--muted)' }}>Explorer</th>
-                    <th className="px-4 pb-3 text-center text-sm font-semibold" style={{ color: 'var(--accent)' }}>Creator</th>
-                    <th className="pb-3 pl-4 text-center text-sm font-semibold" style={{ color: 'var(--violet)' }}>Studio</th>
+                    <th
+                      className="pr-6 pb-3 text-sm font-semibold"
+                      style={{ color: 'var(--text)' }}
+                    >
+                      Feature
+                    </th>
+                    <th
+                      className="px-4 pb-3 text-center text-sm font-semibold"
+                      style={{ color: 'var(--muted)' }}
+                    >
+                      Explorer
+                    </th>
+                    <th
+                      className="px-4 pb-3 text-center text-sm font-semibold"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      Creator
+                    </th>
+                    <th
+                      className="pb-3 pl-4 text-center text-sm font-semibold"
+                      style={{ color: 'var(--violet)' }}
+                    >
+                      Studio
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   <FeatureRow feature="Projects" explorer="3" creator="10" studio="Unlimited" />
                   <FeatureRow feature="Storage" explorer="1 GB" creator="10 GB" studio="100 GB" />
                   <FeatureRow feature="AI Assists" explorer="—" creator="100/mo" studio="500/mo" />
-                  <FeatureRow feature="Video Collaboration" explorer="—" creator="—" studio="3,600 min" />
+                  <FeatureRow
+                    feature="Video Collaboration"
+                    explorer="—"
+                    creator="—"
+                    studio="3,600 min"
+                  />
                   <FeatureRow feature="Collaborators" explorer="1" creator="5" studio="Unlimited" />
-                  <FeatureRow feature="Copyright Sheets" explorer="—" creator={<CheckIcon />} studio={<CheckIcon color="var(--violet)" />} />
-                  <FeatureRow feature="Tour Management" explorer="—" creator={<CheckIcon />} studio={<CheckIcon color="var(--violet)" />} />
-                  <FeatureRow feature="Real-time Collab" explorer="—" creator="—" studio={<CheckIcon color="var(--violet)" />} />
-                  <FeatureRow feature="Priority Support" explorer="—" creator="—" studio={<CheckIcon color="var(--violet)" />} />
+                  <FeatureRow
+                    feature="Copyright Sheets"
+                    explorer="—"
+                    creator={<CheckIcon />}
+                    studio={<CheckIcon color="var(--violet)" />}
+                  />
+                  <FeatureRow
+                    feature="Tour Management"
+                    explorer="—"
+                    creator={<CheckIcon />}
+                    studio={<CheckIcon color="var(--violet)" />}
+                  />
+                  <FeatureRow
+                    feature="Real-time Collab"
+                    explorer="—"
+                    creator="—"
+                    studio={<CheckIcon color="var(--violet)" />}
+                  />
+                  <FeatureRow
+                    feature="Priority Support"
+                    explorer="—"
+                    creator="—"
+                    studio={<CheckIcon color="var(--violet)" />}
+                  />
                 </tbody>
               </table>
             </div>
@@ -286,7 +415,10 @@ export default function PricingPage() {
         </section>
 
         {/* All Plans Include */}
-        <section className="border-t px-5 py-16 sm:px-8 sm:py-20" style={{ borderColor: 'var(--border)' }}>
+        <section
+          className="border-t px-5 py-16 sm:px-8 sm:py-20"
+          style={{ borderColor: 'var(--border)' }}
+        >
           <div className="mx-auto max-w-4xl">
             <h2 className="mb-10 text-center text-2xl font-bold" style={{ color: 'var(--text)' }}>
               Every plan includes
@@ -334,7 +466,7 @@ export default function PricingPage() {
               {[
                 {
                   q: 'Can I switch plans anytime?',
-                  a: "Yes! Upgrade or downgrade at any time. When you upgrade, you get immediate access. When you downgrade, you keep features until the end of your billing period.",
+                  a: 'Yes! Upgrade or downgrade at any time. When you upgrade, you get immediate access. When you downgrade, you keep features until the end of your billing period.',
                 },
                 {
                   q: 'What happens to my projects if I downgrade?',
@@ -361,11 +493,19 @@ export default function PricingPage() {
                   itemProp="mainEntity"
                   itemType="https://schema.org/Question"
                 >
-                  <h3 className="mb-2 text-sm font-semibold" style={{ color: 'var(--text)' }} itemProp="name">
+                  <h3
+                    className="mb-2 text-sm font-semibold"
+                    style={{ color: 'var(--text)' }}
+                    itemProp="name"
+                  >
                     {faq.q}
                   </h3>
                   <div itemScope itemProp="acceptedAnswer" itemType="https://schema.org/Answer">
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }} itemProp="text">
+                    <p
+                      className="text-sm leading-relaxed"
+                      style={{ color: 'var(--muted)' }}
+                      itemProp="text"
+                    >
                       {faq.a}
                     </p>
                   </div>

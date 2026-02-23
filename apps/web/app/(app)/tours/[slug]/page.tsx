@@ -188,7 +188,7 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('overview')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'overview'
-                  ? 'border-b-2 border-brand-primary text-(--accent)'
+                  ? 'border-brand-primary border-b-2 text-(--accent)'
                   : 'text-(--muted) hover:text-(--text)'
               }`}
             >
@@ -198,7 +198,7 @@ export default function TourDetailPage() {
               onClick={() => setActiveSection('shows')}
               className={`px-4 py-2 text-sm font-medium transition ${
                 activeSection === 'shows'
-                  ? 'border-b-2 border-brand-primary text-(--accent)'
+                  ? 'border-brand-primary border-b-2 text-(--accent)'
                   : 'text-(--muted) hover:text-(--text)'
               }`}
             >
@@ -260,7 +260,7 @@ export default function TourDetailPage() {
               </div>
             ) : (
               <Card className="p-12 text-center">
-                <Calendar className="text-(--muted)/50 mx-auto mb-4 h-16 w-16" />
+                <Calendar className="mx-auto mb-4 h-16 w-16 text-(--muted)/50" />
                 <h3 className="mb-2 text-lg font-semibold">No Shows Yet</h3>
                 <p className="mb-6 text-(--muted)">
                   Start adding shows to your tour to manage your schedule.
@@ -309,7 +309,7 @@ function ShowCard({
 
   return (
     <Card
-      className={`p-4 transition ${isPast ? 'border-(--border)/50 bg-muted/10' : 'hover:border-brand-primary/30'}`}
+      className={`p-4 transition ${isPast ? 'bg-muted/10 border-(--border)/50' : 'hover:border-brand-primary/30'}`}
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
@@ -356,9 +356,7 @@ function ShowCard({
 
           {/* Notes */}
           {show.notes && (
-            <p className="mt-2 line-clamp-2 text-sm italic text-(--muted)">
-              {show.notes}
-            </p>
+            <p className="mt-2 line-clamp-2 text-sm text-(--muted) italic">{show.notes}</p>
           )}
         </div>
 
@@ -384,7 +382,7 @@ function ShowCard({
               href={show.ticketUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:bg-(--accent)/90 flex items-center gap-1.5 rounded-lg bg-(--accent) px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+              className="flex items-center gap-1.5 rounded-lg bg-(--accent) px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-(--accent)/90 hover:shadow-lg"
             >
               <Ticket className="h-4 w-4" />
               Get Tickets

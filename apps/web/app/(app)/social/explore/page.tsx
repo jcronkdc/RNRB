@@ -61,7 +61,7 @@ async function TrendingHashtags() {
           style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
         >
           <div
-            className="absolute right-2 top-2 text-3xl font-bold"
+            className="absolute top-2 right-2 text-3xl font-bold"
             style={{ color: 'var(--border)' }}
           >
             {index + 1}
@@ -262,7 +262,7 @@ async function RecentAudioPosts() {
             </div>
             {post.genre && (
               <span
-                className="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-medium"
+                className="absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-medium"
                 style={{ background: 'var(--bg)', color: 'var(--text)' }}
               >
                 {post.genre}

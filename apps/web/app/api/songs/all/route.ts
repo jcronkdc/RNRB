@@ -47,7 +47,10 @@ export async function GET(req: NextRequest) {
     }
 
     // Filter by song status
-    if (status && ['draft', 'in_progress', 'needs_review', 'complete', 'published', 'archived'].includes(status)) {
+    if (
+      status &&
+      ['draft', 'in_progress', 'needs_review', 'complete', 'published', 'archived'].includes(status)
+    ) {
       where.status = status as Prisma.EnumSongStatusFilter;
     }
 
@@ -107,13 +110,14 @@ export async function GET(req: NextRequest) {
       });
 
       // Get stats
-      const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] = await Promise.all([
-        db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
-        db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
-        db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
-        db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
-        db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
-      ]);
+      const [standaloneCount, inProjectCount, draftCount, completeCount, favoritesCount] =
+        await Promise.all([
+          db.song.count({ where: { userId: user.id, archived: false, projectId: null } }),
+          db.song.count({ where: { userId: user.id, archived: false, projectId: { not: null } } }),
+          db.song.count({ where: { userId: user.id, archived: false, status: 'draft' } }),
+          db.song.count({ where: { userId: user.id, archived: false, status: 'complete' } }),
+          db.song.count({ where: { userId: user.id, archived: false, isFavorite: true } }),
+        ]);
 
       stats = {
         total: standaloneCount + inProjectCount,

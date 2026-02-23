@@ -283,7 +283,7 @@ export default function SetlistsPage() {
             {/* Animated glow effect */}
             <div className="absolute inset-0 -z-10 opacity-50">
               <motion.div
-                className="absolute left-0 top-0 h-full w-1/3 bg-linear-to-r from-orange-500/20 to-transparent"
+                className="absolute top-0 left-0 h-full w-1/3 bg-linear-to-r from-orange-500/20 to-transparent"
                 animate={{
                   x: ['-100%', '300%'],
                 }}

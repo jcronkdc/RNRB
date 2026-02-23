@@ -162,8 +162,8 @@ export default function CreateWantedPage() {
     <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-amber-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-amber-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -216,7 +216,7 @@ export default function CreateWantedPage() {
                 value={formData.title}
                 onChange={(e) => updateField('title', e.target.value)}
                 placeholder="e.g., 1960s Fender Stratocaster, any color"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                className="focus:border-brand-primary/50 focus:ring-brand-primary/20 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:ring-2"
               />
             </div>
 
@@ -228,7 +228,7 @@ export default function CreateWantedPage() {
                 onChange={(e) => updateField('description', e.target.value)}
                 placeholder="Describe exactly what you're looking for. Be specific about must-haves vs nice-to-haves..."
                 rows={4}
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
               />
             </div>
 
@@ -242,7 +242,7 @@ export default function CreateWantedPage() {
                     updateField('category', e.target.value);
                     updateField('subcategory', '');
                   }}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden"
                 >
                   <option value="" className="bg-gray-900">
                     Select category
@@ -261,7 +261,7 @@ export default function CreateWantedPage() {
                   <select
                     value={formData.subcategory}
                     onChange={(e) => updateField('subcategory', e.target.value)}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden"
                   >
                     <option value="" className="bg-gray-900">
                       Any
@@ -285,7 +285,7 @@ export default function CreateWantedPage() {
                   value={formData.brand}
                   onChange={(e) => updateField('brand', e.target.value)}
                   placeholder="e.g., Fender, Gibson, any"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
               <div>
@@ -295,7 +295,7 @@ export default function CreateWantedPage() {
                   value={formData.model}
                   onChange={(e) => updateField('model', e.target.value)}
                   placeholder="e.g., Stratocaster"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
             </div>
@@ -309,7 +309,7 @@ export default function CreateWantedPage() {
                   value={formData.yearMin}
                   onChange={(e) => updateField('yearMin', e.target.value)}
                   placeholder="e.g., 1960"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
               <div>
@@ -319,7 +319,7 @@ export default function CreateWantedPage() {
                   value={formData.yearMax}
                   onChange={(e) => updateField('yearMax', e.target.value)}
                   placeholder="e.g., 1969"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
             </div>
@@ -355,23 +355,23 @@ export default function CreateWantedPage() {
               <label className="mb-2 block text-sm font-medium text-white">Budget Range</label>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                  <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                   <input
                     type="number"
                     value={formData.budgetMin}
                     onChange={(e) => updateField('budgetMin', e.target.value)}
                     placeholder="Min"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                  <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                   <input
                     type="number"
                     value={formData.budgetMax}
                     onChange={(e) => updateField('budgetMax', e.target.value)}
                     placeholder="Max"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
               </div>
@@ -403,7 +403,7 @@ export default function CreateWantedPage() {
                       onChange={(e) => updateField('tradeDescription', e.target.value)}
                       placeholder="Describe the gear you're offering..."
                       rows={2}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                      className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                     />
                   </div>
                   <div>
@@ -411,13 +411,13 @@ export default function CreateWantedPage() {
                       Estimated trade value
                     </label>
                     <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                      <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                       <input
                         type="number"
                         value={formData.tradeValue}
                         onChange={(e) => updateField('tradeValue', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                        className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                       />
                     </div>
                   </div>
@@ -430,13 +430,13 @@ export default function CreateWantedPage() {
               <div>
                 <label className="mb-2 block text-sm font-medium text-white">Your Location</label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                  <MapPin className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                   <input
                     type="text"
                     value={formData.location}
                     onChange={(e) => updateField('location', e.target.value)}
                     placeholder="City, State"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
               </div>
@@ -449,7 +449,7 @@ export default function CreateWantedPage() {
                   value={formData.willingToTravel}
                   onChange={(e) => updateField('willingToTravel', e.target.value)}
                   placeholder="e.g., 50"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
             </div>
@@ -460,7 +460,7 @@ export default function CreateWantedPage() {
                   type="checkbox"
                   checked={formData.acceptsShipping}
                   onChange={(e) => updateField('acceptsShipping', e.target.checked)}
-                  className="h-5 w-5 rounded border-white/20 bg-white/5 text-brand-primary focus:ring-brand-primary/50"
+                  className="text-brand-primary focus:ring-brand-primary/50 h-5 w-5 rounded border-white/20 bg-white/5"
                 />
                 <span className="text-sm text-white/70">I accept shipped items</span>
               </label>

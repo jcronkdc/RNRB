@@ -81,7 +81,9 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
       });
 
       if (!createResponse.ok) {
-        const error = await createResponse.json().catch(() => ({ error: 'Failed to create session' }));
+        const error = await createResponse
+          .json()
+          .catch(() => ({ error: 'Failed to create session' }));
         return NextResponse.json(
           { error: error.error || 'Failed to create session' },
           { status: createResponse.status }

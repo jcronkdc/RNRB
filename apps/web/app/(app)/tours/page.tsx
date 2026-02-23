@@ -206,7 +206,7 @@ export default function ToursPage() {
           </div>
           {/* Gradient orbs */}
           <motion.div
-            className="absolute -left-32 top-0 h-[600px] w-[600px] rounded-full blur-3xl"
+            className="absolute top-0 -left-32 h-[600px] w-[600px] rounded-full blur-3xl"
             style={{ background: 'radial-gradient(circle, rgba(255, 99, 71, 0.12), transparent)' }}
             animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
             transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
@@ -218,7 +218,7 @@ export default function ToursPage() {
             transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.div
-            className="absolute left-1/2 top-1/3 h-[400px] w-[400px] -translate-x-1/2 rounded-full blur-3xl"
+            className="absolute top-1/3 left-1/2 h-[400px] w-[400px] -translate-x-1/2 rounded-full blur-3xl"
             style={{ background: 'radial-gradient(circle, rgba(255, 69, 0, 0.06), transparent)' }}
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 30, repeat: Infinity, ease: 'easeInOut' }}
@@ -263,7 +263,7 @@ export default function ToursPage() {
                 <Crown className="h-12 w-12" style={{ color: 'var(--accent)' }} />
               </div>
               <motion.div
-                className="absolute -right-2 -top-2"
+                className="absolute -top-2 -right-2"
                 animate={{ rotate: [0, 15, -15, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -565,7 +565,7 @@ export default function ToursPage() {
               <div className="flex flex-1 gap-3">
                 <div className="relative flex-1">
                   <Search
-                    className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2"
+                    className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2"
                     style={{ color: 'var(--muted)' }}
                   />
                   <input
@@ -573,7 +573,7 @@ export default function ToursPage() {
                     placeholder="Search tours..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-12 w-full rounded-xl border pl-11 pr-4 text-sm transition-all focus:outline-hidden focus:ring-2"
+                    className="h-12 w-full rounded-xl border pr-4 pl-11 text-sm transition-all focus:ring-2 focus:outline-hidden"
                     style={{
                       borderColor: 'var(--border)',
                       background: 'rgba(255, 255, 255, 0.03)',
@@ -584,7 +584,7 @@ export default function ToursPage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="h-12 rounded-xl border px-4 text-sm transition-all focus:outline-hidden focus:ring-2"
+                  className="h-12 rounded-xl border px-4 text-sm transition-all focus:ring-2 focus:outline-hidden"
                   style={{
                     borderColor: 'var(--border)',
                     background: 'rgba(255, 255, 255, 0.03)',

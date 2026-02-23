@@ -93,19 +93,30 @@ export async function GET(request: NextRequest) {
       // Latest messages - one query with grouping
       Promise.all(
         channelIds.map((channelId) =>
-          prisma.chatMessage.findFirst({
-            where: { channelId, isDeleted: false },
-            orderBy: { createdAt: 'desc' },
-            select: { id: true, content: true, senderId: true, createdAt: true, messageType: true, channelId: true },
-          }).then((msg) => ({ channelId, message: msg }))
+          prisma.chatMessage
+            .findFirst({
+              where: { channelId, isDeleted: false },
+              orderBy: { createdAt: 'desc' },
+              select: {
+                id: true,
+                content: true,
+                senderId: true,
+                createdAt: true,
+                messageType: true,
+                channelId: true,
+              },
+            })
+            .then((msg) => ({ channelId, message: msg }))
         )
       ),
       // Unread counts
       Promise.all(
         channelIds.map((channelId) =>
-          prisma.chatMessage.count({
-            where: { channelId, senderId: { not: userId }, isDeleted: false },
-          }).then((count) => ({ channelId, count }))
+          prisma.chatMessage
+            .count({
+              where: { channelId, senderId: { not: userId }, isDeleted: false },
+            })
+            .then((count) => ({ channelId, count }))
         )
       ),
       // Blocked users
@@ -121,56 +132,56 @@ export async function GET(request: NextRequest) {
 
     // Build conversations list
     const conversations = channelIds.map((channelId) => {
-        const settings = settingsMap.get(channelId) || {
-          isArchived: false,
-          isDeleted: false,
-          isMuted: false,
-          isPinned: false,
-        };
+      const settings = settingsMap.get(channelId) || {
+        isArchived: false,
+        isDeleted: false,
+        isMuted: false,
+        isPinned: false,
+      };
 
-        if (filter === 'archived' && !settings.isArchived) return null;
-        if (filter === 'trash' && !settings.isDeleted) return null;
-        if (filter === 'all' && (settings.isArchived || settings.isDeleted)) return null;
+      if (filter === 'archived' && !settings.isArchived) return null;
+      if (filter === 'trash' && !settings.isDeleted) return null;
+      if (filter === 'all' && (settings.isArchived || settings.isDeleted)) return null;
 
-        const otherUserId = channelUserMap.get(channelId);
-        const otherUser = otherUserId ? userMap.get(otherUserId) : null;
-        if (!otherUser) return null;
+      const otherUserId = channelUserMap.get(channelId);
+      const otherUser = otherUserId ? userMap.get(otherUserId) : null;
+      if (!otherUser) return null;
 
-        if (search) {
-          const searchLower = search.toLowerCase();
-          const nameMatch = otherUser.name?.toLowerCase().includes(searchLower);
-          if (!nameMatch) return null;
-        }
+      if (search) {
+        const searchLower = search.toLowerCase();
+        const nameMatch = otherUser.name?.toLowerCase().includes(searchLower);
+        if (!nameMatch) return null;
+      }
 
-        const latestMessage = latestMessageMap.get(channelId) || null;
-        const unreadCount = unreadCountMap.get(channelId) || 0;
+      const latestMessage = latestMessageMap.get(channelId) || null;
+      const unreadCount = unreadCountMap.get(channelId) || 0;
 
-        return {
-          id: channelId,
-          type: 'dm',
-          participant: {
-            id: otherUser.id,
-            name: otherUser.name,
-            image: otherUser.image,
-          },
-          lastMessage: latestMessage
-            ? {
-                id: latestMessage.id,
-                content: latestMessage.content,
-                senderId: latestMessage.senderId,
-                createdAt: latestMessage.createdAt.toISOString(),
-                type: latestMessage.messageType,
-              }
-            : null,
-          unreadCount,
-          isArchived: settings.isArchived || false,
-          isDeleted: settings.isDeleted || false,
-          isMuted: settings.isMuted || false,
-          isPinned: settings.isPinned || false,
-          isBlocked: otherUserId ? blockedSet.has(otherUserId) : false,
-          updatedAt: latestMessage?.createdAt.toISOString() || new Date().toISOString(),
-        };
-      });
+      return {
+        id: channelId,
+        type: 'dm',
+        participant: {
+          id: otherUser.id,
+          name: otherUser.name,
+          image: otherUser.image,
+        },
+        lastMessage: latestMessage
+          ? {
+              id: latestMessage.id,
+              content: latestMessage.content,
+              senderId: latestMessage.senderId,
+              createdAt: latestMessage.createdAt.toISOString(),
+              type: latestMessage.messageType,
+            }
+          : null,
+        unreadCount,
+        isArchived: settings.isArchived || false,
+        isDeleted: settings.isDeleted || false,
+        isMuted: settings.isMuted || false,
+        isPinned: settings.isPinned || false,
+        isBlocked: otherUserId ? blockedSet.has(otherUserId) : false,
+        updatedAt: latestMessage?.createdAt.toISOString() || new Date().toISOString(),
+      };
+    });
 
     // Filter out nulls and sort
     const validConversations = conversations

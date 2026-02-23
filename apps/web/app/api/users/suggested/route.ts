@@ -18,7 +18,7 @@ export async function GET() {
       where: { followerId: userId },
       select: { followingId: true },
     });
-    const followingIds = following.map(f => f.followingId);
+    const followingIds = following.map((f) => f.followingId);
 
     // Exclude self and already-following users
     const excludeIds = [userId, ...followingIds];
@@ -50,24 +50,21 @@ export async function GET() {
           },
         },
       },
-      orderBy: [
-        { followers: { _count: 'desc' } },
-        { authoredPosts: { _count: 'desc' } },
-      ],
+      orderBy: [{ followers: { _count: 'desc' } }, { authoredPosts: { _count: 'desc' } }],
       take: 6,
     });
 
     // Check if any of these users follow the current user (for "Follows you" badge)
     const followerCheck = await prisma.userFollow.findMany({
       where: {
-        followerId: { in: suggestedUsers.map(u => u.id) },
+        followerId: { in: suggestedUsers.map((u) => u.id) },
         followingId: userId,
       },
       select: { followerId: true },
     });
-    const followsYouIds = new Set(followerCheck.map(f => f.followerId));
+    const followsYouIds = new Set(followerCheck.map((f) => f.followerId));
 
-    const suggestions = suggestedUsers.map(user => ({
+    const suggestions = suggestedUsers.map((user) => ({
       id: user.id,
       name: user.name,
       image: user.image,
@@ -83,10 +80,6 @@ export async function GET() {
     return NextResponse.json({ suggestions });
   } catch (error) {
     console.error('Error fetching suggested users:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch suggestions' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch suggestions' }, { status: 500 });
   }
 }
-

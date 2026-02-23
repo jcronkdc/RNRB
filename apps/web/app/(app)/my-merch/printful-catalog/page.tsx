@@ -250,9 +250,9 @@ export default function PrintfulCatalogPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-cyan-500/5 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-cyan-500/5 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -308,13 +308,13 @@ export default function PrintfulCatalogPage() {
           >
             {/* Search */}
             <div className="relative max-w-md flex-1">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+              <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-white/40" />
               <input
                 type="text"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
+                className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-12 text-white placeholder:text-white/40 focus:border-purple-500/50 focus:outline-hidden"
               />
             </div>
 
@@ -446,7 +446,7 @@ export default function PrintfulCatalogPage() {
 
                       {/* Variant Count Badge */}
                       {viewMode === 'grid' && (
-                        <div className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
+                        <div className="absolute top-3 right-3 rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white">
                           {product.variant_count} variants
                         </div>
                       )}
@@ -455,7 +455,7 @@ export default function PrintfulCatalogPage() {
                     {/* Product Info */}
                     <div className={viewMode === 'grid' ? 'p-4' : 'flex-1'}>
                       {product.brand && (
-                        <p className="mb-1 text-xs font-medium uppercase tracking-wider text-purple-400">
+                        <p className="mb-1 text-xs font-medium tracking-wider text-purple-400 uppercase">
                           {product.brand}
                         </p>
                       )}

@@ -112,7 +112,10 @@ function StatPill({
         <Icon className="h-3.5 w-3.5" />
       </div>
       <div className="min-w-0">
-        <span className="block text-sm font-semibold leading-tight" style={{ color: 'var(--text)' }}>
+        <span
+          className="block text-sm leading-tight font-semibold"
+          style={{ color: 'var(--text)' }}
+        >
           {value}
         </span>
         <span className="block text-[11px] leading-tight" style={{ color: 'var(--muted)' }}>
@@ -145,7 +148,10 @@ function QuickAction({
   if (primary) {
     return (
       <Link href={href}>
-        <div className="group flex items-center gap-4 rounded-xl p-4 text-white transition-all duration-200 hover:opacity-90" style={{ background: 'var(--accent)' }}>
+        <div
+          className="group flex items-center gap-4 rounded-xl p-4 text-white transition-all duration-200 hover:opacity-90"
+          style={{ background: 'var(--accent)' }}
+        >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/20">
             <Icon className="h-[18px] w-[18px]" />
           </div>
@@ -171,8 +177,12 @@ function QuickAction({
           <Icon className="h-[18px] w-[18px]" />
         </div>
         <div>
-          <span className="block text-sm font-semibold" style={{ color: 'var(--text)' }}>{title}</span>
-          <span className="block text-xs" style={{ color: 'var(--muted)' }}>{subtitle}</span>
+          <span className="block text-sm font-semibold" style={{ color: 'var(--text)' }}>
+            {title}
+          </span>
+          <span className="block text-xs" style={{ color: 'var(--muted)' }}>
+            {subtitle}
+          </span>
         </div>
       </div>
     </Link>
@@ -199,7 +209,10 @@ export function DashboardContent({
     <div className="mx-auto max-w-4xl">
       {/* ── Greeting ───────────────────────────────────────────────────── */}
       <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0} className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: 'var(--text)' }}>
+        <h1
+          className="text-2xl font-bold tracking-tight sm:text-3xl"
+          style={{ color: 'var(--text)' }}
+        >
           {greeting}, {firstName}
         </h1>
         <p className="mt-1.5 text-sm" style={{ color: 'var(--muted)' }}>
@@ -234,12 +247,49 @@ export function DashboardContent({
         {/* Quick Actions — left 3 cols */}
         <div className="lg:col-span-3">
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-            <QuickAction href="/songwriting" icon={Plus} title="New Song" subtitle="Start writing" primary />
-            <QuickAction href="/projects/new" icon={FolderOpen} title="New Project" subtitle="Organize & collaborate" iconBg="var(--gold-muted)" iconColor="var(--gold)" />
-            <QuickAction href="/meet" icon={Video} title="Start Session" subtitle="Meet & play together" iconBg="var(--sage-muted)" iconColor="var(--sage)" />
-            <QuickAction href="/create" icon={Sparkles} title="AI Sketch" subtitle="Generate ideas with AI" iconBg="var(--accent-muted)" iconColor="var(--accent)" />
-            <QuickAction href="/tools" icon={FlaskConical} title="Tools" subtitle="Explore all tools" />
-            <QuickAction href="/marketplace" icon={ShoppingBag} title="Marketplace" subtitle="Buy & sell gear" />
+            <QuickAction
+              href="/songwriting"
+              icon={Plus}
+              title="New Song"
+              subtitle="Start writing"
+              primary
+            />
+            <QuickAction
+              href="/projects/new"
+              icon={FolderOpen}
+              title="New Project"
+              subtitle="Organize & collaborate"
+              iconBg="var(--gold-muted)"
+              iconColor="var(--gold)"
+            />
+            <QuickAction
+              href="/meet"
+              icon={Video}
+              title="Start Session"
+              subtitle="Meet & play together"
+              iconBg="var(--sage-muted)"
+              iconColor="var(--sage)"
+            />
+            <QuickAction
+              href="/create"
+              icon={Sparkles}
+              title="AI Sketch"
+              subtitle="Generate ideas with AI"
+              iconBg="var(--accent-muted)"
+              iconColor="var(--accent)"
+            />
+            <QuickAction
+              href="/tools"
+              icon={FlaskConical}
+              title="Tools"
+              subtitle="Explore all tools"
+            />
+            <QuickAction
+              href="/marketplace"
+              icon={ShoppingBag}
+              title="Marketplace"
+              subtitle="Buy & sell gear"
+            />
           </div>
         </div>
 
@@ -250,9 +300,18 @@ export function DashboardContent({
       </motion.div>
 
       {/* ── Recent Songs ───────────────────────────────────────────────── */}
-      <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0.15} className="mb-8">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        custom={0.15}
+        className="mb-8"
+      >
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+          <h2
+            className="text-xs font-semibold tracking-wider uppercase"
+            style={{ color: 'var(--muted)' }}
+          >
             Recent Songs
           </h2>
           {songs.length > 0 && (
@@ -284,12 +343,17 @@ export function DashboardContent({
                     <Music2 className="h-4 w-4" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium" style={{ color: 'var(--text)' }}>
+                    <span
+                      className="block truncate text-sm font-medium"
+                      style={{ color: 'var(--text)' }}
+                    >
                       {song.title}
                     </span>
                     <span className="block text-xs" style={{ color: 'var(--muted)' }}>
                       {song.project?.name && `${song.project.name} · `}
-                      <span style={{ color: getStatusColor(song.status) }}>{getStatusLabel(song.status)}</span>
+                      <span style={{ color: getStatusColor(song.status) }}>
+                        {getStatusLabel(song.status)}
+                      </span>
                     </span>
                   </div>
                   <div
@@ -333,9 +397,18 @@ export function DashboardContent({
       </motion.div>
 
       {/* ── Projects ───────────────────────────────────────────────────── */}
-      <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0.2} className="mb-8">
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        custom={0.2}
+        className="mb-8"
+      >
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+          <h2
+            className="text-xs font-semibold tracking-wider uppercase"
+            style={{ color: 'var(--muted)' }}
+          >
             Projects
           </h2>
           {projects.length > 0 && (
@@ -368,7 +441,10 @@ export function DashboardContent({
                       {project.name}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted)' }}>
+                  <div
+                    className="flex items-center gap-3 text-xs"
+                    style={{ color: 'var(--muted)' }}
+                  >
                     {project._count?.songs !== undefined && (
                       <span>
                         {project._count.songs} song{project._count.songs !== 1 ? 's' : ''}
@@ -419,15 +495,27 @@ export function DashboardContent({
           className="flex flex-wrap items-center justify-between gap-3 rounded-xl border px-5 py-3.5"
           style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
         >
-          <div className="flex flex-wrap items-center gap-4 text-xs" style={{ color: 'var(--muted)' }}>
+          <div
+            className="flex flex-wrap items-center gap-4 text-xs"
+            style={{ color: 'var(--muted)' }}
+          >
             <span>
-              <strong style={{ color: 'var(--text)' }}>{stats.songsThisWeek}</strong> songs this week
+              <strong style={{ color: 'var(--text)' }}>{stats.songsThisWeek}</strong> songs this
+              week
             </span>
-            <span className="hidden sm:inline" style={{ color: 'var(--border)' }}>|</span>
-            <Link href="/notifications" className="flex items-center gap-1.5 transition-colors hover:opacity-80" style={{ color: stats.unreadNotifications > 0 ? 'var(--accent)' : 'var(--muted)' }}>
+            <span className="hidden sm:inline" style={{ color: 'var(--border)' }}>
+              |
+            </span>
+            <Link
+              href="/notifications"
+              className="flex items-center gap-1.5 transition-colors hover:opacity-80"
+              style={{ color: stats.unreadNotifications > 0 ? 'var(--accent)' : 'var(--muted)' }}
+            >
               <Bell className="h-3.5 w-3.5" />
               <span>
-                <strong style={{ color: stats.unreadNotifications > 0 ? 'var(--accent)' : 'var(--text)' }}>
+                <strong
+                  style={{ color: stats.unreadNotifications > 0 ? 'var(--accent)' : 'var(--text)' }}
+                >
                   {stats.unreadNotifications}
                 </strong>{' '}
                 notification{stats.unreadNotifications !== 1 ? 's' : ''}

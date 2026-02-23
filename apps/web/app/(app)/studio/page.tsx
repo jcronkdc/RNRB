@@ -234,9 +234,7 @@ export default function StudioPage() {
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h2 className="font-display mb-2 text-2xl font-bold">Studio Tools</h2>
-                <p className="text-(--muted)">
-                  Essential tools for your recording session
-                </p>
+                <p className="text-(--muted)">Essential tools for your recording session</p>
               </div>
               <Link href="/tools">
                 <Button variant="outline" className="gap-2">
@@ -332,10 +330,7 @@ export default function StudioPage() {
                 <h2 className="text-2xl font-semibold">Live Studio Session</h2>
                 <div className="flex items-center gap-2">
                   {recordingId && (
-                    <ProjectSelector
-                      songId={recordingId}
-                      onProjectAdded={() => {}}
-                    />
+                    <ProjectSelector songId={recordingId} onProjectAdded={() => {}} />
                   )}
                   <Button variant="secondary" onClick={endSession}>
                     End Session
@@ -396,7 +391,7 @@ export default function StudioPage() {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-[rgba(232,93,59,0.2)] bg-brand-primary/5 p-6">
+                <div className="bg-brand-primary/5 rounded-lg border border-[rgba(232,93,59,0.2)] p-6">
                   <h3 className="mb-4 text-xl font-semibold">
                     The Real Professional Remote Workflow
                   </h3>
@@ -565,9 +560,7 @@ export default function StudioPage() {
                 </h3>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <h4 className="mb-3 font-semibold text-(--accent)">
-                      Video Communication
-                    </h4>
+                    <h4 className="mb-3 font-semibold text-(--accent)">Video Communication</h4>
                     <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• 1080p HD video at 30fps</li>
                       <li>• H.264 codec (browser-compatible)</li>
@@ -577,9 +570,7 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-(--accent)">
-                      Audio Streaming
-                    </h4>
+                    <h4 className="mb-3 font-semibold text-(--accent)">Audio Streaming</h4>
                     <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• Opus codec (compressed for internet)</li>
                       <li>• NOT professional recording quality</li>
@@ -589,9 +580,7 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-(--accent)">
-                      Live Streaming
-                    </h4>
+                    <h4 className="mb-3 font-semibold text-(--accent)">Live Streaming</h4>
                     <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• RTMP/RTMPS output</li>
                       <li>• Stream to YouTube, Twitch, Facebook</li>
@@ -601,9 +590,7 @@ export default function StudioPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="mb-3 font-semibold text-(--accent)">
-                      Recording Formats
-                    </h4>
+                    <h4 className="mb-3 font-semibold text-(--accent)">Recording Formats</h4>
                     <ul className="space-y-2 text-sm text-(--muted)">
                       <li>• MP4 video files</li>
                       <li>• WAV/MP3 audio exports</li>

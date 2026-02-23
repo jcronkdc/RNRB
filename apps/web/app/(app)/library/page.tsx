@@ -824,7 +824,7 @@ export default function LibraryPage() {
                 {/* Collections */}
                 <div className="flex-1 overflow-y-auto">
                   <div className="mb-2 flex items-center justify-between">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <h3 className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
                       Collections
                     </h3>
                     <button
@@ -890,7 +890,7 @@ export default function LibraryPage() {
                               handleExportZip(undefined, collection.id);
                             }}
                             disabled={exporting}
-                            className="absolute right-2 top-1/2 hidden -translate-y-1/2 rounded bg-emerald-500/20 p-1 text-emerald-400 hover:bg-emerald-500/30 group-hover:block"
+                            className="absolute top-1/2 right-2 hidden -translate-y-1/2 rounded bg-emerald-500/20 p-1 text-emerald-400 group-hover:block hover:bg-emerald-500/30"
                             title={`Export ${collection.name}`}
                           >
                             <FileArchive className="h-3.5 w-3.5" />
@@ -1078,13 +1078,13 @@ export default function LibraryPage() {
               <div className="flex gap-3">
                 {/* Search */}
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+                  <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
                   <input
                     type="text"
                     placeholder="Search files, lyrics, notes..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pl-10 pr-4 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full rounded-xl border border-gray-800 bg-gray-900 py-3 pr-4 pl-10 text-white placeholder:text-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden"
                   />
                 </div>
 
@@ -1451,7 +1451,7 @@ export default function LibraryPage() {
                         {isSelectionMode && (
                           <button
                             onClick={() => toggleFileSelection(file.id)}
-                            className="absolute left-3 top-3 z-10 rounded-lg bg-gray-800/80 p-1.5"
+                            className="absolute top-3 left-3 z-10 rounded-lg bg-gray-800/80 p-1.5"
                           >
                             {selectedFiles.has(file.id) ? (
                               <CheckSquare className="h-4 w-4 text-orange-500" />
@@ -1463,7 +1463,7 @@ export default function LibraryPage() {
 
                         {/* Favorite Badge */}
                         {file.isFavorite && (
-                          <div className="absolute right-3 top-3">
+                          <div className="absolute top-3 right-3">
                             <Heart className="h-4 w-4 fill-pink-500 text-pink-500" />
                           </div>
                         )}

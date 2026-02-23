@@ -101,9 +101,9 @@ export default function BecomeProviderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="bg-background min-h-screen pb-20">
       {/* Header */}
-      <header className="border-b border-white/10 bg-linear-to-r from-brand-primary/10 via-purple-500/10 to-transparent">
+      <header className="from-brand-primary/10 border-b border-white/10 bg-linear-to-r via-purple-500/10 to-transparent">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
             <Link href="/">
@@ -116,8 +116,8 @@ export default function BecomeProviderPage() {
               />
             </Link>
             <div>
-              <h1 className="font-display text-2xl font-bold text-foreground">Become a Provider</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="font-display text-foreground text-2xl font-bold">Become a Provider</h1>
+              <p className="text-muted-foreground text-sm">
                 Share your skills and grow your music business
               </p>
             </div>
@@ -132,11 +132,11 @@ export default function BecomeProviderPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-16 text-center"
         >
-          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-r from-brand-primary to-purple-500">
+          <div className="from-brand-primary mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-r to-purple-500">
             <Sparkles className="h-10 w-10 text-white" />
           </div>
-          <h2 className="mb-4 text-4xl font-bold text-foreground">Turn Your Talent Into Income</h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+          <h2 className="text-foreground mb-4 text-4xl font-bold">Turn Your Talent Into Income</h2>
+          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
             Join our marketplace of professional engineers, producers, and session musicians.
             Connect with artists who need your expertise and get paid doing what you love.
           </p>
@@ -154,11 +154,11 @@ export default function BecomeProviderPage() {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="h-full p-6 text-center">
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-primary/20">
-                    <Icon className="h-6 w-6 text-brand-primary" />
+                  <div className="bg-brand-primary/20 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full">
+                    <Icon className="text-brand-primary h-6 w-6" />
                   </div>
-                  <h3 className="mb-2 font-semibold text-foreground">{benefit.title}</h3>
-                  <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                  <h3 className="text-foreground mb-2 font-semibold">{benefit.title}</h3>
+                  <p className="text-muted-foreground text-sm">{benefit.description}</p>
                 </Card>
               </motion.div>
             );
@@ -167,7 +167,7 @@ export default function BecomeProviderPage() {
 
         {/* How It Works */}
         <div className="mb-16">
-          <h3 className="mb-8 text-center text-2xl font-bold text-foreground">How It Works</h3>
+          <h3 className="text-foreground mb-8 text-center text-2xl font-bold">How It Works</h3>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
             {STEPS.map((step, index) => {
               const Icon = step.icon;
@@ -180,17 +180,17 @@ export default function BecomeProviderPage() {
                   className="relative"
                 >
                   {index < STEPS.length - 1 && (
-                    <div className="absolute right-0 top-8 hidden h-0.5 w-full translate-x-1/2 bg-linear-to-r from-border to-transparent md:block" />
+                    <div className="from-border absolute top-8 right-0 hidden h-0.5 w-full translate-x-1/2 bg-linear-to-r to-transparent md:block" />
                   )}
                   <Card className="relative z-10 p-6">
                     <div className="mb-4 flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary text-white">
+                      <div className="bg-brand-primary flex h-10 w-10 items-center justify-center rounded-full text-white">
                         {index + 1}
                       </div>
-                      <Icon className="h-6 w-6 text-muted-foreground" />
+                      <Icon className="text-muted-foreground h-6 w-6" />
                     </div>
-                    <h4 className="mb-2 font-semibold text-foreground">{step.title}</h4>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                    <h4 className="text-foreground mb-2 font-semibold">{step.title}</h4>
+                    <p className="text-muted-foreground text-sm">{step.description}</p>
                   </Card>
                 </motion.div>
               );
@@ -205,15 +205,15 @@ export default function BecomeProviderPage() {
           transition={{ delay: 0.5 }}
         >
           <Card className="mx-auto max-w-lg overflow-hidden">
-            <div className="bg-linear-to-r from-brand-primary/20 to-purple-500/20 p-6">
-              <h3 className="text-xl font-bold text-foreground">Get Started</h3>
-              <p className="text-sm text-muted-foreground">
+            <div className="from-brand-primary/20 bg-linear-to-r to-purple-500/20 p-6">
+              <h3 className="text-foreground text-xl font-bold">Get Started</h3>
+              <p className="text-muted-foreground text-sm">
                 Create your provider profile in minutes
               </p>
             </div>
             <div className="space-y-4 p-6">
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-2 block text-sm font-medium">
                   Display Name
                 </label>
                 <input
@@ -223,27 +223,27 @@ export default function BecomeProviderPage() {
                     setFormData((prev) => ({ ...prev, displayName: e.target.value }))
                   }
                   placeholder="e.g. John Smith Audio"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-3 focus:ring-2 focus:outline-hidden"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">Tagline</label>
+                <label className="text-foreground mb-2 block text-sm font-medium">Tagline</label>
                 <input
                   type="text"
                   value={formData.tagline}
                   onChange={(e) => setFormData((prev) => ({ ...prev, tagline: e.target.value }))}
                   placeholder="e.g. Grammy-nominated mixing engineer"
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-4 py-3 focus:ring-2 focus:outline-hidden"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-foreground">
+                <label className="text-foreground mb-2 block text-sm font-medium">
                   Primary Category
                 </label>
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-                  className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-foreground focus:border-brand-primary focus:outline-hidden"
+                  className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-3 focus:outline-hidden"
                 >
                   <option value="">Select category...</option>
                   <option value="mixing">Mixing</option>
@@ -259,7 +259,7 @@ export default function BecomeProviderPage() {
               <Button
                 onClick={handleStart}
                 disabled={loading || !formData.displayName}
-                className="w-full bg-brand-primary py-3 hover:bg-brand-primary/90"
+                className="bg-brand-primary hover:bg-brand-primary/90 w-full py-3"
               >
                 {loading ? (
                   <>
@@ -278,7 +278,7 @@ export default function BecomeProviderPage() {
         </motion.div>
 
         {/* Trust Badges */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-center text-sm text-muted-foreground">
+        <div className="text-muted-foreground mt-12 flex flex-wrap items-center justify-center gap-8 text-center text-sm">
           <div className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
             <span>No monthly fees</span>

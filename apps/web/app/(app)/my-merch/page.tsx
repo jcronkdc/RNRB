@@ -165,8 +165,8 @@ export default function MyMerchPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -342,7 +342,7 @@ export default function MyMerchPage() {
                         <Package className="h-16 w-16 text-white/20" />
                       </div>
                     )}
-                    <div className="absolute right-3 top-3">{getStatusBadge(product.status)}</div>
+                    <div className="absolute top-3 right-3">{getStatusBadge(product.status)}</div>
                   </div>
 
                   {/* Product Info */}
@@ -350,7 +350,7 @@ export default function MyMerchPage() {
                     <h3 className="mb-1 truncate text-lg font-semibold text-white">
                       {product.name}
                     </h3>
-                    <p className="mb-3 text-sm capitalize text-white/50">{product.category}</p>
+                    <p className="mb-3 text-sm text-white/50 capitalize">{product.category}</p>
 
                     <div className="mb-4 flex items-center justify-between">
                       <div>

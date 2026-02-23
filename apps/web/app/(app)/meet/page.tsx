@@ -88,7 +88,7 @@ function MeetingCard({
 
       {/* Active indicator line */}
       {isActive && (
-        <div className="absolute left-4 right-4 top-0 h-[2px] rounded-full bg-linear-to-r from-green-500 to-emerald-400" />
+        <div className="absolute top-0 right-4 left-4 h-[2px] rounded-full bg-linear-to-r from-green-500 to-emerald-400" />
       )}
 
       <div className="relative z-10 p-6">
@@ -141,7 +141,7 @@ function MeetingCard({
                 className={`rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${
                   isActive
                     ? 'bg-linear-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-500/40'
-                    : 'bg-linear-to-r from-brand-primary to-orange-500 text-white shadow-lg shadow-brand-primary/25 hover:shadow-brand-primary/40'
+                    : 'from-brand-primary shadow-brand-primary/25 hover:shadow-brand-primary/40 bg-linear-to-r to-orange-500 text-white shadow-lg'
                 }`}
               >
                 {isActive ? 'Join Now' : 'Start'}
@@ -282,9 +282,9 @@ export default function MeetPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-blue-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-brand-primary/10 to-transparent blur-3xl" />
-        <div className="absolute left-1/2 top-1/3 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-purple-500/5 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-blue-500/10 to-transparent blur-3xl" />
+        <div className="from-brand-primary/10 absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl to-transparent blur-3xl" />
+        <div className="absolute top-1/3 left-1/2 h-[300px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br from-purple-500/5 to-transparent blur-3xl" />
       </div>
 
       {/* Logo & Header Section */}
@@ -340,7 +340,7 @@ export default function MeetPage() {
           >
             {/* Gradient glow */}
             <div className="pointer-events-none absolute -inset-px rounded-2xl bg-linear-to-br from-blue-500 to-cyan-500 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-20" />
-            <div className="absolute left-4 right-4 top-0 h-[2px] rounded-full bg-linear-to-r from-blue-500 to-cyan-400 opacity-0 transition-all duration-300 group-hover:opacity-100" />
+            <div className="absolute top-0 right-4 left-4 h-[2px] rounded-full bg-linear-to-r from-blue-500 to-cyan-400 opacity-0 transition-all duration-300 group-hover:opacity-100" />
 
             <div className="relative z-10">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-transform duration-300 group-hover:scale-110">
@@ -361,7 +361,7 @@ export default function MeetPage() {
             className="group relative overflow-hidden rounded-2xl border border-purple-500/30 bg-linear-to-br from-purple-500/10 to-white/2 p-6 text-left transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10"
           >
             <div className="pointer-events-none absolute -inset-px rounded-2xl bg-linear-to-br from-purple-500 to-pink-500 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-20" />
-            <div className="absolute left-4 right-4 top-0 h-[2px] rounded-full bg-linear-to-r from-purple-500 to-pink-400 opacity-0 transition-all duration-300 group-hover:opacity-100" />
+            <div className="absolute top-0 right-4 left-4 h-[2px] rounded-full bg-linear-to-r from-purple-500 to-pink-400 opacity-0 transition-all duration-300 group-hover:opacity-100" />
 
             <div className="relative z-10">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-purple-500 to-purple-600 shadow-lg transition-transform duration-300 group-hover:scale-110">
@@ -390,7 +390,7 @@ export default function MeetPage() {
                   onChange={(e) => setJoinCode(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleJoinByCode()}
                   placeholder="abc-defg-hij"
-                  className="flex-1 rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white placeholder-white/40 transition-all focus:border-green-500/50 focus:outline-hidden focus:ring-2 focus:ring-green-500/20"
+                  className="flex-1 rounded-xl border border-white/10 bg-black/30 px-4 py-2.5 text-sm text-white placeholder-white/40 transition-all focus:border-green-500/50 focus:ring-2 focus:ring-green-500/20 focus:outline-hidden"
                 />
                 <button
                   onClick={handleJoinByCode}
@@ -418,7 +418,7 @@ export default function MeetPage() {
               className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-white/8 to-white/2 shadow-2xl"
             >
               {/* Modal header gradient line */}
-              <div className="h-1 bg-linear-to-r from-purple-500 via-brand-primary to-orange-500" />
+              <div className="via-brand-primary h-1 bg-linear-to-r from-purple-500 to-orange-500" />
 
               <div className="p-6">
                 <div className="mb-6 flex items-center gap-3">
@@ -441,7 +441,7 @@ export default function MeetPage() {
                       value={scheduleTitle}
                       onChange={(e) => setScheduleTitle(e.target.value)}
                       placeholder="Band rehearsal, songwriting session..."
-                      className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white placeholder-white/40 transition-all focus:border-purple-500/50 focus:outline-hidden focus:ring-2 focus:ring-purple-500/20"
+                      className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white placeholder-white/40 transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-hidden"
                     />
                   </div>
 
@@ -458,7 +458,7 @@ export default function MeetPage() {
                         value={scheduleDate}
                         onChange={(e) => setScheduleDate(e.target.value)}
                         min={new Date().toISOString().split('T')[0]}
-                        className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white transition-all focus:border-purple-500/50 focus:outline-hidden focus:ring-2 focus:ring-purple-500/20"
+                        className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-hidden"
                       />
                     </div>
                     <div>
@@ -472,7 +472,7 @@ export default function MeetPage() {
                         type="time"
                         value={scheduleTime}
                         onChange={(e) => setScheduleTime(e.target.value)}
-                        className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white transition-all focus:border-purple-500/50 focus:outline-hidden focus:ring-2 focus:ring-purple-500/20"
+                        className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-hidden"
                       />
                     </div>
                   </div>
@@ -487,7 +487,7 @@ export default function MeetPage() {
                     <select
                       value={scheduleDuration}
                       onChange={(e) => setScheduleDuration(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white transition-all focus:border-purple-500/50 focus:outline-hidden focus:ring-2 focus:ring-purple-500/20"
+                      className="w-full rounded-xl border border-white/10 bg-black/30 px-4 py-3 text-white transition-all focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 focus:outline-hidden"
                     >
                       <option value="15">15 minutes</option>
                       <option value="30">30 minutes</option>

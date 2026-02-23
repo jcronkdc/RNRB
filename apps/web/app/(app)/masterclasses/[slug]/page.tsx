@@ -167,7 +167,7 @@ function LessonItem({
             {index}. {lesson.title}
           </h4>
           {lesson.isFreePreview && !hasAccess && (
-            <span className="bg-(--sage)/20 rounded px-2 py-0.5 text-xs text-(--sage)">
+            <span className="rounded bg-(--sage)/20 px-2 py-0.5 text-xs text-(--sage)">
               Preview
             </span>
           )}
@@ -197,7 +197,12 @@ function ReviewCard({ review }: { review: Review }) {
       <div className="mb-3 flex items-start gap-3">
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
           {review.user.image ? (
-            <Image src={review.user.image} alt={`${review.user.name || 'User'} avatar`} fill className="object-cover" />
+            <Image
+              src={review.user.image}
+              alt={`${review.user.name || 'User'} avatar`}
+              fill
+              className="object-cover"
+            />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-(--accent) to-(--gold) font-bold text-white">
               {review.user.name?.charAt(0) || '?'}
@@ -206,17 +211,13 @@ function ReviewCard({ review }: { review: Review }) {
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-(--text)">
-              {review.user.name || 'Anonymous'}
-            </span>
+            <span className="font-medium text-(--text)">{review.user.name || 'Anonymous'}</span>
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
                   className={`h-4 w-4 ${
-                    star <= review.rating
-                      ? 'fill-(--gold) text-(--gold)'
-                      : 'text-(--border)'
+                    star <= review.rating ? 'fill-(--gold) text-(--gold)' : 'text-(--border)'
                   }`}
                 />
               ))}
@@ -343,7 +344,7 @@ function MasterclassDetailContent() {
   return (
     <div className="min-h-screen bg-(--bg)">
       {/* Hero Section */}
-      <div className="from-(--accent)/10 relative bg-linear-to-b to-transparent">
+      <div className="relative bg-linear-to-b from-(--accent)/10 to-transparent">
         <div className="mx-auto max-w-7xl px-4 py-8">
           {/* Navigation */}
           <div className="mb-6 flex items-center justify-between">
@@ -389,7 +390,7 @@ function MasterclassDetailContent() {
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-[#2a2620] to-[#352f28]">
-                    <GraduationCap className="text-(--accent)/30 h-20 w-20" />
+                    <GraduationCap className="h-20 w-20 text-(--accent)/30" />
                   </div>
                 )}
                 {masterclass.promoVideoUrl && (
@@ -408,11 +409,11 @@ function MasterclassDetailContent() {
               {/* Title & Meta */}
               <div className="mb-6">
                 <div className="mb-2 flex items-center gap-2">
-                  <span className="text-sm font-medium uppercase text-(--accent)">
+                  <span className="text-sm font-medium text-(--accent) uppercase">
                     {masterclass.category.replace('_', ' ')}
                   </span>
                   <span className="text-(--muted)">•</span>
-                  <span className="text-sm capitalize text-(--muted)">
+                  <span className="text-sm text-(--muted) capitalize">
                     {masterclass.skillLevel}
                   </span>
                   {masterclass.format === 'live' && (
@@ -441,9 +442,7 @@ function MasterclassDetailContent() {
                     <span className="font-bold text-(--text)">
                       {masterclass.averageRating.toFixed(1)}
                     </span>
-                    <span className="text-(--muted)">
-                      ({masterclass._count.reviews} reviews)
-                    </span>
+                    <span className="text-(--muted)">({masterclass._count.reviews} reviews)</span>
                   </div>
                 )}
                 <div className="flex items-center gap-1 text-(--muted)">
@@ -462,7 +461,7 @@ function MasterclassDetailContent() {
 
               {/* Instructor */}
               <Link href={`/masterclasses/instructors/${masterclass.instructor.id}`}>
-                <div className="hover:border-(--accent)/50 mb-8 flex items-center gap-4 rounded-xl border border-(--border) bg-(--panel) p-4 transition-colors">
+                <div className="mb-8 flex items-center gap-4 rounded-xl border border-(--border) bg-(--panel) p-4 transition-colors hover:border-(--accent)/50">
                   <div className="relative h-16 w-16 overflow-hidden rounded-full">
                     {masterclass.instructor.profileImage ? (
                       <Image
@@ -504,9 +503,7 @@ function MasterclassDetailContent() {
               <div className="mb-8">
                 <h2 className="mb-4 text-xl font-bold text-(--text)">About This Class</h2>
                 <div className="prose prose-invert max-w-none">
-                  <p className="whitespace-pre-wrap text-(--muted)">
-                    {masterclass.description}
-                  </p>
+                  <p className="whitespace-pre-wrap text-(--muted)">{masterclass.description}</p>
                 </div>
               </div>
 
@@ -713,10 +710,7 @@ function MasterclassDetailContent() {
                       <div className="mt-6 space-y-3">
                         <h4 className="font-medium text-(--text)">This class includes:</h4>
                         {masterclass.features.map((feature, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center gap-2 text-sm text-(--muted)"
-                          >
+                          <div key={i} className="flex items-center gap-2 text-sm text-(--muted)">
                             <CheckCircle className="h-4 w-4 text-(--sage)" />
                             {feature}
                           </div>

@@ -119,10 +119,10 @@ export default function ToursPageOptimized() {
 
   if (authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="bg-background flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
-          <p className="text-lg text-muted-foreground">Loading...</p>
+          <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
+          <p className="text-muted-foreground text-lg">Loading...</p>
         </div>
       </div>
     );
@@ -133,15 +133,15 @@ export default function ToursPageOptimized() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       {/* Toast Notifications */}
       <ToastNotification toasts={toasts} onRemove={removeToast} />
 
       {/* Hero Section */}
-      <div className="relative overflow-hidden border-b border-border/50">
-        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 via-transparent to-brand-primary/5" />
+      <div className="border-border/50 relative overflow-hidden border-b">
+        <div className="from-brand-primary/5 to-brand-primary/5 absolute inset-0 bg-linear-to-br via-transparent" />
         <div className="absolute inset-0">
-          <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-brand-primary/10 blur-3xl" />
+          <div className="bg-brand-primary/10 absolute top-0 left-1/4 h-96 w-96 rounded-full blur-3xl" />
         </div>
 
         <div className="rnrb-container relative z-10 max-w-7xl px-4 py-16">
@@ -151,15 +151,15 @@ export default function ToursPageOptimized() {
             transition={{ duration: 0.6 }}
           >
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primary/10">
-                <Radio className="h-6 w-6 text-brand-primary" />
+              <div className="bg-brand-primary/10 flex h-12 w-12 items-center justify-center rounded-xl">
+                <Radio className="text-brand-primary h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Live Performance</p>
+                <p className="text-muted-foreground text-sm">Live Performance</p>
                 <h1 className="font-display text-3xl font-bold md:text-4xl">Tours & Shows</h1>
               </div>
             </div>
-            <p className="max-w-2xl text-lg text-muted-foreground">
+            <p className="text-muted-foreground max-w-2xl text-lg">
               Manage your live shows, venues, and virtual performances
             </p>
           </motion.div>
@@ -219,11 +219,11 @@ export default function ToursPageOptimized() {
             {/* Empty State */}
             {!toursLoading && tours.length === 0 && (
               <Card className="rnrb-card border-blue-500/20 bg-blue-500/5 p-12 text-center">
-                <Calendar className="mx-auto mb-6 h-24 w-24 text-muted-foreground/50" />
+                <Calendar className="text-muted-foreground/50 mx-auto mb-6 h-24 w-24" />
                 <h2 className="font-display mb-4 text-3xl font-bold">
                   Tour Management - Ready to Build
                 </h2>
-                <p className="mx-auto mb-6 max-w-2xl text-lg text-muted-foreground">
+                <p className="text-muted-foreground mx-auto mb-6 max-w-2xl text-lg">
                   Create your first tour to start managing shows, venues, setlists, and more all in
                   one place.
                 </p>
@@ -317,13 +317,13 @@ const TourCard = memo(function TourCard({
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="rnrb-card group h-full p-6 transition hover:border-brand-primary/30">
+      <Card className="rnrb-card group hover:border-brand-primary/30 h-full p-6 transition">
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
           <div className="min-w-0 flex-1">
             <Link
               href={`/tours/${tour.slug}`}
-              className="mb-2 block truncate text-xl font-bold transition hover:text-brand-primary"
+              className="hover:text-brand-primary mb-2 block truncate text-xl font-bold transition"
             >
               {tour.name}
             </Link>
@@ -349,7 +349,7 @@ const TourCard = memo(function TourCard({
               variant="ghost"
               size="sm"
               onClick={() => onDelete(tour.id, tour.name)}
-              className="opacity-0 transition hover:text-red-500 group-hover:opacity-100"
+              className="opacity-0 transition group-hover:opacity-100 hover:text-red-500"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -358,12 +358,12 @@ const TourCard = memo(function TourCard({
 
         {/* Description */}
         {tour.description && (
-          <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">{tour.description}</p>
+          <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">{tour.description}</p>
         )}
 
         {/* Dates */}
         <div className="mb-4 space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <Calendar className="h-4 w-4 shrink-0" />
             <span>
               {formatDateLong(tour.startDate)}
@@ -373,8 +373,8 @@ const TourCard = memo(function TourCard({
         </div>
 
         {/* Stats */}
-        <div className="flex items-center justify-between border-t border-border pt-4">
-          <div className="text-sm text-muted-foreground">
+        <div className="border-border flex items-center justify-between border-t pt-4">
+          <div className="text-muted-foreground text-sm">
             <span className="font-medium">{tour._count?.shows || 0}</span> shows
           </div>
           <Link href={`/tours/${tour.slug}`}>

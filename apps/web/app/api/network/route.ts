@@ -50,10 +50,10 @@ export async function GET() {
     });
 
     // Get set of IDs the current user is following (for "follows back" check)
-    const followingIds = new Set(followingRelations.map(r => r.followingId));
+    const followingIds = new Set(followingRelations.map((r) => r.followingId));
 
     // Transform the data
-    const following = followingRelations.map(r => ({
+    const following = followingRelations.map((r) => ({
       id: r.following.id,
       name: r.following.name,
       image: r.following.image,
@@ -61,7 +61,7 @@ export async function GET() {
       followerCount: r.following._count.followers,
     }));
 
-    const followers = followerRelations.map(r => ({
+    const followers = followerRelations.map((r) => ({
       id: r.follower.id,
       name: r.follower.name,
       image: r.follower.image,
@@ -78,10 +78,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error fetching network:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch network' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch network' }, { status: 500 });
   }
 }
-

@@ -187,9 +187,7 @@ export default function CertificatePage() {
 
           {progress && (
             <div className="mt-6">
-              <p className="mb-4 text-(--muted)">
-                Complete all lessons to earn your certificate
-              </p>
+              <p className="mb-4 text-(--muted)">Complete all lessons to earn your certificate</p>
               <div className="mb-2 h-3 w-full rounded-full bg-(--bg)">
                 <div
                   className="h-full rounded-full bg-linear-to-r from-(--accent) to-(--gold) transition-all"
@@ -261,14 +259,14 @@ export default function CertificatePage() {
         className="mx-auto max-w-3xl"
       >
         <div className="relative rounded-3xl bg-linear-to-br from-[#1a1a2e] to-[#16213e] p-1">
-          <div className="from-(--accent)/20 to-(--gold)/20 absolute inset-0 rounded-3xl bg-linear-to-br via-transparent" />
+          <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-(--accent)/20 via-transparent to-(--gold)/20" />
 
-          <div className="border-(--accent)/30 relative rounded-3xl border bg-[#0f0f23] p-8 md:p-12">
+          <div className="relative rounded-3xl border border-(--accent)/30 bg-[#0f0f23] p-8 md:p-12">
             {/* Decorative elements */}
-            <div className="border-(--accent)/30 absolute left-4 top-4 h-20 w-20 border-l-2 border-t-2" />
-            <div className="border-(--accent)/30 absolute right-4 top-4 h-20 w-20 border-r-2 border-t-2" />
-            <div className="border-(--accent)/30 absolute bottom-4 left-4 h-20 w-20 border-b-2 border-l-2" />
-            <div className="border-(--accent)/30 absolute bottom-4 right-4 h-20 w-20 border-b-2 border-r-2" />
+            <div className="absolute top-4 left-4 h-20 w-20 border-t-2 border-l-2 border-(--accent)/30" />
+            <div className="absolute top-4 right-4 h-20 w-20 border-t-2 border-r-2 border-(--accent)/30" />
+            <div className="absolute bottom-4 left-4 h-20 w-20 border-b-2 border-l-2 border-(--accent)/30" />
+            <div className="absolute right-4 bottom-4 h-20 w-20 border-r-2 border-b-2 border-(--accent)/30" />
 
             {/* Certificate Content */}
             <div className="text-center">
@@ -294,9 +292,7 @@ export default function CertificatePage() {
 
               {/* Course */}
               <p className="mb-2 text-(--muted)">has successfully completed</p>
-              <h4 className="mb-2 text-2xl font-bold text-(--text)">
-                "{certificate.courseName}"
-              </h4>
+              <h4 className="mb-2 text-2xl font-bold text-(--text)">"{certificate.courseName}"</h4>
 
               {/* Instructor */}
               <p className="text-(--muted)">
@@ -310,9 +306,7 @@ export default function CertificatePage() {
               <div className="my-8 flex items-center justify-center gap-8">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-(--accent)" />
-                  <span className="text-sm text-(--muted)">
-                    {formatDate(certificate.issuedAt)}
-                  </span>
+                  <span className="text-sm text-(--muted)">{formatDate(certificate.issuedAt)}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-(--accent)" />

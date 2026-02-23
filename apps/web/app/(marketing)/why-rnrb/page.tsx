@@ -170,7 +170,7 @@ export default function WhyRNRBPage() {
           <div className="hero-grid-pattern"></div>
         </div>
 
-        <div className="container relative z-10 flex min-h-[90vh] flex-col items-center justify-center py-16">
+        <div className="relative z-10 container flex min-h-[90vh] flex-col items-center justify-center py-16">
           <div className="mx-auto max-w-5xl text-center">
             {/* Logo with Effects */}
             <Link href="/" className="logo-mega-wrapper mb-6 inline-block">
@@ -246,18 +246,18 @@ export default function WhyRNRBPage() {
         {/* Subtle background glow */}
         <div className="absolute inset-0 overflow-hidden">
           <div
-            className="absolute left-1/2 top-0 h-96 w-[800px] -translate-x-1/2 rounded-full blur-[120px]"
+            className="absolute top-0 left-1/2 h-96 w-[800px] -translate-x-1/2 rounded-full blur-[120px]"
             style={{
               background: 'radial-gradient(ellipse, rgba(239, 68, 68, 0.15), transparent 70%)',
             }}
           />
         </div>
 
-        <div className="container relative z-10">
+        <div className="relative z-10 container">
           <div className="mx-auto max-w-5xl">
             <div className="mb-16 text-center">
               <p
-                className="mb-3 text-sm font-medium uppercase tracking-widest"
+                className="mb-3 text-sm font-medium tracking-widest uppercase"
                 style={{ color: '#ef4444' }}
               >
                 The Industry&apos;s Dirty Secret
@@ -376,7 +376,7 @@ export default function WhyRNRBPage() {
         <div className="container">
           <div className="mb-16 text-center">
             <p
-              className="mb-3 text-sm font-medium uppercase tracking-widest"
+              className="mb-3 text-sm font-medium tracking-widest uppercase"
               style={{ color: 'var(--gold)' }}
             >
               Feature Comparison
@@ -399,7 +399,7 @@ export default function WhyRNRBPage() {
           >
             {/* Glow effect at top */}
             <div
-              className="absolute left-0 right-0 top-0 h-1"
+              className="absolute top-0 right-0 left-0 h-1"
               style={{
                 background:
                   'linear-gradient(90deg, transparent, var(--accent), var(--gold), var(--accent), transparent)',
@@ -411,7 +411,7 @@ export default function WhyRNRBPage() {
                 <thead>
                   <tr style={{ borderBottom: '2px solid var(--border)' }}>
                     <th
-                      className="pb-4 pr-4 text-left text-base font-semibold"
+                      className="pr-4 pb-4 text-left text-base font-semibold"
                       style={{ color: 'var(--text)' }}
                     >
                       Platform
@@ -537,17 +537,17 @@ export default function WhyRNRBPage() {
         {/* Background effect */}
         <div className="absolute inset-0 overflow-hidden">
           <div
-            className="absolute right-0 top-1/4 h-[600px] w-[600px] rounded-full blur-[150px]"
+            className="absolute top-1/4 right-0 h-[600px] w-[600px] rounded-full blur-[150px]"
             style={{
               background: 'radial-gradient(ellipse, rgba(232, 93, 59, 0.08), transparent 70%)',
             }}
           />
         </div>
 
-        <div className="container relative z-10">
+        <div className="relative z-10 container">
           <div className="mb-16 text-center">
             <p
-              className="mb-3 text-sm font-medium uppercase tracking-widest"
+              className="mb-3 text-sm font-medium tracking-widest uppercase"
               style={{ color: 'var(--accent)' }}
             >
               Built Different
@@ -969,14 +969,14 @@ export default function WhyRNRBPage() {
         {/* Animated background */}
         <div className="absolute inset-0">
           <div
-            className="absolute left-1/2 top-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[150px]"
+            className="absolute top-1/2 left-1/2 h-[600px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[150px]"
             style={{
               background: 'radial-gradient(ellipse, rgba(232, 93, 59, 0.15), transparent 60%)',
             }}
           />
         </div>
 
-        <div className="container relative z-10">
+        <div className="relative z-10 container">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="cta-title mb-4">Ready to Simplify Your Music Career?</h2>
             <p className="cta-subtitle mx-auto max-w-2xl">

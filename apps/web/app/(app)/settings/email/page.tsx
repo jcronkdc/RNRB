@@ -661,7 +661,7 @@ export default function EmailSettingsPage() {
                   </div>
                   <div>
                     <p className="text-white/40">Username</p>
-                    <p className="break-all font-mono text-green-400">{createdEmail}</p>
+                    <p className="font-mono break-all text-green-400">{createdEmail}</p>
                   </div>
                 </div>
               </div>
@@ -788,13 +788,13 @@ export default function EmailSettingsPage() {
                       }}
                     />
                     {checkingUsername && (
-                      <Loader2 className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-(--muted)" />
+                      <Loader2 className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 animate-spin text-(--muted)" />
                     )}
                     {!checkingUsername && usernameAvailable === true && (
-                      <Check className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-green-500" />
+                      <Check className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-green-500" />
                     )}
                     {!checkingUsername && usernameAvailable === false && (
-                      <X className="absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-red-500" />
+                      <X className="absolute top-1/2 right-3 h-5 w-5 -translate-y-1/2 text-red-500" />
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -916,7 +916,7 @@ export default function EmailSettingsPage() {
                   <button
                     type="button"
                     onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-(--muted) hover:text-(--text)"
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-(--muted) hover:text-(--text)"
                   >
                     {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -1206,12 +1206,10 @@ export default function EmailSettingsPage() {
               </h4>
               <div className="space-y-1 text-sm" style={{ color: 'var(--muted)' }}>
                 <p>
-                  Server:{' '}
-                  <code className="text-(--accent)">{connectionSettings?.imap.server}</code>
+                  Server: <code className="text-(--accent)">{connectionSettings?.imap.server}</code>
                 </p>
                 <p>
-                  Port:{' '}
-                  <code className="text-(--accent)">{connectionSettings?.imap.port}</code>
+                  Port: <code className="text-(--accent)">{connectionSettings?.imap.port}</code>
                 </p>
                 <p>
                   Security:{' '}
@@ -1226,12 +1224,10 @@ export default function EmailSettingsPage() {
               </h4>
               <div className="space-y-1 text-sm" style={{ color: 'var(--muted)' }}>
                 <p>
-                  Server:{' '}
-                  <code className="text-(--accent)">{connectionSettings?.smtp.server}</code>
+                  Server: <code className="text-(--accent)">{connectionSettings?.smtp.server}</code>
                 </p>
                 <p>
-                  Port:{' '}
-                  <code className="text-(--accent)">{connectionSettings?.smtp.port}</code>
+                  Port: <code className="text-(--accent)">{connectionSettings?.smtp.port}</code>
                 </p>
                 <p>
                   Security:{' '}
@@ -1402,7 +1398,7 @@ export default function EmailSettingsPage() {
                 }`}
               >
                 <span
-                  className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                  className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                     autoReplyEnabled ? 'translate-x-5' : ''
                   }`}
                 />
@@ -1456,7 +1452,7 @@ export default function EmailSettingsPage() {
                 }`}
               >
                 <span
-                  className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                  className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                     forwardingEnabled ? 'translate-x-5' : ''
                   }`}
                 />

@@ -42,10 +42,7 @@ export async function POST(request: Request) {
 
     // Validation
     if (!rawEmail || typeof rawEmail !== 'string' || !password || typeof password !== 'string') {
-      return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
     // Normalize email: trim whitespace and lowercase
@@ -54,10 +51,7 @@ export async function POST(request: Request) {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email) || email.length > 254) {
-      return NextResponse.json(
-        { error: 'Please enter a valid email address' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Please enter a valid email address' }, { status: 400 });
     }
 
     if (password.length < 8) {
@@ -68,10 +62,7 @@ export async function POST(request: Request) {
     }
 
     if (password.length > 128) {
-      return NextResponse.json(
-        { error: 'Password is too long' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Password is too long' }, { status: 400 });
     }
 
     // Sanitize name
@@ -111,10 +102,7 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json(
-      { message: 'Account created successfully', user },
-      { status: 201 }
-    );
+    return NextResponse.json({ message: 'Account created successfully', user }, { status: 201 });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
     const errStack = error instanceof Error ? error.stack : undefined;

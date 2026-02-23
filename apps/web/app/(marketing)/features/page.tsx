@@ -161,7 +161,7 @@ function FeatureCategory({
           }}
         />
         <div
-          className="absolute bottom-0 left-0 right-0 h-px"
+          className="absolute right-0 bottom-0 left-0 h-px"
           style={{
             background: `linear-gradient(90deg, transparent, ${colors.border}, transparent)`,
           }}
@@ -246,7 +246,7 @@ function FeatureCategory({
 
               {/* Top Accent Line */}
               <div
-                className="absolute left-0 right-0 top-0 h-1 opacity-60 transition-opacity group-hover:opacity-100"
+                className="absolute top-0 right-0 left-0 h-1 opacity-60 transition-opacity group-hover:opacity-100"
                 style={{
                   background: `linear-gradient(90deg, transparent, ${colors.text}, transparent)`,
                 }}
@@ -2157,7 +2157,7 @@ export default function FeaturesPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {/* EPIC HERO SECTION */}
-      <section className="relative overflow-hidden pb-16 pt-24">
+      <section className="relative overflow-hidden pt-24 pb-16">
         {/* Dramatic Animated Background */}
         <div className="pointer-events-none absolute inset-0">
           {/* Fire gradient from bottom */}
@@ -2317,7 +2317,7 @@ export default function FeaturesPage() {
                     {stat.value}
                   </div>
                   <div
-                    className="text-sm font-semibold uppercase tracking-widest"
+                    className="text-sm font-semibold tracking-widest uppercase"
                     style={{ color: 'var(--muted)' }}
                   >
                     {stat.label}

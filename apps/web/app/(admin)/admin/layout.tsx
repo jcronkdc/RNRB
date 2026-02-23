@@ -56,7 +56,7 @@ function BugBadge() {
   if (unreadCount === 0) return null;
 
   return (
-    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
       {unreadCount > 9 ? '9+' : unreadCount}
     </span>
   );
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex min-h-screen bg-[#0a0a0f]">
       {/* Sidebar */}
-      <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-zinc-800/50 bg-zinc-900/50">
+      <aside className="fixed top-0 left-0 z-40 h-screen w-64 border-r border-zinc-800/50 bg-zinc-900/50">
         {/* Logo */}
         <div className="flex h-16 items-center border-b border-zinc-800/50 px-6">
           <Link href="/admin" className="flex items-center gap-3">
@@ -175,7 +175,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Back to App */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-zinc-800/50 p-4">
+        <div className="absolute right-0 bottom-0 left-0 border-t border-zinc-800/50 p-4">
           <Link
             href="/dashboard"
             className="flex items-center gap-3 rounded-xl bg-zinc-800/50 px-4 py-3 text-sm font-medium text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"

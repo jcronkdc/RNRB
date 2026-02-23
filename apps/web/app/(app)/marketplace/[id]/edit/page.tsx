@@ -268,8 +268,8 @@ export default function EditListingPage() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
+        <div className="absolute -top-40 -left-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/15 to-transparent blur-3xl" />
+        <div className="absolute -right-20 -bottom-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/15 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-3xl px-4 py-8">
@@ -490,13 +490,13 @@ export default function EditListingPage() {
                   <div>
                     <label className="mb-2 block text-sm font-medium text-white">Price</label>
                     <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                      <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                       <input
                         type="number"
                         value={formData.price}
                         onChange={(e) => updateField('price', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
+                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                       />
                     </div>
                   </div>
@@ -541,13 +541,13 @@ export default function EditListingPage() {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-white">Location</label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                    <MapPin className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                     <input
                       type="text"
                       value={formData.location}
                       onChange={(e) => updateField('location', e.target.value)}
                       placeholder="City, State"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                     />
                   </div>
                 </div>
@@ -555,13 +555,13 @@ export default function EditListingPage() {
                 <div>
                   <label className="mb-2 block text-sm font-medium text-white">Shipping Cost</label>
                   <div className="relative">
-                    <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                    <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                     <input
                       type="number"
                       value={formData.shippingCost}
                       onChange={(e) => updateField('shippingCost', e.target.value)}
                       placeholder="0.00"
-                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
+                      className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden focus:border-orange-500/50"
                     />
                   </div>
                 </div>

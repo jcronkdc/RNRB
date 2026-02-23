@@ -176,7 +176,7 @@ function PricingCard({
       }`}
     >
       {popular && (
-        <div className="absolute right-4 top-4 rounded-full bg-linear-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
+        <div className="absolute top-4 right-4 rounded-full bg-linear-to-r from-orange-500 to-pink-500 px-3 py-1 text-xs font-bold text-white">
           MOST POPULAR
         </div>
       )}
@@ -218,8 +218,8 @@ export default function WebsiteBuilderLanding() {
         {/* Animated background */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-linear-to-br from-orange-500/20 via-transparent to-pink-500/20" />
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-orange-500/30 blur-[128px]" />
-          <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-pink-500/30 blur-[128px]" />
+          <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-orange-500/30 blur-[128px]" />
+          <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-pink-500/30 blur-[128px]" />
           {/* Grid pattern */}
           <div
             className="absolute inset-0 opacity-20"
@@ -231,7 +231,7 @@ export default function WebsiteBuilderLanding() {
           />
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 pb-32 pt-24">
+        <div className="relative mx-auto max-w-7xl px-6 pt-24 pb-32">
           {/* Badge */}
           <div className="mb-8 flex justify-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-orange-500/20 to-pink-500/20 px-4 py-2 text-sm">
@@ -241,7 +241,7 @@ export default function WebsiteBuilderLanding() {
           </div>
 
           {/* Main headline */}
-          <h1 className="mb-6 text-center text-5xl font-bold leading-tight md:text-7xl">
+          <h1 className="mb-6 text-center text-5xl leading-tight font-bold md:text-7xl">
             Build Your Music Website
             <br />
             <span className="bg-linear-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
@@ -363,7 +363,7 @@ export default function WebsiteBuilderLanding() {
                 </div>
 
                 {/* AI Assistant indicator */}
-                <div className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-r from-orange-500 to-pink-500 shadow-lg">
+                <div className="absolute right-4 bottom-4 flex h-12 w-12 items-center justify-center rounded-full bg-linear-to-r from-orange-500 to-pink-500 shadow-lg">
                   <Bot className="h-6 w-6 text-white" />
                 </div>
               </div>
@@ -677,7 +677,7 @@ export default function WebsiteBuilderLanding() {
       {/* Final CTA */}
       <section className="relative overflow-hidden py-32">
         <div className="absolute inset-0 bg-linear-to-r from-orange-500/20 to-pink-500/20" />
-        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/30 blur-[128px]" />
+        <div className="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/30 blur-[128px]" />
 
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           <h2 className="mb-6 text-4xl font-bold md:text-6xl">

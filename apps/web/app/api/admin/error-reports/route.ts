@@ -245,7 +245,8 @@ export async function GET(request: NextRequest) {
 
     params.push(limit, offset);
 
-    const reports = await prisma.$queryRawUnsafe(`
+    const reports = await prisma.$queryRawUnsafe(
+      `
       SELECT 
         id,
         timestamp,
@@ -283,7 +284,9 @@ export async function GET(request: NextRequest) {
         "lastOccurredAt" DESC
       LIMIT $${paramIdx++}
       OFFSET $${paramIdx}
-    `, ...params);
+    `,
+      ...params
+    );
 
     // Get counts
     const counts = (await prisma.$queryRaw`

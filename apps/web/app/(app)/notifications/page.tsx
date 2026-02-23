@@ -64,8 +64,8 @@ export default function NotificationsPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Hero Section with Logo */}
@@ -102,7 +102,7 @@ export default function NotificationsPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">Notifications</h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {unreadCount > 0
                     ? `${unreadCount} unread notification${unreadCount !== 1 ? 's' : ''}`
                     : 'All caught up!'}
@@ -136,7 +136,7 @@ export default function NotificationsPage() {
           </div>
 
           {/* Connection Status */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-2 text-sm">
             <div
               className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}
             />
@@ -187,7 +187,7 @@ export default function NotificationsPage() {
               >
                 {/* Unread Indicator */}
                 {!notification.read && (
-                  <div className="absolute left-0 top-0 h-full w-1 bg-brand-primary" />
+                  <div className="bg-brand-primary absolute top-0 left-0 h-full w-1" />
                 )}
 
                 <div className="flex items-start gap-4 p-6">
@@ -201,13 +201,13 @@ export default function NotificationsPage() {
                   {/* Content */}
                   <div className="min-w-0 flex-1">
                     <h3 className="mb-1 text-lg font-semibold text-white">{notification.title}</h3>
-                    <p className="mb-3 text-sm text-muted-foreground">{notification.message}</p>
+                    <p className="text-muted-foreground mb-3 text-sm">{notification.message}</p>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {formatRelativeTime(notification.timestamp)}
                       </span>
                       {notification.link && (
-                        <span className="text-xs font-medium text-brand-primary">
+                        <span className="text-brand-primary text-xs font-medium">
                           Click to view →
                         </span>
                       )}
@@ -254,7 +254,7 @@ export default function NotificationsPage() {
           >
             <button
               onClick={clearAll}
-              className="rounded-lg px-6 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/5 hover:text-white"
+              className="text-muted-foreground rounded-lg px-6 py-3 text-sm font-medium transition-colors hover:bg-white/5 hover:text-white"
             >
               Clear all notifications
             </button>

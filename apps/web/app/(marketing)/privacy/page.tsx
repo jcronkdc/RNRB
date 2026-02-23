@@ -23,14 +23,14 @@ export default function PrivacyPage() {
             <h2 className="mb-4 text-2xl font-semibold text-orange-400">
               1. Information We Collect
             </h2>
-            <h3 className="mb-2 mt-4 text-xl font-semibold text-orange-300">Account Information</h3>
+            <h3 className="mt-4 mb-2 text-xl font-semibold text-orange-300">Account Information</h3>
             <ul className="ml-4 list-inside list-disc space-y-2">
               <li>Email address (for authentication and communication)</li>
               <li>Name and profile information (if provided)</li>
               <li>Authentication tokens (from Google OAuth or email magic links)</li>
             </ul>
 
-            <h3 className="mb-2 mt-4 text-xl font-semibold text-orange-300">
+            <h3 className="mt-4 mb-2 text-xl font-semibold text-orange-300">
               Content and Usage Data
             </h3>
             <ul className="ml-4 list-inside list-disc space-y-2">
@@ -40,7 +40,7 @@ export default function PrivacyPage() {
               <li>Device and browser information (IP address, user agent, device type)</li>
             </ul>
 
-            <h3 className="mb-2 mt-4 text-xl font-semibold text-orange-300">
+            <h3 className="mt-4 mb-2 text-xl font-semibold text-orange-300">
               Third-Party Service Data
             </h3>
             <p>We use the following third-party services that may collect data:</p>
@@ -59,7 +59,7 @@ export default function PrivacyPage() {
               2. How We Use Your Information
             </h2>
             <p>We use your information to:</p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Provide and improve our platform services</li>
               <li>Enable real-time collaboration features</li>
               <li>Send important service updates and notifications</li>
@@ -74,7 +74,7 @@ export default function PrivacyPage() {
             <h2 className="mb-4 text-2xl font-semibold text-orange-400">3. Data Security</h2>
             <p className="mb-2 font-semibold text-white">YOUR DATA IS PROTECTED</p>
             <p>We implement industry-standard security measures including:</p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>End-to-end encryption for sensitive communications</li>
               <li>Secure HTTPS connections for all data transmission</li>
               <li>Regular security audits and vulnerability assessments</li>
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
               We do NOT sell your personal data. We may share your information only in these limited
               circumstances:
             </p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>
                 <strong>With Collaborators:</strong> Project members you invite can see shared
                 project content
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
               5. Your Rights and Choices
             </h2>
             <p>You have the right to:</p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>
                 <strong>Access:</strong> Request a copy of your personal data
               </li>
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
               We retain your data for as long as your account is active or as needed to provide
               services. When you delete your account:
             </p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Your personal information is deleted within 30 days</li>
               <li>
                 Content you created remains accessible to collaborators (unless you delete it first)
@@ -168,7 +168,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="mb-4 text-2xl font-semibold text-orange-400">7. Cookies and Tracking</h2>
             <p>We use cookies and similar technologies for:</p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Session management and authentication</li>
               <li>User preferences and settings</li>
               <li>Analytics and performance monitoring</li>
@@ -249,7 +249,7 @@ export default function PrivacyPage() {
             <p>
               If you are in the European Economic Area (EEA), you have additional rights under GDPR:
             </p>
-            <ul className="ml-4 mt-4 list-inside list-disc space-y-2">
+            <ul className="mt-4 ml-4 list-inside list-disc space-y-2">
               <li>Right to data portability</li>
               <li>Right to restrict processing</li>
               <li>Right to object to processing</li>

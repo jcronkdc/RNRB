@@ -23,19 +23,13 @@ export async function GET(request: NextRequest) {
 
     const requests = await db.songRequest.findMany({
       where: { setlistId },
-      orderBy: [
-        { status: 'asc' },
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ status: 'asc' }, { createdAt: 'desc' }],
     });
 
     return NextResponse.json({ requests });
   } catch (error) {
     console.error('Song requests GET error:', error instanceof Error ? error.message : error);
-    return NextResponse.json(
-      { error: 'Failed to fetch song requests' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch song requests' }, { status: 500 });
   }
 }
 

@@ -34,10 +34,7 @@ export default function SitesLoading() {
         <div className="mb-4 h-7 w-40 animate-pulse rounded bg-white/5" />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="overflow-hidden rounded-xl border border-white/10 bg-white/2"
-            >
+            <div key={i} className="overflow-hidden rounded-xl border border-white/10 bg-white/2">
               <div className="h-40 w-full animate-pulse bg-white/5" />
               <div className="p-4">
                 <div className="h-5 w-3/4 animate-pulse rounded bg-white/5" />

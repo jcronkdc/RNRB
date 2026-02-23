@@ -34,16 +34,16 @@ export default function SolutionsForStudiosPage() {
     <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       {/* Hero Section */}
       <section
-        className="relative overflow-hidden pb-20 pt-24"
+        className="relative overflow-hidden pt-24 pb-20"
         style={{ borderBottom: '1px solid var(--border)' }}
       >
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-teal-500/10 blur-3xl" />
+          <div className="absolute right-1/4 bottom-1/4 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl" />
         </div>
 
-        <div className="container relative z-10">
+        <div className="relative z-10 container">
           <motion.div {...fadeIn} className="mx-auto max-w-4xl text-center">
             {/* Badge */}
             <div

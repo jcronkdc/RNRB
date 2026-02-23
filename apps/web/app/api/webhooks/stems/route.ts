@@ -3,10 +3,10 @@ import { NextResponse } from 'next/server';
 /**
  * POST /api/webhooks/stems
  * Replicate webhook for stem separation completion.
- * 
+ *
  * This is called by Replicate when a stem separation prediction completes.
  * The client also polls /api/stems/status/[predictionId] as a fallback.
- * 
+ *
  * For now this acknowledges the webhook. The actual result is fetched
  * by the client via the status polling endpoint.
  */

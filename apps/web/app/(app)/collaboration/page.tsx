@@ -281,7 +281,7 @@ export default function CollaborationDashboard() {
                 {/* Secondary Actions */}
                 <div className="pt-2">
                   <p
-                    className="mb-2 text-xs font-medium uppercase tracking-wider"
+                    className="mb-2 text-xs font-medium tracking-wider uppercase"
                     style={{ color: 'var(--muted)' }}
                   >
                     More
@@ -311,7 +311,7 @@ export default function CollaborationDashboard() {
                     className="mt-2 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-(--panel-hover)"
                     style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                   >
-                    <span className="bg-(--sage)/20 flex h-6 w-6 items-center justify-center rounded-md">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-md bg-(--sage)/20">
                       <span className="text-xs">🎙️</span>
                     </span>
                     Recording Studio

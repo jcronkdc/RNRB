@@ -468,7 +468,7 @@ export default function CreatePage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="E.g., A driving rock anthem with powerful electric guitars and thunderous drums..."
-                  className="w-full resize-none rounded-xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-xl border border-(--border) bg-(--surface) px-4 py-3 text-(--text) outline-hidden transition placeholder:text-(--muted) focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50"
                   rows={4}
                   maxLength={500}
                   disabled={isDisabled}
@@ -477,7 +477,7 @@ export default function CreatePage() {
                   onClick={() =>
                     setPrompt(examplePrompts[Math.floor(Math.random() * examplePrompts.length)])
                   }
-                  className="hover:bg-(--surface)/50 absolute bottom-3 right-3 rounded-lg p-2 text-(--muted) transition hover:text-(--text) disabled:cursor-not-allowed disabled:opacity-50"
+                  className="absolute right-3 bottom-3 rounded-lg p-2 text-(--muted) transition hover:bg-(--surface)/50 hover:text-(--text) disabled:cursor-not-allowed disabled:opacity-50"
                   title="Get random prompt"
                   disabled={isDisabled}
                 >
@@ -505,7 +505,7 @@ export default function CreatePage() {
                     <button
                       key={i}
                       onClick={() => setPrompt(example)}
-                      className="hover:bg-(--surface)/80 rounded-lg border border-(--border) bg-(--surface) px-3 py-1.5 text-xs transition-all hover:border-brand-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="hover:border-brand-primary/50 rounded-lg border border-(--border) bg-(--surface) px-3 py-1.5 text-xs transition-all hover:bg-(--surface)/80 disabled:cursor-not-allowed disabled:opacity-50"
                       disabled={isDisabled}
                     >
                       {example.substring(0, 30)}...
@@ -533,7 +533,7 @@ export default function CreatePage() {
                     className={`flex items-center gap-2 rounded-xl px-4 py-2 font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
                       selectedInstruments.includes(instrument)
                         ? 'bg-orange-500 text-white'
-                        : 'border border-(--border) bg-(--surface) hover:border-brand-primary/50'
+                        : 'hover:border-brand-primary/50 border border-(--border) bg-(--surface)'
                     }`}
                     disabled={isDisabled}
                   >
@@ -628,7 +628,7 @@ export default function CreatePage() {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="bg-(--surface)/50 mt-4 rounded-xl border border-(--border) p-6">
+                    <div className="mt-4 rounded-xl border border-(--border) bg-(--surface)/50 p-6">
                       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                         <div>
                           <label className="mb-2 block flex items-center gap-2 text-sm font-medium">
@@ -640,19 +640,17 @@ export default function CreatePage() {
                             value={seed}
                             onChange={(e) => setSeed(e.target.value)}
                             placeholder="Enter seed for consistent results"
-                            className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
+                            className="focus:border-brand-primary w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           />
-                          <p className="mt-1 text-xs text-(--muted)">
-                            Same seed = same output
-                          </p>
+                          <p className="mt-1 text-xs text-(--muted)">Same seed = same output</p>
                         </div>
                         <div>
                           <label className="mb-2 block text-sm font-medium">Key Signature</label>
                           <select
                             value={keySignature}
                             onChange={(e) => setKeySignature(e.target.value)}
-                            className="w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:border-brand-primary focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
+                            className="focus:border-brand-primary w-full rounded-lg border border-(--border) bg-(--surface) px-4 py-2 text-(--text) transition focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={isDisabled}
                           >
                             <option>Auto</option>

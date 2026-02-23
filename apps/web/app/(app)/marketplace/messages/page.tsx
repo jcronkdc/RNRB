@@ -74,7 +74,7 @@ function ConversationItem({
             </div>
           )}
           {conversation.unreadCount > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white">
               {conversation.unreadCount}
             </span>
           )}
@@ -116,7 +116,7 @@ function MessageBubble({ message, isOwn }: { message: any; isOwn: boolean }) {
             : 'bg-white/10 text-white/90'
         }`}
       >
-        <p className="whitespace-pre-wrap text-sm">{message.content}</p>
+        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
         <div
           className={`mt-1 flex items-center gap-1 text-xs ${isOwn ? 'text-white/70' : 'text-white/40'}`}
         >
@@ -239,8 +239,8 @@ function MessagesContent() {
     >
       {/* Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-40 -top-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-40 -left-40 h-[400px] w-[400px] rounded-full bg-linear-to-br from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-20 -bottom-20 h-[300px] w-[300px] rounded-full bg-linear-to-tl from-violet-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-8">
@@ -294,7 +294,7 @@ function MessagesContent() {
           {/* Conversations List */}
           <div className="w-80 shrink-0 overflow-y-auto border-r border-white/10">
             <div className="p-4">
-              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-white/50">
+              <h2 className="mb-4 text-sm font-semibold tracking-wider text-white/50 uppercase">
                 Conversations
               </h2>
 

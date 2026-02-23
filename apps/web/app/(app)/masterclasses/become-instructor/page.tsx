@@ -172,9 +172,7 @@ export default function BecomeInstructorPage() {
             <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-linear-to-r from-(--accent) to-(--gold)">
               <GraduationCap className="h-12 w-12 text-(--text)" />
             </div>
-            <h2 className="mb-4 text-3xl font-bold text-(--text)">
-              Share Your Music Expertise
-            </h2>
+            <h2 className="mb-4 text-3xl font-bold text-(--text)">Share Your Music Expertise</h2>
             <p className="mx-auto mb-8 max-w-lg text-lg text-(--muted)">
               Create masterclasses, reach thousands of aspiring musicians, and earn money doing what
               you love.
@@ -191,9 +189,7 @@ export default function BecomeInstructorPage() {
               <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
                 <Users className="mb-4 h-10 w-10 text-(--accent)" />
                 <h3 className="mb-2 font-bold text-(--text)">Grow Your Audience</h3>
-                <p className="text-sm text-(--muted)">
-                  Connect with passionate students worldwide
-                </p>
+                <p className="text-sm text-(--muted)">Connect with passionate students worldwide</p>
               </div>
               <div className="rounded-xl border border-(--border) bg-(--panel) p-6">
                 <DollarSign className="mb-4 h-10 w-10 text-(--accent)" />
@@ -202,7 +198,7 @@ export default function BecomeInstructorPage() {
               </div>
             </div>
 
-            <div className="border-(--accent)/20 from-(--accent)/10 to-(--gold)/10 rounded-xl border bg-linear-to-r p-6">
+            <div className="rounded-xl border border-(--accent)/20 bg-linear-to-r from-(--accent)/10 to-(--gold)/10 p-6">
               <div className="flex items-center justify-center gap-8">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-(--text)">10K+</div>
@@ -244,7 +240,7 @@ export default function BecomeInstructorPage() {
                 {avatarUrl ? (
                   <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
                 ) : (
-                  <Upload className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-(--muted)" />
+                  <Upload className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 text-(--muted)" />
                 )}
               </button>
               <input
@@ -275,22 +271,20 @@ export default function BecomeInstructorPage() {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="How should students know you?"
-                className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
               />
             </div>
 
             {/* Headline */}
             <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-(--muted)">
-                Headline *
-              </label>
+              <label className="mb-2 block text-sm font-medium text-(--muted)">Headline *</label>
               <input
                 type="text"
                 value={headline}
                 onChange={(e) => setHeadline(e.target.value)}
                 placeholder="e.g., Grammy-winning producer & songwriter"
                 maxLength={80}
-                className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                className="w-full rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
               />
               <p className="mt-1 text-xs text-(--muted)">{headline.length}/80</p>
             </div>
@@ -304,7 +298,7 @@ export default function BecomeInstructorPage() {
                 placeholder="Tell students about your background, experience, and what makes you unique..."
                 rows={4}
                 maxLength={1000}
-                className="w-full resize-none rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                className="w-full resize-none rounded-lg border border-(--border) bg-(--panel) px-4 py-3 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
               />
               <p className="mt-1 text-xs text-(--muted)">{bio.length}/1000</p>
             </div>
@@ -315,43 +309,43 @@ export default function BecomeInstructorPage() {
                 Social Links (optional)
               </label>
               <div className="relative">
-                <Instagram className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+                <Instagram className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.instagram}
                   onChange={(e) => setSocialLinks({ ...socialLinks, instagram: e.target.value })}
                   placeholder="Instagram username"
-                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pr-4 pl-12 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                 />
               </div>
               <div className="relative">
-                <Twitter className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+                <Twitter className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.twitter}
                   onChange={(e) => setSocialLinks({ ...socialLinks, twitter: e.target.value })}
                   placeholder="Twitter/X username"
-                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pr-4 pl-12 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                 />
               </div>
               <div className="relative">
-                <Youtube className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+                <Youtube className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.youtube}
                   onChange={(e) => setSocialLinks({ ...socialLinks, youtube: e.target.value })}
                   placeholder="YouTube channel URL"
-                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pr-4 pl-12 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                 />
               </div>
               <div className="relative">
-                <Globe className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+                <Globe className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-(--muted)" />
                 <input
                   type="text"
                   value={socialLinks.website}
                   onChange={(e) => setSocialLinks({ ...socialLinks, website: e.target.value })}
                   placeholder="Personal website URL"
-                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                  className="w-full rounded-lg border border-(--border) bg-(--panel) py-3 pr-4 pl-12 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                 />
               </div>
             </div>
@@ -416,7 +410,7 @@ export default function BecomeInstructorPage() {
 
             {/* Stats Preview */}
             {selectedCategories.length > 0 && (
-              <div className="border-(--accent)/20 from-(--accent)/10 to-(--gold)/10 rounded-xl border bg-linear-to-r p-4">
+              <div className="rounded-xl border border-(--accent)/20 bg-linear-to-r from-(--accent)/10 to-(--gold)/10 p-4">
                 <div className="mb-2 flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-(--accent)" />
                   <span className="font-medium text-(--text)">Market Demand</span>
@@ -440,9 +434,7 @@ export default function BecomeInstructorPage() {
             className="mx-auto max-w-xl"
           >
             <h2 className="mb-2 text-2xl font-bold text-(--text)">Payment Setup</h2>
-            <p className="mb-8 text-(--muted)">
-              Connect your Stripe account to receive payouts
-            </p>
+            <p className="mb-8 text-(--muted)">Connect your Stripe account to receive payouts</p>
 
             {/* Revenue Split */}
             <div className="mb-6 rounded-xl border border-(--border) bg-(--panel) p-6">
@@ -468,7 +460,7 @@ export default function BecomeInstructorPage() {
               <h3 className="mb-4 font-bold text-(--text)">How Payouts Work</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="bg-(--accent)/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--accent)/20">
                     <span className="text-sm text-(--accent)">1</span>
                   </div>
                   <div>
@@ -479,7 +471,7 @@ export default function BecomeInstructorPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="bg-(--accent)/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--accent)/20">
                     <span className="text-sm text-(--accent)">2</span>
                   </div>
                   <div>
@@ -490,7 +482,7 @@ export default function BecomeInstructorPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="bg-(--accent)/20 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-(--accent)/20">
                     <span className="text-sm text-(--accent)">3</span>
                   </div>
                   <div>
@@ -513,10 +505,7 @@ export default function BecomeInstructorPage() {
               />
               <span className="text-sm text-(--muted)">
                 I agree to the{' '}
-                <Link
-                  href="/legal/instructor-terms"
-                  className="text-(--accent) hover:underline"
-                >
+                <Link href="/legal/instructor-terms" className="text-(--accent) hover:underline">
                   Instructor Terms of Service
                 </Link>{' '}
                 and understand the revenue split arrangement.
@@ -607,9 +596,7 @@ export default function BecomeInstructorPage() {
                       />
                     )}
                   </div>
-                  <span
-                    className={`mt-2 text-xs ${isActive ? 'text-(--text)' : 'text-(--muted)'}`}
-                  >
+                  <span className={`mt-2 text-xs ${isActive ? 'text-(--text)' : 'text-(--muted)'}`}>
                     {step.title}
                   </span>
                 </div>

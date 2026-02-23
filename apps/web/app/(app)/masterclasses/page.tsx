@@ -91,7 +91,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
     <Link href={`/masterclasses/${masterclass.slug}`}>
       <motion.div
         whileHover={{ y: -4 }}
-        className="hover:border-(--accent)/50 group relative overflow-hidden rounded-xl border border-(--border) bg-(--panel) transition-all"
+        className="group relative overflow-hidden rounded-xl border border-(--border) bg-(--panel) transition-all hover:border-(--accent)/50"
       >
         {/* Thumbnail */}
         <div className="relative aspect-video">
@@ -104,7 +104,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
             />
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-[#2a2620] to-[#352f28]">
-              <GraduationCap className="text-(--accent)/30 h-12 w-12" />
+              <GraduationCap className="h-12 w-12 text-(--accent)/30" />
             </div>
           )}
 
@@ -120,7 +120,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
           </div>
 
           {/* Badges */}
-          <div className="absolute left-3 top-3 flex gap-2">
+          <div className="absolute top-3 left-3 flex gap-2">
             {masterclass.isFree && (
               <span className="rounded bg-green-500 px-2 py-1 text-xs font-bold text-white">
                 FREE
@@ -136,7 +136,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
 
           {/* Duration */}
           {masterclass.totalDuration && (
-            <div className="absolute bottom-3 right-3 flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
+            <div className="absolute right-3 bottom-3 flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
               <Clock className="h-3 w-3" />
               {formatDuration(masterclass.totalDuration)}
             </div>
@@ -146,7 +146,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
         {/* Content */}
         <div className="p-4">
           {/* Category */}
-          <div className="mb-2 text-xs font-medium uppercase tracking-wider text-(--accent)">
+          <div className="mb-2 text-xs font-medium tracking-wider text-(--accent) uppercase">
             {masterclass.category.replace('_', ' ')}
           </div>
 
@@ -171,12 +171,8 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
                 </div>
               )}
             </div>
-            <span className="text-sm text-(--muted)">
-              {masterclass.instructor.displayName}
-            </span>
-            {masterclass.instructor.verified && (
-              <BadgeCheck className="h-4 w-4 text-(--sky)" />
-            )}
+            <span className="text-sm text-(--muted)">{masterclass.instructor.displayName}</span>
+            {masterclass.instructor.verified && <BadgeCheck className="h-4 w-4 text-(--sky)" />}
           </div>
 
           {/* Stats */}
@@ -214,7 +210,7 @@ function MasterclassCard({ masterclass }: { masterclass: Masterclass }) {
                   )}
               </div>
             )}
-            <span className="text-xs capitalize text-(--muted)">{masterclass.skillLevel}</span>
+            <span className="text-xs text-(--muted) capitalize">{masterclass.skillLevel}</span>
           </div>
         </div>
       </motion.div>
@@ -231,7 +227,7 @@ function FeaturedInstructor({
     <Link href={`/masterclasses/instructors/${instructor.id}`}>
       <motion.div
         whileHover={{ scale: 1.02 }}
-        className="border-(--accent)/20 from-(--accent)/10 to-(--gold)/10 hover:border-(--accent)/50 flex items-center gap-4 rounded-xl border bg-linear-to-r p-4 transition-all"
+        className="flex items-center gap-4 rounded-xl border border-(--accent)/20 bg-linear-to-r from-(--accent)/10 to-(--gold)/10 p-4 transition-all hover:border-(--accent)/50"
       >
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full">
           {instructor.profileImage ? (
@@ -250,9 +246,7 @@ function FeaturedInstructor({
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <h4 className="truncate font-bold text-(--text)">{instructor.displayName}</h4>
-            {instructor.verified && (
-              <BadgeCheck className="h-4 w-4 shrink-0 text-(--sky)" />
-            )}
+            {instructor.verified && <BadgeCheck className="h-4 w-4 shrink-0 text-(--sky)" />}
           </div>
           <p className="truncate text-sm text-(--muted)">{instructor.headline}</p>
           <div className="mt-1 flex items-center gap-3 text-xs text-(--muted)">
@@ -335,7 +329,7 @@ export default function MasterclassesPage() {
 
           {/* Title */}
           <div className="mb-8 text-center">
-            <div className="bg-(--accent)/10 mb-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-(--accent)">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-(--accent)/10 px-4 py-2 text-sm font-medium text-(--accent)">
               <GraduationCap className="h-4 w-4" />
               Masterclasses
             </div>
@@ -354,20 +348,18 @@ export default function MasterclassesPage() {
           {/* Search */}
           <div className="mx-auto max-w-2xl">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-(--muted)" />
+              <Search className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-(--muted)" />
               <input
                 type="text"
                 placeholder="Search masterclasses, instructors, or topics..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-xl border border-(--border) bg-(--bg) py-3 pl-12 pr-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                className="w-full rounded-xl border border-(--border) bg-(--bg) py-3 pr-4 pl-12 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
               />
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-2 transition-colors ${
-                  showFilters
-                    ? 'bg-(--accent) text-white'
-                    : 'text-(--muted) hover:bg-(--border)'
+                className={`absolute top-1/2 right-3 -translate-y-1/2 rounded-lg p-2 transition-colors ${
+                  showFilters ? 'bg-(--accent) text-white' : 'text-(--muted) hover:bg-(--border)'
                 }`}
               >
                 <Filter className="h-5 w-5" />
@@ -441,7 +433,7 @@ export default function MasterclassesPage() {
               <button
                 key={cat.value}
                 onClick={() => setCategory(cat.value)}
-                className={`flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 transition-all ${
+                className={`flex items-center gap-2 rounded-full px-4 py-2 whitespace-nowrap transition-all ${
                   category === cat.value
                     ? 'bg-(--accent) text-white'
                     : 'bg-(--panel) text-(--muted) hover:bg-(--border)'
@@ -502,7 +494,7 @@ export default function MasterclassesPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="border-(--accent)/20 from-(--accent)/15 to-(--gold)/15 mt-16 rounded-2xl border bg-linear-to-r p-8 text-center"
+            className="mt-16 rounded-2xl border border-(--accent)/20 bg-linear-to-r from-(--accent)/15 to-(--gold)/15 p-8 text-center"
           >
             <h3 className="mb-2 text-2xl font-bold text-(--text)">Share Your Expertise</h3>
             <p className="mx-auto mb-6 max-w-xl text-(--muted)">

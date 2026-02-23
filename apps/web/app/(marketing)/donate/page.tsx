@@ -75,7 +75,7 @@ export default function DonatePage() {
       <JsonLd data={donationSchema} />
       <div className="min-h-screen" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
         {/* Hero Section */}
-        <section className="relative overflow-hidden pb-12 pt-20">
+        <section className="relative overflow-hidden pt-20 pb-12">
           {/* Background gradient */}
           <div
             className="absolute inset-0 opacity-30"
@@ -85,7 +85,7 @@ export default function DonatePage() {
             }}
           />
 
-          <div className="container relative">
+          <div className="relative container">
             {/* Logo */}
             <div className="mb-12 flex justify-center">
               <Link href="/" className="group inline-block">
@@ -102,7 +102,7 @@ export default function DonatePage() {
 
             <div className="mx-auto max-w-3xl text-center">
               <div
-                className="mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
+                className="mb-4 inline-block rounded-full px-4 py-1.5 text-xs font-semibold tracking-widest uppercase"
                 style={{
                   background: 'rgba(168, 85, 247, 0.15)',
                   color: '#a855f7',
@@ -113,7 +113,7 @@ export default function DonatePage() {
               </div>
 
               <h1
-                className="mb-6 text-5xl font-bold leading-tight md:text-6xl"
+                className="mb-6 text-5xl leading-tight font-bold md:text-6xl"
                 style={{ fontFamily: 'Oswald, sans-serif' }}
               >
                 Every Child Deserves
@@ -190,7 +190,7 @@ export default function DonatePage() {
                         ${tier.amount}
                       </span>
                       <span
-                        className="text-sm font-medium uppercase tracking-wider"
+                        className="text-sm font-medium tracking-wider uppercase"
                         style={{ color: tier.popular ? '#a855f7' : 'var(--muted)' }}
                       >
                         {tier.label}
@@ -222,7 +222,7 @@ export default function DonatePage() {
                     </div>
 
                     <div
-                      className="mt-4 w-full rounded-lg py-2.5 text-center text-sm font-semibold uppercase tracking-wider transition-all duration-200 group-hover:opacity-90"
+                      className="mt-4 w-full rounded-lg py-2.5 text-center text-sm font-semibold tracking-wider uppercase transition-all duration-200 group-hover:opacity-90"
                       style={{
                         background: tier.popular
                           ? 'linear-gradient(to right, #a855f7, #ec4899)'

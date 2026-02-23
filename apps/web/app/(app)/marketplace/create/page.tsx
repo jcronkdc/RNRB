@@ -189,8 +189,8 @@ export default function CreateListingPage() {
     <div className="relative min-h-screen" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-emerald-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-emerald-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
 
       {/* Header */}
@@ -300,7 +300,7 @@ export default function CreateListingPage() {
                   value={formData.title}
                   onChange={(e) => updateField('title', e.target.value)}
                   placeholder="e.g., 1965 Fender Stratocaster Sunburst"
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/20"
+                  className="focus:border-brand-primary/50 focus:ring-brand-primary/20 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:ring-2"
                 />
               </div>
 
@@ -313,7 +313,7 @@ export default function CreateListingPage() {
                       updateField('category', e.target.value);
                       updateField('subcategory', '');
                     }}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden"
                   >
                     <option value="" className="bg-gray-900">
                       Select category
@@ -332,7 +332,7 @@ export default function CreateListingPage() {
                     <select
                       value={formData.subcategory}
                       onChange={(e) => updateField('subcategory', e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden focus:border-brand-primary/50"
+                      className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-hidden"
                     >
                       <option value="" className="bg-gray-900">
                         Select subcategory
@@ -355,7 +355,7 @@ export default function CreateListingPage() {
                     value={formData.brand}
                     onChange={(e) => updateField('brand', e.target.value)}
                     placeholder="e.g., Fender"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
                 <div>
@@ -365,7 +365,7 @@ export default function CreateListingPage() {
                     value={formData.model}
                     onChange={(e) => updateField('model', e.target.value)}
                     placeholder="e.g., Stratocaster"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
                 <div>
@@ -375,7 +375,7 @@ export default function CreateListingPage() {
                     value={formData.year}
                     onChange={(e) => updateField('year', e.target.value)}
                     placeholder="e.g., 1965"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
               </div>
@@ -412,7 +412,7 @@ export default function CreateListingPage() {
                   onChange={(e) => updateField('description', e.target.value)}
                   placeholder="Describe your item in detail. Include any modifications, history, or issues..."
                   rows={5}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                  className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                 />
               </div>
             </div>
@@ -439,13 +439,13 @@ export default function CreateListingPage() {
                         className="h-full w-full object-cover"
                       />
                       {idx === 0 && (
-                        <span className="absolute left-2 top-2 rounded bg-brand-primary px-2 py-0.5 text-xs font-medium text-white">
+                        <span className="bg-brand-primary absolute top-2 left-2 rounded px-2 py-0.5 text-xs font-medium text-white">
                           Main
                         </span>
                       )}
                       <button
                         onClick={() => removeImage(img.id)}
-                        className="absolute right-2 top-2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
+                        className="absolute top-2 right-2 rounded-full bg-black/50 p-1 text-white hover:bg-black/70"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -527,13 +527,13 @@ export default function CreateListingPage() {
                   <div>
                     <label className="mb-2 block text-sm font-medium text-white">Price *</label>
                     <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                      <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                       <input
                         type="number"
                         value={formData.price}
                         onChange={(e) => updateField('price', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                        className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                       />
                     </div>
                   </div>
@@ -544,7 +544,7 @@ export default function CreateListingPage() {
                         type="checkbox"
                         checked={formData.acceptsOffers}
                         onChange={(e) => updateField('acceptsOffers', e.target.checked)}
-                        className="h-5 w-5 rounded border-white/20 bg-white/5 text-brand-primary focus:ring-brand-primary/50"
+                        className="text-brand-primary focus:ring-brand-primary/50 h-5 w-5 rounded border-white/20 bg-white/5"
                       />
                       <span className="text-sm text-white/70">Accept offers</span>
                     </label>
@@ -562,7 +562,7 @@ export default function CreateListingPage() {
                     onChange={(e) => updateField('tradeFor', e.target.value)}
                     placeholder="Describe what you're looking for in a trade..."
                     rows={3}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                    className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/40 outline-hidden"
                   />
                 </div>
               )}
@@ -574,13 +574,13 @@ export default function CreateListingPage() {
                   <div>
                     <label className="mb-2 block text-sm font-medium text-white">Location *</label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                      <MapPin className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                       <input
                         type="text"
                         value={formData.location}
                         onChange={(e) => updateField('location', e.target.value)}
                         placeholder="City, State"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                        className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                       />
                     </div>
                   </div>
@@ -590,13 +590,13 @@ export default function CreateListingPage() {
                       Shipping Cost
                     </label>
                     <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-white/40" />
+                      <DollarSign className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-white/40" />
                       <input
                         type="number"
                         value={formData.shippingCost}
                         onChange={(e) => updateField('shippingCost', e.target.value)}
                         placeholder="0.00"
-                        className="w-full rounded-xl border border-white/10 bg-white/5 py-3 pl-10 pr-4 text-white placeholder-white/40 outline-hidden focus:border-brand-primary/50"
+                        className="focus:border-brand-primary/50 w-full rounded-xl border border-white/10 bg-white/5 py-3 pr-4 pl-10 text-white placeholder-white/40 outline-hidden"
                       />
                     </div>
                   </div>
@@ -608,7 +608,7 @@ export default function CreateListingPage() {
                       type="checkbox"
                       checked={formData.localPickup}
                       onChange={(e) => updateField('localPickup', e.target.checked)}
-                      className="h-5 w-5 rounded border-white/20 bg-white/5 text-brand-primary focus:ring-brand-primary/50"
+                      className="text-brand-primary focus:ring-brand-primary/50 h-5 w-5 rounded border-white/20 bg-white/5"
                     />
                     <span className="text-sm text-white/70">Local pickup available</span>
                   </label>
@@ -651,11 +651,11 @@ export default function CreateListingPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <div className="text-sm text-white/50">Category</div>
-                        <div className="capitalize text-white">{formData.category || '-'}</div>
+                        <div className="text-white capitalize">{formData.category || '-'}</div>
                       </div>
                       <div>
                         <div className="text-sm text-white/50">Condition</div>
-                        <div className="capitalize text-white">{formData.condition}</div>
+                        <div className="text-white capitalize">{formData.condition}</div>
                       </div>
                     </div>
 
@@ -676,7 +676,7 @@ export default function CreateListingPage() {
 
                     <div>
                       <div className="text-sm text-white/50">Listing Type</div>
-                      <div className="capitalize text-white">
+                      <div className="text-white capitalize">
                         {formData.listingType.replace('_', ' ')}
                       </div>
                     </div>
@@ -733,7 +733,7 @@ export default function CreateListingPage() {
               <button
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceed()}
-                className="rounded-xl bg-linear-to-r from-brand-primary to-orange-500 px-6 py-3 font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+                className="from-brand-primary shadow-brand-primary/25 rounded-xl bg-linear-to-r to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Continue
               </button>

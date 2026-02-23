@@ -465,8 +465,8 @@ export default function ProductCustomizerPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -505,7 +505,7 @@ export default function ProductCustomizerPage() {
             className="mb-8"
           >
             {product.brand && (
-              <p className="mb-1 text-sm font-medium uppercase tracking-wider text-purple-400">
+              <p className="mb-1 text-sm font-medium tracking-wider text-purple-400 uppercase">
                 {product.brand}
               </p>
             )}
@@ -542,7 +542,7 @@ export default function ProductCustomizerPage() {
                                 (prev - 1 + generatedMockups.length) % generatedMockups.length
                             )
                           }
-                          className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white hover:bg-black/70"
+                          className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white hover:bg-black/70"
                         >
                           <ChevronLeft className="h-5 w-5" />
                         </button>
@@ -550,7 +550,7 @@ export default function ProductCustomizerPage() {
                           onClick={() =>
                             setCurrentMockupIndex((prev) => (prev + 1) % generatedMockups.length)
                           }
-                          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white hover:bg-black/70"
+                          className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-black/50 p-3 text-white hover:bg-black/70"
                         >
                           <ChevronRight className="h-5 w-5" />
                         </button>
@@ -608,7 +608,7 @@ export default function ProductCustomizerPage() {
                 )}
 
                 {/* Color indicator */}
-                <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2">
+                <div className="absolute top-4 left-4 flex items-center gap-2 rounded-full bg-black/50 px-4 py-2">
                   <div
                     className="h-4 w-4 rounded-full border border-white/20"
                     style={{
@@ -705,7 +705,7 @@ export default function ProductCustomizerPage() {
                         setDesign({ url: null, position: { x: 50, y: 50 }, scale: 1, rotation: 0 });
                         setGeneratedMockups([]);
                       }}
-                      className="absolute right-2 top-2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
+                      className="absolute top-2 right-2 rounded-full bg-black/50 p-2 text-white hover:bg-black/70"
                     >
                       <X className="h-4 w-4" />
                     </button>

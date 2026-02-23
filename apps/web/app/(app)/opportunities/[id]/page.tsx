@@ -151,7 +151,7 @@ export default function OpportunityDetailPage() {
     <div className="min-h-screen">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="bg-(--accent)/5 absolute -left-64 top-0 h-[600px] w-[600px] rounded-full blur-[120px]" />
+        <div className="absolute top-0 -left-64 h-[600px] w-[600px] rounded-full bg-(--accent)/5 blur-[120px]" />
         <div className="absolute -right-64 bottom-0 h-[500px] w-[500px] rounded-full bg-emerald-500/5 blur-[120px]" />
       </div>
 
@@ -212,7 +212,7 @@ export default function OpportunityDetailPage() {
                     </span>
                   )}
                 </div>
-                <span className="rounded-full bg-(--panel-hover) px-3 py-1 text-sm capitalize text-(--text-secondary)">
+                <span className="rounded-full bg-(--panel-hover) px-3 py-1 text-sm text-(--text-secondary) capitalize">
                   {opportunity.type.replace('_', ' ')}
                 </span>
               </div>
@@ -298,7 +298,7 @@ export default function OpportunityDetailPage() {
                         {opportunity.instruments.map((inst: string) => (
                           <span
                             key={inst}
-                            className="text-(--text)/80 rounded-full bg-(--panel-hover) px-3 py-1 text-sm"
+                            className="rounded-full bg-(--panel-hover) px-3 py-1 text-sm text-(--text)/80"
                           >
                             {inst}
                           </span>
@@ -309,9 +309,7 @@ export default function OpportunityDetailPage() {
 
                   {opportunity.genres?.length > 0 && (
                     <div>
-                      <p className="mb-2 text-sm font-medium text-(--text-secondary)">
-                        Genres
-                      </p>
+                      <p className="mb-2 text-sm font-medium text-(--text-secondary)">Genres</p>
                       <div className="flex flex-wrap gap-2">
                         {opportunity.genres.map((genre: string) => (
                           <span
@@ -330,7 +328,7 @@ export default function OpportunityDetailPage() {
                       <p className="mb-2 text-sm font-medium text-(--text-secondary)">
                         Experience Level
                       </p>
-                      <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm capitalize text-blue-400">
+                      <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm text-blue-400 capitalize">
                         {opportunity.experienceLevel}
                       </span>
                     </div>
@@ -344,7 +342,7 @@ export default function OpportunityDetailPage() {
                   <h2 className="mb-3 text-lg font-semibold text-(--text)">
                     Additional Information
                   </h2>
-                  <p className="whitespace-pre-wrap text-sm text-(--text-secondary)">
+                  <p className="text-sm whitespace-pre-wrap text-(--text-secondary)">
                     {opportunity.additionalInfo}
                   </p>
                 </div>
@@ -358,9 +356,7 @@ export default function OpportunityDetailPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-6 rounded-2xl border border-(--border) bg-linear-to-br from-(--panel) to-(--bg-elevated) p-8"
               >
-                <h2 className="mb-6 text-xl font-bold text-(--text)">
-                  Submit Your Application
-                </h2>
+                <h2 className="mb-6 text-xl font-bold text-(--text)">Submit Your Application</h2>
                 <form onSubmit={handleApply} className="space-y-4">
                   <div>
                     <label className="mb-2 block text-sm font-medium text-(--text)">
@@ -443,7 +439,7 @@ export default function OpportunityDetailPage() {
                     <button
                       type="submit"
                       disabled={applying}
-                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-(--accent-glow) shadow-lg transition-all hover:from-green-600 hover:to-emerald-700 disabled:opacity-50"
                     >
                       {applying ? (
                         <>
@@ -497,9 +493,7 @@ export default function OpportunityDetailPage() {
                       {opportunity.postedBy.name || 'Anonymous'}
                     </p>
                     {opportunity.postedBy.username && (
-                      <p className="text-sm text-(--muted)">
-                        @{opportunity.postedBy.username}
-                      </p>
+                      <p className="text-sm text-(--muted)">@{opportunity.postedBy.username}</p>
                     )}
                   </div>
                 </div>
@@ -534,7 +528,7 @@ export default function OpportunityDetailPage() {
               {!session?.user ? (
                 <Link
                   href="/login"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-(--accent-glow) shadow-lg transition-all hover:from-green-600 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5" />
                   Login to Apply
@@ -558,7 +552,7 @@ export default function OpportunityDetailPage() {
                     href={opportunity.applicationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-(--accent-glow) shadow-lg transition-all hover:from-green-600 hover:to-emerald-700"
                   >
                     Apply Externally
                     <ExternalLink className="h-4 w-4" />
@@ -571,7 +565,7 @@ export default function OpportunityDetailPage() {
               ) : (
                 <button
                   onClick={() => setShowApplicationForm(true)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-lg shadow-(--accent-glow) transition-all hover:from-green-600 hover:to-emerald-700"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-(--accent) to-(--clay) px-6 py-3 font-medium text-(--text) shadow-(--accent-glow) shadow-lg transition-all hover:from-green-600 hover:to-emerald-700"
                 >
                   <Send className="h-5 w-5" />
                   Apply Now

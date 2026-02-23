@@ -108,9 +108,9 @@ export default function MarketplacePage() {
   );
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="bg-background min-h-screen pb-20">
       {/* Header with Logo */}
-      <header className="border-b border-white/10 bg-surface/50">
+      <header className="bg-surface/50 border-b border-white/10">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
@@ -124,10 +124,10 @@ export default function MarketplacePage() {
                 />
               </Link>
               <div>
-                <h1 className="font-display text-2xl font-bold text-foreground">
+                <h1 className="font-display text-foreground text-2xl font-bold">
                   Services Marketplace
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Connect with professional engineers, producers & musicians
                 </p>
               </div>
@@ -146,20 +146,20 @@ export default function MarketplacePage() {
         {/* Search & Filters */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by name, skill, or genre..."
-              className="w-full rounded-xl border border-border bg-surface py-3 pl-10 pr-4 text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border py-3 pr-4 pl-10 focus:ring-2 focus:outline-hidden"
             />
           </div>
           <div className="flex gap-2">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="rounded-xl border border-border bg-surface px-4 py-3 text-foreground focus:border-brand-primary focus:outline-hidden"
+              className="border-border bg-surface text-foreground focus:border-brand-primary rounded-xl border px-4 py-3 focus:outline-hidden"
             >
               <option value="rating">Top Rated</option>
               <option value="reviews">Most Reviews</option>
@@ -174,7 +174,7 @@ export default function MarketplacePage() {
 
         {/* Categories */}
         <div className="mb-8">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          <h2 className="text-muted-foreground mb-4 text-sm font-semibold tracking-wider uppercase">
             Browse by Category
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
@@ -197,7 +197,7 @@ export default function MarketplacePage() {
                   >
                     <Icon className="h-5 w-5" style={{ color: cat.color }} />
                   </div>
-                  <span className="text-center text-xs font-medium text-foreground">
+                  <span className="text-foreground text-center text-xs font-medium">
                     {cat.name}
                   </span>
                 </button>
@@ -236,11 +236,11 @@ export default function MarketplacePage() {
                 transition={{ delay: index * 0.05 }}
               >
                 <Link href={`/marketplace/providers/${provider.slug}`}>
-                  <Card className="group h-full overflow-hidden transition-all hover:border-brand-primary/30 hover:shadow-lg hover:shadow-brand-primary/10">
+                  <Card className="group hover:border-brand-primary/30 hover:shadow-brand-primary/10 h-full overflow-hidden transition-all hover:shadow-lg">
                     <div className="p-6">
                       {/* Provider Header */}
                       <div className="mb-4 flex items-start gap-4">
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-border bg-surface-muted">
+                        <div className="border-border bg-surface-muted relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2">
                           {provider.avatar ? (
                             <Image
                               src={provider.avatar}
@@ -249,19 +249,19 @@ export default function MarketplacePage() {
                               className="object-cover"
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center text-2xl font-bold text-muted-foreground">
+                            <div className="text-muted-foreground flex h-full w-full items-center justify-center text-2xl font-bold">
                               {provider.displayName.charAt(0)}
                             </div>
                           )}
                           {provider.isVerified && (
-                            <div className="absolute -bottom-1 -right-1 rounded-full bg-blue-500 p-1">
+                            <div className="absolute -right-1 -bottom-1 rounded-full bg-blue-500 p-1">
                               <CheckCircle className="h-3 w-3 text-white" />
                             </div>
                           )}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="truncate font-semibold text-foreground group-hover:text-brand-primary">
+                            <h3 className="text-foreground group-hover:text-brand-primary truncate font-semibold">
                               {provider.displayName}
                             </h3>
                             {provider.isPro && (
@@ -271,7 +271,7 @@ export default function MarketplacePage() {
                             )}
                           </div>
                           {provider.tagline && (
-                            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                            <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
                               {provider.tagline}
                             </p>
                           )}
@@ -286,7 +286,7 @@ export default function MarketplacePage() {
                           <span className="text-muted-foreground">({provider.reviewCount})</span>
                         </div>
                         {provider.location && (
-                          <div className="flex items-center gap-1 text-muted-foreground">
+                          <div className="text-muted-foreground flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
                             <span>{provider.location}</span>
                           </div>
@@ -298,28 +298,28 @@ export default function MarketplacePage() {
                         {provider.skills.slice(0, 4).map((skill) => (
                           <span
                             key={skill}
-                            className="rounded-full bg-surface-muted px-2 py-1 text-xs text-muted-foreground"
+                            className="bg-surface-muted text-muted-foreground rounded-full px-2 py-1 text-xs"
                           >
                             {skill}
                           </span>
                         ))}
                         {provider.skills.length > 4 && (
-                          <span className="rounded-full bg-surface-muted px-2 py-1 text-xs text-muted-foreground">
+                          <span className="bg-surface-muted text-muted-foreground rounded-full px-2 py-1 text-xs">
                             +{provider.skills.length - 4}
                           </span>
                         )}
                       </div>
 
                       {/* Footer */}
-                      <div className="flex items-center justify-between border-t border-border pt-4">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="border-border flex items-center justify-between border-t pt-4">
+                        <div className="text-muted-foreground flex items-center gap-2 text-sm">
                           <Clock className="h-4 w-4" />
                           <span>{provider.responseTime || 'Usually responds in 1 day'}</span>
                         </div>
                         {provider.startingPrice && (
                           <div className="text-right">
-                            <span className="text-xs text-muted-foreground">from</span>
-                            <span className="ml-1 font-semibold text-foreground">
+                            <span className="text-muted-foreground text-xs">from</span>
+                            <span className="text-foreground ml-1 font-semibold">
                               ${(provider.startingPrice / 100).toFixed(0)}
                             </span>
                           </div>
@@ -334,10 +334,10 @@ export default function MarketplacePage() {
         )}
 
         {/* Featured Banner */}
-        <Card className="mt-12 overflow-hidden bg-linear-to-r from-brand-primary/20 via-purple-500/20 to-cyan-500/20 p-8">
+        <Card className="from-brand-primary/20 mt-12 overflow-hidden bg-linear-to-r via-purple-500/20 to-cyan-500/20 p-8">
           <div className="flex flex-col items-center gap-6 md:flex-row">
             <div className="flex-1">
-              <h2 className="mb-2 text-2xl font-bold text-foreground">Offer Your Services</h2>
+              <h2 className="text-foreground mb-2 text-2xl font-bold">Offer Your Services</h2>
               <p className="text-muted-foreground">
                 Join our marketplace of professional engineers, producers, and musicians. Set your
                 own rates, build your portfolio, and grow your client base.

@@ -296,7 +296,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
         {/* Edit Cover Button (own profile only) */}
         {profile.isOwnProfile && (
           <button
-            className="absolute bottom-4 right-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all hover:opacity-90"
+            className="absolute right-4 bottom-4 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all hover:opacity-90"
             style={{ backgroundColor: 'rgba(0,0,0,0.6)' }}
           >
             <Camera className="h-4 w-4" />
@@ -336,7 +336,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
               {/* Online Status / Current Activity */}
               {mp?.currentStatus && (
                 <div
-                  className="absolute -bottom-1 right-2 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-white"
+                  className="absolute right-2 -bottom-1 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium text-white"
                   style={{ backgroundColor: statusColors[mp.currentStatus] || '#6B7280' }}
                 >
                   <div className="h-2 w-2 animate-pulse rounded-full bg-white" />
@@ -345,7 +345,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
               )}
               {profile.isOwnProfile && (
                 <button
-                  className="absolute bottom-0 right-0 flex h-10 w-10 items-center justify-center rounded-full transition-transform hover:scale-110"
+                  className="absolute right-0 bottom-0 flex h-10 w-10 items-center justify-center rounded-full transition-transform hover:scale-110"
                   style={{ backgroundColor: 'var(--accent)' }}
                 >
                   <Camera className="h-5 w-5 text-white" />
@@ -485,7 +485,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                     </button>
                     {showMoreMenu && (
                       <div
-                        className="absolute right-0 top-full z-50 mt-2 min-w-[180px] rounded-lg py-2 shadow-xl"
+                        className="absolute top-full right-0 z-50 mt-2 min-w-[180px] rounded-lg py-2 shadow-xl"
                         style={{
                           backgroundColor: 'var(--panel)',
                           border: '1px solid var(--border)',
@@ -522,7 +522,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="absolute left-1/2 top-full z-50 mt-4 flex -translate-x-1/2 items-center gap-2 rounded-lg px-4 py-2 text-sm"
+                className="absolute top-full left-1/2 z-50 mt-4 flex -translate-x-1/2 items-center gap-2 rounded-lg px-4 py-2 text-sm"
                 style={{ backgroundColor: '#EF4444', color: '#fff' }}
               >
                 <X className="h-4 w-4" />
@@ -603,7 +603,7 @@ export default function CommunityUserPage({ params }: { params: Promise<{ id: st
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as TabType)}
-                className="flex items-center gap-2 whitespace-nowrap px-6 py-4 text-sm font-semibold transition-all"
+                className="flex items-center gap-2 px-6 py-4 text-sm font-semibold whitespace-nowrap transition-all"
                 style={{
                   color: activeTab === tab.key ? 'var(--accent)' : 'var(--muted)',
                   borderBottom:

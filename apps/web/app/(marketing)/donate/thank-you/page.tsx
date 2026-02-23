@@ -67,7 +67,7 @@ export default function ThankYouPage() {
           }}
         >
           <div
-            className="mb-4 text-sm font-medium uppercase tracking-wider"
+            className="mb-4 text-sm font-medium tracking-wider uppercase"
             style={{ color: 'var(--muted)' }}
           >
             What Happens Next
@@ -158,7 +158,7 @@ export default function ThankYouPage() {
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href="/donate"
-            className="rounded-lg px-6 py-2.5 text-sm font-semibold uppercase tracking-wider transition-all hover:opacity-90"
+            className="rounded-lg px-6 py-2.5 text-sm font-semibold tracking-wider uppercase transition-all hover:opacity-90"
             style={{
               background: 'linear-gradient(to right, #a855f7, #ec4899)',
               color: 'white',
@@ -168,7 +168,7 @@ export default function ThankYouPage() {
           </Link>
           <Link
             href="/"
-            className="rounded-lg px-6 py-2.5 text-sm font-semibold uppercase tracking-wider transition-all hover:opacity-90"
+            className="rounded-lg px-6 py-2.5 text-sm font-semibold tracking-wider uppercase transition-all hover:opacity-90"
             style={{
               background: 'var(--surface)',
               border: '1px solid var(--border)',

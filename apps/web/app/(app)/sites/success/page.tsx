@@ -467,7 +467,7 @@ function DeploymentSuccessContent() {
                         : 'bg-red-400'
                   }`}
                 />
-                <span className="text-sm capitalize text-gray-400">{siteHealth.ssl}</span>
+                <span className="text-sm text-gray-400 capitalize">{siteHealth.ssl}</span>
               </div>
             </div>
 
@@ -495,7 +495,7 @@ function DeploymentSuccessContent() {
                         : 'bg-red-400'
                   }`}
                 />
-                <span className="text-sm capitalize text-gray-400">{siteHealth.cdn}</span>
+                <span className="text-sm text-gray-400 capitalize">{siteHealth.cdn}</span>
               </div>
             </div>
 
@@ -523,7 +523,7 @@ function DeploymentSuccessContent() {
                         : 'bg-red-400'
                   }`}
                 />
-                <span className="text-sm capitalize text-gray-400">{siteHealth.dns}</span>
+                <span className="text-sm text-gray-400 capitalize">{siteHealth.dns}</span>
               </div>
             </div>
           </div>

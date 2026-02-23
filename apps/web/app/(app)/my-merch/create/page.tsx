@@ -268,8 +268,8 @@ export default function CreateProductPage() {
     <div className="relative min-h-screen overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Ambient Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-64 -top-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-64 -left-64 h-[500px] w-[500px] rounded-full bg-linear-to-br from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-32 -bottom-32 h-[400px] w-[400px] rounded-full bg-linear-to-tl from-orange-500/10 to-transparent blur-3xl" />
       </div>
 
       <div className="relative z-10">
@@ -355,7 +355,7 @@ export default function CreateProductPage() {
                         {formatPrice(product.suggestedRetail)}
                       </div>
                       {selectedProduct.id === product.id && (
-                        <CheckCircle className="absolute right-3 top-3 h-5 w-5 text-orange-400" />
+                        <CheckCircle className="absolute top-3 right-3 h-5 w-5 text-orange-400" />
                       )}
                     </button>
                   );
@@ -439,7 +439,7 @@ export default function CreateProductPage() {
                       />
                       <button
                         onClick={() => setDesignUrl(null)}
-                        className="absolute right-2 top-2 rounded-full bg-black/50 px-3 py-1 text-sm text-white hover:bg-black/70"
+                        className="absolute top-2 right-2 rounded-full bg-black/50 px-3 py-1 text-sm text-white hover:bg-black/70"
                       >
                         Change
                       </button>

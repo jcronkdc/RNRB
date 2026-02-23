@@ -73,7 +73,7 @@ function RevenueCard({ revenue }: { revenue: any }) {
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between">
-          <h4 className="font-semibold capitalize text-white">
+          <h4 className="font-semibold text-white capitalize">
             {revenue.source.replace('_', ' ')}
           </h4>
           <span className="text-lg font-bold text-emerald-400">+${revenue.amount.toFixed(2)}</span>
@@ -161,7 +161,7 @@ export default function RevenuePage() {
     <div className="min-h-screen bg-linear-to-b from-black via-gray-950 to-black">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-64 top-0 h-[600px] w-[600px] rounded-full bg-emerald-500/5 blur-[120px]" />
+        <div className="absolute top-0 -left-64 h-[600px] w-[600px] rounded-full bg-emerald-500/5 blur-[120px]" />
         <div className="absolute -right-64 bottom-0 h-[500px] w-[500px] rounded-full bg-green-500/5 blur-[120px]" />
       </div>
 
@@ -221,7 +221,7 @@ export default function RevenuePage() {
         >
           {/* Total */}
           <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br from-emerald-500/20 to-green-500/10 p-6">
-            <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-emerald-500/20 blur-2xl" />
+            <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-emerald-500/20 blur-2xl" />
             <div className="relative">
               <div className="mb-2 flex items-center gap-2">
                 <PiggyBank className="h-5 w-5 text-emerald-400" />
@@ -269,7 +269,7 @@ export default function RevenuePage() {
               <TrendingUp className="h-5 w-5 text-orange-400" />
               <span className="text-sm text-white/60">Top Source</span>
             </div>
-            <p className="text-2xl font-bold capitalize text-white">
+            <p className="text-2xl font-bold text-white capitalize">
               {topSources[0]?.[0]?.replace('_', ' ') || '-'}
             </p>
           </div>
@@ -319,7 +319,7 @@ export default function RevenuePage() {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-sm capitalize text-white/70">
+                          <span className="text-sm text-white/70 capitalize">
                             {source.replace('_', ' ')}
                           </span>
                           <span className="text-sm font-medium text-white">

@@ -118,7 +118,7 @@ function UserRow({ user, onSelect }: { user: any; onSelect: (id: string) => void
         <div className="relative">
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="rounded-lg p-2 opacity-0 transition-all hover:bg-white/10 group-hover:opacity-100"
+            className="rounded-lg p-2 opacity-0 transition-all group-hover:opacity-100 hover:bg-white/10"
           >
             <MoreVertical className="h-4 w-4 text-zinc-400" />
           </button>
@@ -126,7 +126,7 @@ function UserRow({ user, onSelect }: { user: any; onSelect: (id: string) => void
           <>
             {showMenu && (
               <div
-                className="absolute right-0 top-full z-50 mt-1 w-48 overflow-hidden rounded-xl border"
+                className="absolute top-full right-0 z-50 mt-1 w-48 overflow-hidden rounded-xl border"
                 style={{
                   background: 'rgba(20, 20, 25, 0.98)',
                   borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -214,13 +214,13 @@ export default function UsersPage() {
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <form onSubmit={handleSearch} className="flex flex-1 items-center gap-3">
           <div className="relative max-w-md flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-500" />
             <input
               type="text"
               placeholder="Search by email or name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl border bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-zinc-500 transition-colors focus:border-orange-500/50 focus:outline-hidden"
+              className="w-full rounded-xl border bg-white/5 py-2.5 pr-4 pl-10 text-sm text-white placeholder-zinc-500 transition-colors focus:border-orange-500/50 focus:outline-hidden"
               style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
             />
           </div>
@@ -354,7 +354,7 @@ export default function UsersPage() {
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => handleSort('name')}
-                    className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-white"
+                    className="flex items-center gap-1 text-xs font-semibold tracking-wider text-zinc-400 uppercase hover:text-white"
                   >
                     User
                     <ArrowUpDown className="h-3 w-3" />
@@ -363,38 +363,38 @@ export default function UsersPage() {
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => handleSort('subscriptionTier')}
-                    className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-white"
+                    className="flex items-center gap-1 text-xs font-semibold tracking-wider text-zinc-400 uppercase hover:text-white"
                   >
                     Tier
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th className="px-4 py-3 text-left">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
                     Status
                   </span>
                 </th>
                 <th className="px-4 py-3 text-left">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
                     Content
                   </span>
                 </th>
                 <th className="px-4 py-3 text-left">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
                     Usage
                   </span>
                 </th>
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => handleSort('createdAt')}
-                    className="flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-zinc-400 hover:text-white"
+                    className="flex items-center gap-1 text-xs font-semibold tracking-wider text-zinc-400 uppercase hover:text-white"
                   >
                     Joined
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th className="px-4 py-3 text-left">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                  <span className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
                     Actions
                   </span>
                 </th>

@@ -85,7 +85,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
  * POST /api/projects/[slug]/members
  * Add the authenticated user as a member of a project (invite accept)
  */
-export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
   try {
     const { slug } = await params;
     const user = await getCurrentUser();

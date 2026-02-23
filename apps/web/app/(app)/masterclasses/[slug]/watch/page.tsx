@@ -281,7 +281,7 @@ function VideoPlayer({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-4"
+            className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-4"
           >
             {/* Progress bar */}
             <div className="mb-3">
@@ -298,31 +298,19 @@ function VideoPlayer({
             <div className="flex items-center justify-between">
               {/* Left controls */}
               <div className="flex items-center gap-3">
-                <button
-                  onClick={togglePlay}
-                  className="text-(--text) hover:text-(--accent)"
-                >
+                <button onClick={togglePlay} className="text-(--text) hover:text-(--accent)">
                   {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
                 </button>
-                <button
-                  onClick={() => skip(-10)}
-                  className="text-(--text) hover:text-(--accent)"
-                >
+                <button onClick={() => skip(-10)} className="text-(--text) hover:text-(--accent)">
                   <SkipBack className="h-5 w-5" />
                 </button>
-                <button
-                  onClick={() => skip(10)}
-                  className="text-(--text) hover:text-(--accent)"
-                >
+                <button onClick={() => skip(10)} className="text-(--text) hover:text-(--accent)">
                   <SkipForward className="h-5 w-5" />
                 </button>
 
                 {/* Volume */}
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={toggleMute}
-                    className="text-(--text) hover:text-(--accent)"
-                  >
+                  <button onClick={toggleMute} className="text-(--text) hover:text-(--accent)">
                     {isMuted || volume === 0 ? (
                       <VolumeX className="h-5 w-5" />
                     ) : (
@@ -362,10 +350,7 @@ function VideoPlayer({
                   <option value={2}>2x</option>
                 </select>
 
-                <button
-                  onClick={toggleFullscreen}
-                  className="text-(--text) hover:text-(--accent)"
-                >
+                <button onClick={toggleFullscreen} className="text-(--text) hover:text-(--accent)">
                   {isFullscreen ? (
                     <Minimize className="h-5 w-5" />
                   ) : (
@@ -549,10 +534,7 @@ export default function WatchPage() {
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 p-4">
           <div className="flex items-center gap-4">
-            <Link
-              href={`/masterclasses/${slug}`}
-              className="text-(--muted) hover:text-(--text)"
-            >
+            <Link href={`/masterclasses/${slug}`} className="text-(--muted) hover:text-(--text)">
               <ChevronLeft className="h-6 w-6" />
             </Link>
             <div>
@@ -665,7 +647,7 @@ export default function WatchPage() {
                   onChange={(e) => setNotes(e.target.value)}
                   onBlur={saveNotes}
                   placeholder="Take notes on this lesson..."
-                  className="h-40 w-full resize-none rounded-lg border border-(--border) bg-(--panel) p-4 text-(--text) placeholder-(--muted) focus:outline-hidden focus:ring-2 focus:ring-(--accent)"
+                  className="h-40 w-full resize-none rounded-lg border border-(--border) bg-(--panel) p-4 text-(--text) placeholder-(--muted) focus:ring-2 focus:ring-(--accent) focus:outline-hidden"
                 />
               </motion.div>
             )}
@@ -680,7 +662,7 @@ export default function WatchPage() {
             initial={{ x: 320 }}
             animate={{ x: 0 }}
             exit={{ x: 320 }}
-            className="fixed bottom-0 right-0 top-0 w-80 overflow-y-auto border-l border-(--border) bg-(--panel)"
+            className="fixed top-0 right-0 bottom-0 w-80 overflow-y-auto border-l border-(--border) bg-(--panel)"
           >
             <div className="border-b border-(--border) p-4">
               <div className="mb-4 flex items-center justify-between">
@@ -721,19 +703,13 @@ export default function WatchPage() {
                     key={lesson.id}
                     onClick={() => goToLesson(index)}
                     className={`mb-1 w-full rounded-lg p-3 text-left transition-colors ${
-                      isCurrent
-                        ? 'border-(--accent)/50 bg-(--accent)/20 border'
-                        : 'hover:bg-(--bg)'
+                      isCurrent ? 'border border-(--accent)/50 bg-(--accent)/20' : 'hover:bg-(--bg)'
                     }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
                         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                          isComplete
-                            ? 'bg-(--sage)'
-                            : isCurrent
-                              ? 'bg-(--accent)'
-                              : 'bg-(--bg)'
+                          isComplete ? 'bg-(--sage)' : isCurrent ? 'bg-(--accent)' : 'bg-(--bg)'
                         }`}
                       >
                         {isComplete ? (

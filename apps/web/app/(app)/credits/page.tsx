@@ -203,9 +203,7 @@ export default function CreditsPage() {
                     animate={{ width: `${aiPercentage}%` }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                     className={`h-full rounded-full ${
-                      nearAILimit
-                        ? 'bg-orange-500'
-                        : 'bg-linear-to-r from-orange-500 to-orange-400'
+                      nearAILimit ? 'bg-orange-500' : 'bg-linear-to-r from-orange-500 to-orange-400'
                     }`}
                   />
                 </div>
@@ -314,7 +312,7 @@ export default function CreditsPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b border-(--border) py-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-primary/10">
+                  <div className="bg-brand-primary/10 flex h-10 w-10 items-center justify-center rounded-lg">
                     <Sparkles className="h-5 w-5 text-(--accent)" />
                   </div>
                   <div>
@@ -351,9 +349,7 @@ export default function CreditsPage() {
                   </div>
                   <div>
                     <p className="font-medium">Lyrics Generation</p>
-                    <p className="text-sm text-(--muted)">
-                      AI-powered lyrics suggestions
-                    </p>
+                    <p className="text-sm text-(--muted)">AI-powered lyrics suggestions</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -369,9 +365,7 @@ export default function CreditsPage() {
                   </div>
                   <div>
                     <p className="font-medium">Album Art Generation</p>
-                    <p className="text-sm text-(--muted)">
-                      AI-generated artwork for songs
-                    </p>
+                    <p className="text-sm text-(--muted)">AI-generated artwork for songs</p>
                   </div>
                 </div>
                 <div className="text-right">

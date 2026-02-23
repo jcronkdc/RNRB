@@ -36,7 +36,7 @@ function TableRow({
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-500/20">
             <Table className="h-4 w-4 text-purple-400" />
           </div>
-          <span className="font-medium capitalize text-white">
+          <span className="font-medium text-white capitalize">
             {table.table.replace(/_/g, ' ')}
           </span>
         </div>
@@ -311,16 +311,16 @@ export default function DatabasePage() {
                     className="border-b border-white/10"
                     style={{ background: 'rgba(255,255,255,0.02)' }}
                   >
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Table Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Record Count
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Distribution
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    <th className="px-6 py-3 text-left text-xs font-semibold tracking-wider text-zinc-500 uppercase">
                       Status
                     </th>
                   </tr>
