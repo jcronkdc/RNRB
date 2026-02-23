@@ -12,9 +12,18 @@ export default async function DashboardPage() {
 
   const userId = session.user.id;
   const firstName = session.user.name?.split(' ')[0] || 'there';
+  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-  // Fetch data at the server — no loading spinner, instant render
-  const [songs, projects] = await Promise.all([
+  const [
+    songs,
+    projects,
+    totalSongs,
+    totalProjects,
+    collaboratorCount,
+    songsThisWeek,
+    unreadNotifications,
+    user,
+  ] = await Promise.all([
     db.song.findMany({
       where: { userId, archived: false },
       orderBy: { updatedAt: 'desc' },
@@ -30,20 +39,41 @@ export default async function DashboardPage() {
       },
     }),
     db.project.findMany({
-      where: {
-        members: { some: { userId } },
-      },
+      where: { members: { some: { userId } } },
       orderBy: { updatedAt: 'desc' },
       take: 4,
       include: {
-        _count: {
-          select: { songs: true, members: true },
-        },
+        _count: { select: { songs: true, members: true } },
+      },
+    }),
+    db.song.count({
+      where: { OR: [{ userId }, { collaborators: { some: { userId } } }], archived: false },
+    }),
+    db.project.count({
+      where: { members: { some: { userId } } },
+    }),
+    db.songCollaborator.count({
+      where: { song: { userId }, userId: { not: userId } },
+    }),
+    db.song.count({
+      where: { userId, createdAt: { gte: oneWeekAgo } },
+    }),
+    db.notification.count({
+      where: { userId, readAt: null },
+    }),
+    db.user.findUnique({
+      where: { id: userId },
+      select: {
+        subscriptionTier: true,
+        isOwner: true,
+        aiRequestsUsed: true,
+        storageUsedGB: true,
       },
     }),
   ]);
 
-  // Serialize dates for client component
+  const tier = user?.isOwner ? 'studio' : (user?.subscriptionTier ?? 'free');
+
   const serializedSongs = songs.map((s) => ({
     id: s.id,
     title: s.title,
@@ -64,6 +94,14 @@ export default async function DashboardPage() {
       firstName={firstName}
       songs={serializedSongs}
       projects={serializedProjects}
+      stats={{
+        totalSongs,
+        totalProjects,
+        collaborators: collaboratorCount,
+        songsThisWeek,
+        unreadNotifications,
+        tier,
+      }}
     />
   );
 }
