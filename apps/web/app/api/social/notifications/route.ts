@@ -3,7 +3,6 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
 
-// GET - Fetch notifications for current user
 export async function GET(request: NextRequest) {
   try {
     const session = await auth();
@@ -14,23 +13,18 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id;
     const searchParams = request.nextUrl.searchParams;
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50'), 100);
     const unreadOnly = searchParams.get('unread') === 'true';
 
-    // Check if Notification model exists in the schema
-    // For now, we'll create notifications from activity
-    // This is a placeholder that generates notifications from recent activity
+    const where: any = { userId };
+    if (unreadOnly) {
+      where.readAt = null;
+    }
 
-    // Get recent follows
-    const recentFollows = await prisma.userFollow.findMany({
-      where: {
-        followingId: userId,
-        createdAt: {
-          gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Last 30 days
-        },
-      },
+    const notifications = await prisma.notification.findMany({
+      where,
       include: {
-        follower: {
+        actor: {
           select: {
             id: true,
             name: true,
@@ -42,23 +36,64 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    // Transform follows into notification format
-    const notifications = recentFollows.map((follow) => ({
-      id: `follow_${follow.id}`,
-      type: 'follow' as const,
-      read: false, // In production, track this in a separate table
-      createdAt: follow.createdAt.toISOString(),
-      fromUser: {
-        id: follow.follower.id,
-        name: follow.follower.name,
-        image: follow.follower.image,
-      },
-      data: {},
-    }));
+    const unreadCount = await prisma.notification.count({
+      where: { userId, readAt: null },
+    });
 
-    return NextResponse.json({ notifications });
+    return NextResponse.json({
+      notifications: notifications.map((n) => ({
+        id: n.id,
+        type: n.type,
+        title: n.title,
+        message: n.message,
+        read: !!n.readAt,
+        createdAt: n.createdAt.toISOString(),
+        actionUrl: n.actionUrl,
+        fromUser: n.actor
+          ? {
+              id: n.actor.id,
+              name: n.actor.name,
+              image: n.actor.image,
+            }
+          : null,
+      })),
+      unreadCount,
+    });
   } catch (error) {
     console.error('Error fetching notifications:', error);
     return NextResponse.json({ error: 'Failed to fetch notifications' }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { notificationIds, markAllRead } = body;
+
+    if (markAllRead) {
+      await prisma.notification.updateMany({
+        where: { userId: session.user.id, readAt: null },
+        data: { readAt: new Date() },
+      });
+    } else if (notificationIds?.length) {
+      await prisma.notification.updateMany({
+        where: {
+          id: { in: notificationIds },
+          userId: session.user.id,
+        },
+        data: { readAt: new Date() },
+      });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error updating notifications:', error);
+    return NextResponse.json({ error: 'Failed to update notifications' }, { status: 500 });
   }
 }

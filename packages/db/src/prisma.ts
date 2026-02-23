@@ -102,7 +102,7 @@ function createBuildTimeStub(): PrismaClient {
       });
     },
   };
-  return new Proxy({} as unknown as PrismaClient, handler);
+  return new Proxy({}, handler) as unknown as PrismaClient;
 }
 
 // Check global cache first, then create new instance if needed (singleton pattern)

@@ -349,7 +349,6 @@ export function StageplotGenerator() {
   const exportAsPNG = async () => {
     if (!stageRef.current) return;
 
-    // @ts-expect-error - html2canvas is dynamically imported
     const html2canvas = (await import('html2canvas')).default;
     const canvas = await html2canvas(stageRef.current, {
       backgroundColor: '#1e1e1e',

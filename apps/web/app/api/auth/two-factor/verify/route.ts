@@ -9,8 +9,13 @@ import { prisma } from '@cronkwaters/db';
 import { auth } from '@cronkwaters/auth';
 import { verifyTOTP, verifyBackupCode, decryptSecret } from '@/lib/two-factor-auth';
 
-const ENCRYPTION_KEY =
-  process.env.TWO_FACTOR_ENCRYPTION_KEY || process.env.NEXTAUTH_SECRET || 'fallback-key';
+function getEncryptionKey(): string {
+  const key = process.env.TWO_FACTOR_ENCRYPTION_KEY || process.env.NEXTAUTH_SECRET;
+  if (!key) {
+    throw new Error('TWO_FACTOR_ENCRYPTION_KEY or NEXTAUTH_SECRET must be set for 2FA support');
+  }
+  return key;
+}
 
 /**
  * POST - Verify TOTP code
@@ -56,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Decrypt secret
-    const secret = decryptSecret(user.twoFactorSecret, ENCRYPTION_KEY);
+    const secret = decryptSecret(user.twoFactorSecret, getEncryptionKey());
 
     // Clean the code input
     const cleanCode = code.replace(/\s|-/g, '');

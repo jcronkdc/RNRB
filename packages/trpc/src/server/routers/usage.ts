@@ -78,15 +78,44 @@ export const usageRouter = router({
         throw new Error('Unauthorized');
       }
 
-      // TODO: Implement usage history tracking in database
-      // For now, return current usage
       const usage = await getUserUsage(ctx.session.user.id, input.type);
+
+      const creditTypeMap: Record<string, string> = {
+        aiRequests: 'ai',
+        videoMinutes: 'video',
+        imageCredits: 'image',
+        assistantConversations: 'ai',
+      };
+
+      const creditType = creditTypeMap[input.type];
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - input.days);
+
+      const { prisma } = await import('@cronkwaters/db');
+      const purchases = await prisma.creditPurchase.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          type: creditType as any,
+          createdAt: { gte: startDate },
+        },
+        select: {
+          createdAt: true,
+          type: true,
+          unitAmount: true,
+        },
+        orderBy: { createdAt: 'asc' },
+      });
+
+      const history = purchases.map((p) => ({
+        date: p.createdAt.toISOString().split('T')[0],
+        amount: p.unitAmount,
+      }));
 
       return {
         type: input.type,
         current: usage.used,
         limit: usage.limit,
-        history: [], // Will be populated when we add usage history table
+        history,
       };
     }),
 

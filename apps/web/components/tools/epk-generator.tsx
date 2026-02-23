@@ -98,6 +98,7 @@ export function EPKGenerator() {
   const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit');
   const [activeSection, setActiveSection] = useState('basic');
   const [copied, setCopied] = useState(false);
+  const [generatingBio, setGeneratingBio] = useState(false);
 
   const updateField = (path: string, value: any) => {
     setEpkData((prev) => {
@@ -112,16 +113,48 @@ export function EPKGenerator() {
     });
   };
 
-  const generateAIBio = () => {
-    // In real implementation, this would call an AI API
-    const genres = ['rock', 'indie', 'alternative', 'pop', 'metal', 'folk'];
-    const adjectives = ['electrifying', 'soulful', 'dynamic', 'innovative', 'raw', 'powerful'];
-    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const generateAIBio = async () => {
+    setGeneratingBio(true);
+    try {
+      const res = await fetch('/api/ai/generate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'artist-bio',
+          context: {
+            artistName: epkData.artistName,
+            genre: epkData.genre,
+            location: epkData.location,
+            formed: epkData.formed,
+            members: epkData.members.filter((m) => m.name),
+          },
+        }),
+      });
 
-    updateField(
-      'bio.short',
-      `${epkData.artistName} brings ${adj} ${epkData.genre.toLowerCase()} music from ${epkData.location}. Since ${epkData.formed}, they've captivated audiences with their unique blend of sound and unforgettable live performances.`
-    );
+      if (!res.ok) throw new Error(`API returned ${res.status}`);
+
+      const data = await res.json();
+      if (data.shortBio) updateField('bio.short', data.shortBio);
+      if (data.longBio) updateField('bio.long', data.longBio);
+    } catch {
+      const memberNames = epkData.members
+        .filter((m) => m.name)
+        .map((m) => `${m.name} (${m.role})`)
+        .join(', ');
+      const adjectives = ['electrifying', 'soulful', 'dynamic', 'innovative', 'raw', 'powerful'];
+      const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+
+      updateField(
+        'bio.short',
+        `${epkData.artistName || 'This artist'} brings ${adj} ${(epkData.genre || 'original').toLowerCase()} music from ${epkData.location || 'parts unknown'}. Since ${epkData.formed || 'their formation'}, they've captivated audiences with their unique blend of sound and unforgettable live performances.`
+      );
+      updateField(
+        'bio.long',
+        `Born out of ${epkData.location || 'a shared love of music'}${epkData.formed ? ` in ${epkData.formed}` : ''}, ${epkData.artistName || 'the band'} has carved a distinctive path through the ${(epkData.genre || 'music').toLowerCase()} scene.${memberNames ? `\n\nThe current lineup features ${memberNames}.` : ''}\n\nWith a sound that defies easy categorization, ${epkData.artistName || 'they'} continue to push creative boundaries, delivering powerful studio recordings and captivating live shows that have earned them a dedicated and growing fanbase.`
+      );
+    } finally {
+      setGeneratingBio(false);
+    }
   };
 
   const copyToClipboard = () => {
@@ -151,9 +184,175 @@ Instagram: ${epkData.social.instagram}
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const downloadPDF = () => {
-    // In real implementation, this would generate a PDF
-    alert('PDF generation would be implemented here using a library like jsPDF or react-pdf');
+  const downloadPDF = async () => {
+    const { jsPDF } = await import('jspdf');
+    const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 50;
+    const contentWidth = pageWidth - margin * 2;
+    let y = 50;
+
+    const ensureSpace = (needed: number) => {
+      if (y + needed > doc.internal.pageSize.getHeight() - 50) {
+        doc.addPage();
+        y = 50;
+      }
+    };
+
+    const drawSectionTitle = (title: string) => {
+      ensureSpace(40);
+      y += 12;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(100, 80, 160);
+      doc.text(title.toUpperCase(), margin, y);
+      y += 4;
+      doc.setDrawColor(100, 80, 160);
+      doc.setLineWidth(0.75);
+      doc.line(margin, y, margin + contentWidth, y);
+      y += 16;
+      doc.setTextColor(40, 40, 40);
+    };
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(28);
+    doc.setTextColor(40, 40, 40);
+    const nameText = epkData.artistName || 'Artist EPK';
+    doc.text(nameText, pageWidth / 2, y, { align: 'center' });
+    y += 10;
+
+    if (epkData.tagline) {
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(12);
+      doc.setTextColor(120, 120, 120);
+      doc.text(epkData.tagline, pageWidth / 2, y + 14, { align: 'center' });
+      y += 24;
+    }
+
+    const details = [epkData.genre, epkData.location, epkData.formed ? `Est. ${epkData.formed}` : ''].filter(Boolean).join('  |  ');
+    if (details) {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(130, 130, 130);
+      doc.text(details, pageWidth / 2, y + 10, { align: 'center' });
+      y += 20;
+    }
+
+    y += 8;
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, margin + contentWidth, y);
+    y += 16;
+
+    if (epkData.bio.short || epkData.bio.long) {
+      drawSectionTitle('About');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+      const bioText = epkData.bio.long || epkData.bio.short;
+      const lines = doc.splitTextToSize(bioText, contentWidth);
+      for (const line of lines) {
+        ensureSpace(14);
+        doc.text(line, margin, y);
+        y += 14;
+      }
+    }
+
+    const activeMembers = epkData.members.filter((m) => m.name);
+    if (activeMembers.length > 0) {
+      drawSectionTitle('Members');
+      doc.setFontSize(10);
+      for (const member of activeMembers) {
+        ensureSpace(16);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(40, 40, 40);
+        doc.text(member.name, margin, y);
+        if (member.role) {
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(120, 120, 120);
+          doc.text(`  —  ${member.role}`, margin + doc.getTextWidth(member.name), y);
+        }
+        y += 16;
+      }
+    }
+
+    const hasStats = epkData.stats.monthlyListeners || epkData.stats.followers || epkData.stats.streamsTotal;
+    if (hasStats) {
+      drawSectionTitle('Statistics');
+      doc.setFontSize(10);
+      const statItems = [
+        { label: 'Monthly Listeners', value: epkData.stats.monthlyListeners },
+        { label: 'Social Followers', value: epkData.stats.followers },
+        { label: 'Total Streams', value: epkData.stats.streamsTotal },
+      ].filter((s) => s.value);
+      const colWidth = contentWidth / statItems.length;
+      for (let i = 0; i < statItems.length; i++) {
+        const cx = margin + colWidth * i + colWidth / 2;
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(100, 80, 160);
+        doc.setFontSize(16);
+        doc.text(statItems[i].value, cx, y, { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(120, 120, 120);
+        doc.setFontSize(8);
+        doc.text(statItems[i].label, cx, y + 14, { align: 'center' });
+      }
+      y += 32;
+    }
+
+    const nonEmptyAchievements = epkData.achievements.filter(Boolean);
+    if (nonEmptyAchievements.length > 0) {
+      drawSectionTitle('Achievements');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+      for (const achievement of nonEmptyAchievements) {
+        ensureSpace(16);
+        doc.text(`•  ${achievement}`, margin, y);
+        y += 16;
+      }
+    }
+
+    const hasContact = epkData.contact.email || epkData.contact.phone || epkData.contact.booking || epkData.contact.management;
+    if (hasContact) {
+      drawSectionTitle('Contact');
+      doc.setFontSize(10);
+      const contactLines = [
+        { label: 'Email', value: epkData.contact.email },
+        { label: 'Phone', value: epkData.contact.phone },
+        { label: 'Booking', value: epkData.contact.booking },
+        { label: 'Management', value: epkData.contact.management },
+      ].filter((c) => c.value);
+      for (const line of contactLines) {
+        ensureSpace(16);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(40, 40, 40);
+        doc.text(`${line.label}: `, margin, y);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(60, 60, 60);
+        doc.text(line.value, margin + doc.getTextWidth(`${line.label}: `), y);
+        y += 16;
+      }
+    }
+
+    const socialEntries = Object.entries(epkData.social).filter(([, v]) => v);
+    if (socialEntries.length > 0) {
+      drawSectionTitle('Online');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(60, 60, 60);
+      for (const [key, value] of socialEntries) {
+        ensureSpace(16);
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${key}: `, margin, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(value, margin + doc.getTextWidth(`${key}: `), y);
+        y += 16;
+      }
+    }
+
+    const safeName = (epkData.artistName || 'artist').replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
+    doc.save(`${safeName}-epk.pdf`);
   };
 
   const SECTIONS = [
@@ -281,9 +480,9 @@ Instagram: ${epkData.social.instagram}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-lg font-semibold">Biography</h4>
-                  <Button variant="outline" size="sm" onClick={generateAIBio} className="gap-2">
-                    <Sparkles className="h-4 w-4" />
-                    AI Generate
+                  <Button variant="outline" size="sm" onClick={generateAIBio} disabled={generatingBio} className="gap-2">
+                    <Sparkles className={`h-4 w-4 ${generatingBio ? 'animate-spin' : ''}`} />
+                    {generatingBio ? 'Generating...' : 'AI Generate'}
                   </Button>
                 </div>
                 <div>

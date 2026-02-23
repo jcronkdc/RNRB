@@ -192,46 +192,144 @@ export async function GET(request: NextRequest) {
     const user = await requireAuth();
     const { searchParams } = new URL(request.url);
 
-    const status = searchParams.get('status'); // scheduled, active, ended
-    const type = searchParams.get('type'); // upcoming, past, all
+    const status = searchParams.get('status');
+    const type = searchParams.get('type');
     const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    let whereClause = `
-      WHERE (m.organizer_id = '${user.id}' 
-             OR mp.user_id = '${user.id}'
-             OR mp.email = '${user.email}')
-    `;
+    const validStatuses = ['scheduled', 'active', 'ended'];
+    const safeStatus = status && validStatuses.includes(status) ? status : null;
 
-    if (status) {
-      whereClause += ` AND m.status = '${status}'`;
-    }
+    let meetings: any[];
 
-    if (type === 'upcoming') {
-      whereClause += ` AND (m.scheduled_start_at > NOW() OR m.status = 'active')`;
+    if (safeStatus && type === 'upcoming') {
+      meetings = await db.$queryRaw<any[]>`
+        SELECT DISTINCT
+          m.*,
+          u.name as organizer_name,
+          u.image as organizer_avatar,
+          (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
+          mp.role as my_role,
+          mp.invite_status as my_invite_status
+        FROM meetings m
+        JOIN "User" u ON m.organizer_id = u.id
+        LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
+          AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
+        WHERE (m.organizer_id = ${user.id} OR mp.user_id = ${user.id} OR mp.email = ${user.email})
+          AND m.status = ${safeStatus}
+          AND (m.scheduled_start_at > NOW() OR m.status = 'active')
+        ORDER BY 
+          CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
+          COALESCE(m.scheduled_start_at, m.created_at) DESC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `;
+    } else if (safeStatus && type === 'past') {
+      meetings = await db.$queryRaw<any[]>`
+        SELECT DISTINCT
+          m.*,
+          u.name as organizer_name,
+          u.image as organizer_avatar,
+          (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
+          mp.role as my_role,
+          mp.invite_status as my_invite_status
+        FROM meetings m
+        JOIN "User" u ON m.organizer_id = u.id
+        LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
+          AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
+        WHERE (m.organizer_id = ${user.id} OR mp.user_id = ${user.id} OR mp.email = ${user.email})
+          AND m.status = ${safeStatus}
+          AND m.status = 'ended'
+        ORDER BY 
+          CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
+          COALESCE(m.scheduled_start_at, m.created_at) DESC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `;
+    } else if (safeStatus) {
+      meetings = await db.$queryRaw<any[]>`
+        SELECT DISTINCT
+          m.*,
+          u.name as organizer_name,
+          u.image as organizer_avatar,
+          (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
+          mp.role as my_role,
+          mp.invite_status as my_invite_status
+        FROM meetings m
+        JOIN "User" u ON m.organizer_id = u.id
+        LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
+          AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
+        WHERE (m.organizer_id = ${user.id} OR mp.user_id = ${user.id} OR mp.email = ${user.email})
+          AND m.status = ${safeStatus}
+        ORDER BY 
+          CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
+          COALESCE(m.scheduled_start_at, m.created_at) DESC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `;
+    } else if (type === 'upcoming') {
+      meetings = await db.$queryRaw<any[]>`
+        SELECT DISTINCT
+          m.*,
+          u.name as organizer_name,
+          u.image as organizer_avatar,
+          (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
+          mp.role as my_role,
+          mp.invite_status as my_invite_status
+        FROM meetings m
+        JOIN "User" u ON m.organizer_id = u.id
+        LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
+          AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
+        WHERE (m.organizer_id = ${user.id} OR mp.user_id = ${user.id} OR mp.email = ${user.email})
+          AND (m.scheduled_start_at > NOW() OR m.status = 'active')
+        ORDER BY 
+          CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
+          COALESCE(m.scheduled_start_at, m.created_at) DESC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `;
     } else if (type === 'past') {
-      whereClause += ` AND m.status = 'ended'`;
+      meetings = await db.$queryRaw<any[]>`
+        SELECT DISTINCT
+          m.*,
+          u.name as organizer_name,
+          u.image as organizer_avatar,
+          (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
+          mp.role as my_role,
+          mp.invite_status as my_invite_status
+        FROM meetings m
+        JOIN "User" u ON m.organizer_id = u.id
+        LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
+          AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
+        WHERE (m.organizer_id = ${user.id} OR mp.user_id = ${user.id} OR mp.email = ${user.email})
+          AND m.status = 'ended'
+        ORDER BY 
+          CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
+          COALESCE(m.scheduled_start_at, m.created_at) DESC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `;
+    } else {
+      meetings = await db.$queryRaw<any[]>`
+        SELECT DISTINCT
+          m.*,
+          u.name as organizer_name,
+          u.image as organizer_avatar,
+          (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
+          mp.role as my_role,
+          mp.invite_status as my_invite_status
+        FROM meetings m
+        JOIN "User" u ON m.organizer_id = u.id
+        LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
+          AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
+        WHERE (m.organizer_id = ${user.id} OR mp.user_id = ${user.id} OR mp.email = ${user.email})
+        ORDER BY 
+          CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
+          COALESCE(m.scheduled_start_at, m.created_at) DESC
+        LIMIT ${limit}
+        OFFSET ${offset}
+      `;
     }
-
-    const meetings = await db.$queryRaw<any[]>`
-      SELECT DISTINCT
-        m.*,
-        u.name as organizer_name,
-        u.image as organizer_avatar,
-        (SELECT COUNT(*) FROM meeting_participants WHERE meeting_id = m.id) as participant_count,
-        mp.role as my_role,
-        mp.invite_status as my_invite_status
-      FROM meetings m
-      JOIN "User" u ON m.organizer_id = u.id
-      LEFT JOIN meeting_participants mp ON mp.meeting_id = m.id 
-        AND (mp.user_id = ${user.id} OR mp.email = ${user.email})
-      ${whereClause.includes('WHERE') ? whereClause : ''}
-      ORDER BY 
-        CASE WHEN m.status = 'active' THEN 0 ELSE 1 END,
-        COALESCE(m.scheduled_start_at, m.created_at) DESC
-      LIMIT ${limit}
-      OFFSET ${offset}
-    `;
 
     return NextResponse.json({
       meetings: meetings.map((m) => ({

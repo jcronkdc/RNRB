@@ -291,12 +291,45 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // TODO: Trigger actual Stripe transfer
-    // This would normally be handled by a background job or admin approval
+    // Trigger actual Stripe transfer to the artist's Connect account
+    let transferId: string | null = null;
+    try {
+      const Stripe = (await import('stripe')).default;
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+        apiVersion: '2025-02-24.acacia',
+      });
+
+      const transfer = await stripe.transfers.create({
+        amount: pendingAmount,
+        currency: 'usd',
+        destination: user.stripeConnectAccountId,
+        description: `Artist merch payout - ${ordersCount} orders`,
+        metadata: {
+          payoutId: payout.id,
+          artistId: session.user.id,
+          periodStart: payout.periodStart.toISOString(),
+          periodEnd: payout.periodEnd.toISOString(),
+        },
+      });
+
+      transferId = transfer.id;
+
+      await prisma.artistMerchPayout.update({
+        where: { id: payout.id },
+        data: {
+          status: 'PROCESSING',
+          stripeTransferId: transfer.id,
+          processedAt: new Date(),
+        },
+      });
+    } catch (stripeError) {
+      console.error('[ARTIST-EARNINGS] Stripe transfer failed:', stripeError);
+      // Payout record stays PENDING — admin can retry or process manually
+    }
 
     return NextResponse.json({
       success: true,
-      payout,
+      payout: { ...payout, stripeTransferId: transferId },
       message: `Payout request submitted for $${(pendingAmount / 100).toFixed(2)}`,
     });
   } catch (error) {

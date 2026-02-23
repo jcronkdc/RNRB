@@ -636,7 +636,7 @@ export function GearInventory() {
         )}
       </AnimatePresence>
 
-      {/* Add/Edit Modal - Simplified for brevity */}
+      {/* Add/Edit Modal */}
       <AnimatePresence>
         {showAddModal && (
           <motion.div
@@ -653,36 +653,341 @@ export function GearInventory() {
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
-              className="bg-panel w-full max-w-lg rounded-2xl p-6"
+              className="bg-panel max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl p-6"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="mb-4 text-lg font-bold">
+              <h3 className="mb-5 text-lg font-bold">
                 {editingItem ? 'Edit Gear' : 'Add New Gear'}
               </h3>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Full form would go here with all fields for name, brand, model, serial number,
-                purchase info, insurance details, maintenance schedule, etc.
-              </p>
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowAddModal(false);
-                    setEditingItem(null);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={() => {
-                    // In real implementation, this would save form data
-                    setShowAddModal(false);
-                    setEditingItem(null);
-                  }}
-                >
-                  Save
-                </Button>
-              </div>
+              <form
+                key={editingItem?.id ?? 'new'}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.currentTarget);
+                  const str = (k: string) => ((fd.get(k) as string) ?? '').trim();
+                  const num = (k: string) => parseFloat(str(k)) || 0;
+                  const optStr = (k: string) => str(k) || undefined;
+                  const optNum = (k: string) => {
+                    const v = str(k);
+                    return v ? parseFloat(v) : undefined;
+                  };
+                  saveItem({
+                    id: editingItem?.id || crypto.randomUUID(),
+                    name: str('name'),
+                    brand: str('brand'),
+                    model: str('model'),
+                    category: str('category'),
+                    serialNumber: str('serialNumber'),
+                    purchaseDate: str('purchaseDate'),
+                    purchasePrice: num('purchasePrice'),
+                    currentValue: num('currentValue'),
+                    condition: (str('condition') as GearItem['condition']) || 'good',
+                    location: str('location'),
+                    notes: str('notes'),
+                    imageUrl: editingItem?.imageUrl,
+                    insurance: {
+                      covered: fd.has('insuranceCovered'),
+                      policyNumber: optStr('policyNumber'),
+                      insuredValue: optNum('insuredValue'),
+                    },
+                    maintenance: {
+                      lastService: optStr('lastService'),
+                      nextService: optStr('nextService'),
+                      serviceNotes: optStr('serviceNotes'),
+                    },
+                  });
+                }}
+                className="space-y-5"
+              >
+                {/* Basic Info */}
+                <div className="space-y-3">
+                  <div>
+                    <label htmlFor="gear-name" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      id="gear-name"
+                      name="name"
+                      type="text"
+                      required
+                      defaultValue={editingItem?.name ?? ''}
+                      placeholder="e.g. Fender Stratocaster"
+                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="gear-brand" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Brand
+                      </label>
+                      <input
+                        id="gear-brand"
+                        name="brand"
+                        type="text"
+                        defaultValue={editingItem?.brand ?? ''}
+                        placeholder="Fender"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="gear-model" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Model
+                      </label>
+                      <input
+                        id="gear-model"
+                        name="model"
+                        type="text"
+                        defaultValue={editingItem?.model ?? ''}
+                        placeholder="American Pro II"
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="gear-category" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Category <span className="text-red-400">*</span>
+                      </label>
+                      <select
+                        id="gear-category"
+                        name="category"
+                        required
+                        defaultValue={editingItem?.category ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      >
+                        <option value="" disabled>
+                          Select category
+                        </option>
+                        {CATEGORIES.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="gear-condition" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Condition
+                      </label>
+                      <select
+                        id="gear-condition"
+                        name="condition"
+                        defaultValue={editingItem?.condition ?? 'good'}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      >
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                        <option value="poor">Poor</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Details */}
+                <div className="grid grid-cols-2 gap-3 border-t border-border/50 pt-4">
+                  <div>
+                    <label htmlFor="gear-serial" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Serial Number
+                    </label>
+                    <input
+                      id="gear-serial"
+                      name="serialNumber"
+                      type="text"
+                      defaultValue={editingItem?.serialNumber ?? ''}
+                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="gear-location" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Location
+                    </label>
+                    <input
+                      id="gear-location"
+                      name="location"
+                      type="text"
+                      defaultValue={editingItem?.location ?? ''}
+                      placeholder="Studio, Home, etc."
+                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Financial */}
+                <div className="space-y-3 border-t border-border/50 pt-4">
+                  <h4 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                    <DollarSign className="h-4 w-4" />
+                    Financial
+                  </h4>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label htmlFor="gear-purchase-date" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Purchase Date
+                      </label>
+                      <input
+                        id="gear-purchase-date"
+                        name="purchaseDate"
+                        type="date"
+                        defaultValue={editingItem?.purchaseDate ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="gear-purchase-price" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Purchase Price ($)
+                      </label>
+                      <input
+                        id="gear-purchase-price"
+                        name="purchasePrice"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        defaultValue={editingItem?.purchasePrice ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="gear-current-value" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Current Value ($)
+                      </label>
+                      <input
+                        id="gear-current-value"
+                        name="currentValue"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        defaultValue={editingItem?.currentValue ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Insurance */}
+                <div className="space-y-3 border-t border-border/50 pt-4">
+                  <h4 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                    <Shield className="h-4 w-4" />
+                    Insurance
+                  </h4>
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl bg-white/5 px-3 py-2.5">
+                    <input
+                      name="insuranceCovered"
+                      type="checkbox"
+                      defaultChecked={editingItem?.insurance?.covered ?? false}
+                      className="h-4 w-4 rounded accent-brand-primary"
+                    />
+                    <span className="text-sm">This item is insured</span>
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="gear-policy" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Policy Number
+                      </label>
+                      <input
+                        id="gear-policy"
+                        name="policyNumber"
+                        type="text"
+                        defaultValue={editingItem?.insurance?.policyNumber ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="gear-insured-value" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Insured Value ($)
+                      </label>
+                      <input
+                        id="gear-insured-value"
+                        name="insuredValue"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        defaultValue={editingItem?.insurance?.insuredValue ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Maintenance */}
+                <div className="space-y-3 border-t border-border/50 pt-4">
+                  <h4 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                    <Wrench className="h-4 w-4" />
+                    Maintenance
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label htmlFor="gear-last-service" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Last Service
+                      </label>
+                      <input
+                        id="gear-last-service"
+                        name="lastService"
+                        type="date"
+                        defaultValue={editingItem?.maintenance?.lastService ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="gear-next-service" className="mb-1 block text-xs font-medium text-muted-foreground">
+                        Next Service
+                      </label>
+                      <input
+                        id="gear-next-service"
+                        name="nextService"
+                        type="date"
+                        defaultValue={editingItem?.maintenance?.nextService ?? ''}
+                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="gear-service-notes" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      Service Notes
+                    </label>
+                    <textarea
+                      id="gear-service-notes"
+                      name="serviceNotes"
+                      rows={2}
+                      defaultValue={editingItem?.maintenance?.serviceNotes ?? ''}
+                      placeholder="Any maintenance notes..."
+                      className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div className="border-t border-border/50 pt-4">
+                  <label htmlFor="gear-notes" className="mb-1 block text-xs font-medium text-muted-foreground">
+                    Notes
+                  </label>
+                  <textarea
+                    id="gear-notes"
+                    name="notes"
+                    rows={3}
+                    defaultValue={editingItem?.notes ?? ''}
+                    placeholder="Additional notes about this item..."
+                    className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-none"
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end gap-2 border-t border-border/50 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowAddModal(false);
+                      setEditingItem(null);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={saving} className="gap-2">
+                    {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {saving ? 'Saving...' : editingItem ? 'Update Gear' : 'Add Gear'}
+                  </Button>
+                </div>
+              </form>
             </motion.div>
           </motion.div>
         )}

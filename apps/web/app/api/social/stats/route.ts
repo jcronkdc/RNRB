@@ -53,8 +53,15 @@ export async function GET() {
           },
         })
         .catch(() => 0), // Handle if Message model doesn't exist
-      // Profile views (from last 30 days) - placeholder for now
-      Promise.resolve(0), // Will implement profile views tracking later
+      // Profile engagement (follows + track plays received in last 30 days)
+      prisma.userFollow
+        .count({
+          where: {
+            followingId: userId,
+            createdAt: { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+          },
+        })
+        .catch(() => 0),
     ]);
 
     return NextResponse.json({

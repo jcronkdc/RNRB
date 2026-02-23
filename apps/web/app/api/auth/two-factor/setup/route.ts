@@ -18,8 +18,13 @@ import {
   formatBackupCode,
 } from '@/lib/two-factor-auth';
 
-const ENCRYPTION_KEY =
-  process.env.TWO_FACTOR_ENCRYPTION_KEY || process.env.NEXTAUTH_SECRET || 'fallback-key';
+function getEncryptionKey(): string {
+  const key = process.env.TWO_FACTOR_ENCRYPTION_KEY || process.env.NEXTAUTH_SECRET;
+  if (!key) {
+    throw new Error('TWO_FACTOR_ENCRYPTION_KEY or NEXTAUTH_SECRET must be set for 2FA support');
+  }
+  return key;
+}
 
 /**
  * POST - Start 2FA setup (generate secret)
@@ -58,7 +63,7 @@ export async function POST(request: NextRequest) {
     const hashedBackupCodes = hashBackupCodes(backupCodes);
 
     // Encrypt secret for storage
-    const encryptedSecret = encryptSecret(secret, ENCRYPTION_KEY);
+    const encryptedSecret = encryptSecret(secret, getEncryptionKey());
 
     // Store encrypted secret and backup codes (not enabled yet)
     await prisma.user.update({
@@ -120,7 +125,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: '2FA secret not found' }, { status: 400 });
     }
 
-    const secret = decryptSecret(user.twoFactorSecret, ENCRYPTION_KEY);
+    const secret = decryptSecret(user.twoFactorSecret, getEncryptionKey());
     const isValid = verifyTOTP(secret, code);
 
     if (!isValid) {
