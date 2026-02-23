@@ -81,7 +81,7 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: [
       'lucide-react',
-      'framer-motion',
+      'motion',
       '@cronkwaters/ui',
       '@radix-ui/react-dialog',
       '@radix-ui/react-dropdown-menu',

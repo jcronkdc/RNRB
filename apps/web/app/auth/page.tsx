@@ -88,6 +88,20 @@ function AuthForm() {
     }
   }, [errorParam]);
 
+  const signInHref = `/auth${redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''}`;
+
+  const attemptSignIn = async (isNewUser: boolean, retries = 1): Promise<void> => {
+    try {
+      await completeCredentialsSignIn(isNewUser);
+    } catch (err) {
+      if (retries > 0) {
+        await new Promise((r) => setTimeout(r, 800));
+        return attemptSignIn(isNewUser, retries - 1);
+      }
+      throw err;
+    }
+  };
+
   const handlePasswordAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -104,11 +118,31 @@ function AuthForm() {
         const data = await response.json();
 
         if (!response.ok) {
+          if (response.status === 409 || data.code === 'EMAIL_EXISTS') {
+            setMessage({
+              type: 'error',
+              text: 'This email is already registered. Try signing in instead.',
+            });
+            setLoading(false);
+            return;
+          }
           throw new Error(data.error || 'Registration failed');
         }
 
         setMessage({ type: 'success', text: 'Account created! Signing you in...' });
-        await completeCredentialsSignIn(true);
+
+        try {
+          await attemptSignIn(true);
+        } catch {
+          setMessage({
+            type: 'success',
+            text: 'Account created! Redirecting to sign in...',
+          });
+          setLoading(false);
+          setTimeout(() => {
+            window.location.href = signInHref;
+          }, 1500);
+        }
       } else {
         await completeCredentialsSignIn(false);
       }
@@ -406,7 +440,7 @@ function AuthForm() {
                 <Link
                   href={
                     isSignup
-                      ? `/auth${redirectParam ? `?redirect=${encodeURIComponent(redirectParam)}` : ''}`
+                      ? signInHref
                       : `/auth?signup=true${redirectParam ? `&redirect=${encodeURIComponent(redirectParam)}` : ''}`
                   }
                   className="font-medium transition-colors hover:opacity-80"

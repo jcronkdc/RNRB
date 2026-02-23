@@ -83,7 +83,10 @@ export async function POST(request: Request) {
     });
 
     if (existingUser) {
-      return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Email already registered', code: 'EMAIL_EXISTS' },
+        { status: 409 }
+      );
     }
 
     // Hash password with bcrypt (cost factor 12 for better security)
@@ -113,13 +116,16 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error('[REGISTER] Error:', error instanceof Error ? error.message : error);
+    const errMsg = error instanceof Error ? error.message : String(error);
+    const errStack = error instanceof Error ? error.stack : undefined;
+    console.error('[REGISTER] Error:', errMsg);
+    if (errStack) console.error('[REGISTER] Stack:', errStack);
+
     return NextResponse.json(
       {
         error: 'Failed to create account. Please try again.',
-        ...(process.env.NODE_ENV === 'development' && {
-          details: error instanceof Error ? error.message : String(error),
-        }),
+        code: 'INTERNAL_ERROR',
+        ...(process.env.NODE_ENV === 'development' && { details: errMsg }),
       },
       { status: 500 }
     );
