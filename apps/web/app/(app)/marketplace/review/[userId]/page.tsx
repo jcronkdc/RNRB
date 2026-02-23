@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   ArrowLeft,
   Star,

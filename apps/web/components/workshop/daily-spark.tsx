@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Check, RefreshCw } from '@/components/ui/custom-icons';
 import { getDailySpark } from '@/lib/workshop-voice';
 

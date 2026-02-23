@@ -17,7 +17,7 @@
 
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { MousePointer2 } from '@/components/ui/custom-icons';
 
 import { type CursorPosition } from '@/hooks/use-collaborative-cursors';

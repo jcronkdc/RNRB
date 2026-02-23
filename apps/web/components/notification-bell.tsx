@@ -7,7 +7,7 @@
  * Like Tokyo subway alert system - instant, clear, actionable
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Bell, Check, CheckCheck, Trash2, X, Settings } from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';

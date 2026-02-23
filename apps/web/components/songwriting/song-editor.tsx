@@ -20,7 +20,7 @@
  * - Sections are rendered as a vertical list with subtle type indicators
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Plus, X, GripVertical, ChevronDown } from '@/components/ui/custom-icons';
 import {
   useState,

@@ -7,7 +7,7 @@
  * Perfect for live performances and band rehearsals.
  */
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Play,
   Pause,

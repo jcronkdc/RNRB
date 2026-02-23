@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ShoppingBag, Bell, Mail, CheckCircle } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';

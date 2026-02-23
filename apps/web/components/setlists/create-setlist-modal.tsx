@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'motion/react';
 import {
   X,
   Music,

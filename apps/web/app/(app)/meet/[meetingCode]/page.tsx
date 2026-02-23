@@ -1,7 +1,7 @@
 'use client';
 
 import DailyIframe from '@daily-co/daily-js';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Video,
   VideoOff,

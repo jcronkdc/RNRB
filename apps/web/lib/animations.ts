@@ -5,7 +5,7 @@
  * a consistent, premium feel across the app.
  */
 
-import type { Variants, Transition } from 'framer-motion';
+import type { Variants, Transition } from 'motion/react';
 
 // =============================================================================
 // BUTTON ANIMATIONS

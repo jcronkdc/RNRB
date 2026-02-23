@@ -7,7 +7,7 @@
  * See who added which chord and discuss alternatives.
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Music2,
   Plus,

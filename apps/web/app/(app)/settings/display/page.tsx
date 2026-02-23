@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Monitor, Sun, Moon, Check, Palette } from '@/components/ui/custom-icons';
 import { WorkshopPageHeader } from '@/components/workshop/page-header';
 import { useTheme } from '@/components/theme';

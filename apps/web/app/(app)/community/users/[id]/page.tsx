@@ -1,7 +1,7 @@
 'use client';
 
 import { formatDistanceToNow, format } from 'date-fns';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Loader2,
   Music,

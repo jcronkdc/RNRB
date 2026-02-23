@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Lock, Users, Globe, Sparkles, ArrowLeft, Folder } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

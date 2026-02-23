@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from '@/components/ui/custom-icons';
 import { useEffect, useState, useCallback, useRef } from 'react';
 

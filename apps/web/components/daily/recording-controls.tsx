@@ -2,7 +2,7 @@
 
 import { Card, Button } from '@cronkwaters/ui';
 import { useRecording, useDaily, useParticipantCounts } from '@daily-co/daily-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Disc, Square, Pause, Play, Settings, AlertCircle } from '@/components/ui/custom-icons';
 import { useState, useCallback, useEffect, useMemo } from 'react';
 

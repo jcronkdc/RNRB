@@ -17,7 +17,7 @@ import {
   Copy,
   Check,
 } from '@/components/ui/custom-icons';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface FileViewerProps {
   url: string;

@@ -8,7 +8,7 @@ import {
   useLocalParticipant,
   DailyVideo,
 } from '@daily-co/daily-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Radio,
   X,

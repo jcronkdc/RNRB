@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Loader2, Eye, EyeOff } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';

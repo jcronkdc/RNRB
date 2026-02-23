@@ -7,7 +7,7 @@
  */
 
 import { formatDistanceToNow } from 'date-fns';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Activity, AlertCircle } from '@/components/ui/custom-icons';
 import { memo, useMemo } from 'react';
 

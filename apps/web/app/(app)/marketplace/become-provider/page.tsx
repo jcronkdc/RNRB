@@ -7,7 +7,7 @@
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Sparkles,
   CheckCircle,

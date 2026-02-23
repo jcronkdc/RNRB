@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { motion, AnimatePresence, Reorder } from 'framer-motion';
+import { motion, AnimatePresence, Reorder } from 'motion/react';
 import Link from 'next/link';
 import { useWorkspace } from './workspace-context';
 import { getToolByKey, type ToolDefinition } from './tool-catalog';

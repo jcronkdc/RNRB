@@ -3,7 +3,7 @@
 import { Card, Button } from '@cronkwaters/ui';
 import Daily, { DailyCall } from '@daily-co/daily-js';
 import { DailyProvider } from '@daily-co/daily-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Radio,
   Disc,

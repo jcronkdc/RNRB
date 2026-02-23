@@ -8,7 +8,7 @@
  * so we don't need ChannelProvider from ably/react.
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { User, Circle } from '@/components/ui/custom-icons';
 import { Component, type ReactNode } from 'react';
 

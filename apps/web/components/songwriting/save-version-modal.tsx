@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { GitBranch, Save, Sparkles, X } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 

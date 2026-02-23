@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Plus, Minus, ShoppingBag, Trash2, ArrowRight } from '@/components/ui/custom-icons';
 import { useCart, formatPrice } from '@/lib/merch/cart-context';
 import Image from 'next/image';

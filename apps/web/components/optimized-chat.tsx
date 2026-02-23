@@ -15,7 +15,7 @@
  */
 
 import { Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Send, MoreVertical, Loader2, WifiOff } from '@/components/ui/custom-icons';
 import { useEffect, useState, useRef } from 'react';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Loader2, Eye, EyeOff } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';

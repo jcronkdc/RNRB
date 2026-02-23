@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Maximize2, X } from '@/components/ui/custom-icons';
 import { useFocusMode } from '@/hooks/use-focus-mode';
 import { useState, useEffect } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { FileText, Sparkles, X, Check, AlertCircle } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 

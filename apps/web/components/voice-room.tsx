@@ -17,7 +17,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { DailyProvider } from '@daily-co/daily-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Mic, MicOff, PhoneOff, Volume2, Settings } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 

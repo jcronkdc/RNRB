@@ -12,7 +12,7 @@
  * Just: "I want this person in my song."
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { UserPlus, X, Check, Loader2, Copy } from '@/components/ui/custom-icons';
 import { useState, useCallback, useRef, useEffect } from 'react';
 

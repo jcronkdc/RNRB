@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { MapPin, Ticket, ExternalLink } from '@/components/ui/custom-icons';
 
 interface Show {

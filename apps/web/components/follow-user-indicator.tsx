@@ -10,7 +10,7 @@
  */
 
 import { Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Eye, X, UserCheck } from '@/components/ui/custom-icons';
 
 import type { PresenceMember } from '@/hooks/use-enhanced-presence';

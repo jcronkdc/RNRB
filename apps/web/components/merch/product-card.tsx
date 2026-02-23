@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ShoppingBag, Plus, Check, ZoomIn } from '@/components/ui/custom-icons';
 import { useCart, formatPrice, MerchProduct } from '@/lib/merch/cart-context';
 import Image from 'next/image';

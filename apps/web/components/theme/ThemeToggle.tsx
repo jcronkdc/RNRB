@@ -3,7 +3,7 @@
 import { Sun, Moon, Monitor } from '@/components/ui/custom-icons';
 import { useThemeSafe } from './theme-provider';
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface ThemeToggleProps {
   /** Show expanded dropdown with system option */

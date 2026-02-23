@@ -2,7 +2,7 @@
 
 import { trpc } from '@cronkwaters/trpc/client/react';
 import { Card, Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   CreditCard,
   Sparkles,

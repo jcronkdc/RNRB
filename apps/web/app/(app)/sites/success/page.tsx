@@ -10,7 +10,7 @@
  * - Share options
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { SettingsSkeleton } from '@/components/loading-skeletons';
 import {
   CheckCircle,

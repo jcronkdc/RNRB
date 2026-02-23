@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Send, Loader2, CheckCircle } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 
