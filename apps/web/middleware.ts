@@ -180,6 +180,53 @@ export async function middleware(request: NextRequest) {
   }
 
   // ============================================
+  // CSRF PROTECTION FOR API MUTATIONS
+  // ============================================
+  const isApiMutation =
+    pathname.startsWith('/api/') &&
+    ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method);
+
+  if (isApiMutation) {
+    const origin = request.headers.get('origin');
+    const referer = request.headers.get('referer');
+
+    // Webhooks and external callbacks don't send Origin headers
+    const isWebhook =
+      pathname.includes('/webhook') ||
+      pathname.includes('/callback') ||
+      pathname.startsWith('/api/trpc');
+
+    if (!isWebhook && process.env.NODE_ENV === 'production') {
+      const allowedOrigins = [
+        'https://cronkwaters.com',
+        'https://www.cronkwaters.com',
+        'https://rnrb.me',
+        'https://www.rnrb.me',
+        'https://rnrb.app',
+        'https://www.rnrb.app',
+        'https://rnrb.rocks',
+        'https://www.rnrb.rocks',
+        'https://rocknrollbasement.com',
+        'https://www.rocknrollbasement.com',
+        process.env.NEXTAUTH_URL,
+        process.env.NEXT_PUBLIC_APP_URL,
+      ].filter(Boolean) as string[];
+
+      const originValid =
+        origin && allowedOrigins.some((allowed) => origin.startsWith(allowed));
+      const refererValid =
+        referer && allowedOrigins.some((allowed) => referer.startsWith(allowed));
+
+      if (!originValid && !refererValid) {
+        return NextResponse.json(
+          { error: 'Invalid request origin' },
+          { status: 403 }
+        );
+      }
+    }
+  }
+
+  // ============================================
   // STANDARD AUTH ROUTING
   // ============================================
   // Check if the current path is protected

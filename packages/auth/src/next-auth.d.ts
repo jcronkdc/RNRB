@@ -10,6 +10,7 @@ declare module 'next-auth' {
       image?: string | null;
       organizationIds: string[];
       activeOrganizationId?: string;
+      profileCompleted?: boolean;
     };
   }
 
@@ -23,5 +24,7 @@ declare module 'next-auth/jwt' {
     userId?: string;
     organizationIds?: string[];
     activeOrganizationId?: string;
+    profileCompleted?: boolean;
+    rotatedAt?: number;
   }
 }

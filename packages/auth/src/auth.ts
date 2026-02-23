@@ -2,14 +2,15 @@ import { prisma } from '@cronkwaters/db';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import NextAuth, { type Session } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
+import NextAuth from 'next-auth';
 import type { Adapter } from 'next-auth/adapters';
 import Credentials from 'next-auth/providers/credentials';
 import Email from 'next-auth/providers/nodemailer';
 import Google from 'next-auth/providers/google';
 
 import { env } from './env';
+
+const OWNER_EMAIL = 'justincronk@pm.me';
 
 // NextAuth v5 configuration
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -106,121 +107,113 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, user, trigger, session, account }) {
-      // Session fixation protection: Regenerate token ID on sign in
-      if (user) {
-        // Set user ID (required for all auth providers)
-        (token as JWT & { userId?: string }).userId = user.id;
+    async signIn({ user, account }) {
+      if (!user?.email) return true;
 
-        // Check if user has completed profile (for new user redirect)
+      const email = user.email.trim().toLowerCase();
+
+      try {
+        // Auto-provision isOwner for the platform owner on every sign-in
+        if (email === OWNER_EMAIL) {
+          await prisma.user.updateMany({
+            where: { email },
+            data: { isOwner: true },
+          });
+        }
+
+        // For OAuth providers, ensure the user record has subscriptionTier set
+        if (account?.provider !== 'credentials') {
+          const dbUser = await prisma.user.findUnique({
+            where: { email },
+            select: { subscriptionTier: true, subscriptionStatus: true },
+          });
+          if (dbUser && !dbUser.subscriptionStatus) {
+            await prisma.user.update({
+              where: { email },
+              data: { subscriptionTier: 'free', subscriptionStatus: 'active' },
+            });
+          }
+        }
+      } catch (error) {
+        console.error('[AUTH] signIn callback error:', error instanceof Error ? error.message : error);
+      }
+
+      return true;
+    },
+
+    async jwt({ token, user, trigger, session, account }) {
+      if (user) {
+        token.userId = user.id;
+
         if (user.id) {
           try {
             const dbUser = await prisma.user.findUnique({
               where: { id: user.id },
               select: { profileCompleted: true },
             });
-            (token as JWT & { profileCompleted?: boolean }).profileCompleted =
-              dbUser?.profileCompleted ?? false;
+            token.profileCompleted = dbUser?.profileCompleted ?? false;
           } catch (error) {
             console.error('[AUTH] Failed to check profile completion:', error instanceof Error ? error.message : error);
-            (token as JWT & { profileCompleted?: boolean }).profileCompleted = false;
+            token.profileCompleted = false;
           }
         }
 
-        // Generate new session token ID to prevent session fixation
-        if (account) {
-          token.jti = crypto.randomBytes(32).toString('hex');
-          token.iat = Math.floor(Date.now() / 1000);
-          // Store session rotation timestamp
-          (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
-        } else {
-          // For credentials provider (no account object)
-          token.jti = crypto.randomBytes(32).toString('hex');
-          token.iat = Math.floor(Date.now() / 1000);
-          (token as JWT & { rotatedAt?: number }).rotatedAt = Date.now();
-        }
+        // Session fixation protection: regenerate token ID on sign-in
+        token.jti = crypto.randomBytes(32).toString('hex');
+        token.iat = Math.floor(Date.now() / 1000);
+        token.rotatedAt = Date.now();
       }
 
-      // Session rotation: Regenerate token periodically
-      const tokenWithExtras = token as JWT & {
-        userId?: string;
-        organizationIds?: string[];
-        activeOrganizationId?: string;
-        rotatedAt?: number;
-        jti?: string;
-        profileCompleted?: boolean;
-      };
-
       // Rotate session token every 60 minutes
-      const ROTATION_INTERVAL = 60 * 60 * 1000; // 1 hour
-      if (tokenWithExtras.rotatedAt && Date.now() - tokenWithExtras.rotatedAt > ROTATION_INTERVAL) {
-        tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
-        tokenWithExtras.rotatedAt = Date.now();
+      const ROTATION_INTERVAL = 60 * 60 * 1000;
+      if (token.rotatedAt && Date.now() - token.rotatedAt > ROTATION_INTERVAL) {
+        token.jti = crypto.randomBytes(32).toString('hex');
+        token.rotatedAt = Date.now();
       }
 
       if (trigger === 'update') {
         if (session?.activeOrganizationId) {
-          tokenWithExtras.activeOrganizationId = session.activeOrganizationId;
+          token.activeOrganizationId = session.activeOrganizationId;
         }
-        // Update profile completion status if changed
         if (session?.profileCompleted !== undefined) {
-          tokenWithExtras.profileCompleted = session.profileCompleted;
+          token.profileCompleted = session.profileCompleted;
         }
-        // Regenerate token on manual update
-        tokenWithExtras.jti = crypto.randomBytes(32).toString('hex');
-        tokenWithExtras.rotatedAt = Date.now();
+        token.jti = crypto.randomBytes(32).toString('hex');
+        token.rotatedAt = Date.now();
       }
 
-      if (tokenWithExtras.userId && (!tokenWithExtras.organizationIds || trigger === 'update')) {
+      if (token.userId && (!token.organizationIds || trigger === 'update')) {
         try {
           const memberships = await prisma.membership.findMany({
-            where: { userId: tokenWithExtras.userId as string },
+            where: { userId: token.userId },
             include: { org: true },
           });
 
-          tokenWithExtras.organizationIds = memberships.map(
+          token.organizationIds = memberships.map(
             (membership: { orgId: string }) => membership.orgId
           );
-          tokenWithExtras.activeOrganizationId =
+          token.activeOrganizationId =
             (session?.activeOrganizationId as string | undefined) ||
-            (tokenWithExtras.activeOrganizationId as string | undefined) ||
+            token.activeOrganizationId ||
             memberships[0]?.orgId;
         } catch (error) {
           console.error('[AUTH] Failed to fetch memberships:', error instanceof Error ? error.message : error);
-          tokenWithExtras.organizationIds = tokenWithExtras.organizationIds || [];
+          token.organizationIds = token.organizationIds || [];
         }
       }
 
-      return tokenWithExtras;
+      return token;
     },
 
     async session({ session, token }) {
-      const tokenWithExtras = token as JWT & {
-        userId?: string;
-        organizationIds?: string[];
-        activeOrganizationId?: string;
-        profileCompleted?: boolean;
-      };
-      const sessionWithExtras = session as Session & {
-        user?: {
-          id?: string;
-          organizationIds?: string[];
-          activeOrganizationId?: string;
-          profileCompleted?: boolean;
-        };
-      };
-
-      if (sessionWithExtras.user) {
-        sessionWithExtras.user.id = tokenWithExtras.userId as string;
-        sessionWithExtras.user.organizationIds =
-          (tokenWithExtras.organizationIds as string[]) ?? [];
-        sessionWithExtras.user.activeOrganizationId = tokenWithExtras.activeOrganizationId as
-          | string
-          | undefined;
-        sessionWithExtras.user.profileCompleted = tokenWithExtras.profileCompleted ?? false;
+      if (session.user) {
+        session.user.id = token.userId as string;
+        session.user.organizationIds = token.organizationIds ?? [];
+        session.user.activeOrganizationId = token.activeOrganizationId;
+        session.user.profileCompleted = token.profileCompleted ?? false;
       }
 
-      return sessionWithExtras;
+      return session;
     },
   },
 

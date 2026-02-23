@@ -75,7 +75,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (status === 'loading') return;
 
       if (!session?.user) {
-        router.replace('/auth/signin?callbackUrl=/admin');
+        router.replace('/auth?from=/admin');
         return;
       }
 

@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 import { authLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getClientIp, logSecurityEvent } from '@/lib/security';
 
+const OWNER_EMAIL = 'justincronk@pm.me';
+
 export async function POST(request: Request) {
   try {
     // 🔒 RATE LIMITING: Prevent brute-force account creation (5 attempts per minute per IP)
@@ -87,7 +89,7 @@ export async function POST(request: Request) {
     // Hash password with bcrypt (cost factor 12 for better security)
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create user
+    // Create user (auto-flag platform owner)
     const user = await prisma.user.create({
       data: {
         email,
@@ -96,6 +98,7 @@ export async function POST(request: Request) {
         subscriptionTier: 'free',
         subscriptionStatus: 'active',
         profileCompleted: false,
+        isOwner: email === OWNER_EMAIL,
       },
       select: {
         id: true,
