@@ -155,7 +155,7 @@ export function CountdownSection({ content, theme, siteId }: CountdownSectionPro
           {value.toString().padStart(2, '0')}
         </span>
       </div>
-      <span className="text-sm uppercase tracking-wider text-white/70">{label}</span>
+      <span className="text-sm tracking-wider text-white/70 uppercase">{label}</span>
     </div>
   );
 
@@ -194,7 +194,7 @@ export function CountdownSection({ content, theme, siteId }: CountdownSectionPro
         {/* Release Type Badge */}
         <div className="mb-4">
           <span
-            className="inline-block rounded-full px-4 py-1 text-sm font-semibold uppercase tracking-wider"
+            className="inline-block rounded-full px-4 py-1 text-sm font-semibold tracking-wider uppercase"
             style={{ background: accentColor, color: '#fff' }}
           >
             New {releaseType}
@@ -239,7 +239,7 @@ export function CountdownSection({ content, theme, siteId }: CountdownSectionPro
         {/* Pre-save Links */}
         {!isExpired && presaveLinks.length > 0 && (
           <div className="mb-8">
-            <p className="mb-4 text-sm uppercase tracking-wider text-white/70">Pre-save Now</p>
+            <p className="mb-4 text-sm tracking-wider text-white/70 uppercase">Pre-save Now</p>
             <div className="flex flex-wrap justify-center gap-3">
               {presaveLinks.map((link) => (
                 <a

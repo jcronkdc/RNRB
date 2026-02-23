@@ -143,7 +143,7 @@ export function LivePreview({ subdomain, refreshKey = 0 }: LivePreviewProps) {
           {/* Notch for mobile */}
           {device === 'mobile' && (
             <div
-              className="absolute left-1/2 top-0 z-10 h-6 w-32 -translate-x-1/2 rounded-b-2xl"
+              className="absolute top-0 left-1/2 z-10 h-6 w-32 -translate-x-1/2 rounded-b-2xl"
               style={{ background: '#1a1a1a' }}
             />
           )}

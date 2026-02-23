@@ -105,7 +105,7 @@ export function LyricsSection({ content, theme }: LyricsSectionProps) {
             <div className="relative">
               <Search
                 size={20}
-                className="absolute left-4 top-1/2 -translate-y-1/2"
+                className="absolute top-1/2 left-4 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -113,7 +113,7 @@ export function LyricsSection({ content, theme }: LyricsSectionProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search songs or lyrics..."
-                className="w-full rounded-xl py-4 pl-12 pr-4"
+                className="w-full rounded-xl py-4 pr-4 pl-12"
                 style={{
                   background: 'var(--panel)',
                   color: 'var(--text)',
@@ -249,7 +249,7 @@ export function LyricsSection({ content, theme }: LyricsSectionProps) {
                       {/* Lyrics */}
                       <div className="p-6">
                         <pre
-                          className="whitespace-pre-wrap font-sans leading-relaxed"
+                          className="font-sans leading-relaxed whitespace-pre-wrap"
                           style={{ color: 'var(--text)' }}
                         >
                           {song.lyrics}

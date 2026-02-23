@@ -147,7 +147,7 @@ export function ImageUpload({
           )}
 
           {uploadProgress === 100 && (
-            <div className="absolute right-2 top-2 rounded-full bg-green-500 p-2">
+            <div className="absolute top-2 right-2 rounded-full bg-green-500 p-2">
               <Check size={16} className="text-white" />
             </div>
           )}

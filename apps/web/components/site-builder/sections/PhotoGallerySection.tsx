@@ -202,7 +202,7 @@ export function PhotoGallerySection({ content, styles }: PhotoGallerySectionProp
           {/* Close Button */}
           <button
             onClick={closeLightbox}
-            className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
+            className="absolute top-4 right-4 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20"
           >
             <X size={24} />
           </button>
@@ -242,7 +242,7 @@ export function PhotoGallerySection({ content, styles }: PhotoGallerySectionProp
           </div>
 
           {/* Caption & Counter */}
-          <div className="absolute bottom-4 left-0 right-0 text-center">
+          <div className="absolute right-0 bottom-4 left-0 text-center">
             {photos[selectedIndex].caption && (
               <p className="mb-2 text-white">{photos[selectedIndex].caption}</p>
             )}
@@ -392,7 +392,7 @@ export function PhotoGallerySectionEditor({
                 <Image src={photo.url} alt={photo.alt || ''} fill className="object-cover" />
                 <button
                   onClick={() => removePhoto(index)}
-                  className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                  className="absolute top-1 right-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
                 >
                   <X size={14} />
                 </button>

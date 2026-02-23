@@ -314,7 +314,7 @@ export function LiveStreamSection({ content, theme }: LiveStreamSectionProps) {
                     {/* Countdown Badge */}
                     {countdown[stream.id] && (
                       <div
-                        className="absolute right-3 top-3 rounded-lg px-3 py-1 text-sm font-semibold"
+                        className="absolute top-3 right-3 rounded-lg px-3 py-1 text-sm font-semibold"
                         style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}
                       >
                         {countdown[stream.id]}
@@ -323,7 +323,7 @@ export function LiveStreamSection({ content, theme }: LiveStreamSectionProps) {
 
                     {/* Platform Badge */}
                     <div
-                      className="absolute left-3 top-3 rounded-lg px-2 py-1 text-xs font-semibold"
+                      className="absolute top-3 left-3 rounded-lg px-2 py-1 text-xs font-semibold"
                       style={{ background: getPlatformColor(stream.platform), color: '#fff' }}
                     >
                       {stream.platform.charAt(0).toUpperCase() + stream.platform.slice(1)}
@@ -426,7 +426,7 @@ export function LiveStreamSection({ content, theme }: LiveStreamSectionProps) {
                     {/* Duration */}
                     {stream.duration && (
                       <div
-                        className="absolute bottom-2 right-2 rounded px-2 py-0.5 text-xs font-medium"
+                        className="absolute right-2 bottom-2 rounded px-2 py-0.5 text-xs font-medium"
                         style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}
                       >
                         {stream.duration}

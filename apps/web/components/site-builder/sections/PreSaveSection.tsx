@@ -147,7 +147,7 @@ export function PreSaveSection({ content, theme, siteId }: PreSaveSectionProps) 
         {/* Header */}
         <div className="mb-8 text-center">
           <span
-            className="mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold uppercase tracking-wider"
+            className="mb-4 inline-block rounded-full px-4 py-1 text-sm font-semibold tracking-wider uppercase"
             style={{ background: `${accentColor}20`, color: accentColor }}
           >
             New {releaseType}

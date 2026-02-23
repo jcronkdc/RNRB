@@ -274,7 +274,7 @@ export function ResponsiveTesting({ url }: ResponsiveTestingProps) {
           <>
             {/* Horizontal Ruler */}
             <div
-              className="absolute left-0 top-0 h-6 w-full"
+              className="absolute top-0 left-0 h-6 w-full"
               style={{ background: 'var(--panel)', borderBottom: '1px solid var(--border)' }}
             >
               {Array.from({ length: Math.ceil(width / 100) }).map((_, i) => (
@@ -291,7 +291,7 @@ export function ResponsiveTesting({ url }: ResponsiveTestingProps) {
 
             {/* Vertical Ruler */}
             <div
-              className="absolute left-0 top-0 h-full w-6"
+              className="absolute top-0 left-0 h-full w-6"
               style={{ background: 'var(--panel)', borderRight: '1px solid var(--border)' }}
             >
               {Array.from({ length: Math.ceil(height / 100) }).map((_, i) => (
@@ -333,7 +333,7 @@ export function ResponsiveTesting({ url }: ResponsiveTestingProps) {
               {/* Notch for mobile */}
               {selectedDevice.type === 'mobile' && orientation === 'portrait' && (
                 <div
-                  className="absolute left-1/2 top-0 h-6 w-32 -translate-x-1/2 rounded-b-2xl"
+                  className="absolute top-0 left-1/2 h-6 w-32 -translate-x-1/2 rounded-b-2xl"
                   style={{ background: '#1a1a1a' }}
                 />
               )}

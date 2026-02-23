@@ -282,7 +282,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             value={(value as string) || ''}
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-hidden"
           />
         );
 
@@ -293,7 +293,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             rows={4}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white placeholder-gray-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-hidden"
           />
         );
 
@@ -304,7 +304,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
             placeholder={field.placeholder}
             rows={6}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 font-mono text-sm text-green-400 placeholder-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 font-mono text-sm text-green-400 placeholder-gray-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-hidden"
           />
         );
 
@@ -336,7 +336,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
           <select
             value={(value as string) || options[0]?.value || ''}
             onChange={(e) => handleFieldChange(field.key, e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-hidden"
           >
             {options.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -357,7 +357,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
             }`}
           >
             <span
-              className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+              className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                 value ? 'translate-x-5' : 'translate-x-0'
               }`}
             />
@@ -491,7 +491,7 @@ export function SectionEditor({ section, isOpen, onClose, onSave }: SectionEdito
                     id="section-animation"
                     value={animation}
                     onChange={(e) => setAnimation(e.target.value)}
-                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:outline-hidden focus:ring-1 focus:ring-orange-500"
+                    className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2.5 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500 focus:outline-hidden"
                   >
                     {animationOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -627,7 +627,7 @@ function GalleryEditor({
             <img src={url} alt="" className="h-full w-full object-cover" />
             <button
               onClick={() => removeImage(index)}
-              className="absolute right-1 top-1 rounded bg-red-500/80 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+              className="absolute top-1 right-1 rounded bg-red-500/80 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
             >
               <Trash2 className="h-3 w-3" />
             </button>

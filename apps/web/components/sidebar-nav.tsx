@@ -117,7 +117,11 @@ function SidebarLogo({
           title={isCollapsed ? 'Expand' : 'Collapse'}
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+          {isCollapsed ? (
+            <ChevronRight className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronLeft className="h-3.5 w-3.5" />
+          )}
         </button>
       )}
     </div>
@@ -210,7 +214,7 @@ export function SidebarNav() {
           x: showSidebar ? 0 : isMobile ? -260 : 0,
         }}
         transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-        className={`fixed left-0 top-0 z-50 flex h-screen flex-col border-r ${isMobile ? '' : ''}`}
+        className={`fixed top-0 left-0 z-50 flex h-screen flex-col border-r ${isMobile ? '' : ''}`}
         style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
       >
         <SidebarLogo

@@ -121,7 +121,7 @@ export function AboutPageSection({ content, theme }: AboutPageSectionProps) {
           >
             <Quote
               size={48}
-              className="absolute left-6 top-6 opacity-20"
+              className="absolute top-6 left-6 opacity-20"
               style={{ color: accentColor }}
             />
             <blockquote
@@ -216,7 +216,7 @@ export function AboutPageSection({ content, theme }: AboutPageSectionProps) {
             <div className="relative mx-auto max-w-2xl">
               {/* Timeline line */}
               <div
-                className="absolute left-4 top-0 h-full w-0.5"
+                className="absolute top-0 left-4 h-full w-0.5"
                 style={{ background: 'var(--border)' }}
               />
               <div className="space-y-8">
@@ -224,7 +224,7 @@ export function AboutPageSection({ content, theme }: AboutPageSectionProps) {
                   <div key={i} className="relative flex gap-6 pl-12">
                     {/* Dot */}
                     <div
-                      className="absolute left-2 top-1 h-5 w-5 rounded-full"
+                      className="absolute top-1 left-2 h-5 w-5 rounded-full"
                       style={{ background: accentColor }}
                     />
                     <div>

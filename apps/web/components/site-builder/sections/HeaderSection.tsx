@@ -52,7 +52,7 @@ export function HeaderSection({ content, theme, socialLinks }: HeaderSectionProp
   return (
     <>
       <header
-        className={`${sticky ? 'fixed left-0 right-0 top-0 z-50' : 'relative'} transition-all duration-300`}
+        className={`${sticky ? 'fixed top-0 right-0 left-0 z-50' : 'relative'} transition-all duration-300`}
         style={{
           backgroundColor: isScrolled
             ? (theme.primaryColor as string) + 'f0' || '#000000f0'

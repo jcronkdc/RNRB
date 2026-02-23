@@ -275,7 +275,7 @@ export function SupportSection({ content, theme }: SupportSectionProps) {
                 >
                   {tier.popular && (
                     <div
-                      className="absolute -right-8 top-6 rotate-45 px-10 py-1 text-xs font-semibold text-white"
+                      className="absolute top-6 -right-8 rotate-45 px-10 py-1 text-xs font-semibold text-white"
                       style={{ background: accentColor }}
                     >
                       Popular

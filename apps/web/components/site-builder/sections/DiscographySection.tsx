@@ -185,7 +185,7 @@ export function DiscographySection({ content, theme }: DiscographySectionProps) 
 
                 {/* Type Badge */}
                 <div
-                  className="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold uppercase"
+                  className="absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-semibold uppercase"
                   style={{ background: accentColor, color: '#fff' }}
                 >
                   {RELEASE_TYPE_LABELS[release.type] || release.type}

@@ -89,7 +89,7 @@ export function ServiceWorkerRegistration() {
   if (updateAvailable) {
     return (
       <div
-        className="fixed bottom-4 left-4 right-4 z-50 mx-auto flex max-w-md items-center justify-between gap-4 rounded-lg p-4 shadow-lg md:left-auto md:right-4"
+        className="fixed right-4 bottom-4 left-4 z-50 mx-auto flex max-w-md items-center justify-between gap-4 rounded-lg p-4 shadow-lg md:right-4 md:left-auto"
         style={{
           background: 'linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%)',
           border: '1px solid rgba(249, 115, 22, 0.3)',
@@ -172,7 +172,7 @@ export function OfflineIndicator() {
 
   return (
     <div
-      className="fixed left-0 right-0 top-0 z-50 flex items-center justify-center gap-2 py-2 text-sm font-medium"
+      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-center gap-2 py-2 text-sm font-medium"
       style={{
         background: 'linear-gradient(135deg, #7c2d12 0%, #9a3412 100%)',
         color: '#fff',

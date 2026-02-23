@@ -323,7 +323,7 @@ export function SharedFilesView() {
 
                   {/* Message */}
                   {share.message && (
-                    <div className="mt-3 rounded-lg bg-gray-800/50 p-2 text-xs italic text-gray-300">
+                    <div className="mt-3 rounded-lg bg-gray-800/50 p-2 text-xs text-gray-300 italic">
                       "{share.message}"
                     </div>
                   )}

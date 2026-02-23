@@ -148,7 +148,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
               </div>
 
               {/* Info Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-6">
+              <div className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/80 to-transparent p-6">
                 <div className="flex items-center gap-2">
                   {featured.type && (
                     <span
@@ -285,7 +285,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
                     {/* Duration */}
                     {video.duration && (
                       <div
-                        className="absolute bottom-2 right-2 rounded px-2 py-0.5 text-xs font-medium"
+                        className="absolute right-2 bottom-2 rounded px-2 py-0.5 text-xs font-medium"
                         style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}
                       >
                         {video.duration}
@@ -295,7 +295,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
                     {/* Type Badge */}
                     {video.type && (
                       <div
-                        className="absolute left-2 top-2 rounded px-2 py-0.5 text-xs font-medium"
+                        className="absolute top-2 left-2 rounded px-2 py-0.5 text-xs font-medium"
                         style={{ background: accentColor, color: '#fff' }}
                       >
                         {VIDEO_TYPE_LABELS[video.type] || video.type}
@@ -351,7 +351,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
                     />
                     {video.duration && (
                       <div
-                        className="absolute bottom-1 right-1 rounded px-1.5 py-0.5 text-xs"
+                        className="absolute right-1 bottom-1 rounded px-1.5 py-0.5 text-xs"
                         style={{ background: 'rgba(0,0,0,0.8)', color: '#fff' }}
                       >
                         {video.duration}
@@ -438,7 +438,7 @@ export function MusicVideosSection({ content, theme }: MusicVideosSectionProps) 
               {/* Close Button */}
               <button
                 onClick={() => setPlayingVideo(null)}
-                className="absolute -right-2 -top-12 rounded-full p-2 text-white transition-colors hover:bg-white/10"
+                className="absolute -top-12 -right-2 rounded-full p-2 text-white transition-colors hover:bg-white/10"
               >
                 <X size={24} />
               </button>

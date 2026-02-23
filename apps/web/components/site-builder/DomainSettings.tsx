@@ -320,7 +320,9 @@ export function DomainSettings() {
                     )}
                     <div>
                       <p className={verifyResult.success ? 'text-green-400' : 'text-yellow-400'}>
-                        {verifyResult.message || verifyResult.error || (verifyResult.success ? 'Domain verified!' : 'Verification failed')}
+                        {verifyResult.message ||
+                          verifyResult.error ||
+                          (verifyResult.success ? 'Domain verified!' : 'Verification failed')}
                       </p>
                       {!verifyResult.success && (
                         <p className="mt-2 text-sm" style={{ color: 'var(--muted)' }}>

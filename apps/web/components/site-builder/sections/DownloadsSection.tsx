@@ -219,7 +219,7 @@ export function DownloadsSection({ content, theme, siteId }: DownloadsSectionPro
 
                 {/* Type Badge */}
                 <div
-                  className="absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold"
+                  className="absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-semibold"
                   style={{ background: accentColor, color: '#fff' }}
                 >
                   {TYPE_LABELS[item.type] || item.type}
@@ -227,7 +227,7 @@ export function DownloadsSection({ content, theme, siteId }: DownloadsSectionPro
 
                 {/* Price Badge */}
                 <div
-                  className="absolute right-3 top-3 rounded-full px-3 py-1 text-sm font-bold"
+                  className="absolute top-3 right-3 rounded-full px-3 py-1 text-sm font-bold"
                   style={{
                     background: item.isFree ? 'rgba(34, 197, 94, 0.9)' : 'rgba(0,0,0,0.8)',
                     color: '#fff',
@@ -240,7 +240,7 @@ export function DownloadsSection({ content, theme, siteId }: DownloadsSectionPro
                 {allowPreview && item.previewUrl && (
                   <button
                     onClick={() => togglePreview(item.id)}
-                    className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full transition-transform hover:scale-110"
+                    className="absolute right-3 bottom-3 flex h-10 w-10 items-center justify-center rounded-full transition-transform hover:scale-110"
                     style={{ background: 'rgba(0,0,0,0.8)' }}
                   >
                     {playingId === item.id ? (

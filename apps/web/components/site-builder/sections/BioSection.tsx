@@ -53,7 +53,7 @@ export function BioSection({ content, theme, animation }: BioSectionProps) {
 
             {bio && (
               <p
-                className="mb-8 whitespace-pre-wrap text-lg leading-relaxed md:text-xl"
+                className="mb-8 text-lg leading-relaxed whitespace-pre-wrap md:text-xl"
                 style={{
                   fontFamily: (theme.fontBody as string) || 'inherit',
                   color: (theme.textColor as string) || '#fff',
@@ -134,7 +134,7 @@ export function BioSection({ content, theme, animation }: BioSectionProps) {
 
             {/* Decorative accent */}
             <div
-              className="absolute -bottom-4 -right-4 -z-10 h-32 w-32"
+              className="absolute -right-4 -bottom-4 -z-10 h-32 w-32"
               style={{
                 backgroundColor: accentColor + '30',
                 borderRadius: (theme.borderRadius as string) || '16px',
@@ -161,7 +161,7 @@ export function BioSection({ content, theme, animation }: BioSectionProps) {
 
             {bio && (
               <p
-                className="mb-8 whitespace-pre-wrap text-lg leading-relaxed"
+                className="mb-8 text-lg leading-relaxed whitespace-pre-wrap"
                 style={{
                   fontFamily: (theme.fontBody as string) || 'inherit',
                   color: (theme.mutedColor as string) || '#ccc',

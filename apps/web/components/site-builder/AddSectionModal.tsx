@@ -430,7 +430,7 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
           <div className="relative">
             <Search
               size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2"
+              className="absolute top-1/2 left-3 -translate-y-1/2"
               style={{ color: 'var(--muted)' }}
             />
             <input
@@ -438,7 +438,7 @@ export function AddSectionModal({ isOpen, onClose, onAdd }: AddSectionModalProps
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search sections..."
-              className="w-full rounded-lg py-2 pl-10 pr-4"
+              className="w-full rounded-lg py-2 pr-4 pl-10"
               style={{
                 background: 'var(--bg)',
                 color: 'var(--text)',

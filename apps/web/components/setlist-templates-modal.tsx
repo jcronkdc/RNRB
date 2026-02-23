@@ -126,7 +126,7 @@ export function SetlistTemplatesModal({
               <h2 className="font-display mb-1 text-2xl font-bold sm:text-3xl">
                 Setlist Templates
               </h2>
-              <p className="text-sm text-muted-foreground sm:text-base">
+              <p className="text-muted-foreground text-sm sm:text-base">
                 Choose a pre-built template to generate your setlist
               </p>
             </div>
@@ -145,13 +145,13 @@ export function SetlistTemplatesModal({
           {/* Loading */}
           {loading ? (
             <div className="py-12 text-center">
-              <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-brand-primary" />
+              <Loader2 className="text-brand-primary mx-auto mb-4 h-12 w-12 animate-spin" />
               <p className="text-muted-foreground">Loading templates...</p>
             </div>
           ) : templates.length === 0 ? (
             <div className="py-12 text-center">
-              <Sparkles className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-              <p className="mb-4 text-muted-foreground">No templates available yet</p>
+              <Sparkles className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+              <p className="text-muted-foreground mb-4">No templates available yet</p>
               <Button className="rnrb-button-primary">
                 <Plus className="mr-2 h-4 w-4" />
                 Create Custom Template
@@ -162,7 +162,7 @@ export function SetlistTemplatesModal({
               {/* Built-in Templates */}
               {templates.filter((t) => t.isBuiltIn).length > 0 && (
                 <div>
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-muted-foreground mb-3 text-xs font-medium tracking-wide uppercase">
                     Built-in Templates
                   </h3>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -177,30 +177,30 @@ export function SetlistTemplatesModal({
                             key={template.id}
                             onClick={() => handleApplyTemplate(template)}
                             disabled={isApplying || !!applying}
-                            className="rnrb-card group p-4 text-left transition hover:border-brand-primary/50 disabled:opacity-50 sm:p-5"
+                            className="rnrb-card group hover:border-brand-primary/50 p-4 text-left transition disabled:opacity-50 sm:p-5"
                           >
                             <div className="mb-3 flex items-start justify-between">
                               <div className="flex items-center gap-3">
-                                <div className="rounded-lg bg-brand-primary/10 p-2">
-                                  <Icon className="h-5 w-5 text-brand-primary" />
+                                <div className="bg-brand-primary/10 rounded-lg p-2">
+                                  <Icon className="text-brand-primary h-5 w-5" />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <h4 className="truncate font-semibold">{template.name}</h4>
                                 </div>
                               </div>
                               {isApplying && (
-                                <Loader2 className="h-5 w-5 shrink-0 animate-spin text-brand-primary" />
+                                <Loader2 className="text-brand-primary h-5 w-5 shrink-0 animate-spin" />
                               )}
                             </div>
 
                             {template.description && (
-                              <p className="mb-3 text-xs text-muted-foreground sm:text-sm">
+                              <p className="text-muted-foreground mb-3 text-xs sm:text-sm">
                                 {template.description}
                               </p>
                             )}
 
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-muted px-2 py-0.5 text-xs">
+                              <span className="border-border bg-surface-muted inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs">
                                 <Clock className="h-3 w-3" />
                                 {template.targetDuration} min
                               </span>
@@ -218,7 +218,7 @@ export function SetlistTemplatesModal({
                             </div>
 
                             {isApplying && (
-                              <p className="mt-3 text-xs font-medium text-brand-primary">
+                              <p className="text-brand-primary mt-3 text-xs font-medium">
                                 Generating setlist...
                               </p>
                             )}
@@ -232,7 +232,7 @@ export function SetlistTemplatesModal({
               {/* User Templates */}
               {templates.filter((t) => !t.isBuiltIn).length > 0 && (
                 <div className="mt-6">
-                  <h3 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <h3 className="text-muted-foreground mb-3 text-xs font-medium tracking-wide uppercase">
                     My Custom Templates
                   </h3>
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -246,7 +246,7 @@ export function SetlistTemplatesModal({
                             key={template.id}
                             onClick={() => handleApplyTemplate(template)}
                             disabled={isApplying || !!applying}
-                            className="rnrb-card group p-4 text-left transition hover:border-brand-primary/50 disabled:opacity-50 sm:p-5"
+                            className="rnrb-card group hover:border-brand-primary/50 p-4 text-left transition disabled:opacity-50 sm:p-5"
                           >
                             <div className="mb-3 flex items-start justify-between">
                               <div className="flex items-center gap-3">
@@ -258,18 +258,18 @@ export function SetlistTemplatesModal({
                                 </div>
                               </div>
                               {isApplying && (
-                                <Loader2 className="h-5 w-5 shrink-0 animate-spin text-brand-primary" />
+                                <Loader2 className="text-brand-primary h-5 w-5 shrink-0 animate-spin" />
                               )}
                             </div>
 
                             {template.description && (
-                              <p className="mb-3 text-xs text-muted-foreground sm:text-sm">
+                              <p className="text-muted-foreground mb-3 text-xs sm:text-sm">
                                 {template.description}
                               </p>
                             )}
 
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-muted px-2 py-0.5 text-xs">
+                              <span className="border-border bg-surface-muted inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs">
                                 <Clock className="h-3 w-3" />
                                 {template.targetDuration} min
                               </span>
@@ -283,7 +283,7 @@ export function SetlistTemplatesModal({
                             </div>
 
                             {isApplying && (
-                              <p className="mt-3 text-xs font-medium text-brand-primary">
+                              <p className="text-brand-primary mt-3 text-xs font-medium">
                                 Generating setlist...
                               </p>
                             )}
@@ -298,8 +298,8 @@ export function SetlistTemplatesModal({
 
           {/* Footer */}
           {!loading && templates.length > 0 && (
-            <div className="mt-6 border-t border-border pt-4">
-              <p className="text-center text-xs text-muted-foreground sm:text-sm">
+            <div className="border-border mt-6 border-t pt-4">
+              <p className="text-muted-foreground text-center text-xs sm:text-sm">
                 Templates analyze your songs and build optimized setlists based on duration, energy,
                 and style
               </p>

@@ -385,7 +385,7 @@ export function DataSyncPicker({
             <div className="relative flex-1">
               <Search
                 size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2"
+                className="absolute top-1/2 left-3 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
               <input
@@ -393,7 +393,7 @@ export function DataSyncPicker({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={`Search ${config.label.toLowerCase()}...`}
-                className="w-full rounded-lg py-2 pl-10 pr-4"
+                className="w-full rounded-lg py-2 pr-4 pl-10"
                 style={{
                   background: 'var(--bg)',
                   color: 'var(--text)',
@@ -407,7 +407,7 @@ export function DataSyncPicker({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                className="appearance-none rounded-lg py-2 pl-3 pr-8"
+                className="appearance-none rounded-lg py-2 pr-8 pl-3"
                 style={{
                   background: 'var(--bg)',
                   color: 'var(--text)',
@@ -420,7 +420,7 @@ export function DataSyncPicker({
               </select>
               <ChevronDown
                 size={16}
-                className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2"
+                className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2"
                 style={{ color: 'var(--muted)' }}
               />
             </div>
@@ -430,13 +430,13 @@ export function DataSyncPicker({
               <div className="relative">
                 <Filter
                   size={16}
-                  className="absolute left-3 top-1/2 -translate-y-1/2"
+                  className="absolute top-1/2 left-3 -translate-y-1/2"
                   style={{ color: 'var(--muted)' }}
                 />
                 <select
                   value={filterProject || ''}
                   onChange={(e) => setFilterProject(e.target.value || null)}
-                  className="appearance-none rounded-lg py-2 pl-9 pr-8"
+                  className="appearance-none rounded-lg py-2 pr-8 pl-9"
                   style={{
                     background: 'var(--bg)',
                     color: 'var(--text)',
@@ -452,7 +452,7 @@ export function DataSyncPicker({
                 </select>
                 <ChevronDown
                   size={16}
-                  className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2"
+                  className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2"
                   style={{ color: 'var(--muted)' }}
                 />
               </div>
@@ -681,10 +681,7 @@ function SongItem({ song, color }: { song: SyncableSong; color: string }) {
       </div>
 
       {/* Meta */}
-      <div
-        className="flex shrink-0 items-center gap-4 text-sm"
-        style={{ color: 'var(--muted)' }}
-      >
+      <div className="flex shrink-0 items-center gap-4 text-sm" style={{ color: 'var(--muted)' }}>
         {song.duration && (
           <span className="flex items-center gap-1">
             <Clock size={14} />

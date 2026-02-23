@@ -381,7 +381,7 @@ export function AISectionWizard({
                     </h4>
                   </div>
                   {selectedStyle === style.id && (
-                    <div className="absolute right-2 top-2 rounded-full bg-orange-500 p-1">
+                    <div className="absolute top-2 right-2 rounded-full bg-orange-500 p-1">
                       <Check size={14} className="text-white" />
                     </div>
                   )}

@@ -216,7 +216,7 @@ export function FanClubSection({
                 {/* Popular Badge */}
                 {tier.id === 'vip' && (
                   <div
-                    className="absolute -right-8 top-6 rotate-45 px-10 py-1 text-xs font-semibold text-white"
+                    className="absolute top-6 -right-8 rotate-45 px-10 py-1 text-xs font-semibold text-white"
                     style={{ background: tier.color }}
                   >
                     Popular
@@ -246,11 +246,7 @@ export function FanClubSection({
                 <ul className="mb-6 space-y-3">
                   {tier.benefits.map((benefit, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <Check
-                        size={18}
-                        className="mt-0.5 shrink-0"
-                        style={{ color: tier.color }}
-                      />
+                      <Check size={18} className="mt-0.5 shrink-0" style={{ color: tier.color }} />
                       <span className="text-sm" style={{ color: 'var(--text)' }}>
                         {benefit}
                       </span>
@@ -321,7 +317,7 @@ export function FanClubSection({
 
                       {/* Type Badge */}
                       <div
-                        className="absolute left-3 top-3 flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
+                        className="absolute top-3 left-3 flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
                         style={{ background: 'rgba(0,0,0,0.7)', color: '#fff' }}
                       >
                         <ContentIcon size={12} />
@@ -331,7 +327,7 @@ export function FanClubSection({
                       {/* Tier Badge */}
                       {tierInfo && (
                         <div
-                          className="absolute right-3 top-3 rounded-full px-2 py-1 text-xs font-medium"
+                          className="absolute top-3 right-3 rounded-full px-2 py-1 text-xs font-medium"
                           style={{ background: tierInfo.color, color: '#fff' }}
                         >
                           {tierInfo.name}

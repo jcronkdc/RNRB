@@ -181,7 +181,7 @@ export function BookingSection({ content, styles, subdomain }: BookingSectionPro
                   <Music size={20} />
                   <span className="font-semibold">Technical Requirements</span>
                 </div>
-                <p className="whitespace-pre-line text-sm opacity-80" style={{ color: textColor }}>
+                <p className="text-sm whitespace-pre-line opacity-80" style={{ color: textColor }}>
                   {requirements}
                 </p>
               </div>
@@ -296,7 +296,7 @@ export function BookingSection({ content, styles, subdomain }: BookingSectionPro
                     <div className="relative">
                       <Calendar
                         size={18}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 opacity-50"
+                        className="absolute top-1/2 left-3 -translate-y-1/2 opacity-50"
                         style={{ color: textColor }}
                       />
                       <input
@@ -305,7 +305,7 @@ export function BookingSection({ content, styles, subdomain }: BookingSectionPro
                         value={formData.eventDate}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-lg py-3 pl-10 pr-4"
+                        className="w-full rounded-lg py-3 pr-4 pl-10"
                         style={{
                           background: 'rgba(0,0,0,0.3)',
                           color: textColor,
@@ -348,7 +348,7 @@ export function BookingSection({ content, styles, subdomain }: BookingSectionPro
                   <div className="relative">
                     <MapPin
                       size={18}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 opacity-50"
+                      className="absolute top-1/2 left-3 -translate-y-1/2 opacity-50"
                       style={{ color: textColor }}
                     />
                     <input
@@ -357,7 +357,7 @@ export function BookingSection({ content, styles, subdomain }: BookingSectionPro
                       value={formData.location}
                       onChange={handleChange}
                       required
-                      className="w-full rounded-lg py-3 pl-10 pr-4"
+                      className="w-full rounded-lg py-3 pr-4 pl-10"
                       style={{
                         background: 'rgba(0,0,0,0.3)',
                         color: textColor,

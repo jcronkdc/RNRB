@@ -176,7 +176,7 @@ export function SetlistGeneratorModal({
               </div>
               <div>
                 <h2 className="font-display text-2xl font-bold">Setlist Generator</h2>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Algorithmic optimization for faster setlist creation
                 </p>
               </div>
@@ -316,12 +316,12 @@ export function SetlistGeneratorModal({
                       }`}
                     >
                       <div className="text-2xl font-bold">{duration}</div>
-                      <div className="text-xs text-muted-foreground">minutes</div>
+                      <div className="text-muted-foreground text-xs">minutes</div>
                     </button>
                   ))}
                 </div>
                 <div className="mt-3">
-                  <label className="text-xs text-muted-foreground">Custom duration (minutes)</label>
+                  <label className="text-muted-foreground text-xs">Custom duration (minutes)</label>
                   <input
                     type="number"
                     value={targetDuration}
@@ -329,7 +329,7 @@ export function SetlistGeneratorModal({
                     disabled={loading}
                     min={15}
                     max={240}
-                    className="mt-1 w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-hidden focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                    className="border-border bg-surface focus:border-brand-primary focus:ring-brand-primary/20 mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-hidden focus:ring-2"
                   />
                 </div>
               </div>
@@ -357,7 +357,7 @@ export function SetlistGeneratorModal({
                           </div>
                           <div className="font-semibold">{profile.name}</div>
                         </div>
-                        <div className="text-xs text-muted-foreground">{profile.description}</div>
+                        <div className="text-muted-foreground text-xs">{profile.description}</div>
                       </button>
                     );
                   })}
@@ -365,11 +365,11 @@ export function SetlistGeneratorModal({
               </div>
 
               {/* Advanced Options */}
-              <div className="rounded-lg border border-border">
+              <div className="border-border rounded-lg border">
                 <button
                   onClick={() => setShowAdvanced(!showAdvanced)}
                   disabled={loading}
-                  className="flex w-full items-center justify-between p-4 transition hover:bg-surface-muted"
+                  className="hover:bg-surface-muted flex w-full items-center justify-between p-4 transition"
                 >
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-purple-400" />
@@ -388,7 +388,7 @@ export function SetlistGeneratorModal({
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden border-t border-border"
+                      className="border-border overflow-hidden border-t"
                     >
                       <div className="space-y-4 p-4">
                         {/* Toggles */}
@@ -459,7 +459,7 @@ export function SetlistGeneratorModal({
                   <Info className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
                   <div className="text-sm">
                     <p className="mb-1 font-medium text-blue-300">What This Tool Does</p>
-                    <ul className="space-y-1 text-muted-foreground">
+                    <ul className="text-muted-foreground space-y-1">
                       <li>• Matches your target duration (±5 minutes)</li>
                       <li>• Prevents 3+ songs in same key (vocal health)</li>
                       <li>• Varies tempo to avoid monotony</li>
@@ -475,7 +475,7 @@ export function SetlistGeneratorModal({
                   <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
                   <div className="text-sm">
                     <p className="mb-1 font-medium text-yellow-300">Realistic Expectations</p>
-                    <ul className="space-y-1 text-muted-foreground">
+                    <ul className="text-muted-foreground space-y-1">
                       <li>• Requires songs with key, tempo, duration metadata</li>
                       <li>• You'll likely need to tweak the results</li>
                       <li>• It's a time-saving tool, not magic</li>

@@ -384,7 +384,7 @@ function ViewsChart({ data }: { data: Array<{ date: string; views: number }> }) 
               {/* Tooltip */}
               <div className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 group-hover:block">
                 <div
-                  className="whitespace-nowrap rounded px-2 py-1 text-xs"
+                  className="rounded px-2 py-1 text-xs whitespace-nowrap"
                   style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                 >
                   <div style={{ color: 'var(--text)' }}>{day.views} views</div>

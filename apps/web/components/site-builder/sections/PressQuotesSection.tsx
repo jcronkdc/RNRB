@@ -88,7 +88,7 @@ export function PressQuotesSection({ content, theme }: PressQuotesSectionProps) 
       {/* Quote Icon */}
       <Quote
         size={size === 'featured' ? 48 : 32}
-        className="absolute right-4 top-4 opacity-10"
+        className="absolute top-4 right-4 opacity-10"
         style={{ color: accentColor }}
       />
 
@@ -192,14 +192,14 @@ export function PressQuotesSection({ content, theme }: PressQuotesSectionProps) 
               <>
                 <button
                   onClick={prevSlide}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full p-3 transition-colors hover:bg-white/10"
+                  className="absolute top-1/2 left-0 -translate-y-1/2 rounded-full p-3 transition-colors hover:bg-white/10"
                   style={{ background: 'var(--panel)', color: 'var(--text)' }}
                 >
                   <ChevronLeft size={24} />
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full p-3 transition-colors hover:bg-white/10"
+                  className="absolute top-1/2 right-0 -translate-y-1/2 rounded-full p-3 transition-colors hover:bg-white/10"
                   style={{ background: 'var(--panel)', color: 'var(--text)' }}
                 >
                   <ChevronRight size={24} />

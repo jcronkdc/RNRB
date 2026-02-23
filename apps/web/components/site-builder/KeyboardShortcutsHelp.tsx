@@ -118,7 +118,7 @@ export function KeyboardShortcutsHelp({ isOpen, onClose }: KeyboardShortcutsHelp
               return (
                 <div key={category}>
                   <h3
-                    className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide"
+                    className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-wide uppercase"
                     style={{ color: 'var(--muted)' }}
                   >
                     {categoryInfo.label}

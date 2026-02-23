@@ -253,7 +253,7 @@ export function MeetGreetSection({ content, theme, siteId }: MeetGreetSectionPro
                 {/* Popular Badge */}
                 {option.popular && (
                   <div
-                    className="absolute -right-8 top-6 rotate-45 px-10 py-1 text-xs font-semibold text-white"
+                    className="absolute top-6 -right-8 rotate-45 px-10 py-1 text-xs font-semibold text-white"
                     style={{ background: accentColor }}
                   >
                     Popular
@@ -316,7 +316,7 @@ export function MeetGreetSection({ content, theme, siteId }: MeetGreetSectionPro
                 {/* Selection Indicator */}
                 {isSelected && (
                   <div
-                    className="absolute bottom-4 right-4 flex h-6 w-6 items-center justify-center rounded-full"
+                    className="absolute right-4 bottom-4 flex h-6 w-6 items-center justify-center rounded-full"
                     style={{ background: accentColor }}
                   >
                     <Check size={14} className="text-white" />

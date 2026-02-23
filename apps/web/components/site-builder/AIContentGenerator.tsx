@@ -433,10 +433,7 @@ export function AIContentGenerator({
           {selectedTemplate ? (
             <>
               {/* Form Header */}
-              <div
-                className="shrink-0 p-6"
-                style={{ borderBottom: '1px solid var(--border)' }}
-              >
+              <div className="shrink-0 p-6" style={{ borderBottom: '1px solid var(--border)' }}>
                 <div className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-pink-500">
                     <selectedTemplate.icon size={24} className="text-white" />

@@ -204,7 +204,7 @@ export function SetlistShareModal({
 
                 {/* Share URL */}
                 <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <label className="mb-2 block text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <label className="mb-2 block text-xs font-medium tracking-wider text-gray-500 uppercase">
                     Share Link
                   </label>
                   <div className="flex items-center gap-2">
@@ -290,7 +290,7 @@ export function SetlistShareModal({
                     value={customTitle}
                     onChange={(e) => setCustomTitle(e.target.value)}
                     placeholder="e.g. Friday Night at The Roxy"
-                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-gray-500 focus:border-orange-500 focus:outline-hidden focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-gray-500 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden"
                   />
                 </div>
 

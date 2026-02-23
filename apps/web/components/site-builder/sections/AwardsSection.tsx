@@ -104,7 +104,7 @@ export function AwardsSection({ content, theme }: AwardsSectionProps) {
                   />
                   {award.certificationCount && award.certificationCount > 1 && (
                     <span
-                      className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
+                      className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold"
                       style={{ background: certColor, color: '#000' }}
                     >
                       {award.certificationCount}x
@@ -124,7 +124,7 @@ export function AwardsSection({ content, theme }: AwardsSectionProps) {
           {/* Type Badge */}
           {award.type && (
             <span
-              className="absolute right-3 top-3 rounded-full px-3 py-1 text-xs font-semibold capitalize"
+              className="absolute top-3 right-3 rounded-full px-3 py-1 text-xs font-semibold capitalize"
               style={{
                 background: award.type === 'nomination' ? 'var(--bg)' : certColor,
                 color: award.type === 'nomination' ? 'var(--text)' : '#000',
@@ -247,7 +247,7 @@ export function AwardsSection({ content, theme }: AwardsSectionProps) {
               <div className="relative">
                 {/* Timeline Line */}
                 <div
-                  className="absolute left-8 top-0 h-full w-0.5"
+                  className="absolute top-0 left-8 h-full w-0.5"
                   style={{ background: 'var(--border)' }}
                 />
                 <div className="space-y-8">
@@ -257,7 +257,7 @@ export function AwardsSection({ content, theme }: AwardsSectionProps) {
                       <div key={award.id} className="relative flex gap-6 pl-16">
                         {/* Dot */}
                         <div
-                          className="absolute left-6 top-2 flex h-5 w-5 items-center justify-center rounded-full"
+                          className="absolute top-2 left-6 flex h-5 w-5 items-center justify-center rounded-full"
                           style={{ background: accentColor }}
                         >
                           <TypeIcon size={12} className="text-white" />

@@ -196,7 +196,7 @@ export function TechRiderSection({ content, theme }: TechRiderSectionProps) {
             >
               {(stageWidth || stageDepth) && (
                 <div
-                  className="absolute right-4 top-4 rounded-lg px-3 py-1 text-sm"
+                  className="absolute top-4 right-4 rounded-lg px-3 py-1 text-sm"
                   style={{ background: 'var(--bg)' }}
                 >
                   {stageWidth && <span>Width: {stageWidth}</span>}
@@ -217,7 +217,7 @@ export function TechRiderSection({ content, theme }: TechRiderSectionProps) {
               </button>
               <button
                 onClick={() => setShowFullStagePlot(!showFullStagePlot)}
-                className="absolute bottom-4 right-4 flex items-center gap-1 rounded-lg px-3 py-2 text-sm"
+                className="absolute right-4 bottom-4 flex items-center gap-1 rounded-lg px-3 py-2 text-sm"
                 style={{ background: 'var(--bg)', color: 'var(--text)' }}
               >
                 <ZoomIn size={16} />

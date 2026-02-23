@@ -187,11 +187,7 @@ export function TicketsSection({ content, theme }: TicketsSectionProps) {
                           {event.title}
                         </h3>
                         {event.isHeadliner && (
-                          <Star
-                            size={14}
-                            className="shrink-0"
-                            style={{ color: accentColor }}
-                          />
+                          <Star size={14} className="shrink-0" style={{ color: accentColor }} />
                         )}
                         {event.isFestival && (
                           <span

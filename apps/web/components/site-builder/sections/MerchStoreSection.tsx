@@ -279,7 +279,7 @@ export function MerchStoreSection({
                   )}
                   {product.comparePrice && product.comparePrice > product.price && (
                     <span
-                      className="absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-bold"
+                      className="absolute top-2 left-2 rounded-full px-2 py-1 text-xs font-bold"
                       style={{ background: '#ef4444', color: '#fff' }}
                     >
                       SALE
@@ -335,7 +335,7 @@ export function MerchStoreSection({
       {cart.length > 0 && (
         <button
           onClick={() => setIsCartOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full px-6 py-3 shadow-lg transition-transform hover:scale-105"
+          className="fixed right-6 bottom-6 z-40 flex items-center gap-2 rounded-full px-6 py-3 shadow-lg transition-transform hover:scale-105"
           style={{ background: accentColor, color: '#fff' }}
         >
           <ShoppingBag size={20} />
@@ -358,7 +358,7 @@ export function MerchStoreSection({
           >
             <button
               onClick={() => setSelectedProduct(null)}
-              className="absolute right-4 top-4 z-10 rounded-full bg-white/10 p-2 hover:bg-white/20"
+              className="absolute top-4 right-4 z-10 rounded-full bg-white/10 p-2 hover:bg-white/20"
             >
               <X size={20} />
             </button>

@@ -121,7 +121,7 @@ export function MailingListSection({ content, theme, animation, siteId }: Mailin
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="flex-1 border px-4 py-3 focus:outline-hidden focus:ring-2"
+                  className="flex-1 border px-4 py-3 focus:ring-2 focus:outline-hidden"
                   style={
                     {
                       backgroundColor: (theme.secondaryColor as string) || '#1a1a1a',

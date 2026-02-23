@@ -119,19 +119,19 @@ export default function LogSessionModal({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="pointer-events-auto max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-background shadow-2xl"
+              className="border-border bg-background pointer-events-auto max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border shadow-2xl"
             >
               {/* Header */}
-              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background px-6 py-4">
+              <div className="border-border bg-background sticky top-0 z-10 flex items-center justify-between border-b px-6 py-4">
                 <div>
                   <h2 className="font-display text-2xl font-bold">Log Session</h2>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-sm">
                     Track your creative work with your team
                   </p>
                 </div>
                 <button
                   onClick={onClose}
-                  className="rounded-lg p-2 transition-colors hover:bg-surface"
+                  className="hover:bg-surface rounded-lg p-2 transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -171,7 +171,7 @@ export default function LogSessionModal({
                   <label className="mb-3 block text-sm font-semibold">Duration</label>
                   <div className="flex items-center gap-3">
                     <div className="flex-1">
-                      <label className="mb-1 block text-xs text-muted-foreground">HOURS</label>
+                      <label className="text-muted-foreground mb-1 block text-xs">HOURS</label>
                       <input
                         type="number"
                         min="0"
@@ -180,18 +180,18 @@ export default function LogSessionModal({
                         onChange={(e) =>
                           setDuration({ ...duration, hours: parseInt(e.target.value) || 0 })
                         }
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-center text-2xl font-bold text-foreground focus:border-brand-primary focus:outline-hidden"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 text-center text-2xl font-bold focus:outline-hidden"
                       />
                     </div>
-                    <span className="mt-6 text-2xl text-muted-foreground">:</span>
+                    <span className="text-muted-foreground mt-6 text-2xl">:</span>
                     <div className="flex-1">
-                      <label className="mb-1 block text-xs text-muted-foreground">MINUTES</label>
+                      <label className="text-muted-foreground mb-1 block text-xs">MINUTES</label>
                       <select
                         value={duration.minutes}
                         onChange={(e) =>
                           setDuration({ ...duration, minutes: parseInt(e.target.value) })
                         }
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-center text-2xl font-bold text-foreground focus:border-brand-primary focus:outline-hidden"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 text-center text-2xl font-bold focus:outline-hidden"
                       >
                         {[0, 15, 30, 45].map((min) => (
                           <option key={min} value={min}>
@@ -201,9 +201,9 @@ export default function LogSessionModal({
                       </select>
                     </div>
                     <div className="mt-6 flex-1">
-                      <div className="rounded-lg border border-brand-primary/30 bg-brand-primary/10 px-4 py-2 text-center">
-                        <p className="text-xs text-muted-foreground">Total</p>
-                        <p className="text-lg font-bold text-brand-primary">{totalMinutes}m</p>
+                      <div className="border-brand-primary/30 bg-brand-primary/10 rounded-lg border px-4 py-2 text-center">
+                        <p className="text-muted-foreground text-xs">Total</p>
+                        <p className="text-brand-primary text-lg font-bold">{totalMinutes}m</p>
                       </div>
                     </div>
                   </div>
@@ -216,7 +216,7 @@ export default function LogSessionModal({
                     type="date"
                     value={sessionDate}
                     onChange={(e) => setSessionDate(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
+                    className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 focus:outline-hidden"
                   />
                 </div>
 
@@ -225,12 +225,12 @@ export default function LogSessionModal({
                   <div>
                     <label className="mb-2 block text-sm font-semibold">
                       Linked Song{' '}
-                      <span className="font-normal text-muted-foreground">(Optional)</span>
+                      <span className="text-muted-foreground font-normal">(Optional)</span>
                     </label>
                     <select
                       value={selectedSong}
                       onChange={(e) => setSelectedSong(e.target.value)}
-                      className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
+                      className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 focus:outline-hidden"
                     >
                       <option value="">No specific song</option>
                       {projectSongs.map((song) => (
@@ -246,7 +246,7 @@ export default function LogSessionModal({
                 <div>
                   <label className="mb-3 block text-sm font-semibold">
                     Participants{' '}
-                    <span className="text-xs text-muted-foreground">(Select all who attended)</span>
+                    <span className="text-muted-foreground text-xs">(Select all who attended)</span>
                   </label>
                   <div className="max-h-48 space-y-2 overflow-y-auto">
                     {projectCollaborators.map((collab) => (
@@ -261,13 +261,13 @@ export default function LogSessionModal({
                       >
                         <span className="text-sm">{collab.name || collab.email}</span>
                         {selectedParticipants.includes(collab.email) && (
-                          <CheckCircle2 className="h-4 w-4 text-brand-primary" />
+                          <CheckCircle2 className="text-brand-primary h-4 w-4" />
                         )}
                       </button>
                     ))}
                   </div>
                   {selectedParticipants.length > 0 && (
-                    <p className="mt-2 text-xs text-muted-foreground">
+                    <p className="text-muted-foreground mt-2 text-xs">
                       {selectedParticipants.length} participant
                       {selectedParticipants.length !== 1 ? 's' : ''} selected
                     </p>
@@ -277,26 +277,26 @@ export default function LogSessionModal({
                 {/* Notes */}
                 <div>
                   <label className="mb-2 block text-sm font-semibold">
-                    Notes <span className="font-normal text-muted-foreground">(Optional)</span>
+                    Notes <span className="text-muted-foreground font-normal">(Optional)</span>
                   </label>
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="What did you work on? Any breakthroughs or decisions made?"
                     rows={4}
-                    className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground focus:border-brand-primary focus:outline-hidden"
+                    className="border-border bg-surface text-foreground focus:border-brand-primary w-full resize-none rounded-lg border px-4 py-3 text-sm focus:outline-hidden"
                   />
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     Example: "Recorded vocals for verse 1, decided on Am for the bridge"
                   </p>
                 </div>
 
                 {/* Collaborative Note */}
                 <div className="rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
-                  <p className="mb-1 text-sm font-medium text-brand-primary">
+                  <p className="text-brand-primary mb-1 text-sm font-medium">
                     🤝 Collaborative Tracking
                   </p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     All project members can see this session. This helps your team coordinate
                     schedules, track contributions, and prepare for royalty split conversations.
                   </p>
@@ -304,10 +304,10 @@ export default function LogSessionModal({
               </div>
 
               {/* Footer */}
-              <div className="sticky bottom-0 flex items-center justify-between border-t border-border bg-background px-6 py-4">
+              <div className="border-border bg-background sticky bottom-0 flex items-center justify-between border-t px-6 py-4">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
                 >
                   Cancel
                 </button>

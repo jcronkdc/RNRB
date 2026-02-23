@@ -120,17 +120,17 @@ export default function CreateSetlistModal({
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="pointer-events-auto flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border bg-background shadow-2xl"
+              className="border-border bg-background pointer-events-auto flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border shadow-2xl"
             >
               {/* Header */}
-              <div className="flex shrink-0 items-center justify-between border-b border-border bg-background px-6 py-4">
+              <div className="border-border bg-background flex shrink-0 items-center justify-between border-b px-6 py-4">
                 <div>
                   <h2 className="font-display text-2xl font-bold">Create Setlist</h2>
-                  <p className="text-sm text-muted-foreground">Organize songs for your show</p>
+                  <p className="text-muted-foreground text-sm">Organize songs for your show</p>
                 </div>
                 <button
                   onClick={onClose}
-                  className="rounded-lg p-2 transition-colors hover:bg-surface"
+                  className="hover:bg-surface rounded-lg p-2 transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -150,48 +150,48 @@ export default function CreateSetlistModal({
                         value={setlistName}
                         onChange={(e) => setSetlistName(e.target.value)}
                         placeholder="Friday Night Show, Acoustic Set, Main Set..."
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 focus:outline-hidden"
                         autoFocus
                       />
                     </div>
 
                     <div>
                       <label className="mb-2 block text-sm font-semibold">
-                        Venue <span className="font-normal text-muted-foreground">(Optional)</span>
+                        Venue <span className="text-muted-foreground font-normal">(Optional)</span>
                       </label>
                       <input
                         type="text"
                         value={venue}
                         onChange={(e) => setVenue(e.target.value)}
                         placeholder="The Bluebird Cafe, House of Blues..."
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 focus:outline-hidden"
                       />
                     </div>
 
                     <div>
                       <label className="mb-2 block text-sm font-semibold">
                         Show Date{' '}
-                        <span className="font-normal text-muted-foreground">(Optional)</span>
+                        <span className="text-muted-foreground font-normal">(Optional)</span>
                       </label>
                       <input
                         type="date"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
-                        className="w-full rounded-lg border border-border bg-surface px-4 py-2 text-foreground focus:border-brand-primary focus:outline-hidden"
+                        className="border-border bg-surface text-foreground focus:border-brand-primary w-full rounded-lg border px-4 py-2 focus:outline-hidden"
                       />
                     </div>
 
                     <div>
                       <label className="mb-2 block text-sm font-semibold">Setlist Stats</label>
                       <div className="flex gap-2 text-xs">
-                        <div className="rounded border border-brand-primary/30 bg-brand-primary/10 px-3 py-2">
-                          <span className="font-bold text-brand-primary">
+                        <div className="border-brand-primary/30 bg-brand-primary/10 rounded border px-3 py-2">
+                          <span className="text-brand-primary font-bold">
                             {setlistSongs.length}
                           </span>{' '}
                           songs
                         </div>
-                        <div className="rounded border border-brand-primary/30 bg-brand-primary/10 px-3 py-2">
-                          <span className="font-bold text-brand-primary">~{totalDuration}</span> min
+                        <div className="border-brand-primary/30 bg-brand-primary/10 rounded border px-3 py-2">
+                          <span className="text-brand-primary font-bold">~{totalDuration}</span> min
                         </div>
                         {keyChanges > 0 && (
                           <div className="rounded border border-yellow-500/30 bg-yellow-500/10 px-3 py-2">
@@ -208,14 +208,14 @@ export default function CreateSetlistModal({
                     {/* Available Songs */}
                     <div>
                       <h3 className="mb-3 flex items-center gap-2 font-semibold">
-                        <Music className="h-4 w-4 text-brand-primary" />
+                        <Music className="text-brand-primary h-4 w-4" />
                         Available Songs ({availableSongs.length})
                       </h3>
 
                       {availableSongs.length === 0 ? (
-                        <div className="rounded-lg border-2 border-dashed border-border p-8 text-center">
+                        <div className="border-border rounded-lg border-2 border-dashed p-8 text-center">
                           <CheckCircle2 className="mx-auto mb-2 h-8 w-8 text-green-500" />
-                          <p className="text-sm text-muted-foreground">All songs added!</p>
+                          <p className="text-muted-foreground text-sm">All songs added!</p>
                         </div>
                       ) : (
                         <div className="max-h-96 space-y-2 overflow-y-auto pr-2">
@@ -223,12 +223,12 @@ export default function CreateSetlistModal({
                             <button
                               key={song.id}
                               onClick={() => addSongToSetlist(song.id)}
-                              className="group w-full rounded-lg border border-border bg-surface p-3 text-left transition-all hover:border-brand-primary"
+                              className="group border-border bg-surface hover:border-brand-primary w-full rounded-lg border p-3 text-left transition-all"
                             >
                               <div className="flex items-center justify-between">
                                 <div className="min-w-0 flex-1">
                                   <p className="truncate font-medium">{song.title}</p>
-                                  <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                                  <div className="text-muted-foreground mt-1 flex items-center gap-2 text-xs">
                                     {song.key && <span>Key: {song.key}</span>}
                                     {song.tempo && (
                                       <>
@@ -238,7 +238,7 @@ export default function CreateSetlistModal({
                                     )}
                                   </div>
                                 </div>
-                                <Plus className="ml-2 h-4 w-4 shrink-0 text-brand-primary opacity-0 transition-opacity group-hover:opacity-100" />
+                                <Plus className="text-brand-primary ml-2 h-4 w-4 shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
                               </div>
                             </button>
                           ))}
@@ -249,18 +249,18 @@ export default function CreateSetlistModal({
                     {/* Setlist Order (Drag-Drop) */}
                     <div>
                       <h3 className="mb-3 flex items-center gap-2 font-semibold">
-                        <GripVertical className="h-4 w-4 text-brand-primary" />
+                        <GripVertical className="text-brand-primary h-4 w-4" />
                         Setlist Order ({setlistSongs.length})
-                        <span className="ml-auto text-xs font-normal text-muted-foreground">
+                        <span className="text-muted-foreground ml-auto text-xs font-normal">
                           Drag to reorder
                         </span>
                       </h3>
 
                       {setlistSongs.length === 0 ? (
-                        <div className="rounded-lg border-2 border-dashed border-border p-8 text-center">
-                          <ArrowRight className="mx-auto mb-2 h-8 w-8 rotate-180 text-muted-foreground/50" />
-                          <p className="text-sm text-muted-foreground">Add songs from the left</p>
-                          <p className="mt-1 text-xs text-muted-foreground">
+                        <div className="border-border rounded-lg border-2 border-dashed p-8 text-center">
+                          <ArrowRight className="text-muted-foreground/50 mx-auto mb-2 h-8 w-8 rotate-180" />
+                          <p className="text-muted-foreground text-sm">Add songs from the left</p>
+                          <p className="text-muted-foreground mt-1 text-xs">
                             Click any song to add it to your setlist
                           </p>
                         </div>
@@ -275,16 +275,16 @@ export default function CreateSetlistModal({
                             <Reorder.Item
                               key={song.id}
                               value={song.id}
-                              className="group cursor-move rounded-lg border border-brand-primary/30 bg-brand-primary/5 p-3"
+                              className="group border-brand-primary/30 bg-brand-primary/5 cursor-move rounded-lg border p-3"
                             >
                               <div className="flex items-center gap-3">
-                                <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground" />
-                                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-primary text-sm font-bold text-brand-primary-foreground">
+                                <GripVertical className="text-muted-foreground h-4 w-4 shrink-0" />
+                                <span className="bg-brand-primary text-brand-primary-foreground flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
                                   {index + 1}
                                 </span>
                                 <div className="min-w-0 flex-1">
                                   <p className="truncate font-medium">{song.title}</p>
-                                  <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
+                                  <div className="text-muted-foreground mt-1 flex items-center gap-2 text-xs">
                                     {song.key && <span>Key: {song.key}</span>}
                                     {song.tempo && (
                                       <>
@@ -302,7 +302,7 @@ export default function CreateSetlistModal({
                                 </div>
                                 <button
                                   onClick={() => removeSongFromSetlist(song.id)}
-                                  className="shrink-0 p-1 text-muted-foreground opacity-0 transition-all hover:text-red-500 group-hover:opacity-100"
+                                  className="text-muted-foreground shrink-0 p-1 opacity-0 transition-all group-hover:opacity-100 hover:text-red-500"
                                   title="Remove from setlist"
                                 >
                                   <Trash2 className="h-4 w-4" />
@@ -329,24 +329,24 @@ export default function CreateSetlistModal({
                   {/* Notes */}
                   <div className="mt-6">
                     <label className="mb-2 block text-sm font-semibold">
-                      Notes <span className="font-normal text-muted-foreground">(Optional)</span>
+                      Notes <span className="text-muted-foreground font-normal">(Optional)</span>
                     </label>
                     <textarea
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       placeholder="Special requests, transitions between songs, tuning changes..."
                       rows={3}
-                      className="w-full resize-none rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground focus:border-brand-primary focus:outline-hidden"
+                      className="border-border bg-surface text-foreground focus:border-brand-primary w-full resize-none rounded-lg border px-4 py-3 text-sm focus:outline-hidden"
                     />
                   </div>
 
                   {/* Collaborative Notice */}
                   <div className="mt-6 rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
-                    <p className="mb-2 flex items-center gap-2 text-sm font-medium text-brand-primary">
+                    <p className="text-brand-primary mb-2 flex items-center gap-2 text-sm font-medium">
                       <Sparkles className="h-4 w-4" />
                       Pro Tips for Great Setlists
                     </p>
-                    <ul className="space-y-1 text-xs text-muted-foreground">
+                    <ul className="text-muted-foreground space-y-1 text-xs">
                       <li>
                         • <strong>Start strong:</strong> Open with a crowd-pleaser
                       </li>
@@ -366,8 +366,8 @@ export default function CreateSetlistModal({
               </div>
 
               {/* Footer */}
-              <div className="flex shrink-0 items-center justify-between border-t border-border bg-background px-6 py-4">
-                <div className="text-sm text-muted-foreground">
+              <div className="border-border bg-background flex shrink-0 items-center justify-between border-t px-6 py-4">
+                <div className="text-muted-foreground text-sm">
                   {!isValid && (
                     <span className="flex items-center gap-2 text-yellow-500">
                       <AlertCircle className="h-4 w-4" />
@@ -378,7 +378,7 @@ export default function CreateSetlistModal({
                 <div className="flex items-center gap-3">
                   <button
                     onClick={onClose}
-                    className="px-4 py-2 text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-muted-foreground hover:text-foreground px-4 py-2 transition-colors"
                   >
                     Cancel
                   </button>
