@@ -71,10 +71,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
-  eslint: {
-    // Disabled during builds — eslint-plugin-tailwindcss@3.x is incompatible with Tailwind v4
-    ignoreDuringBuilds: true,
-  },
   // Externalize packages that use Node.js built-ins (required for nodemailer/auth)
   // This prevents webpack from bundling these for Edge runtime
   serverExternalPackages: ['nodemailer', 'bcryptjs'],
@@ -144,8 +140,8 @@ const nextConfig = {
       },
     ],
   },
+  turbopack: {},
   // Webpack config only used when explicitly running with --webpack flag
-  // By default, Next.js 16 uses Turbopack which is faster and more stable
   webpack: (config, { isServer }) => {
     // Ensure proper handling of lucide-react icons
     config.module.rules.push({
