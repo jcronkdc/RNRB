@@ -31,20 +31,17 @@ function createPrismaClient(): PrismaClient {
 function createBuildTimeStub(): PrismaClient {
   const handler: ProxyHandler<object> = {
     get(_target, prop) {
-      if (prop === 'then' || prop === Symbol.toPrimitive || prop === Symbol.toStringTag) return undefined;
+      if (prop === 'then' || prop === Symbol.toPrimitive || prop === Symbol.toStringTag)
+        return undefined;
       if (prop === '$connect' || prop === '$disconnect') return () => Promise.resolve();
       if (prop === '$extends') return () => new Proxy({}, handler);
       if (prop === '$queryRaw') return () => Promise.resolve([]);
       return new Proxy(() => {}, {
         get() {
-          throw new Error(
-            `DATABASE_URL is not set — cannot perform DB operations at build time.`
-          );
+          throw new Error(`DATABASE_URL is not set — cannot perform DB operations at build time.`);
         },
         apply() {
-          throw new Error(
-            `DATABASE_URL is not set — cannot perform DB operations at build time.`
-          );
+          throw new Error(`DATABASE_URL is not set — cannot perform DB operations at build time.`);
         },
       });
     },

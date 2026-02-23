@@ -79,7 +79,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             image: user.image,
           };
         } catch (error) {
-          console.error('[AUTH] Authorization error:', error instanceof Error ? error.message : error);
+          console.error(
+            '[AUTH] Authorization error:',
+            error instanceof Error ? error.message : error
+          );
           return null;
         }
       },
@@ -135,7 +138,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         }
       } catch (error) {
-        console.error('[AUTH] signIn callback error:', error instanceof Error ? error.message : error);
+        console.error(
+          '[AUTH] signIn callback error:',
+          error instanceof Error ? error.message : error
+        );
       }
 
       return true;
@@ -153,7 +159,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             });
             token.profileCompleted = dbUser?.profileCompleted ?? false;
           } catch (error) {
-            console.error('[AUTH] Failed to check profile completion:', error instanceof Error ? error.message : error);
+            console.error(
+              '[AUTH] Failed to check profile completion:',
+              error instanceof Error ? error.message : error
+            );
             token.profileCompleted = false;
           }
         }
@@ -197,7 +206,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.activeOrganizationId ||
             memberships[0]?.orgId;
         } catch (error) {
-          console.error('[AUTH] Failed to fetch memberships:', error instanceof Error ? error.message : error);
+          console.error(
+            '[AUTH] Failed to fetch memberships:',
+            error instanceof Error ? error.message : error
+          );
           token.organizationIds = token.organizationIds || [];
         }
       }

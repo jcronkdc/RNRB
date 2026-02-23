@@ -104,7 +104,7 @@ function Toast({
       <button
         type="button"
         onClick={onDismiss}
-        className="absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-hidden focus:ring-2 group-hover:opacity-100"
+        className="focus:outline-hidden absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:ring-2 group-hover:opacity-100"
         aria-label="Close"
       >
         <svg
@@ -135,7 +135,7 @@ function ToastViewport({ children, className }: ToastViewportProps) {
   return (
     <div
       className={cn(
-        'fixed bottom-4 right-4 z-999 flex max-h-screen w-full flex-col gap-2 outline-hidden',
+        'z-999 outline-hidden fixed bottom-4 right-4 flex max-h-screen w-full flex-col gap-2',
         className
       )}
     >

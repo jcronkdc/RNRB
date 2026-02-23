@@ -28,7 +28,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div
         className={cn(
-          'group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 shadow-xs ring-offset-background focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2 motion-safe:transition-all motion-safe:duration-200',
+          'shadow-xs group relative flex w-full items-center gap-2 rounded-xl border border-border bg-background px-3 py-2 ring-offset-background focus-within:ring-2 focus-within:ring-brand-primary focus-within:ring-offset-2 motion-safe:transition-all motion-safe:duration-200',
           disabled && 'opacity-60',
           containerClassName
         )}
@@ -48,7 +48,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           disabled={disabled}
           className={cn(
-            'flex h-6 w-full bg-transparent text-sm text-foreground outline-hidden placeholder:text-muted-foreground/80',
+            'outline-hidden flex h-6 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/80',
             className
           )}
           {...props}

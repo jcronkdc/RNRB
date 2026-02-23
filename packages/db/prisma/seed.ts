@@ -12,7 +12,9 @@ async function main() {
     });
     console.log(`✅ Set isOwner=true for ${OWNER_EMAIL}`);
   } else if (!ownerUser) {
-    console.log(`ℹ️  Owner account (${OWNER_EMAIL}) not yet registered — will be auto-flagged on first sign-in.`);
+    console.log(
+      `ℹ️  Owner account (${OWNER_EMAIL}) not yet registered — will be auto-flagged on first sign-in.`
+    );
   }
 
   // Seed demo data

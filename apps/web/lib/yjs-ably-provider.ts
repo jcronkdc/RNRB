@@ -18,7 +18,12 @@
 
 import type { RealtimeChannel, Realtime } from 'ably';
 import * as Y from 'yjs';
-import { Awareness, encodeAwarenessUpdate, applyAwarenessUpdate, removeAwarenessStates } from 'y-protocols/awareness';
+import {
+  Awareness,
+  encodeAwarenessUpdate,
+  applyAwarenessUpdate,
+  removeAwarenessStates,
+} from 'y-protocols/awareness';
 
 export interface YjsAblyProviderOptions {
   /** The Yjs document to sync */
@@ -193,15 +198,18 @@ export class YjsAblyProvider {
     });
 
     // When awareness changes, broadcast to Ably
-    this.awareness.on('update', ({ added, updated, removed }: { added: number[]; updated: number[]; removed: number[] }) => {
-      if (this.isDestroyed) return;
+    this.awareness.on(
+      'update',
+      ({ added, updated, removed }: { added: number[]; updated: number[]; removed: number[] }) => {
+        if (this.isDestroyed) return;
 
-      const changedClients = added.concat(updated).concat(removed);
-      const awarenessUpdate = encodeAwarenessUpdate(this.awareness, changedClients);
-      const encoded = btoa(String.fromCharCode(...awarenessUpdate));
+        const changedClients = added.concat(updated).concat(removed);
+        const awarenessUpdate = encodeAwarenessUpdate(this.awareness, changedClients);
+        const encoded = btoa(String.fromCharCode(...awarenessUpdate));
 
-      this.channel.publish('yjs-awareness', { update: encoded });
-    });
+        this.channel.publish('yjs-awareness', { update: encoded });
+      }
+    );
   }
 
   /**

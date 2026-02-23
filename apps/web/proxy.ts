@@ -183,8 +183,7 @@ export async function proxy(request: NextRequest) {
   // CSRF PROTECTION FOR API MUTATIONS
   // ============================================
   const isApiMutation =
-    pathname.startsWith('/api/') &&
-    ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method);
+    pathname.startsWith('/api/') && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method);
 
   if (isApiMutation) {
     const origin = request.headers.get('origin');
@@ -212,16 +211,11 @@ export async function proxy(request: NextRequest) {
         process.env.NEXT_PUBLIC_APP_URL,
       ].filter(Boolean) as string[];
 
-      const originValid =
-        origin && allowedOrigins.some((allowed) => origin.startsWith(allowed));
-      const refererValid =
-        referer && allowedOrigins.some((allowed) => referer.startsWith(allowed));
+      const originValid = origin && allowedOrigins.some((allowed) => origin.startsWith(allowed));
+      const refererValid = referer && allowedOrigins.some((allowed) => referer.startsWith(allowed));
 
       if (!originValid && !refererValid) {
-        return NextResponse.json(
-          { error: 'Invalid request origin' },
-          { status: 403 }
-        );
+        return NextResponse.json({ error: 'Invalid request origin' }, { status: 403 });
       }
     }
   }

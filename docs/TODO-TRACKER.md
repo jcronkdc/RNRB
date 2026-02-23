@@ -4,14 +4,14 @@
 
 ## Summary
 
-| Category | Count |
-|----------|-------|
-| Notifications & Email | 7 |
-| UI Navigation | 3 |
-| Setlist Management | 4 |
-| Live Streaming | 3 |
-| Social Features | 3 |
-| Other (merch, audio, meetings, mail) | 5 |
+| Category                             | Count |
+| ------------------------------------ | ----- |
+| Notifications & Email                | 7     |
+| UI Navigation                        | 3     |
+| Setlist Management                   | 4     |
+| Live Streaming                       | 3     |
+| Social Features                      | 3     |
+| Other (merch, audio, meetings, mail) | 5     |
 
 ---
 

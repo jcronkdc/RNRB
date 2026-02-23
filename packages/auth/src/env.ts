@@ -31,8 +31,9 @@ function getEnv() {
     // During `next build`, process.env.NEXTAUTH_SECRET may be absent — that's okay.
     // But at runtime, missing secret = unsigned JWTs = security vulnerability.
     if (!parsed.NEXTAUTH_SECRET && typeof window === 'undefined') {
-      const isBuild = process.env.npm_lifecycle_event === 'build' ||
-                      process.env.NEXT_PHASE === 'phase-production-build';
+      const isBuild =
+        process.env.npm_lifecycle_event === 'build' ||
+        process.env.NEXT_PHASE === 'phase-production-build';
       if (!isBuild) {
         console.error(
           '[AUTH] CRITICAL: NEXTAUTH_SECRET is not set. JWTs will not be signed securely.'
