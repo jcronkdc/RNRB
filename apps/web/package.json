@@ -40,7 +40,7 @@
     "@mux/mux-node": "^12.8.0",
     "@mux/mux-player-react": "^3.2.2",
     "@next/bundle-analyzer": "^15.5.2",
-    "@prisma/client": "^5.20.0",
+    "@prisma/client": "^7.4.1",
     "@react-email/components": "^1.0.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.81.1",

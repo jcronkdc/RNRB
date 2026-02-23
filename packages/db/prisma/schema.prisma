@@ -5,11 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  // For 1000+ concurrent users, use Neon's connection pooler
-  // directUrl is used for migrations, url uses PgBouncer pooler
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  provider = "postgresql"
 }
 
 // NextAuth.js Models
