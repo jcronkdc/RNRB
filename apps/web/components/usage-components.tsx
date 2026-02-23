@@ -2,7 +2,7 @@
 
 import { trpc } from '@cronkwaters/trpc/client/react';
 import { Card } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Zap, Clock, TrendingUp, TrendingDown } from '@/components/ui/custom-icons';
 
 interface UsageHistoryProps {

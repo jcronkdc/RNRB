@@ -7,7 +7,7 @@
  * Like Netflix Party but for music production.
  */
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Play,
   Pause,

@@ -7,7 +7,7 @@
  * Everyone can leave feedback at specific moments.
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   MessageSquare,
   Send,

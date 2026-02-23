@@ -1,7 +1,7 @@
 'use client';
 
 import MuxPlayer from '@mux/mux-player-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Loader2,
   Wifi,

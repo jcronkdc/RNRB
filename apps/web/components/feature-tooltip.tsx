@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Info, X, ChevronRight, ChevronLeft } from '@/components/ui/custom-icons';
 import { useState, type ReactNode, useCallback } from 'react';
 

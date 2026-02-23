@@ -8,7 +8,7 @@
  */
 
 import { Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Loader2, ArrowLeft, Calendar, Sparkles } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';

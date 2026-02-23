@@ -13,7 +13,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown } from '@/components/ui/custom-icons';
 import { useEffect, useRef, useState, useCallback, memo } from 'react';
 

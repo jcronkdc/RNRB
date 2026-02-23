@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Play, Pause, SkipBack, SkipForward, Volume2, VolumeX } from '@/components/ui/custom-icons';
 import { useState, useRef } from 'react';
 

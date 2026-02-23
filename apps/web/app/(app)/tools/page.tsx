@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { PageSkeleton } from '@/components/loading-skeletons';
 import Image from 'next/image';
 import Link from 'next/link';

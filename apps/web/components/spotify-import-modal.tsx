@@ -13,7 +13,7 @@
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Music, X, Check, AlertCircle, Loader2, ExternalLink } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 

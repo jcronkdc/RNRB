@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Copy, Check, Printer, Download, Music, FileText } from '@/components/ui/custom-icons';
 import { useState, useMemo } from 'react';
 

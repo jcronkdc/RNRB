@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, Save, Plus, Trash2 } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 

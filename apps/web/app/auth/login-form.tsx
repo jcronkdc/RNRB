@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Loader2, Sparkles, ShieldCheck } from '@/components/ui/custom-icons';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';

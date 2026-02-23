@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Music2, Info, Volume2, VolumeX, Play } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 

@@ -6,7 +6,7 @@
  * The Nerve Center - See EVERYTHING happening across the mycelial network
  */
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Users,
   Activity,

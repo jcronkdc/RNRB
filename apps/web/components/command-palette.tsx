@@ -14,7 +14,7 @@
  * - Rich previews with avatars and metadata
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Search, Command as CommandIcon, ArrowRight, Loader2 } from '@/components/ui/custom-icons';
 import { useState, useEffect, useRef } from 'react';
 

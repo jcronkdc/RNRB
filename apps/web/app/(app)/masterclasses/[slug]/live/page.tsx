@@ -1,7 +1,7 @@
 'use client';
 
 import { DailyProvider, useCallObject, useDaily } from '@daily-co/daily-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Video,
   VideoOff,

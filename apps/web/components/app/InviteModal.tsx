@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Input, Label } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Mail, Loader2, X } from '@/components/ui/custom-icons';
 import { useState } from 'react';
 

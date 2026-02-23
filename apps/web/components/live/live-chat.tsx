@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Send, Pin, Crown, Shield, Star } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import { useEffect, useRef, useState, FormEvent } from 'react';

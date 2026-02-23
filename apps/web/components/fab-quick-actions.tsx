@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Plus, Music, Users, Mic2, X, Folder } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useState } from 'react';

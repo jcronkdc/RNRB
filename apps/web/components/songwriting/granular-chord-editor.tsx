@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Music, X, Plus } from '@/components/ui/custom-icons';
 import { useState, useRef, useMemo, useCallback, useEffect, memo } from 'react';
 

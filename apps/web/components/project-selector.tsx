@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Check, ChevronDown, Folder, Plus, ExternalLink } from '@/components/ui/custom-icons';
 import { useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { ArrowUp, ArrowDown, RotateCcw, Music } from '@/components/ui/custom-icons';
 import { useState, useMemo, useCallback } from 'react';
 

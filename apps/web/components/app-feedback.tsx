@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { X, Check, AlertTriangle, Info } from '@/components/ui/custom-icons';
 
 interface FeedbackMessage {

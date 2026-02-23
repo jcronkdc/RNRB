@@ -7,7 +7,7 @@
  * Like Google Docs but for lyrics!
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Users, Lock, Unlock, Lightbulb, Check, X, Type } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
 import { useState, useRef, useEffect } from 'react';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, Suspense } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { CheckCircle, Package, ArrowRight, Home } from '@/components/ui/custom-icons';
 import { useCart } from '@/lib/merch/cart-context';
 import { useSearchParams } from 'next/navigation';

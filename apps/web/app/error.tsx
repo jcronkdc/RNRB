@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { AlertTriangle, RefreshCw, Home } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useEffect } from 'react';

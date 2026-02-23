@@ -11,7 +11,7 @@ import {
   DailyVideo,
   DailyAudio,
 } from '@daily-co/daily-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import {
   Video,
   VideoOff,

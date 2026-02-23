@@ -15,7 +15,7 @@
  * />
  */
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { LucideIcon } from '@/components/ui/custom-icons';
 import { ThemeLogo } from '@/components/theme';
 import React from 'react';

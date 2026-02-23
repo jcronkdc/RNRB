@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { MessageSquare, Reply, Loader2, Send, User } from '@/components/ui/custom-icons';
 import { useState, useEffect } from 'react';
 

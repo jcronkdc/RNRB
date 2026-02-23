@@ -15,7 +15,7 @@
  */
 
 import { Button, Card } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   Calendar,
   Download,

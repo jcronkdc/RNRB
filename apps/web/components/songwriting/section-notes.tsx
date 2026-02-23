@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { StickyNote, Plus, X, Save, Trash2 } from '@/components/ui/custom-icons';
 import { useState, useCallback } from 'react';
 

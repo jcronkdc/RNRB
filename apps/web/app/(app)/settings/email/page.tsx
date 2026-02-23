@@ -23,7 +23,7 @@ import {
   X,
   Zap,
 } from '@/components/ui/custom-icons';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

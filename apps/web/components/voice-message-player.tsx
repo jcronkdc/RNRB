@@ -15,7 +15,7 @@
  */
 
 import { Button } from '@cronkwaters/ui';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Play, Pause, Download, Gauge } from '@/components/ui/custom-icons';
 import { useState, useRef, useEffect } from 'react';
 

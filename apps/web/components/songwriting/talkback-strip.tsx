@@ -20,7 +20,7 @@
  * - Renders as a fixed bar at the bottom of the editor
  */
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Mic, MicOff, Video, PhoneOff } from '@/components/ui/custom-icons';
 import { useState, useEffect, useCallback, useRef } from 'react';
 

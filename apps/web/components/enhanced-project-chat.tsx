@@ -19,7 +19,7 @@
 
 import { Button } from '@cronkwaters/ui';
 import type { RealtimeChannel } from 'ably';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Send, Smile, Paperclip, MoreVertical, Reply } from '@/components/ui/custom-icons';
 import { useEffect, useState, useRef } from 'react';
 
