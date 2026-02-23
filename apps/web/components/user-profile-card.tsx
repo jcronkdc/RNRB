@@ -100,18 +100,18 @@ export function UserProfileCard({
     <Link href={ROUTES.profile.view(id)}>
       <Card className="rnrb-card group relative overflow-hidden p-6 transition-all hover:shadow-xl">
         {/* Hover Effect */}
-        <div className="absolute inset-0 bg-linear-to-br from-brand-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+        <div className="from-brand-primary/5 absolute inset-0 bg-linear-to-br to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
         <div className="relative z-10">
           {/* Header */}
           <div className="mb-4 flex items-start gap-4">
             {/* Avatar */}
-            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl ring-2 ring-border transition-all group-hover:ring-brand-primary">
+            <div className="ring-border group-hover:ring-brand-primary relative h-16 w-16 shrink-0 overflow-hidden rounded-xl ring-2 transition-all">
               {image ? (
                 <Image src={image} alt={name || 'User'} fill className="object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center bg-surface-muted">
-                  <Users className="h-8 w-8 text-muted-foreground" />
+                <div className="bg-surface-muted flex h-full w-full items-center justify-center">
+                  <Users className="text-muted-foreground h-8 w-8" />
                 </div>
               )}
             </div>
@@ -124,12 +124,12 @@ export function UserProfileCard({
                 </h3>
                 {profile?.availableForCollaboration && (
                   <CheckCircle
-                    className="h-4 w-4 shrink-0 text-brand-primary"
+                    className="text-brand-primary h-4 w-4 shrink-0"
                     aria-label="Available for collaboration"
                   />
                 )}
               </div>
-              <p className="truncate text-sm text-muted-foreground">{email}</p>
+              <p className="text-muted-foreground truncate text-sm">{email}</p>
             </div>
           </div>
 
@@ -139,18 +139,18 @@ export function UserProfileCard({
               {/* Genres */}
               {profile.genres && profile.genres.length > 0 && (
                 <div className="flex items-center gap-2">
-                  <Music className="h-4 w-4 shrink-0 text-muted-foreground" />
+                  <Music className="text-muted-foreground h-4 w-4 shrink-0" />
                   <div className="flex flex-wrap gap-1">
                     {profile.genres.slice(0, 3).map((genre) => (
                       <span
                         key={genre}
-                        className="inline-block rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium"
+                        className="bg-surface-muted inline-block rounded-md px-2 py-0.5 text-xs font-medium"
                       >
                         {genre}
                       </span>
                     ))}
                     {profile.genres.length > 3 && (
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         +{profile.genres.length - 3} more
                       </span>
                     )}
@@ -174,7 +174,7 @@ export function UserProfileCard({
 
               {/* Location */}
               {profile.location && (
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
                   <MapPin className="h-3.5 w-3.5" />
                   <span>{profile.location}</span>
                 </div>
@@ -183,18 +183,18 @@ export function UserProfileCard({
           )}
 
           {/* Stats Row */}
-          <div className="flex items-center gap-4 border-t border-border/50 pt-4">
+          <div className="border-border/50 flex items-center gap-4 border-t pt-4">
             <div className="text-center">
               <div className="font-display text-lg font-bold">{followerCount}</div>
-              <div className="text-xs text-muted-foreground">Followers</div>
+              <div className="text-muted-foreground text-xs">Followers</div>
             </div>
             <div className="text-center">
               <div className="font-display text-lg font-bold">{stats.following}</div>
-              <div className="text-xs text-muted-foreground">Following</div>
+              <div className="text-muted-foreground text-xs">Following</div>
             </div>
             <div className="text-center">
               <div className="font-display text-lg font-bold">{stats.tracks}</div>
-              <div className="text-xs text-muted-foreground">Tracks</div>
+              <div className="text-muted-foreground text-xs">Tracks</div>
             </div>
           </div>
 
@@ -245,13 +245,13 @@ export function UserProfileCard({
           {profile && (profile.availableForCollaboration || profile.availableForGigs) && (
             <div className="mt-4 flex flex-wrap gap-2">
               {profile.availableForCollaboration && (
-                <div className="inline-flex items-center gap-1 rounded-full bg-brand-primary/10 px-3 py-1 text-xs font-medium text-brand-primary">
+                <div className="bg-brand-primary/10 text-brand-primary inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium">
                   <CheckCircle className="h-3 w-3" />
                   Open to collaborate
                 </div>
               )}
               {profile.availableForGigs && (
-                <div className="inline-flex items-center gap-1 rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
+                <div className="bg-success/10 text-success inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium">
                   <CheckCircle className="h-3 w-3" />
                   Available for gigs
                 </div>

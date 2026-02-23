@@ -317,7 +317,7 @@ ${session.notes}
           </div>
           <div>
             <h3 className="text-lg font-bold">Recording Session Notes</h3>
-            <p className="text-sm text-muted-foreground">{sessions.length} sessions documented</p>
+            <p className="text-muted-foreground text-sm">{sessions.length} sessions documented</p>
           </div>
         </div>
         <Button
@@ -335,13 +335,13 @@ ${session.notes}
       {/* Search and Filter */}
       <div className="mb-6 flex flex-wrap gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search sessions..."
-            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-hidden"
+            className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 py-2 pr-4 pl-10 focus:outline-hidden"
           />
         </div>
         <div className="flex gap-2">
@@ -372,9 +372,9 @@ ${session.notes}
       {/* Sessions List */}
       {filteredSessions.length === 0 ? (
         <div className="rounded-xl bg-white/5 py-12 text-center">
-          <ClipboardList className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <ClipboardList className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
           <p className="text-muted-foreground">No session notes yet</p>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             Document your recording setups to recreate great sounds!
           </p>
         </div>
@@ -409,7 +409,7 @@ ${session.notes}
 
                   <div className="flex-1">
                     <h4 className="font-semibold">{session.title}</h4>
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <div className="text-muted-foreground flex items-center gap-3 text-sm">
                       <span>{session.songName}</span>
                       <span>•</span>
                       <span>{session.microphone}</span>
@@ -452,7 +452,7 @@ ${session.notes}
                       exit={{ height: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="border-t border-border p-4">
+                      <div className="border-border border-t p-4">
                         <div className="grid gap-4 md:grid-cols-2">
                           {/* Signal Chain */}
                           <div className="space-y-3">
@@ -497,7 +497,7 @@ ${session.notes}
 
                             {session.effects.length > 0 && (
                               <div>
-                                <h6 className="mb-2 text-xs text-muted-foreground">Effects</h6>
+                                <h6 className="text-muted-foreground mb-2 text-xs">Effects</h6>
                                 <div className="flex flex-wrap gap-1">
                                   {session.effects.map((effect, i) => (
                                     <span
@@ -517,7 +517,7 @@ ${session.notes}
                         {session.notes && (
                           <div className="mt-4">
                             <h5 className="mb-2 text-sm font-semibold">Notes</h5>
-                            <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                            <p className="text-muted-foreground text-sm whitespace-pre-wrap">
                               {session.notes}
                             </p>
                           </div>
@@ -565,7 +565,7 @@ ${session.notes}
                         setEditingSession({ ...editingSession, title: e.target.value })
                       }
                       placeholder="e.g., Lead Vocal Take 3"
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -576,7 +576,7 @@ ${session.notes}
                       onChange={(e) =>
                         setEditingSession({ ...editingSession, songName: e.target.value })
                       }
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 </div>
@@ -589,7 +589,7 @@ ${session.notes}
                       onChange={(e) =>
                         setEditingSession({ ...editingSession, trackType: e.target.value as any })
                       }
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     >
                       {TRACK_TYPES.map((type) => (
                         <option key={type.id} value={type.id}>
@@ -606,7 +606,7 @@ ${session.notes}
                       onChange={(e) =>
                         setEditingSession({ ...editingSession, date: e.target.value })
                       }
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 </div>
@@ -625,7 +625,7 @@ ${session.notes}
                         }
                         list="mics"
                         placeholder="e.g., Shure SM7B"
-                        className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                        className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                       />
                       <datalist id="mics">
                         {POPULAR_MICS.map((mic) => (
@@ -642,7 +642,7 @@ ${session.notes}
                           setEditingSession({ ...editingSession, preamp: e.target.value })
                         }
                         placeholder="e.g., UA 610"
-                        className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                        className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                       />
                     </div>
                     <div>
@@ -654,7 +654,7 @@ ${session.notes}
                           setEditingSession({ ...editingSession, eq: e.target.value })
                         }
                         placeholder="e.g., API 550A"
-                        className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                        className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                       />
                     </div>
                     <div>
@@ -666,7 +666,7 @@ ${session.notes}
                           setEditingSession({ ...editingSession, compression: e.target.value })
                         }
                         placeholder="e.g., LA-2A"
-                        className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                        className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                       />
                     </div>
                   </div>
@@ -683,7 +683,7 @@ ${session.notes}
                       }
                       placeholder="e.g., 3 inches off grill, 45° angle"
                       rows={2}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -695,7 +695,7 @@ ${session.notes}
                       }
                       placeholder="e.g., Gain at 2 o'clock, HPF at 80Hz"
                       rows={2}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 </div>
@@ -710,7 +710,7 @@ ${session.notes}
                     }
                     placeholder="Any other details worth remembering..."
                     rows={4}
-                    className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                    className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                   />
                 </div>
               </div>

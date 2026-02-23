@@ -286,7 +286,7 @@ export function PerformerMode() {
         <div
           key={i}
           className={`${isEmpty ? 'h-4' : ''} ${
-            isSection ? 'mt-8 font-bold uppercase tracking-wider text-brand-primary' : ''
+            isSection ? 'text-brand-primary mt-8 font-bold tracking-wider uppercase' : ''
           }`}
         >
           {line}
@@ -316,7 +316,7 @@ export function PerformerMode() {
               initial={{ scale: 2, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
-              className="text-9xl font-black text-brand-primary"
+              className="text-brand-primary text-9xl font-black"
             >
               {countdownSeconds}
             </motion.div>

@@ -77,15 +77,15 @@ export function TrackCard({
       transition={{ duration: 0.2 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative rounded-lg border border-border bg-surface transition-all duration-200 hover:border-border-strong hover:shadow-lg"
+      className="group border-border bg-surface hover:border-border-strong relative rounded-lg border transition-all duration-200 hover:shadow-lg"
     >
       {/* Album Art Section */}
-      <div className="relative aspect-square overflow-hidden rounded-t-lg bg-surface-hover">
+      <div className="bg-surface-hover relative aspect-square overflow-hidden rounded-t-lg">
         {coverUrl ? (
           <Image src={coverUrl} alt={title} fill className="object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <Music2 className="h-16 w-16 text-foreground-muted opacity-50" />
+            <Music2 className="text-foreground-muted h-16 w-16 opacity-50" />
           </div>
         )}
 
@@ -93,11 +93,11 @@ export function TrackCard({
         <motion.div
           initial={false}
           animate={{ opacity: isHovered ? 1 : 0 }}
-          className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/60"
+          className="bg-background/60 pointer-events-none absolute inset-0 flex items-center justify-center"
         >
           <button
             onClick={onPlay}
-            className="pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full bg-brand-primary text-background shadow-xl transition-transform duration-200 hover:scale-110 active:scale-100"
+            className="bg-brand-primary text-background pointer-events-auto flex h-16 w-16 items-center justify-center rounded-full shadow-xl transition-transform duration-200 hover:scale-110 active:scale-100"
           >
             {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="ml-1 h-6 w-6" />}
           </button>
@@ -109,7 +109,7 @@ export function TrackCard({
             setLiked(!liked);
             onLike?.();
           }}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-background/80 transition-all duration-200 hover:bg-background"
+          className="bg-background/80 hover:bg-background absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200"
         >
           <Heart
             className={`h-4 w-4 transition-colors ${
@@ -119,7 +119,7 @@ export function TrackCard({
         </button>
 
         {/* Duration Badge */}
-        <div className="absolute bottom-3 left-3 rounded-md bg-background/80 px-2 py-1 text-xs font-medium">
+        <div className="bg-background/80 absolute bottom-3 left-3 rounded-md px-2 py-1 text-xs font-medium">
           {formatDuration(duration)}
         </div>
       </div>
@@ -128,8 +128,8 @@ export function TrackCard({
       <div className="space-y-3 p-4">
         {/* Title & Artist */}
         <div>
-          <h3 className="truncate font-medium text-foreground">{title}</h3>
-          <p className="truncate text-sm text-foreground-muted">{artist}</p>
+          <h3 className="text-foreground truncate font-medium">{title}</h3>
+          <p className="text-foreground-muted truncate text-sm">{artist}</p>
         </div>
 
         {/* Mini Waveform */}
@@ -150,7 +150,7 @@ export function TrackCard({
 
         {/* Stats & Actions */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-foreground-muted">
+          <div className="text-foreground-muted flex items-center gap-3 text-xs">
             <span className="flex items-center gap-1">
               <Play className="h-3 w-3" />
               {plays}
@@ -165,7 +165,7 @@ export function TrackCard({
           <div className="flex items-center gap-1">
             <button
               onClick={onExtend}
-              className="btn-icon h-8 w-8 hover:bg-surface-hover"
+              className="btn-icon hover:bg-surface-hover h-8 w-8"
               title="Extend"
             >
               <Wand2 className="h-4 w-4" />
@@ -173,7 +173,7 @@ export function TrackCard({
 
             <button
               onClick={onRemix}
-              className="btn-icon h-8 w-8 hover:bg-surface-hover"
+              className="btn-icon hover:bg-surface-hover h-8 w-8"
               title="Get Stems"
             >
               <Layers className="h-4 w-4" />
@@ -181,7 +181,7 @@ export function TrackCard({
 
             <button
               onClick={onDownload}
-              className="btn-icon h-8 w-8 hover:bg-surface-hover"
+              className="btn-icon hover:bg-surface-hover h-8 w-8"
               title="Download"
             >
               <Download className="h-4 w-4" />
@@ -190,7 +190,7 @@ export function TrackCard({
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="btn-icon h-8 w-8 hover:bg-surface-hover"
+                className="btn-icon hover:bg-surface-hover h-8 w-8"
               >
                 <MoreVertical className="h-4 w-4" />
               </button>
@@ -203,22 +203,22 @@ export function TrackCard({
                     initial={{ opacity: 0, scale: 0.95, y: -10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                    className="absolute right-0 top-full z-50 mt-1 w-48 rounded-lg border border-border bg-surface py-1 shadow-xl"
+                    className="border-border bg-surface absolute top-full right-0 z-50 mt-1 w-48 rounded-lg border py-1 shadow-xl"
                   >
-                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-hover">
+                    <button className="hover:bg-surface-hover flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors">
                       <Share2 className="h-4 w-4" />
                       Share
                     </button>
-                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-hover">
+                    <button className="hover:bg-surface-hover flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors">
                       <Copy className="h-4 w-4" />
                       Duplicate
                     </button>
-                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-hover">
+                    <button className="hover:bg-surface-hover flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors">
                       <Edit className="h-4 w-4" />
                       Rename
                     </button>
-                    <hr className="my-1 border-border" />
-                    <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-error transition-colors hover:bg-surface-hover">
+                    <hr className="border-border my-1" />
+                    <button className="text-error hover:bg-surface-hover flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors">
                       <Trash2 className="h-4 w-4" />
                       Delete
                     </button>

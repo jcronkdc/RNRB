@@ -304,7 +304,7 @@ export function VoiceMemoRecorder({ songId, onMemoCreated }: VoiceMemoRecorderPr
       {/* Saved Memos List */}
       {memos.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold uppercase tracking-wide text-gray-400">
+          <h4 className="text-sm font-semibold tracking-wide text-gray-400 uppercase">
             Saved Voice Memos ({memos.length})
           </h4>
 

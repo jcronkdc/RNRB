@@ -369,7 +369,7 @@ export function VersionHistoryPanel({
                               initial={{ opacity: 0, scale: 0.95 }}
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.95 }}
-                              className="absolute right-0 top-8 z-10 w-44 overflow-hidden rounded-xl shadow-lg"
+                              className="absolute top-8 right-0 z-10 w-44 overflow-hidden rounded-xl shadow-lg"
                               style={{
                                 background: 'var(--panel)',
                                 border: '1px solid var(--border)',

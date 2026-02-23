@@ -119,16 +119,16 @@ export function VoiceMessagePlayer({
   const progress = duration > 0 ? currentTime / duration : 0;
 
   return (
-    <div className={`rounded-lg border border-border bg-surface p-3 ${className}`}>
+    <div className={`border-border bg-surface rounded-lg border p-3 ${className}`}>
       {/* Hidden audio element */}
       <audio ref={audioRef} src={audioUrl} />
 
       {/* Voice message header */}
       {(userName || timestamp) && (
         <div className="mb-2 flex items-center justify-between">
-          {userName && <span className="text-sm font-medium text-foreground">{userName}</span>}
+          {userName && <span className="text-foreground text-sm font-medium">{userName}</span>}
           {timestamp && (
-            <span className="text-xs text-muted-foreground">
+            <span className="text-muted-foreground text-xs">
               {timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
@@ -167,7 +167,7 @@ export function VoiceMessagePlayer({
         </div>
 
         {/* Time display */}
-        <div className="shrink-0 font-mono text-xs text-muted-foreground">
+        <div className="text-muted-foreground shrink-0 font-mono text-xs">
           {formatTime(currentTime)} / {formatTime(duration)}
         </div>
 

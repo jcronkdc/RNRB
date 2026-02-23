@@ -380,9 +380,9 @@ export function StageplotGenerator() {
               type="text"
               value={stageName}
               onChange={(e) => setStageName(e.target.value)}
-              className="bg-transparent text-lg font-bold focus:outline-hidden focus:ring-0"
+              className="bg-transparent text-lg font-bold focus:ring-0 focus:outline-hidden"
             />
-            <p className="text-sm text-muted-foreground">Drag equipment to position</p>
+            <p className="text-muted-foreground text-sm">Drag equipment to position</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -429,12 +429,12 @@ export function StageplotGenerator() {
             )}
 
             {/* Front of Stage Label */}
-            <div className="absolute left-1/2 top-2 -translate-x-1/2 text-xs font-bold uppercase tracking-wider text-white/50">
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 text-xs font-bold tracking-wider text-white/50 uppercase">
               Front of Stage (Audience)
             </div>
 
             {/* Back of Stage Label */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-bold uppercase tracking-wider text-white/50">
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-bold tracking-wider text-white/50 uppercase">
               Back of Stage
             </div>
 
@@ -473,7 +473,7 @@ export function StageplotGenerator() {
                     <Icon className="h-4 w-4" style={{ color: item.color }} />
                   </div>
                   <div
-                    className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[8px] font-bold"
+                    className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[8px] font-bold whitespace-nowrap"
                     style={{ color: item.color }}
                   >
                     {item.name}
@@ -519,7 +519,7 @@ export function StageplotGenerator() {
                   >
                     <equip.icon className="h-3 w-3" style={{ color: equip.color }} />
                   </div>
-                  <span className="text-[8px] text-muted-foreground">{equip.name}</span>
+                  <span className="text-muted-foreground text-[8px]">{equip.name}</span>
                 </button>
               ))}
             </div>
@@ -597,7 +597,7 @@ export function StageplotGenerator() {
         <h4 className="mb-3 text-sm font-semibold">Stage Plot Legend</h4>
         <div className="flex flex-wrap gap-4">
           {items.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Add equipment to generate legend</p>
+            <p className="text-muted-foreground text-sm">Add equipment to generate legend</p>
           ) : (
             items.map((item) => (
               <div key={item.id} className="flex items-center gap-2 text-xs">

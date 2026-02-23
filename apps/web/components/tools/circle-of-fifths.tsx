@@ -287,7 +287,7 @@ export function CircleOfFifths() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Circle of Fifths</h3>
-            <p className="text-sm text-muted-foreground">Interactive music theory reference</p>
+            <p className="text-muted-foreground text-sm">Interactive music theory reference</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -487,14 +487,14 @@ export function CircleOfFifths() {
                 <h4 className="text-2xl font-bold">
                   {showMinor ? selectedKey.minor : selectedKey.major} {showMinor ? '' : 'Major'}
                 </h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {selectedKey.sharpsFlats === 0
                     ? 'No sharps or flats'
                     : `${Math.abs(selectedKey.sharpsFlats)} ${selectedKey.sharpsFlats > 0 ? 'sharp' : 'flat'}${Math.abs(selectedKey.sharpsFlats) > 1 ? 's' : ''}: ${selectedKey.accidentals}`}
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-sm text-muted-foreground">Relative Minor</div>
+                <div className="text-muted-foreground text-sm">Relative Minor</div>
                 <div className="font-semibold">{selectedKey.relativeMinor}</div>
               </div>
             </div>
@@ -519,7 +519,7 @@ export function CircleOfFifths() {
                         whileTap={{ scale: 0.95 }}
                         className="flex flex-col items-center rounded-lg bg-white/10 px-3 py-2 hover:bg-white/20"
                       >
-                        <span className="text-xs text-muted-foreground">{numerals[i]}</span>
+                        <span className="text-muted-foreground text-xs">{numerals[i]}</span>
                         <span className="font-bold">{chord}</span>
                       </motion.button>
                     );
@@ -547,7 +547,7 @@ export function CircleOfFifths() {
                     ]
                 ).map((prog) => (
                   <div key={prog.name} className="rounded-lg bg-white/5 p-2">
-                    <div className="text-xs text-muted-foreground">{prog.name}</div>
+                    <div className="text-muted-foreground text-xs">{prog.name}</div>
                     <div className="font-mono text-xs">{prog.chords}</div>
                   </div>
                 ))}
@@ -557,18 +557,18 @@ export function CircleOfFifths() {
             {/* Key Relationships */}
             <div className="grid grid-cols-3 gap-2 text-center text-sm">
               <div className="rounded-lg bg-white/5 p-2">
-                <div className="text-xs text-muted-foreground">Parallel Minor</div>
+                <div className="text-muted-foreground text-xs">Parallel Minor</div>
                 <div className="font-semibold">{selectedKey.parallelMinor}</div>
               </div>
               <div className="rounded-lg bg-white/5 p-2">
-                <div className="text-xs text-muted-foreground">Relative Major</div>
+                <div className="text-muted-foreground text-xs">Relative Major</div>
                 <div className="font-semibold">
                   {KEYS[(KEYS.findIndex((k) => k.major === selectedKey.major) + 3) % 12]?.major ||
                     selectedKey.major}
                 </div>
               </div>
               <div className="rounded-lg bg-white/5 p-2">
-                <div className="text-xs text-muted-foreground">Dominant</div>
+                <div className="text-muted-foreground text-xs">Dominant</div>
                 <div className="font-semibold">
                   {KEYS[(KEYS.findIndex((k) => k.major === selectedKey.major) + 1) % 12]?.major}
                 </div>

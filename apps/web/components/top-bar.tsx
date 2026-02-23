@@ -1,12 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  User,
-  LogOut,
-  ChevronDown,
-  Settings,
-} from '@/components/ui/custom-icons';
+import { User, LogOut, ChevronDown, Settings } from '@/components/ui/custom-icons';
 import { ThemeToggle } from '@/components/theme';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
@@ -32,7 +27,7 @@ export function TopBar() {
 
   return (
     <header
-      className="fixed left-0 right-0 top-0 z-30 flex h-(--topbar-height) items-center border-b lg:ml-(--sidebar-width)"
+      className="fixed top-0 right-0 left-0 z-30 flex h-(--topbar-height) items-center border-b lg:ml-(--sidebar-width)"
       style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
     >
       <div className="flex h-full w-full items-center justify-between px-4 lg:px-5">
@@ -102,7 +97,10 @@ export function TopBar() {
                     }}
                   >
                     <div className="border-b px-3 py-2.5" style={{ borderColor: 'var(--border)' }}>
-                      <p className="truncate text-[13px] font-medium" style={{ color: 'var(--text)' }}>
+                      <p
+                        className="truncate text-[13px] font-medium"
+                        style={{ color: 'var(--text)' }}
+                      >
                         {user?.name || 'Musician'}
                       </p>
                       <p className="truncate text-xs" style={{ color: 'var(--muted)' }}>

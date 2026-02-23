@@ -84,11 +84,7 @@ function encodeWAV(audioBuffer: AudioBuffer): Blob {
   for (let i = 0; i < numSamples; i++) {
     for (let ch = 0; ch < numChannels; ch++) {
       const sample = Math.max(-1, Math.min(1, channels[ch][i]));
-      view.setInt16(
-        offset,
-        sample < 0 ? sample * 0x8000 : sample * 0x7fff,
-        true
-      );
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
       offset += bytesPerSample;
     }
   }
@@ -96,10 +92,7 @@ function encodeWAV(audioBuffer: AudioBuffer): Blob {
   return new Blob([buffer], { type: 'audio/wav' });
 }
 
-function computeWaveformPeaks(
-  buffers: Map<string, AudioBuffer>,
-  resolution = 120
-): number[] {
+function computeWaveformPeaks(buffers: Map<string, AudioBuffer>, resolution = 120): number[] {
   if (buffers.size === 0) return [];
 
   let maxLength = 0;
@@ -216,8 +209,7 @@ export function BackingTrackCreator() {
   const tickTimeline = useCallback(() => {
     if (!audioCtxRef.current || !isPlayingRef.current) return;
 
-    const elapsed =
-      audioCtxRef.current.currentTime - startTimeRef.current;
+    const elapsed = audioCtxRef.current.currentTime - startTimeRef.current;
     const dur = durationRef.current;
 
     if (dur > 0 && elapsed >= dur) {
@@ -257,8 +249,7 @@ export function BackingTrackCreator() {
 
       source.connect(gain);
 
-      const effectiveGain =
-        stem.muted || (hasSoloed && !stem.solo) ? 0 : stem.volume;
+      const effectiveGain = stem.muted || (hasSoloed && !stem.solo) ? 0 : stem.volume;
       gain.gain.value = effectiveGain;
       pan.pan.value = stem.pan;
 
@@ -286,8 +277,7 @@ export function BackingTrackCreator() {
   const togglePlayPause = useCallback(() => {
     if (isPlayingRef.current) {
       if (audioCtxRef.current) {
-        pauseOffsetRef.current =
-          audioCtxRef.current.currentTime - startTimeRef.current;
+        pauseOffsetRef.current = audioCtxRef.current.currentTime - startTimeRef.current;
       }
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
@@ -312,10 +302,7 @@ export function BackingTrackCreator() {
       if (dur <= 0) return;
 
       const rect = e.currentTarget.getBoundingClientRect();
-      const ratio = Math.max(
-        0,
-        Math.min(1, (e.clientX - rect.left) / rect.width)
-      );
+      const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
       const seekTime = ratio * dur;
 
       pauseOffsetRef.current = seekTime;
@@ -470,8 +457,7 @@ export function BackingTrackCreator() {
     stems.forEach((stem) => {
       const gain = gainNodes.current.get(stem.id);
       if (gain) {
-        gain.gain.value =
-          stem.muted || (hasSoloed && !stem.solo) ? 0 : stem.volume;
+        gain.gain.value = stem.muted || (hasSoloed && !stem.solo) ? 0 : stem.volume;
       }
 
       const pan = panNodes.current.get(stem.id);
@@ -580,8 +566,7 @@ export function BackingTrackCreator() {
 
   // ── Derived state ──────────────────────────────────────────────────
   const hasUploadedFiles = audioBuffers.current.size > 0;
-  const progressPct =
-    duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
+  const progressPct = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
 
   return (
     <div className="rnrb-card overflow-hidden rounded-2xl p-6">
@@ -593,7 +578,7 @@ export function BackingTrackCreator() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Backing Track Creator</h3>
-            <p className="text-sm text-muted-foreground">Mix stems for live performance</p>
+            <p className="text-muted-foreground text-sm">Mix stems for live performance</p>
           </div>
         </div>
         <Button
@@ -633,9 +618,9 @@ export function BackingTrackCreator() {
       {/* Stems List */}
       {stems.length === 0 ? (
         <div className="rounded-xl bg-white/5 py-12 text-center">
-          <Music className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <Music className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
           <p className="text-muted-foreground">No stems added yet</p>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-sm">
             Click the buttons above to add instrument stems
           </p>
         </div>
@@ -669,14 +654,14 @@ export function BackingTrackCreator() {
                     className="w-full bg-transparent font-medium focus:outline-hidden"
                   />
                   {decodingIds.has(stem.id) ? (
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span className="text-muted-foreground flex items-center gap-1 text-xs">
                       <Loader2 className="h-3 w-3 animate-spin" />
                       Decoding audio…
                     </span>
                   ) : stem.file ? (
-                    <p className="text-xs text-muted-foreground">{stem.file.name}</p>
+                    <p className="text-muted-foreground text-xs">{stem.file.name}</p>
                   ) : (
-                    <label className="cursor-pointer text-xs text-brand-primary hover:underline">
+                    <label className="text-brand-primary cursor-pointer text-xs hover:underline">
                       Upload audio file
                       <input
                         type="file"
@@ -693,7 +678,7 @@ export function BackingTrackCreator() {
 
                 {/* Volume slider */}
                 <div className="flex w-32 items-center gap-2">
-                  <Volume2 className="h-4 w-4 text-muted-foreground" />
+                  <Volume2 className="text-muted-foreground h-4 w-4" />
                   <input
                     type="range"
                     min="0"
@@ -707,7 +692,7 @@ export function BackingTrackCreator() {
 
                 {/* Pan control */}
                 <div className="flex w-24 items-center gap-1">
-                  <span className="text-xs text-muted-foreground">L</span>
+                  <span className="text-muted-foreground text-xs">L</span>
                   <input
                     type="range"
                     min="-1"
@@ -717,7 +702,7 @@ export function BackingTrackCreator() {
                     onChange={(e) => updateStem(stem.id, { pan: Number(e.target.value) })}
                     className="flex-1"
                   />
-                  <span className="text-xs text-muted-foreground">R</span>
+                  <span className="text-muted-foreground text-xs">R</span>
                 </div>
 
                 {/* Mute/Solo buttons */}
@@ -727,7 +712,7 @@ export function BackingTrackCreator() {
                     className={`rounded px-2 py-1 text-xs font-bold ${
                       stem.muted
                         ? 'bg-red-500 text-white'
-                        : 'bg-white/10 text-muted-foreground hover:bg-white/20'
+                        : 'text-muted-foreground bg-white/10 hover:bg-white/20'
                     }`}
                   >
                     M
@@ -737,7 +722,7 @@ export function BackingTrackCreator() {
                     className={`rounded px-2 py-1 text-xs font-bold ${
                       stem.solo
                         ? 'bg-yellow-500 text-black'
-                        : 'bg-white/10 text-muted-foreground hover:bg-white/20'
+                        : 'text-muted-foreground bg-white/10 hover:bg-white/20'
                     }`}
                   >
                     S
@@ -772,7 +757,7 @@ export function BackingTrackCreator() {
       {duration > 0 && (
         <div className="mb-4">
           <div className="flex items-center gap-3">
-            <span className="w-14 text-right font-mono text-xs text-muted-foreground">
+            <span className="text-muted-foreground w-14 text-right font-mono text-xs">
               {formatTime(currentTime)}
             </span>
 
@@ -817,7 +802,7 @@ export function BackingTrackCreator() {
               />
             </div>
 
-            <span className="w-14 font-mono text-xs text-muted-foreground">
+            <span className="text-muted-foreground w-14 font-mono text-xs">
               {formatTime(duration)}
             </span>
           </div>
@@ -880,7 +865,7 @@ export function BackingTrackCreator() {
       {/* Usage Guide */}
       <div className="mt-6 rounded-xl bg-white/5 p-4">
         <h4 className="mb-3 text-sm font-semibold">How to Use</h4>
-        <ol className="space-y-2 text-sm text-muted-foreground">
+        <ol className="text-muted-foreground space-y-2 text-sm">
           <li>
             1. <strong>Add stems</strong> for each instrument track you want to include
           </li>
@@ -905,7 +890,7 @@ export function BackingTrackCreator() {
       {/* Tips */}
       <div className="mt-4 rounded-xl bg-yellow-500/10 p-4">
         <h4 className="mb-2 text-sm font-semibold text-yellow-400">Pro Tips</h4>
-        <ul className="space-y-1 text-sm text-muted-foreground">
+        <ul className="text-muted-foreground space-y-1 text-sm">
           <li>• Mute your own instrument to create a practice track</li>
           <li>• Use pan to spread instruments in the stereo field</li>
           <li>• Export different versions for rehearsal vs. performance</li>

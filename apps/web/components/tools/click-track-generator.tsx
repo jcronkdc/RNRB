@@ -293,7 +293,7 @@ export function ClickTrackGenerator() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Click Track Generator</h3>
-            <p className="text-sm text-muted-foreground">Create practice & recording clicks</p>
+            <p className="text-muted-foreground text-sm">Create practice & recording clicks</p>
           </div>
         </div>
         <Button
@@ -326,7 +326,7 @@ export function ClickTrackGenerator() {
                       CLICK_SOUNDS.find((s) => s.name === e.target.value) || CLICK_SOUNDS[0]
                     )
                   }
-                  className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
+                  className="border-border w-full rounded-lg border bg-transparent px-3 py-2"
                 >
                   {CLICK_SOUNDS.map((sound) => (
                     <option key={sound.name} value={sound.name}>
@@ -342,7 +342,7 @@ export function ClickTrackGenerator() {
                 <select
                   value={subdivision}
                   onChange={(e) => setSubdivision(Number(e.target.value))}
-                  className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
+                  className="border-border w-full rounded-lg border bg-transparent px-3 py-2"
                 >
                   <option value={1}>Quarter Notes</option>
                   <option value={2}>Eighth Notes</option>
@@ -360,7 +360,7 @@ export function ClickTrackGenerator() {
                   }`}
                 >
                   <span
-                    className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                       accentFirst ? 'translate-x-5' : ''
                     }`}
                   />
@@ -377,7 +377,7 @@ export function ClickTrackGenerator() {
                   }`}
                 >
                   <span
-                    className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                       countIn ? 'translate-x-5' : ''
                     }`}
                   />
@@ -392,7 +392,7 @@ export function ClickTrackGenerator() {
       <div className="mb-6 text-center">
         <div className="mb-4">
           <span className="font-display text-8xl font-black">{bpm}</span>
-          <span className="ml-2 text-2xl text-muted-foreground">BPM</span>
+          <span className="text-muted-foreground ml-2 text-2xl">BPM</span>
         </div>
 
         {/* BPM Slider */}
@@ -405,7 +405,7 @@ export function ClickTrackGenerator() {
             onChange={(e) => setBpm(Number(e.target.value))}
             className="w-full"
           />
-          <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+          <div className="text-muted-foreground mt-1 flex justify-between text-xs">
             <span>20</span>
             <span>Largo</span>
             <span>Andante</span>
@@ -514,7 +514,7 @@ export function ClickTrackGenerator() {
         <div className="flex items-center gap-2 rounded-full bg-white/5 px-4 py-2">
           <button onClick={() => setIsMuted(!isMuted)}>
             {isMuted ? (
-              <VolumeX className="h-5 w-5 text-muted-foreground" />
+              <VolumeX className="text-muted-foreground h-5 w-5" />
             ) : (
               <Volume2 className="h-5 w-5" />
             )}
@@ -546,35 +546,35 @@ export function ClickTrackGenerator() {
         <h4 className="mb-3 text-sm font-semibold">Tempo Reference</h4>
         <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Grave</div>
+            <div className="text-muted-foreground text-xs">Grave</div>
             <div className="font-mono">20-40</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Largo</div>
+            <div className="text-muted-foreground text-xs">Largo</div>
             <div className="font-mono">40-60</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Adagio</div>
+            <div className="text-muted-foreground text-xs">Adagio</div>
             <div className="font-mono">66-76</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Andante</div>
+            <div className="text-muted-foreground text-xs">Andante</div>
             <div className="font-mono">76-108</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Moderato</div>
+            <div className="text-muted-foreground text-xs">Moderato</div>
             <div className="font-mono">108-120</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Allegro</div>
+            <div className="text-muted-foreground text-xs">Allegro</div>
             <div className="font-mono">120-168</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Vivace</div>
+            <div className="text-muted-foreground text-xs">Vivace</div>
             <div className="font-mono">168-176</div>
           </div>
           <div className="rounded-lg bg-white/5 p-2">
-            <div className="text-xs text-muted-foreground">Presto</div>
+            <div className="text-muted-foreground text-xs">Presto</div>
             <div className="font-mono">176-200</div>
           </div>
         </div>

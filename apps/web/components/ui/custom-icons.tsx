@@ -4308,7 +4308,6 @@ export const GitCompare = createIcon(
 
 // LucideIcon type already exported at top of file
 
-
 // Semantic aliases (used across the app)
 export const SongManuscript = Music4;
 export const VinylRecord = Disc3;
@@ -4611,4 +4610,3 @@ export const Icons = {
 } as const;
 
 export default Icons;
-

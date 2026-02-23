@@ -139,23 +139,23 @@ export function VersionSnapshotManager({
 
   if (loading) {
     return (
-      <div className={`rounded-lg border border-border bg-surface p-6 ${className}`}>
-        <p className="text-center text-muted-foreground">Loading versions...</p>
+      <div className={`border-border bg-surface rounded-lg border p-6 ${className}`}>
+        <p className="text-muted-foreground text-center">Loading versions...</p>
       </div>
     );
   }
 
   return (
-    <div className={`rounded-lg border border-border bg-surface ${className}`}>
+    <div className={`border-border bg-surface rounded-lg border ${className}`}>
       {/* Header */}
-      <div className="border-b border-border p-4">
+      <div className="border-border border-b p-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
-              <GitBranch className="h-5 w-5 text-brand-primary" />
+            <h3 className="text-foreground flex items-center gap-2 text-lg font-semibold">
+              <GitBranch className="text-brand-primary h-5 w-5" />
               Version History
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {snapshots.length} {snapshots.length === 1 ? 'version' : 'versions'} saved
             </p>
           </div>
@@ -181,13 +181,13 @@ export function VersionSnapshotManager({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="border-b border-border p-4"
+            className="border-border border-b p-4"
           >
             <div className="space-y-3">
               <div>
                 <label
                   htmlFor="snapshot-name"
-                  className="mb-1 block text-sm font-medium text-foreground"
+                  className="text-foreground mb-1 block text-sm font-medium"
                 >
                   Snapshot Name *
                 </label>
@@ -197,13 +197,13 @@ export function VersionSnapshotManager({
                   value={newLabel}
                   onChange={(e) => setNewLabel(e.target.value)}
                   placeholder="e.g., Demo Ready, Final Mix, Pre-Producer Review"
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-lg border px-3 py-2 outline-hidden focus:ring-2"
                 />
               </div>
               <div>
                 <label
                   htmlFor="snapshot-description"
-                  className="mb-1 block text-sm font-medium text-foreground"
+                  className="text-foreground mb-1 block text-sm font-medium"
                 >
                   Description (optional)
                 </label>
@@ -212,7 +212,7 @@ export function VersionSnapshotManager({
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   placeholder="Describe what changed in this version..."
-                  className="w-full resize-none rounded-lg border border-border bg-surface px-3 py-2 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
+                  className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/20 w-full resize-none rounded-lg border px-3 py-2 outline-hidden focus:ring-2"
                   rows={2}
                 />
               </div>
@@ -257,7 +257,7 @@ export function VersionSnapshotManager({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className={`rounded-lg border border-border p-4 transition ${
+                className={`border-border rounded-lg border p-4 transition ${
                   isSelected ? 'border-brand-primary bg-brand-primary/5' : 'bg-surface-muted'
                 }`}
               >
@@ -266,7 +266,7 @@ export function VersionSnapshotManager({
                   <div className="flex-1">
                     <div className="mb-2 flex items-center gap-2">
                       {/* Version number badge */}
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-bold text-brand-primary">
+                      <div className="bg-brand-primary/20 text-brand-primary flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold">
                         v{snapshot.versionNum}
                       </div>
 
@@ -276,15 +276,15 @@ export function VersionSnapshotManager({
                           type="text"
                           value={editLabel}
                           onChange={(e) => setEditLabel(e.target.value)}
-                          className="flex-1 rounded border border-border bg-surface px-2 py-1 text-sm text-foreground"
+                          className="border-border bg-surface text-foreground flex-1 rounded border px-2 py-1 text-sm"
                           autoFocus
                         />
                       ) : (
                         <div>
-                          <h4 className="flex items-center gap-2 font-semibold text-foreground">
+                          <h4 className="text-foreground flex items-center gap-2 font-semibold">
                             {snapshot.label || `Version ${snapshot.versionNum}`}
                             {isLatest && (
-                              <span className="rounded-full bg-brand-primary/20 px-2 py-0.5 text-xs font-medium text-brand-primary">
+                              <span className="bg-brand-primary/20 text-brand-primary rounded-full px-2 py-0.5 text-xs font-medium">
                                 Latest
                               </span>
                             )}
@@ -295,7 +295,7 @@ export function VersionSnapshotManager({
                             )}
                           </h4>
                           {snapshot.description && (
-                            <p className="mt-1 text-sm text-muted-foreground">
+                            <p className="text-muted-foreground mt-1 text-sm">
                               {snapshot.description}
                             </p>
                           )}
@@ -304,7 +304,7 @@ export function VersionSnapshotManager({
                     </div>
 
                     {/* Metadata */}
-                    <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+                    <div className="text-muted-foreground flex flex-wrap gap-3 text-xs">
                       <span className="flex items-center gap-1">
                         <Clock className="h-3 w-3" />
                         {new Date(snapshot.createdAt).toLocaleString()}
@@ -378,9 +378,9 @@ export function VersionSnapshotManager({
         {/* Empty state */}
         {snapshots.length === 0 && (
           <div className="py-12 text-center">
-            <GitBranch className="mx-auto mb-3 h-12 w-12 text-muted-foreground opacity-50" />
-            <p className="text-sm text-muted-foreground">No snapshots saved yet</p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <GitBranch className="text-muted-foreground mx-auto mb-3 h-12 w-12 opacity-50" />
+            <p className="text-muted-foreground text-sm">No snapshots saved yet</p>
+            <p className="text-muted-foreground mt-1 text-xs">
               Create snapshots to save important milestones
             </p>
           </div>
@@ -388,7 +388,7 @@ export function VersionSnapshotManager({
       </div>
 
       {error && (
-        <div className="border-t border-border p-4">
+        <div className="border-border border-t p-4">
           <p className="text-sm text-red-500">{error}</p>
         </div>
       )}

@@ -187,9 +187,9 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal className="h-5 w-5 text-brand-primary" />
+          <SlidersHorizontal className="text-brand-primary h-5 w-5" />
           <h2 className="text-xl font-semibold">Multi-Track Mixer</h2>
-          <span className="text-sm text-muted-foreground">({tracks.length} tracks)</span>
+          <span className="text-muted-foreground text-sm">({tracks.length} tracks)</span>
         </div>
         <Button onClick={onTrackUpload} className="rnrb-button-primary flex items-center gap-2">
           <Upload className="h-4 w-4" />
@@ -200,9 +200,9 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
       {/* Mixer */}
       {tracks.length === 0 ? (
         <Card className="p-8 text-center">
-          <Music className="mx-auto mb-3 h-12 w-12 text-muted-foreground/50" />
-          <p className="mb-2 text-muted-foreground">No tracks uploaded yet</p>
-          <p className="mb-6 text-sm text-muted-foreground">
+          <Music className="text-muted-foreground/50 mx-auto mb-3 h-12 w-12" />
+          <p className="text-muted-foreground mb-2">No tracks uploaded yet</p>
+          <p className="text-muted-foreground mb-6 text-sm">
             Upload individual stems (vocals, instruments) to create a professional mix
           </p>
           <Button onClick={onTrackUpload} className="rnrb-button-primary">
@@ -234,7 +234,7 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
                     <div className={`h-8 w-1 rounded-full ${getTrackColor(track.trackType)}`} />
                     <div className="w-32">
                       <p className="truncate font-semibold">{track.trackName}</p>
-                      <p className="truncate text-xs text-muted-foreground">
+                      <p className="text-muted-foreground truncate text-xs">
                         {track.trackType.replace(/_/g, ' ')}
                       </p>
                     </div>
@@ -242,7 +242,7 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
 
                   {/* Volume Fader */}
                   <div className="flex flex-1 items-center gap-3">
-                    <Volume2 className="h-4 w-4 text-muted-foreground" />
+                    <Volume2 className="text-muted-foreground h-4 w-4" />
                     <input
                       type="range"
                       min="0"
@@ -254,14 +254,14 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
                       }
                       className="flex-1"
                     />
-                    <span className="w-12 text-right text-sm text-muted-foreground">
+                    <span className="text-muted-foreground w-12 text-right text-sm">
                       {Math.round(track.volume * 100)}%
                     </span>
                   </div>
 
                   {/* Pan Control */}
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-muted-foreground">Pan</span>
+                    <span className="text-muted-foreground text-xs">Pan</span>
                     <input
                       type="range"
                       min="-1"
@@ -271,7 +271,7 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
                       onChange={(e) => updateTrack(track.id, { pan: parseFloat(e.target.value) })}
                       className="w-24"
                     />
-                    <span className="w-8 text-right text-xs text-muted-foreground">
+                    <span className="text-muted-foreground w-8 text-right text-xs">
                       {track.pan > 0 ? 'R' : track.pan < 0 ? 'L' : 'C'}
                     </span>
                   </div>
@@ -308,9 +308,9 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
                 </div>
 
                 {/* Waveform Placeholder */}
-                <div className="mt-3 h-12 rounded-lg bg-surface-muted">
+                <div className="bg-surface-muted mt-3 h-12 rounded-lg">
                   <div className="flex h-full items-center justify-center">
-                    <span className="text-xs text-muted-foreground">Waveform visualization</span>
+                    <span className="text-muted-foreground text-xs">Waveform visualization</span>
                   </div>
                 </div>
               </Card>
@@ -324,7 +324,7 @@ export function StemsMixer({ songId, onTrackUpload }: StemsMixerProps) {
         <Card className="border-brand-primary/50 bg-brand-primary/5 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Maximize2 className="h-5 w-5 text-brand-primary" />
+              <Maximize2 className="text-brand-primary h-5 w-5" />
               <span className="font-semibold">Master Output</span>
             </div>
             <div className="flex items-center gap-4">

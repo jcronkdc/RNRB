@@ -153,7 +153,7 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <GitBranch className="h-5 w-5 text-brand-primary" />
+          <GitBranch className="text-brand-primary h-5 w-5" />
           <h2 className="text-xl font-semibold">Version History</h2>
         </div>
         <Button
@@ -169,9 +169,9 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
       <div className="space-y-3">
         {versions.length === 0 ? (
           <Card className="p-8 text-center">
-            <GitBranch className="mx-auto mb-3 h-12 w-12 text-muted-foreground/50" />
-            <p className="mb-2 text-muted-foreground">No versions saved yet</p>
-            <p className="text-sm text-muted-foreground">
+            <GitBranch className="text-muted-foreground/50 mx-auto mb-3 h-12 w-12" />
+            <p className="text-muted-foreground mb-2">No versions saved yet</p>
+            <p className="text-muted-foreground text-sm">
               Click "Save Version" to create a snapshot of your current work
             </p>
           </Card>
@@ -194,8 +194,8 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
                 <div className="flex items-start justify-between gap-4">
                   {/* Left: Version Info */}
                   <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-primary/10">
-                      <span className="font-semibold text-brand-primary">
+                    <div className="bg-brand-primary/10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                      <span className="text-brand-primary font-semibold">
                         v{version.versionNum}
                       </span>
                     </div>
@@ -214,10 +214,10 @@ export function VersionHistory({ songId, onRestore, onPlay }: VersionHistoryProp
                       </div>
 
                       {version.description && (
-                        <p className="mb-2 text-sm text-muted-foreground">{version.description}</p>
+                        <p className="text-muted-foreground mb-2 text-sm">{version.description}</p>
                       )}
 
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <div className="text-muted-foreground flex items-center gap-3 text-xs">
                         <span className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {new Date(version.createdAt).toLocaleDateString()} at{' '}

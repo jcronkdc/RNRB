@@ -36,7 +36,14 @@ import {
 // Types
 // ============================================
 
-export type SectionType = 'verse' | 'chorus' | 'bridge' | 'pre-chorus' | 'intro' | 'outro' | 'freeform';
+export type SectionType =
+  | 'verse'
+  | 'chorus'
+  | 'bridge'
+  | 'pre-chorus'
+  | 'intro'
+  | 'outro'
+  | 'freeform';
 
 export interface ChordAnnotation {
   /** Which line (0-indexed) the chord sits above */
@@ -114,13 +121,19 @@ function generateId(): string {
 
 function getSectionNumber(sections: SongSection[], index: number): string {
   const section = sections[index];
-  if (!section || section.type === 'freeform' || section.type === 'intro' || section.type === 'outro') return '';
-  
+  if (
+    !section ||
+    section.type === 'freeform' ||
+    section.type === 'intro' ||
+    section.type === 'outro'
+  )
+    return '';
+
   let count = 0;
   for (let i = 0; i <= index; i++) {
     if (sections[i].type === section.type) count++;
   }
-  
+
   // Only show number if there are multiple of this type
   const totalOfType = sections.filter((s) => s.type === section.type).length;
   return totalOfType > 1 ? ` ${count}` : '';
@@ -181,7 +194,7 @@ const SectionEditor = memo(function SectionEditor({
     <div className="group relative">
       {/* Section type indicator — left edge line */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-1 rounded-full transition-opacity"
+        className="absolute top-0 bottom-0 left-0 w-1 rounded-full transition-opacity"
         style={{
           backgroundColor: color,
           opacity: section.type === 'freeform' ? 0 : 0.5,
@@ -204,15 +217,12 @@ const SectionEditor = memo(function SectionEditor({
           {showTypeMenu && (
             <>
               {/* Full-screen dismiss backdrop */}
-              <div
-                className="fixed inset-0 z-20"
-                onClick={() => setShowTypeMenu(false)}
-              />
+              <div className="fixed inset-0 z-20" onClick={() => setShowTypeMenu(false)} />
               <motion.div
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
-                className="absolute left-4 top-10 z-30 overflow-hidden rounded-lg"
+                className="absolute top-10 left-4 z-30 overflow-hidden rounded-lg"
                 style={{
                   background: 'var(--panel)',
                   border: '1px solid var(--border)',
@@ -245,7 +255,7 @@ const SectionEditor = memo(function SectionEditor({
         {/* Remove button — only visible on hover, minimum touch target */}
         <button
           onClick={onRemove}
-          className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg opacity-0 transition-opacity group-hover:opacity-40 hover:opacity-100! hover:bg-white/5"
+          className="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg opacity-0 transition-opacity group-hover:opacity-40 hover:bg-white/5 hover:opacity-100!"
           style={{ color: 'var(--muted)' }}
           title="Remove section"
         >
@@ -327,7 +337,14 @@ const SectionEditor = memo(function SectionEditor({
                   const existing = (section.chords || []).filter(
                     (c) => !(c.line === editingChord.line && c.offset === editingChord.offset)
                   );
-                  onChordsChange([...existing, { line: editingChord.line, offset: editingChord.offset, chord: chordInputValue.trim() }]);
+                  onChordsChange([
+                    ...existing,
+                    {
+                      line: editingChord.line,
+                      offset: editingChord.offset,
+                      chord: chordInputValue.trim(),
+                    },
+                  ]);
                 }
                 setEditingChord(null);
                 setChordInputValue('');
@@ -350,7 +367,14 @@ const SectionEditor = memo(function SectionEditor({
                 const existing = (section.chords || []).filter(
                   (c) => !(c.line === editingChord.line && c.offset === editingChord.offset)
                 );
-                onChordsChange([...existing, { line: editingChord.line, offset: editingChord.offset, chord: chordInputValue.trim() }]);
+                onChordsChange([
+                  ...existing,
+                  {
+                    line: editingChord.line,
+                    offset: editingChord.offset,
+                    chord: chordInputValue.trim(),
+                  },
+                ]);
               }
               setEditingChord(null);
               setChordInputValue('');
@@ -502,25 +526,22 @@ export function SongEditor({
 
   // Update section content
   const updateSectionContent = useCallback((id: string, content: string) => {
-    setSections((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, content } : s))
-    );
+    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, content } : s)));
   }, []);
 
   // Update section chords
   const updateSectionChords = useCallback((id: string, chords: ChordAnnotation[]) => {
-    setSections((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, chords } : s))
-    );
+    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, chords } : s)));
   }, []);
 
   // Change section type
-  const changeSectionType = useCallback((id: string, type: SectionType) => {
-    pushUndoState();
-    setSections((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, type } : s))
-    );
-  }, [pushUndoState]);
+  const changeSectionType = useCallback(
+    (id: string, type: SectionType) => {
+      pushUndoState();
+      setSections((prev) => prev.map((s) => (s.id === id ? { ...s, type } : s)));
+    },
+    [pushUndoState]
+  );
 
   // Remove a section
   const removeSection = useCallback((id: string) => {
@@ -626,10 +647,7 @@ export function SongEditor({
   );
 
   return (
-    <div
-      className="mx-auto w-full max-w-2xl"
-      style={{ minHeight: '70vh' }}
-    >
+    <div className="mx-auto w-full max-w-2xl" style={{ minHeight: '70vh' }}>
       {/* Title */}
       <div className="mb-8">
         <input
@@ -692,10 +710,7 @@ export function SongEditor({
           <AnimatePresence>
             {showAddMenu && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowAddMenu(false)}
-                />
+                <div className="fixed inset-0 z-10" onClick={() => setShowAddMenu(false)} />
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}

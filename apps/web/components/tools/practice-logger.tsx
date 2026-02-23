@@ -290,7 +290,7 @@ export function PracticeLogger() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Practice Logger</h3>
-            <p className="text-sm text-muted-foreground">Track your practice sessions</p>
+            <p className="text-muted-foreground text-sm">Track your practice sessions</p>
           </div>
         </div>
         <Button
@@ -309,17 +309,17 @@ export function PracticeLogger() {
         <div className="rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20 p-4 text-center">
           <Flame className="mx-auto mb-2 h-6 w-6 text-orange-400" />
           <div className="text-2xl font-bold">{streak}</div>
-          <div className="text-xs text-muted-foreground">Day Streak</div>
+          <div className="text-muted-foreground text-xs">Day Streak</div>
         </div>
         <div className="rounded-xl bg-linear-to-br from-purple-500/20 to-indigo-500/20 p-4 text-center">
           <Music className="mx-auto mb-2 h-6 w-6 text-purple-400" />
           <div className="text-2xl font-bold">{sessions.length}</div>
-          <div className="text-xs text-muted-foreground">Sessions</div>
+          <div className="text-muted-foreground text-xs">Sessions</div>
         </div>
         <div className="rounded-xl bg-linear-to-br from-emerald-500/20 to-teal-500/20 p-4 text-center">
           <Trophy className="mx-auto mb-2 h-6 w-6 text-emerald-400" />
           <div className="text-2xl font-bold">{Math.floor(totalPracticeTime / 3600)}h</div>
-          <div className="text-xs text-muted-foreground">Total Time</div>
+          <div className="text-muted-foreground text-xs">Total Time</div>
         </div>
       </div>
 
@@ -371,7 +371,7 @@ export function PracticeLogger() {
           {formatTime(elapsedTime)}
         </motion.div>
         {isRunning && currentSong && (
-          <p className="mt-2 text-muted-foreground">
+          <p className="text-muted-foreground mt-2">
             Practicing: <span className="font-semibold text-white">{currentSong}</span>
           </p>
         )}
@@ -386,7 +386,7 @@ export function PracticeLogger() {
             value={currentSong}
             onChange={(e) => setCurrentSong(e.target.value)}
             placeholder="Song name, technique, scales..."
-            className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+            className="border-border focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border bg-white/5 px-4 py-3 focus:ring-2 focus:outline-hidden"
           />
         </div>
       )}
@@ -401,7 +401,7 @@ export function PracticeLogger() {
               onChange={(e) => setSessionNotes(e.target.value)}
               placeholder="What did you work on? Any breakthroughs?"
               rows={3}
-              className="w-full rounded-xl border border-border bg-white/5 px-4 py-3 focus:border-brand-primary focus:outline-hidden focus:ring-2 focus:ring-brand-primary/20"
+              className="border-border focus:border-brand-primary focus:ring-brand-primary/20 w-full rounded-xl border bg-white/5 px-4 py-3 focus:ring-2 focus:outline-hidden"
             />
           </div>
           <div>
@@ -486,7 +486,7 @@ export function PracticeLogger() {
               </h4>
 
               {sessions.length === 0 ? (
-                <p className="py-4 text-center text-sm text-muted-foreground">
+                <p className="text-muted-foreground py-4 text-center text-sm">
                   No practice sessions yet. Start your first one!
                 </p>
               ) : (
@@ -498,7 +498,7 @@ export function PracticeLogger() {
                     >
                       <div>
                         <div className="font-medium">{session.songName}</div>
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <div className="text-muted-foreground flex items-center gap-2 text-xs">
                           <span>{new Date(session.date).toLocaleDateString()}</span>
                           {session.rating > 0 && (
                             <span className="flex items-center gap-0.5">

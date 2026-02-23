@@ -389,7 +389,7 @@ export function ContractTemplates() {
         </div>
         <div>
           <h3 className="text-lg font-bold">Contract Templates</h3>
-          <p className="text-sm text-muted-foreground">Legal templates for the music industry</p>
+          <p className="text-muted-foreground text-sm">Legal templates for the music industry</p>
         </div>
       </div>
 
@@ -410,13 +410,13 @@ export function ContractTemplates() {
       {/* Search and Filters */}
       <div className="mb-6 space-y-4">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search templates..."
-            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-hidden"
+            className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 py-2 pr-4 pl-10 focus:outline-hidden"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -451,13 +451,13 @@ export function ContractTemplates() {
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
                 <template.icon className="h-5 w-5" />
               </div>
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-1 text-xs">
                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                 {template.popularity}%
               </div>
             </div>
             <h4 className="font-semibold">{template.name}</h4>
-            <p className="mt-1 text-sm text-muted-foreground">{template.description}</p>
+            <p className="text-muted-foreground mt-1 text-sm">{template.description}</p>
             <div className="mt-3 flex flex-wrap gap-1">
               {template.fields.slice(0, 3).map((field) => (
                 <span key={field} className="rounded-full bg-white/10 px-2 py-0.5 text-xs">
@@ -492,14 +492,14 @@ export function ContractTemplates() {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between border-b border-border p-4">
+              <div className="border-border flex items-center justify-between border-b p-4">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
                     <selectedTemplate.icon className="h-5 w-5" />
                   </div>
                   <div>
                     <h3 className="font-bold">{selectedTemplate.name}</h3>
-                    <p className="text-sm text-muted-foreground">{selectedTemplate.description}</p>
+                    <p className="text-muted-foreground text-sm">{selectedTemplate.description}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -534,13 +534,13 @@ export function ContractTemplates() {
               </div>
 
               {/* Required Fields */}
-              <div className="border-b border-border p-4">
+              <div className="border-border border-b p-4">
                 <h4 className="mb-2 text-sm font-semibold">Fields to Complete</h4>
                 <div className="flex flex-wrap gap-2">
                   {selectedTemplate.fields.map((field) => (
                     <span
                       key={field}
-                      className="rounded-full bg-brand-primary/20 px-3 py-1 text-sm text-brand-primary"
+                      className="bg-brand-primary/20 text-brand-primary rounded-full px-3 py-1 text-sm"
                     >
                       {field}
                     </span>
@@ -550,15 +550,15 @@ export function ContractTemplates() {
 
               {/* Template Preview */}
               <div className="max-h-[50vh] overflow-y-auto p-4">
-                <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed">
+                <pre className="font-mono text-sm leading-relaxed whitespace-pre-wrap">
                   {selectedTemplate.preview}
                 </pre>
               </div>
 
               {/* Footer */}
-              <div className="border-t border-border p-4">
+              <div className="border-border border-t p-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     Replace all [BRACKETED] sections with your information
                   </p>
                   <Button variant="outline" onClick={() => setSelectedTemplate(null)}>

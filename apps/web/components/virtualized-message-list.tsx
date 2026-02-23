@@ -52,7 +52,7 @@ const MessageItem = memo(
         {/* Avatar */}
         <div className="shrink-0">
           {showAvatar ? (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+            <div className="bg-brand-primary/20 text-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold">
               {message.senderAvatar ? (
                 <img
                   src={message.senderAvatar}
@@ -73,8 +73,8 @@ const MessageItem = memo(
         <div className={`flex max-w-[70%] flex-col ${isOwnMessage ? 'items-end' : 'items-start'}`}>
           {showAvatar && (
             <div className="mb-1 flex items-center gap-2">
-              <span className="text-sm font-medium text-foreground">{message.senderName}</span>
-              <span className="text-xs text-muted-foreground">{formatTime(message.timestamp)}</span>
+              <span className="text-foreground text-sm font-medium">{message.senderName}</span>
+              <span className="text-muted-foreground text-xs">{formatTime(message.timestamp)}</span>
             </div>
           )}
 
@@ -84,10 +84,10 @@ const MessageItem = memo(
               className={`rounded-2xl px-4 py-2 ${
                 isOwnMessage
                   ? 'bg-brand-primary text-brand-primary-foreground'
-                  : 'border border-border bg-surface text-foreground'
+                  : 'border-border bg-surface text-foreground border'
               }`}
             >
-              <p className="whitespace-pre-wrap wrap-break-word text-sm">{message.content}</p>
+              <p className="text-sm wrap-break-word whitespace-pre-wrap">{message.content}</p>
               {message.isEdited && <span className="mt-1 block text-xs opacity-60">(edited)</span>}
             </div>
           )}
@@ -108,7 +108,7 @@ const MessageItem = memo(
               {Object.entries(message.reactions).map(([emoji, users]) => (
                 <div
                   key={emoji}
-                  className="flex items-center gap-1 rounded-full border border-border bg-surface-muted px-2 py-0.5 text-xs"
+                  className="border-border bg-surface-muted flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs"
                 >
                   <span>{emoji}</span>
                   <span className="text-muted-foreground">{users.length}</span>
@@ -225,7 +225,7 @@ export function VirtualizedMessageList({
           {/* Loading indicator at top */}
           {isLoading && (
             <div className="sticky top-0 z-10 flex justify-center py-2">
-              <div className="rounded-full border border-border bg-surface px-4 py-2 text-sm">
+              <div className="border-border bg-surface rounded-full border px-4 py-2 text-sm">
                 Loading messages...
               </div>
             </div>
@@ -270,7 +270,7 @@ export function VirtualizedMessageList({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-4 right-4"
+            className="absolute right-4 bottom-4"
           >
             <Button
               onClick={() => scrollToBottom(true)}

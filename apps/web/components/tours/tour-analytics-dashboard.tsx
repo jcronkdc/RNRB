@@ -88,7 +88,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+        <Loader2 className="text-brand-primary h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -96,9 +96,9 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
   if (shows.length === 0) {
     return (
       <Card className="p-8 text-center">
-        <Calendar className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+        <Calendar className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
         <p className="text-muted-foreground">No shows scheduled yet.</p>
-        <p className="text-sm text-muted-foreground">Add shows to your tour to see the schedule.</p>
+        <p className="text-muted-foreground text-sm">Add shows to your tour to see the schedule.</p>
       </Card>
     );
   }
@@ -180,7 +180,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Past Shows */}
           {pastShows.length > 0 && (
             <Card className="p-6">
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-muted-foreground">
+              <h3 className="text-muted-foreground mb-4 flex items-center gap-2 text-lg font-semibold">
                 <Clock className="h-5 w-5" />
                 Completed Shows ({pastShows.length})
               </h3>
@@ -189,7 +189,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                   <ShowCard key={show.id} show={show} isPast />
                 ))}
                 {pastShows.length > 5 && (
-                  <p className="text-center text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-center text-sm">
                     + {pastShows.length - 5} more completed shows
                   </p>
                 )}
@@ -209,28 +209,28 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
           {/* Routing Summary */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card className="p-6">
-              <h4 className="mb-2 text-sm text-muted-foreground">Total Distance</h4>
+              <h4 className="text-muted-foreground mb-2 text-sm">Total Distance</h4>
               <p className="text-2xl font-bold">
                 {routing.current?.totalDistance?.toLocaleString() || 0} mi
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-xs">
                 {routing.current?.totalDrivingTime?.toFixed(1) || 0} hours driving
               </p>
             </Card>
             <Card className="p-6">
-              <h4 className="mb-2 text-sm text-muted-foreground">Avg Per Leg</h4>
+              <h4 className="text-muted-foreground mb-2 text-sm">Avg Per Leg</h4>
               <p className="text-2xl font-bold">
                 {routing.current?.averageDistancePerLeg?.toLocaleString() || 0} mi
               </p>
             </Card>
             <Card className="p-6">
-              <h4 className="mb-2 text-sm text-muted-foreground">Issues Detected</h4>
+              <h4 className="text-muted-foreground mb-2 text-sm">Issues Detected</h4>
               <p className="text-2xl font-bold text-yellow-500">
                 {(routing.current?.issues?.backtracking || 0) +
                   (routing.current?.issues?.longDrives || 0) +
                   (routing.current?.issues?.tightSchedules || 0)}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-xs">
                 {routing.current?.issues?.longDrives || 0} long drives •{' '}
                 {routing.current?.issues?.tightSchedules || 0} tight schedules
               </p>
@@ -278,13 +278,13 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                         <p className="font-medium">
                           {leg.from.city}, {leg.from.state} → {leg.to.city}, {leg.to.state}
                         </p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           {leg.from.venue} → {leg.to.venue}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold">{Math.round(leg.distance)} mi</p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           ~{Math.round(leg.drivingTime * 10) / 10} hrs
                         </p>
                       </div>
@@ -339,7 +339,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
                         {rec.priority}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground">{rec.description}</p>
+                    <p className="text-muted-foreground text-sm">{rec.description}</p>
                   </div>
                 ))}
               </div>
@@ -350,11 +350,11 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
 
       {activeTab === 'routing' && !routing && (
         <Card className="p-8 text-center">
-          <Navigation className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <Navigation className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
           <p className="text-muted-foreground">
             Routing optimization requires venues with coordinates.
           </p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Add venue addresses to enable smart routing.
           </p>
         </Card>
@@ -385,7 +385,7 @@ function StatCard({
   return (
     <Card className="p-6">
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{label}</p>
+        <p className="text-muted-foreground text-sm">{label}</p>
         <div className={`rounded-lg p-2 ${colorClasses[color as keyof typeof colorClasses]}`}>
           <Icon className="h-4 w-4" />
         </div>
@@ -423,7 +423,7 @@ function ShowCard({ show, isPast = false }: { show: any; isPast?: boolean }) {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className={`font-semibold ${isPast ? 'text-muted-foreground' : ''}`}>{show.name}</p>
-          <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+          <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-3 text-sm">
             <div className="flex items-center gap-1">
               <Calendar className="h-3.5 w-3.5" />
               {formatDate(show.date)}
@@ -455,7 +455,7 @@ function ShowCard({ show, isPast = false }: { show: any; isPast?: boolean }) {
             href={show.ticketUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 rounded-lg bg-brand-primary/10 px-3 py-1.5 text-sm font-medium text-brand-primary transition hover:bg-brand-primary/20"
+            className="bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition"
           >
             <Ticket className="h-4 w-4" />
             Tickets
@@ -466,7 +466,7 @@ function ShowCard({ show, isPast = false }: { show: any; isPast?: boolean }) {
 
       {/* Show times row */}
       {(show.loadInTime || show.soundcheckTime || show.setTime) && (
-        <div className="mt-3 flex flex-wrap gap-4 border-t border-border/50 pt-3 text-xs text-muted-foreground">
+        <div className="border-border/50 text-muted-foreground mt-3 flex flex-wrap gap-4 border-t pt-3 text-xs">
           {show.loadInTime && <span>Load-in: {formatTime(show.loadInTime)}</span>}
           {show.soundcheckTime && <span>Soundcheck: {formatTime(show.soundcheckTime)}</span>}
           {show.setTime && <span>Set: {formatTime(show.setTime)}</span>}
@@ -475,7 +475,7 @@ function ShowCard({ show, isPast = false }: { show: any; isPast?: boolean }) {
       )}
 
       {/* Notes */}
-      {show.notes && <p className="mt-2 text-sm italic text-muted-foreground">{show.notes}</p>}
+      {show.notes && <p className="text-muted-foreground mt-2 text-sm italic">{show.notes}</p>}
     </div>
   );
 }

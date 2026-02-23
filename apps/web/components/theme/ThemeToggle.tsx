@@ -58,7 +58,7 @@ export function ThemeToggle({ showMenu = false, size = 'md', className = '' }: T
 
   // Prevent hydration mismatch
   if (!mounted) {
-    return <div className={`${sizeClasses[size]} rounded-xl bg-surface/50`} />;
+    return <div className={`${sizeClasses[size]} bg-surface/50 rounded-xl`} />;
   }
 
   const ThemeIcon = resolvedTheme === 'dark' ? Moon : Sun;
@@ -142,7 +142,7 @@ export function ThemeToggle({ showMenu = false, size = 'md', className = '' }: T
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-full z-50 mt-2 w-40 overflow-hidden rounded-xl"
+            className="absolute top-full right-0 z-50 mt-2 w-40 overflow-hidden rounded-xl"
             style={{
               background: resolvedTheme === 'dark' ? 'rgb(30, 30, 30)' : 'rgb(255, 255, 255)',
               border: `1px solid ${resolvedTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`,
@@ -177,7 +177,7 @@ export function ThemeToggle({ showMenu = false, size = 'md', className = '' }: T
                   {theme === value && (
                     <motion.div layoutId="theme-check" className="ml-auto">
                       <svg
-                        className="h-4 w-4 text-accent"
+                        className="text-accent h-4 w-4"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"

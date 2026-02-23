@@ -378,7 +378,7 @@ export function WaveformComments({
   };
 
   return (
-    <div className="bg-panel space-y-4 rounded-xl border border-border p-6">
+    <div className="bg-panel border-border space-y-4 rounded-xl border p-6">
       {/* Hidden audio element */}
       <audio
         ref={audioRef}
@@ -393,8 +393,8 @@ export function WaveformComments({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-foreground">{audioName}</h3>
-          <p className="text-sm text-muted-foreground">
+          <h3 className="text-foreground text-lg font-semibold">{audioName}</h3>
+          <p className="text-muted-foreground text-sm">
             {unresolvedCount} open feedback{unresolvedCount !== 1 ? 's' : ''}
             {resolvedCount > 0 && ` · ${resolvedCount} resolved`}
           </p>
@@ -432,8 +432,8 @@ export function WaveformComments({
         style={{ height: '120px' }}
       >
         {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-surface">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-primary border-t-transparent" />
+          <div className="bg-surface absolute inset-0 flex items-center justify-center">
+            <div className="border-brand-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
           </div>
         ) : (
           <canvas
@@ -458,7 +458,7 @@ export function WaveformComments({
 
         {/* Adding comment mode indicator */}
         {isAddingComment && (
-          <div className="absolute right-2 top-2 rounded bg-green-500 px-2 py-1 text-xs font-medium text-white">
+          <div className="absolute top-2 right-2 rounded bg-green-500 px-2 py-1 text-xs font-medium text-white">
             Click waveform to place marker
           </div>
         )}
@@ -469,15 +469,15 @@ export function WaveformComments({
         <div className="flex items-center gap-2">
           <button
             onClick={() => skip(-5)}
-            className="rounded-lg p-2 transition-colors hover:bg-surface"
+            className="hover:bg-surface rounded-lg p-2 transition-colors"
             title="Skip back 5s"
           >
-            <SkipBack className="h-4 w-4 text-muted-foreground" />
+            <SkipBack className="text-muted-foreground h-4 w-4" />
           </button>
 
           <button
             onClick={togglePlay}
-            className="rounded-full bg-brand-primary p-3 transition-colors hover:bg-brand-primary/90"
+            className="bg-brand-primary hover:bg-brand-primary/90 rounded-full p-3 transition-colors"
           >
             {isPlaying ? (
               <Pause className="h-5 w-5 text-white" />
@@ -488,22 +488,22 @@ export function WaveformComments({
 
           <button
             onClick={() => skip(5)}
-            className="rounded-lg p-2 transition-colors hover:bg-surface"
+            className="hover:bg-surface rounded-lg p-2 transition-colors"
             title="Skip forward 5s"
           >
-            <SkipForward className="h-4 w-4 text-muted-foreground" />
+            <SkipForward className="text-muted-foreground h-4 w-4" />
           </button>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={toggleMute}
-            className="rounded-lg p-2 transition-colors hover:bg-surface"
+            className="hover:bg-surface rounded-lg p-2 transition-colors"
           >
             {isMuted ? (
-              <VolumeX className="h-4 w-4 text-muted-foreground" />
+              <VolumeX className="text-muted-foreground h-4 w-4" />
             ) : (
-              <Volume2 className="h-4 w-4 text-muted-foreground" />
+              <Volume2 className="text-muted-foreground h-4 w-4" />
             )}
           </button>
           <input
@@ -541,7 +541,7 @@ export function WaveformComments({
               value={newCommentText}
               onChange={(e) => setNewCommentText(e.target.value)}
               placeholder="Add your feedback... (e.g., 'Snare is too loud here', 'Love this section!')"
-              className="w-full resize-none rounded-lg border border-border bg-surface p-3 text-foreground outline-hidden placeholder:text-muted-foreground focus:border-brand-primary"
+              className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary w-full resize-none rounded-lg border p-3 outline-hidden"
               rows={3}
               autoFocus
             />
@@ -564,19 +564,19 @@ export function WaveformComments({
       </AnimatePresence>
 
       {/* Comments List */}
-      <div className="border-t border-border pt-4">
+      <div className="border-border border-t pt-4">
         <button
           onClick={() => setExpandedComments(!expandedComments)}
-          className="flex w-full items-center justify-between rounded-lg p-2 transition-colors hover:bg-surface"
+          className="hover:bg-surface flex w-full items-center justify-between rounded-lg p-2 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4 text-brand-primary" />
-            <span className="font-medium text-foreground">Feedback ({sortedComments.length})</span>
+            <MessageSquare className="text-brand-primary h-4 w-4" />
+            <span className="text-foreground font-medium">Feedback ({sortedComments.length})</span>
           </div>
           {expandedComments ? (
-            <ChevronUp className="h-4 w-4 text-muted-foreground" />
+            <ChevronUp className="text-muted-foreground h-4 w-4" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-muted-foreground" />
+            <ChevronDown className="text-muted-foreground h-4 w-4" />
           )}
         </button>
 
@@ -590,12 +590,12 @@ export function WaveformComments({
             >
               {/* Filter toggle */}
               <div className="mb-3 flex items-center gap-2">
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground">
+                <label className="text-muted-foreground flex cursor-pointer items-center gap-2 text-sm">
                   <input
                     type="checkbox"
                     checked={showResolved}
                     onChange={(e) => setShowResolved(e.target.checked)}
-                    className="rounded border-border"
+                    className="border-border rounded"
                   />
                   Show resolved
                 </label>
@@ -603,9 +603,9 @@ export function WaveformComments({
 
               {sortedComments.length === 0 ? (
                 <div className="py-8 text-center">
-                  <MessageSquare className="mx-auto mb-2 h-8 w-8 text-muted-foreground opacity-40" />
-                  <p className="text-sm text-muted-foreground">No feedback yet</p>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <MessageSquare className="text-muted-foreground mx-auto mb-2 h-8 w-8 opacity-40" />
+                  <p className="text-muted-foreground text-sm">No feedback yet</p>
+                  <p className="text-muted-foreground mt-1 text-xs">
                     Double-click on the waveform to add feedback
                   </p>
                 </div>
@@ -633,10 +633,10 @@ export function WaveformComments({
                     {/* Comment content */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-foreground">
+                        <span className="text-foreground text-sm font-medium">
                           {comment.userName}
                         </span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-muted-foreground text-xs">
                           {new Date(comment.createdAt).toLocaleDateString()}
                         </span>
                         {comment.isResolved && (
@@ -646,7 +646,7 @@ export function WaveformComments({
                           </span>
                         )}
                       </div>
-                      <p className="mt-1 whitespace-pre-wrap text-sm text-foreground">
+                      <p className="text-foreground mt-1 text-sm whitespace-pre-wrap">
                         {comment.content}
                       </p>
                     </div>

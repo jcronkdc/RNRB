@@ -63,14 +63,14 @@ export function VoiceRoom({
 
   if (!isJoined) {
     return (
-      <div className={`rounded-lg border border-border bg-surface p-6 ${className}`}>
+      <div className={`border-border bg-surface rounded-lg border p-6 ${className}`}>
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Voice Room</h3>
-            <p className="text-sm text-muted-foreground">{projectName}</p>
+            <h3 className="text-foreground text-lg font-semibold">Voice Room</h3>
+            <p className="text-muted-foreground text-sm">{projectName}</p>
           </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-muted">
-            <Volume2 className="h-5 w-5 text-brand-primary" />
+          <div className="bg-surface-muted flex h-10 w-10 items-center justify-center rounded-full">
+            <Volume2 className="text-brand-primary h-5 w-5" />
           </div>
         </div>
 
@@ -80,7 +80,7 @@ export function VoiceRoom({
           </div>
         )}
 
-        <p className="mb-4 text-sm text-muted-foreground">
+        <p className="text-muted-foreground mb-4 text-sm">
           Join the voice room to collaborate in real-time while working on the project. Your audio
           stays on in the background - just like Discord!
         </p>
@@ -90,8 +90,8 @@ export function VoiceRoom({
         </Button>
 
         {pushToTalk && (
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            Press and hold <kbd className="rounded bg-surface-muted px-2 py-1">Space</kbd> to talk
+          <p className="text-muted-foreground mt-3 text-center text-xs">
+            Press and hold <kbd className="bg-surface-muted rounded px-2 py-1">Space</kbd> to talk
           </p>
         )}
       </div>
@@ -100,15 +100,15 @@ export function VoiceRoom({
 
   return (
     <DailyProvider>
-      <div className={`rounded-lg border border-border bg-surface ${className}`}>
+      <div className={`border-border bg-surface rounded-lg border ${className}`}>
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border p-4">
+        <div className="border-border flex items-center justify-between border-b p-4">
           <div>
-            <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+            <h3 className="text-foreground flex items-center gap-2 text-lg font-semibold">
               <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
               Voice Room
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {participants.length} {participants.length === 1 ? 'person' : 'people'}
             </p>
           </div>
@@ -126,7 +126,7 @@ export function VoiceRoom({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                className={`flex items-center gap-3 rounded-lg border border-border p-3 transition ${
+                className={`border-border flex items-center gap-3 rounded-lg border p-3 transition ${
                   participant.isSpeaking
                     ? 'border-brand-primary bg-brand-primary/5'
                     : 'bg-surface-muted'
@@ -134,7 +134,7 @@ export function VoiceRoom({
               >
                 {/* Avatar */}
                 <div className="relative shrink-0">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary/20 text-sm font-semibold text-foreground">
+                  <div className="bg-brand-primary/20 text-foreground flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold">
                     {userAvatar && participant.id === 'local' ? (
                       <img
                         src={userAvatar}
@@ -151,7 +151,7 @@ export function VoiceRoom({
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 0.8 }}
-                      className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500"
+                      className="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-500"
                     >
                       <Volume2 className="h-2.5 w-2.5 text-white" />
                     </motion.div>
@@ -161,16 +161,16 @@ export function VoiceRoom({
                 {/* Name and status */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-foreground">
+                    <span className="text-foreground text-sm font-medium">
                       {participant.userName}
                       {participant.id === 'local' && ' (You)'}
                     </span>
                   </div>
 
                   {/* Audio level bar */}
-                  <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-muted">
+                  <div className="bg-surface-muted mt-1 h-1.5 overflow-hidden rounded-full">
                     <motion.div
-                      className="h-full rounded-full bg-brand-primary"
+                      className="bg-brand-primary h-full rounded-full"
                       style={{
                         width: `${participant.audioLevel * 100}%`,
                       }}
@@ -191,7 +191,7 @@ export function VoiceRoom({
         </div>
 
         {/* Controls */}
-        <div className="border-t border-border p-4">
+        <div className="border-border border-t p-4">
           <div className="flex gap-2">
             {/* Mute/Unmute or Push-to-Talk */}
             {pushToTalk ? (
@@ -245,8 +245,8 @@ export function VoiceRoom({
           </div>
 
           {pushToTalk && (
-            <p className="mt-3 text-center text-xs text-muted-foreground">
-              Press and hold <kbd className="rounded bg-surface-muted px-2 py-1">Space</kbd> or the
+            <p className="text-muted-foreground mt-3 text-center text-xs">
+              Press and hold <kbd className="bg-surface-muted rounded px-2 py-1">Space</kbd> or the
               button to talk
             </p>
           )}

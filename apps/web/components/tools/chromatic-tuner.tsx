@@ -227,7 +227,7 @@ export function ChromaticTuner() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Chromatic Tuner</h3>
-            <p className="text-sm text-muted-foreground">A4 = {referenceFreq}Hz</p>
+            <p className="text-muted-foreground text-sm">A4 = {referenceFreq}Hz</p>
           </div>
         </div>
         <Button
@@ -263,7 +263,7 @@ export function ChromaticTuner() {
                   />
                   <span className="w-16 text-right font-mono text-sm">{referenceFreq} Hz</span>
                 </div>
-                <div className="mt-1 flex justify-between text-xs text-muted-foreground">
+                <div className="text-muted-foreground mt-1 flex justify-between text-xs">
                   <span>432 Hz (Verdi)</span>
                   <span>440 Hz (Standard)</span>
                   <span>446 Hz</span>
@@ -396,10 +396,10 @@ export function ChromaticTuner() {
               >
                 {tunerState.note}
               </span>
-              <span className="text-2xl font-bold text-muted-foreground">{tunerState.octave}</span>
+              <span className="text-muted-foreground text-2xl font-bold">{tunerState.octave}</span>
             </div>
             <div className="flex items-center justify-center gap-4 text-sm">
-              <span className="font-mono text-muted-foreground">
+              <span className="text-muted-foreground font-mono">
                 {tunerState.frequency.toFixed(1)} Hz
               </span>
               <span
@@ -422,8 +422,8 @@ export function ChromaticTuner() {
           </motion.div>
         ) : (
           <div className="space-y-2">
-            <span className="font-display text-7xl font-black text-muted-foreground/30">—</span>
-            <p className="text-sm text-muted-foreground">
+            <span className="font-display text-muted-foreground/30 text-7xl font-black">—</span>
+            <p className="text-muted-foreground text-sm">
               {isListening ? 'Play a note...' : 'Click Start to begin tuning'}
             </p>
           </div>
@@ -460,7 +460,7 @@ export function ChromaticTuner() {
         <div className="grid grid-cols-6 gap-2">
           {['E2', 'A2', 'D3', 'G3', 'B3', 'E4'].map((note, i) => (
             <div key={note} className="rounded-lg bg-white/5 p-2 text-center">
-              <div className="text-xs text-muted-foreground">String {6 - i}</div>
+              <div className="text-muted-foreground text-xs">String {6 - i}</div>
               <div className="font-mono font-bold">{note}</div>
             </div>
           ))}

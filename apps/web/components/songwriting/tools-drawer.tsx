@@ -18,12 +18,7 @@
  */
 
 import { motion, AnimatePresence } from 'motion/react';
-import {
-  X,
-  Shield,
-  GitBranch,
-  Wrench,
-} from '@/components/ui/custom-icons';
+import { X, Shield, GitBranch, Wrench } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
@@ -86,7 +81,7 @@ export function ToolsDrawer({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-            className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col"
+            className="fixed top-0 right-0 z-50 flex h-full w-full max-w-md flex-col"
             style={{
               background: 'var(--bg)',
               borderLeft: '1px solid var(--border)',

@@ -133,7 +133,7 @@ const SortableBlock = memo(function SortableBlock({
           <div className="relative">
             <button
               onClick={() => setShowTypeMenu(!showTypeMenu)}
-              className="flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider transition hover:opacity-80"
+              className="flex items-center gap-0.5 rounded px-1.5 py-0.5 text-[10px] font-bold tracking-wider uppercase transition hover:opacity-80"
               style={{ background: `${color}20`, color }}
             >
               {block.type.replace('-', ' ')} {sectionNumber}
@@ -147,7 +147,7 @@ const SortableBlock = memo(function SortableBlock({
                   initial={{ opacity: 0, y: -3 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -3 }}
-                  className="absolute left-0 top-full z-20 mt-0.5 w-28 overflow-hidden rounded-md shadow-lg"
+                  className="absolute top-full left-0 z-20 mt-0.5 w-28 overflow-hidden rounded-md shadow-lg"
                   style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
                 >
                   {BLOCK_TYPES.map((type) => (
@@ -200,14 +200,14 @@ const SortableBlock = memo(function SortableBlock({
             </button>
             <button
               onClick={onDuplicate}
-              className="rounded p-1 opacity-0 transition hover:opacity-80 group-hover:opacity-60"
+              className="rounded p-1 opacity-0 transition group-hover:opacity-60 hover:opacity-80"
               title="Duplicate section"
             >
               <Copy className="h-3 w-3" style={{ color }} />
             </button>
             <button
               onClick={onRemove}
-              className="rounded p-1 text-red-400 opacity-0 transition hover:bg-red-500/10 group-hover:opacity-60"
+              className="rounded p-1 text-red-400 opacity-0 transition group-hover:opacity-60 hover:bg-red-500/10"
               title="Remove section"
             >
               <X className="h-3 w-3" />
@@ -224,7 +224,7 @@ const SortableBlock = memo(function SortableBlock({
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="px-2 pb-2 pt-1">
+              <div className="px-2 pt-1 pb-2">
                 <GranularChordEditor
                   content={block.content}
                   chordPlacements={block.chordPlacements || []}

@@ -322,7 +322,7 @@ export function GearInventory() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Gear Inventory</h3>
-            <p className="text-sm text-muted-foreground">{gear.length} items tracked</p>
+            <p className="text-muted-foreground text-sm">{gear.length} items tracked</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -345,35 +345,35 @@ export function GearInventory() {
         <div className="rounded-xl bg-linear-to-br from-emerald-500/20 to-teal-500/20 p-4">
           <DollarSign className="mb-2 h-5 w-5 text-emerald-400" />
           <div className="text-2xl font-bold">${totalValue.toLocaleString()}</div>
-          <div className="text-xs text-muted-foreground">Total Value</div>
+          <div className="text-muted-foreground text-xs">Total Value</div>
         </div>
         <div className="rounded-xl bg-linear-to-br from-blue-500/20 to-cyan-500/20 p-4">
           <Shield className="mb-2 h-5 w-5 text-blue-400" />
           <div className="text-2xl font-bold">${totalInsured.toLocaleString()}</div>
-          <div className="text-xs text-muted-foreground">Insured Value</div>
+          <div className="text-muted-foreground text-xs">Insured Value</div>
         </div>
         <div className="rounded-xl bg-linear-to-br from-purple-500/20 to-pink-500/20 p-4">
           <Package className="mb-2 h-5 w-5 text-purple-400" />
           <div className="text-2xl font-bold">{gear.length}</div>
-          <div className="text-xs text-muted-foreground">Total Items</div>
+          <div className="text-muted-foreground text-xs">Total Items</div>
         </div>
         <div className="rounded-xl bg-linear-to-br from-orange-500/20 to-red-500/20 p-4">
           <Wrench className="mb-2 h-5 w-5 text-orange-400" />
           <div className="text-2xl font-bold">{needsMaintenance.length}</div>
-          <div className="text-xs text-muted-foreground">Need Service</div>
+          <div className="text-muted-foreground text-xs">Need Service</div>
         </div>
       </div>
 
       {/* Search and Filters */}
       <div className="mb-6 flex flex-wrap gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search gear..."
-            className="w-full rounded-xl border border-border bg-white/5 py-2 pl-10 pr-4 focus:border-brand-primary focus:outline-hidden"
+            className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 py-2 pr-4 pl-10 focus:outline-hidden"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -418,12 +418,12 @@ export function GearInventory() {
       {/* Loading State */}
       {loading ? (
         <div className="rounded-xl bg-white/5 py-12 text-center">
-          <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-muted-foreground" />
+          <Loader2 className="text-muted-foreground mx-auto mb-4 h-12 w-12 animate-spin" />
           <p className="text-muted-foreground">Loading your gear inventory...</p>
         </div>
       ) : filteredGear.length === 0 ? (
         <div className="rounded-xl bg-white/5 py-12 text-center">
-          <Package className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <Package className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
           <p className="text-muted-foreground">No gear found. Add your first item!</p>
         </div>
       ) : (
@@ -443,7 +443,7 @@ export function GearInventory() {
                 onClick={() => setSelectedItem(item)}
               >
                 {/* Status badges */}
-                <div className="absolute right-3 top-3 flex gap-1">
+                <div className="absolute top-3 right-3 flex gap-1">
                   {item.insurance.covered && (
                     <div className="rounded-full bg-blue-500/20 p-1" title="Insured">
                       <Shield className="h-3 w-3 text-blue-400" />
@@ -458,12 +458,12 @@ export function GearInventory() {
 
                 {/* Icon */}
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-white/10">
-                  <CategoryIcon className="h-6 w-6 text-muted-foreground" />
+                  <CategoryIcon className="text-muted-foreground h-6 w-6" />
                 </div>
 
                 {/* Info */}
                 <h4 className="font-semibold">{item.name}</h4>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   {item.brand} {item.model}
                 </p>
 
@@ -533,11 +533,11 @@ export function GearInventory() {
                 {/* Details Grid */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-lg bg-white/5 p-3">
-                    <div className="text-xs text-muted-foreground">Serial Number</div>
+                    <div className="text-muted-foreground text-xs">Serial Number</div>
                     <div className="font-mono">{selectedItem.serialNumber}</div>
                   </div>
                   <div className="rounded-lg bg-white/5 p-3">
-                    <div className="text-xs text-muted-foreground">Condition</div>
+                    <div className="text-muted-foreground text-xs">Condition</div>
                     <div
                       className={`inline-block rounded px-2 py-0.5 ${getConditionColor(selectedItem.condition)}`}
                     >
@@ -545,21 +545,21 @@ export function GearInventory() {
                     </div>
                   </div>
                   <div className="rounded-lg bg-white/5 p-3">
-                    <div className="text-xs text-muted-foreground">Purchase Price</div>
+                    <div className="text-muted-foreground text-xs">Purchase Price</div>
                     <div className="font-mono">${selectedItem.purchasePrice.toLocaleString()}</div>
                   </div>
                   <div className="rounded-lg bg-white/5 p-3">
-                    <div className="text-xs text-muted-foreground">Current Value</div>
+                    <div className="text-muted-foreground text-xs">Current Value</div>
                     <div className="font-mono text-emerald-400">
                       ${selectedItem.currentValue.toLocaleString()}
                     </div>
                   </div>
                   <div className="rounded-lg bg-white/5 p-3">
-                    <div className="text-xs text-muted-foreground">Purchase Date</div>
+                    <div className="text-muted-foreground text-xs">Purchase Date</div>
                     <div>{new Date(selectedItem.purchaseDate).toLocaleDateString()}</div>
                   </div>
                   <div className="rounded-lg bg-white/5 p-3">
-                    <div className="text-xs text-muted-foreground">Location</div>
+                    <div className="text-muted-foreground text-xs">Location</div>
                     <div>{selectedItem.location}</div>
                   </div>
                 </div>
@@ -582,7 +582,7 @@ export function GearInventory() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-sm text-muted-foreground">Not covered</p>
+                    <p className="text-muted-foreground text-sm">Not covered</p>
                   )}
                 </div>
 
@@ -616,7 +616,7 @@ export function GearInventory() {
                       </div>
                     )}
                     {selectedItem.maintenance.serviceNotes && (
-                      <p className="mt-2 text-muted-foreground">
+                      <p className="text-muted-foreground mt-2">
                         {selectedItem.maintenance.serviceNotes}
                       </p>
                     )}
@@ -627,7 +627,7 @@ export function GearInventory() {
                 {selectedItem.notes && (
                   <div className="rounded-lg bg-white/5 p-4">
                     <h4 className="mb-2 text-sm font-semibold">Notes</h4>
-                    <p className="text-sm text-muted-foreground">{selectedItem.notes}</p>
+                    <p className="text-muted-foreground text-sm">{selectedItem.notes}</p>
                   </div>
                 )}
               </div>
@@ -702,7 +702,10 @@ export function GearInventory() {
                 {/* Basic Info */}
                 <div className="space-y-3">
                   <div>
-                    <label htmlFor="gear-name" className="mb-1 block text-xs font-medium text-muted-foreground">
+                    <label
+                      htmlFor="gear-name"
+                      className="text-muted-foreground mb-1 block text-xs font-medium"
+                    >
                       Name <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -712,12 +715,15 @@ export function GearInventory() {
                       required
                       defaultValue={editingItem?.name ?? ''}
                       placeholder="e.g. Fender Stratocaster"
-                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                      className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label htmlFor="gear-brand" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-brand"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Brand
                       </label>
                       <input
@@ -726,11 +732,14 @@ export function GearInventory() {
                         type="text"
                         defaultValue={editingItem?.brand ?? ''}
                         placeholder="Fender"
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       />
                     </div>
                     <div>
-                      <label htmlFor="gear-model" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-model"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Model
                       </label>
                       <input
@@ -739,13 +748,16 @@ export function GearInventory() {
                         type="text"
                         defaultValue={editingItem?.model ?? ''}
                         placeholder="American Pro II"
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label htmlFor="gear-category" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-category"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Category <span className="text-red-400">*</span>
                       </label>
                       <select
@@ -753,7 +765,7 @@ export function GearInventory() {
                         name="category"
                         required
                         defaultValue={editingItem?.category ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       >
                         <option value="" disabled>
                           Select category
@@ -766,14 +778,17 @@ export function GearInventory() {
                       </select>
                     </div>
                     <div>
-                      <label htmlFor="gear-condition" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-condition"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Condition
                       </label>
                       <select
                         id="gear-condition"
                         name="condition"
                         defaultValue={editingItem?.condition ?? 'good'}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       >
                         <option value="excellent">Excellent</option>
                         <option value="good">Good</option>
@@ -785,9 +800,12 @@ export function GearInventory() {
                 </div>
 
                 {/* Details */}
-                <div className="grid grid-cols-2 gap-3 border-t border-border/50 pt-4">
+                <div className="border-border/50 grid grid-cols-2 gap-3 border-t pt-4">
                   <div>
-                    <label htmlFor="gear-serial" className="mb-1 block text-xs font-medium text-muted-foreground">
+                    <label
+                      htmlFor="gear-serial"
+                      className="text-muted-foreground mb-1 block text-xs font-medium"
+                    >
                       Serial Number
                     </label>
                     <input
@@ -795,11 +813,14 @@ export function GearInventory() {
                       name="serialNumber"
                       type="text"
                       defaultValue={editingItem?.serialNumber ?? ''}
-                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
+                      className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 font-mono text-sm focus:outline-hidden"
                     />
                   </div>
                   <div>
-                    <label htmlFor="gear-location" className="mb-1 block text-xs font-medium text-muted-foreground">
+                    <label
+                      htmlFor="gear-location"
+                      className="text-muted-foreground mb-1 block text-xs font-medium"
+                    >
                       Location
                     </label>
                     <input
@@ -808,20 +829,23 @@ export function GearInventory() {
                       type="text"
                       defaultValue={editingItem?.location ?? ''}
                       placeholder="Studio, Home, etc."
-                      className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                      className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                     />
                   </div>
                 </div>
 
                 {/* Financial */}
-                <div className="space-y-3 border-t border-border/50 pt-4">
-                  <h4 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                <div className="border-border/50 space-y-3 border-t pt-4">
+                  <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
                     <DollarSign className="h-4 w-4" />
                     Financial
                   </h4>
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label htmlFor="gear-purchase-date" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-purchase-date"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Purchase Date
                       </label>
                       <input
@@ -829,11 +853,14 @@ export function GearInventory() {
                         name="purchaseDate"
                         type="date"
                         defaultValue={editingItem?.purchaseDate ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       />
                     </div>
                     <div>
-                      <label htmlFor="gear-purchase-price" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-purchase-price"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Purchase Price ($)
                       </label>
                       <input
@@ -843,11 +870,14 @@ export function GearInventory() {
                         min="0"
                         step="0.01"
                         defaultValue={editingItem?.purchasePrice ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 font-mono text-sm focus:outline-hidden"
                       />
                     </div>
                     <div>
-                      <label htmlFor="gear-current-value" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-current-value"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Current Value ($)
                       </label>
                       <input
@@ -857,15 +887,15 @@ export function GearInventory() {
                         min="0"
                         step="0.01"
                         defaultValue={editingItem?.currentValue ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 font-mono text-sm focus:outline-hidden"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Insurance */}
-                <div className="space-y-3 border-t border-border/50 pt-4">
-                  <h4 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                <div className="border-border/50 space-y-3 border-t pt-4">
+                  <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
                     <Shield className="h-4 w-4" />
                     Insurance
                   </h4>
@@ -874,13 +904,16 @@ export function GearInventory() {
                       name="insuranceCovered"
                       type="checkbox"
                       defaultChecked={editingItem?.insurance?.covered ?? false}
-                      className="h-4 w-4 rounded accent-brand-primary"
+                      className="accent-brand-primary h-4 w-4 rounded"
                     />
                     <span className="text-sm">This item is insured</span>
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label htmlFor="gear-policy" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-policy"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Policy Number
                       </label>
                       <input
@@ -888,11 +921,14 @@ export function GearInventory() {
                         name="policyNumber"
                         type="text"
                         defaultValue={editingItem?.insurance?.policyNumber ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       />
                     </div>
                     <div>
-                      <label htmlFor="gear-insured-value" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-insured-value"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Insured Value ($)
                       </label>
                       <input
@@ -902,21 +938,24 @@ export function GearInventory() {
                         min="0"
                         step="0.01"
                         defaultValue={editingItem?.insurance?.insuredValue ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm font-mono focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 font-mono text-sm focus:outline-hidden"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Maintenance */}
-                <div className="space-y-3 border-t border-border/50 pt-4">
-                  <h4 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                <div className="border-border/50 space-y-3 border-t pt-4">
+                  <h4 className="text-muted-foreground flex items-center gap-2 text-sm font-semibold">
                     <Wrench className="h-4 w-4" />
                     Maintenance
                   </h4>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label htmlFor="gear-last-service" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-last-service"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Last Service
                       </label>
                       <input
@@ -924,11 +963,14 @@ export function GearInventory() {
                         name="lastService"
                         type="date"
                         defaultValue={editingItem?.maintenance?.lastService ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       />
                     </div>
                     <div>
-                      <label htmlFor="gear-next-service" className="mb-1 block text-xs font-medium text-muted-foreground">
+                      <label
+                        htmlFor="gear-next-service"
+                        className="text-muted-foreground mb-1 block text-xs font-medium"
+                      >
                         Next Service
                       </label>
                       <input
@@ -936,12 +978,15 @@ export function GearInventory() {
                         name="nextService"
                         type="date"
                         defaultValue={editingItem?.maintenance?.nextService ?? ''}
-                        className="w-full rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                        className="border-border focus:border-brand-primary w-full rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                       />
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="gear-service-notes" className="mb-1 block text-xs font-medium text-muted-foreground">
+                    <label
+                      htmlFor="gear-service-notes"
+                      className="text-muted-foreground mb-1 block text-xs font-medium"
+                    >
                       Service Notes
                     </label>
                     <textarea
@@ -950,14 +995,17 @@ export function GearInventory() {
                       rows={2}
                       defaultValue={editingItem?.maintenance?.serviceNotes ?? ''}
                       placeholder="Any maintenance notes..."
-                      className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                      className="border-border focus:border-brand-primary w-full resize-none rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                     />
                   </div>
                 </div>
 
                 {/* Notes */}
-                <div className="border-t border-border/50 pt-4">
-                  <label htmlFor="gear-notes" className="mb-1 block text-xs font-medium text-muted-foreground">
+                <div className="border-border/50 border-t pt-4">
+                  <label
+                    htmlFor="gear-notes"
+                    className="text-muted-foreground mb-1 block text-xs font-medium"
+                  >
                     Notes
                   </label>
                   <textarea
@@ -966,12 +1014,12 @@ export function GearInventory() {
                     rows={3}
                     defaultValue={editingItem?.notes ?? ''}
                     placeholder="Additional notes about this item..."
-                    className="w-full resize-none rounded-xl border border-border bg-white/5 px-3 py-2 text-sm focus:border-brand-primary focus:outline-hidden"
+                    className="border-border focus:border-brand-primary w-full resize-none rounded-xl border bg-white/5 px-3 py-2 text-sm focus:outline-hidden"
                   />
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-end gap-2 border-t border-border/50 pt-4">
+                <div className="border-border/50 flex justify-end gap-2 border-t pt-4">
                   <Button
                     type="button"
                     variant="outline"

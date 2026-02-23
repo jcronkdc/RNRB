@@ -151,8 +151,8 @@ export function VoiceMessageRecorder({
 
   if (!isSupported) {
     return (
-      <div className="rounded-lg border border-border bg-surface-muted p-3">
-        <p className="text-sm text-muted-foreground">
+      <div className="border-border bg-surface-muted rounded-lg border p-3">
+        <p className="text-muted-foreground text-sm">
           Voice messages are not supported in your browser
         </p>
       </div>
@@ -184,7 +184,7 @@ export function VoiceMessageRecorder({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="flex items-center gap-3 rounded-lg border border-border bg-surface p-3"
+            className="border-border bg-surface flex items-center gap-3 rounded-lg border p-3"
           >
             {/* Animated recording indicator */}
             <motion.div
@@ -204,14 +204,14 @@ export function VoiceMessageRecorder({
                   key={index}
                   initial={{ height: 4 }}
                   animate={{ height: Math.max(4, amplitude * 40) }}
-                  className="w-1 rounded-full bg-brand-primary"
+                  className="bg-brand-primary w-1 rounded-full"
                   style={{ opacity: 0.5 + amplitude * 0.5 }}
                 />
               ))}
             </div>
 
             {/* Duration counter */}
-            <div className="shrink-0 font-mono text-sm font-medium text-foreground">
+            <div className="text-foreground shrink-0 font-mono text-sm font-medium">
               {formatDuration(duration)}
             </div>
 
@@ -234,7 +234,7 @@ export function VoiceMessageRecorder({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="space-y-3 rounded-lg border border-border bg-surface p-4"
+            className="border-border bg-surface space-y-3 rounded-lg border p-4"
           >
             {/* Audio player (hidden, controlled by our UI) */}
             <audio ref={audioRef} src={previewAudio.url} />
@@ -259,7 +259,7 @@ export function VoiceMessageRecorder({
                 {recordedDataRef.current?.waveform.map((amplitude, index) => (
                   <div
                     key={index}
-                    className="w-1 rounded-full bg-brand-primary/40"
+                    className="bg-brand-primary/40 w-1 rounded-full"
                     style={{
                       height: `${Math.max(4, amplitude * 40)}px`,
                       opacity: 0.5 + amplitude * 0.5,
@@ -269,7 +269,7 @@ export function VoiceMessageRecorder({
               </div>
 
               {/* Duration */}
-              <div className="shrink-0 font-mono text-sm text-muted-foreground">
+              <div className="text-muted-foreground shrink-0 font-mono text-sm">
                 {formatDuration(recordedDataRef.current?.duration || 0)}
               </div>
             </div>
@@ -299,7 +299,7 @@ export function VoiceMessageRecorder({
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="mt-2 rounded-lg border border-border border-red-500/20 bg-red-500/10 p-3"
+          className="border-border mt-2 rounded-lg border border-red-500/20 bg-red-500/10 p-3"
         >
           <p className="text-sm text-red-500">{error}</p>
         </motion.div>

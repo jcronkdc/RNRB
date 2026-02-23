@@ -229,7 +229,7 @@ export function LoopPlayer() {
           </div>
           <div>
             <h3 className="text-lg font-bold">Loop/Slow-Down Player</h3>
-            <p className="text-sm text-muted-foreground">Learn parts at any tempo</p>
+            <p className="text-muted-foreground text-sm">Learn parts at any tempo</p>
           </div>
         </div>
       </div>
@@ -240,10 +240,10 @@ export function LoopPlayer() {
       {/* File Upload */}
       {!audioFile && (
         <div className="mb-6">
-          <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border py-12 transition-colors hover:border-brand-primary">
-            <Upload className="mb-4 h-12 w-12 text-muted-foreground" />
+          <label className="border-border hover:border-brand-primary flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed py-12 transition-colors">
+            <Upload className="text-muted-foreground mb-4 h-12 w-12" />
             <span className="font-medium">Drop audio file or click to upload</span>
-            <span className="mt-1 text-sm text-muted-foreground">MP3, WAV, M4A supported</span>
+            <span className="text-muted-foreground mt-1 text-sm">MP3, WAV, M4A supported</span>
             <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
           </label>
         </div>
@@ -281,7 +281,7 @@ export function LoopPlayer() {
                 {waveformData.map((amplitude, i) => (
                   <div
                     key={i}
-                    className="flex-1 rounded-full bg-brand-primary/50 transition-colors hover:bg-brand-primary"
+                    className="bg-brand-primary/50 hover:bg-brand-primary flex-1 rounded-full transition-colors"
                     style={{ height: `${amplitude * 100}%` }}
                   />
                 ))}
@@ -296,8 +296,8 @@ export function LoopPlayer() {
                     width: `${((loopRegion.end - loopRegion.start) / duration) * 100}%`,
                   }}
                 >
-                  <div className="absolute left-0 top-0 h-full w-1 cursor-ew-resize bg-lime-500" />
-                  <div className="absolute right-0 top-0 h-full w-1 cursor-ew-resize bg-lime-500" />
+                  <div className="absolute top-0 left-0 h-full w-1 cursor-ew-resize bg-lime-500" />
+                  <div className="absolute top-0 right-0 h-full w-1 cursor-ew-resize bg-lime-500" />
                 </div>
               )}
 
@@ -388,7 +388,7 @@ export function LoopPlayer() {
                 }`}
               >
                 <span
-                  className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                  className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                     preservePitch ? 'translate-x-5' : ''
                   }`}
                 />
@@ -410,7 +410,7 @@ export function LoopPlayer() {
                 }`}
               >
                 <span
-                  className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                  className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
                     isLooping ? 'translate-x-5' : ''
                   }`}
                 />
@@ -420,7 +420,7 @@ export function LoopPlayer() {
             {loopRegion && (
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">Loop Start</label>
+                  <label className="text-muted-foreground mb-1 block text-xs">Loop Start</label>
                   <input
                     type="number"
                     value={loopRegion.start.toFixed(2)}
@@ -435,7 +435,7 @@ export function LoopPlayer() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-muted-foreground">Loop End</label>
+                  <label className="text-muted-foreground mb-1 block text-xs">Loop End</label>
                   <input
                     type="number"
                     value={loopRegion.end.toFixed(2)}
@@ -476,7 +476,7 @@ export function LoopPlayer() {
           <div className="flex items-center gap-3 rounded-xl bg-white/5 p-4">
             <button onClick={() => setIsMuted(!isMuted)}>
               {isMuted ? (
-                <VolumeX className="h-5 w-5 text-muted-foreground" />
+                <VolumeX className="text-muted-foreground h-5 w-5" />
               ) : (
                 <Volume2 className="h-5 w-5" />
               )}
@@ -498,7 +498,7 @@ export function LoopPlayer() {
       {/* Tips */}
       <div className="mt-6 rounded-xl bg-white/5 p-4">
         <h4 className="mb-2 text-sm font-semibold">Practice Tips</h4>
-        <ul className="space-y-1 text-sm text-muted-foreground">
+        <ul className="text-muted-foreground space-y-1 text-sm">
           <li>• Start at 50% speed, gradually increase as you master the part</li>
           <li>• Use loop to isolate difficult sections</li>
           <li>• Keep "Preserve Pitch" on to maintain the original key</li>

@@ -212,7 +212,7 @@ export function TalkbackStrip({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed bottom-0 left-0 right-0 z-40 lg:left-[240px]"
+          className="fixed right-0 bottom-0 left-0 z-40 lg:left-[240px]"
           style={{
             background: 'var(--panel)',
             borderTop: '1px solid var(--border)',
@@ -246,7 +246,7 @@ export function TalkbackStrip({
                     {/* Mute indicator */}
                     {person.isMuted && (
                       <div
-                        className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full"
+                        className="absolute -right-0.5 -bottom-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full"
                         style={{ background: 'var(--panel)', border: '1.5px solid var(--border)' }}
                       >
                         <MicOff className="h-2 w-2" style={{ color: 'var(--muted)' }} />
@@ -277,11 +277,7 @@ export function TalkbackStrip({
                 }}
                 title={isMuted ? 'Unmute (say hey)' : 'Mute'}
               >
-                {isMuted ? (
-                  <MicOff className="h-4 w-4" />
-                ) : (
-                  <Mic className="h-4 w-4" />
-                )}
+                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
               </button>
 
               {/* Leave button — subtle */}

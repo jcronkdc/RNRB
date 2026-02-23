@@ -63,7 +63,7 @@ export function UsageHistory({
           </div>
           <div>
             <h3 className="font-semibold">{typeLabel} Usage</h3>
-            <p className="text-xs text-muted-foreground">Last {days} days</p>
+            <p className="text-muted-foreground text-xs">Last {days} days</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -102,7 +102,7 @@ export function UsageHistory({
 
       {/* Reset Info */}
       {usageData?.resetDate && (
-        <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-xs">
+        <div className="border-border mt-4 flex items-center justify-between border-t pt-4 text-xs">
           <span className="text-muted-foreground">Resets on</span>
           <span className="font-medium text-white">
             {new Date(usageData.resetDate).toLocaleDateString('en-US', {
@@ -115,17 +115,17 @@ export function UsageHistory({
       )}
 
       {/* Quick Stats */}
-      <div className="mt-4 grid grid-cols-1 gap-4 border-t border-border pt-4 sm:grid-cols-3">
+      <div className="border-border mt-4 grid grid-cols-1 gap-4 border-t pt-4 sm:grid-cols-3">
         <div>
-          <p className="mb-1 text-xs text-muted-foreground">Used</p>
+          <p className="text-muted-foreground mb-1 text-xs">Used</p>
           <p className="text-lg font-bold">{data?.used || 0}</p>
         </div>
         <div>
-          <p className="mb-1 text-xs text-muted-foreground">Limit</p>
+          <p className="text-muted-foreground mb-1 text-xs">Limit</p>
           <p className="text-lg font-bold">{data?.limit === -1 ? '∞' : data?.limit || 0}</p>
         </div>
         <div>
-          <p className="mb-1 text-xs text-muted-foreground">Available</p>
+          <p className="text-muted-foreground mb-1 text-xs">Available</p>
           <p className={`text-lg font-bold ${statusColor}`}>
             {data?.limit === -1 ? '∞' : data?.remaining || 0}
           </p>
@@ -198,7 +198,7 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
           <Zap className="h-6 w-6 text-orange-400" />
         </div>
         <div>
-          <p className="text-sm text-muted-foreground">AI Credits</p>
+          <p className="text-muted-foreground text-sm">AI Credits</p>
           <p className={`text-2xl font-bold ${creditsColor}`}>{creditsData?.remaining ?? '...'}</p>
         </div>
       </div>
@@ -232,7 +232,7 @@ export function CreditsWidget({ compact = false, showDetails = true }: CreditsWi
               <span className="font-medium">{creditsData.limit}</span>
             </div>
             {creditsData.resetDate && (
-              <div className="flex justify-between border-t border-border pt-2">
+              <div className="border-border flex justify-between border-t pt-2">
                 <span className="text-muted-foreground">Resets</span>
                 <span className="font-medium">
                   {new Date(creditsData.resetDate).toLocaleDateString('en-US', {

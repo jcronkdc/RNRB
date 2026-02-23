@@ -229,7 +229,13 @@ Instagram: ${epkData.social.instagram}
       y += 24;
     }
 
-    const details = [epkData.genre, epkData.location, epkData.formed ? `Est. ${epkData.formed}` : ''].filter(Boolean).join('  |  ');
+    const details = [
+      epkData.genre,
+      epkData.location,
+      epkData.formed ? `Est. ${epkData.formed}` : '',
+    ]
+      .filter(Boolean)
+      .join('  |  ');
     if (details) {
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(10);
@@ -276,7 +282,8 @@ Instagram: ${epkData.social.instagram}
       }
     }
 
-    const hasStats = epkData.stats.monthlyListeners || epkData.stats.followers || epkData.stats.streamsTotal;
+    const hasStats =
+      epkData.stats.monthlyListeners || epkData.stats.followers || epkData.stats.streamsTotal;
     if (hasStats) {
       drawSectionTitle('Statistics');
       doc.setFontSize(10);
@@ -313,7 +320,11 @@ Instagram: ${epkData.social.instagram}
       }
     }
 
-    const hasContact = epkData.contact.email || epkData.contact.phone || epkData.contact.booking || epkData.contact.management;
+    const hasContact =
+      epkData.contact.email ||
+      epkData.contact.phone ||
+      epkData.contact.booking ||
+      epkData.contact.management;
     if (hasContact) {
       drawSectionTitle('Contact');
       doc.setFontSize(10);
@@ -368,14 +379,14 @@ Instagram: ${epkData.social.instagram}
   return (
     <div className="rnrb-card overflow-hidden rounded-2xl">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-border p-4">
+      <div className="border-border flex items-center justify-between border-b p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-500 to-purple-600">
             <Newspaper className="h-5 w-5 text-white" />
           </div>
           <div>
             <h3 className="text-lg font-bold">EPK Generator</h3>
-            <p className="text-sm text-muted-foreground">Create professional press kits</p>
+            <p className="text-muted-foreground text-sm">Create professional press kits</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -401,7 +412,7 @@ Instagram: ${epkData.social.instagram}
       {activeTab === 'edit' ? (
         <div className="flex">
           {/* Section Navigation */}
-          <div className="w-48 border-r border-border p-4">
+          <div className="border-border w-48 border-r p-4">
             <div className="space-y-1">
               {SECTIONS.map((section) => (
                 <button
@@ -431,7 +442,7 @@ Instagram: ${epkData.social.instagram}
                     type="text"
                     value={epkData.artistName}
                     onChange={(e) => updateField('artistName', e.target.value)}
-                    className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                    className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                   />
                 </div>
                 <div>
@@ -440,7 +451,7 @@ Instagram: ${epkData.social.instagram}
                     type="text"
                     value={epkData.tagline}
                     onChange={(e) => updateField('tagline', e.target.value)}
-                    className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                    className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     placeholder="One-line description of your sound"
                   />
                 </div>
@@ -451,7 +462,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.genre}
                       onChange={(e) => updateField('genre', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -460,7 +471,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.location}
                       onChange={(e) => updateField('location', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -469,7 +480,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.formed}
                       onChange={(e) => updateField('formed', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 </div>
@@ -480,7 +491,13 @@ Instagram: ${epkData.social.instagram}
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-lg font-semibold">Biography</h4>
-                  <Button variant="outline" size="sm" onClick={generateAIBio} disabled={generatingBio} className="gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={generateAIBio}
+                    disabled={generatingBio}
+                    className="gap-2"
+                  >
                     <Sparkles className={`h-4 w-4 ${generatingBio ? 'animate-spin' : ''}`} />
                     {generatingBio ? 'Generating...' : 'AI Generate'}
                   </Button>
@@ -493,7 +510,7 @@ Instagram: ${epkData.social.instagram}
                     value={epkData.bio.short}
                     onChange={(e) => updateField('bio.short', e.target.value)}
                     rows={3}
-                    className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                    className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     placeholder="Perfect for social media and quick introductions..."
                   />
                 </div>
@@ -505,7 +522,7 @@ Instagram: ${epkData.social.instagram}
                     value={epkData.bio.long}
                     onChange={(e) => updateField('bio.long', e.target.value)}
                     rows={8}
-                    className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                    className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     placeholder="Tell your full story..."
                   />
                 </div>
@@ -526,7 +543,7 @@ Instagram: ${epkData.social.instagram}
                         updateField('members', newMembers);
                       }}
                       placeholder="Name"
-                      className="flex-1 rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border flex-1 rounded-lg border bg-white/5 px-4 py-2"
                     />
                     <input
                       type="text"
@@ -537,7 +554,7 @@ Instagram: ${epkData.social.instagram}
                         updateField('members', newMembers);
                       }}
                       placeholder="Role/Instrument"
-                      className="flex-1 rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border flex-1 rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 ))}
@@ -563,7 +580,7 @@ Instagram: ${epkData.social.instagram}
                       type="email"
                       value={epkData.contact.email}
                       onChange={(e) => updateField('contact.email', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -572,7 +589,7 @@ Instagram: ${epkData.social.instagram}
                       type="tel"
                       value={epkData.contact.phone}
                       onChange={(e) => updateField('contact.phone', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -581,7 +598,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.contact.booking}
                       onChange={(e) => updateField('contact.booking', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -590,7 +607,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.contact.management}
                       onChange={(e) => updateField('contact.management', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 </div>
@@ -608,7 +625,7 @@ Instagram: ${epkData.social.instagram}
                         type="text"
                         value={value}
                         onChange={(e) => updateField(`social.${key}`, e.target.value)}
-                        className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                        className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                       />
                     </div>
                   ))}
@@ -626,7 +643,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.stats.monthlyListeners}
                       onChange={(e) => updateField('stats.monthlyListeners', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -635,7 +652,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.stats.followers}
                       onChange={(e) => updateField('stats.followers', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                   <div>
@@ -644,7 +661,7 @@ Instagram: ${epkData.social.instagram}
                       type="text"
                       value={epkData.stats.streamsTotal}
                       onChange={(e) => updateField('stats.streamsTotal', e.target.value)}
-                      className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                      className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                     />
                   </div>
                 </div>
@@ -664,7 +681,7 @@ Instagram: ${epkData.social.instagram}
                       newAchievements[i] = e.target.value;
                       updateField('achievements', newAchievements);
                     }}
-                    className="w-full rounded-lg border border-border bg-white/5 px-4 py-2"
+                    className="border-border w-full rounded-lg border bg-white/5 px-4 py-2"
                   />
                 ))}
                 <Button
@@ -685,7 +702,7 @@ Instagram: ${epkData.social.instagram}
             {/* Header */}
             <div className="text-center">
               <h1 className="text-4xl font-black">{epkData.artistName}</h1>
-              <p className="mt-2 text-xl text-muted-foreground">{epkData.tagline}</p>
+              <p className="text-muted-foreground mt-2 text-xl">{epkData.tagline}</p>
               <div className="mt-4 flex items-center justify-center gap-4 text-sm">
                 <span className="flex items-center gap-1">
                   <Music className="h-4 w-4" />
@@ -706,15 +723,15 @@ Instagram: ${epkData.social.instagram}
             <div className="grid grid-cols-3 gap-4 rounded-xl bg-linear-to-r from-violet-500/10 to-purple-500/10 p-6">
               <div className="text-center">
                 <div className="text-2xl font-bold">{epkData.stats.monthlyListeners}</div>
-                <div className="text-xs text-muted-foreground">Monthly Listeners</div>
+                <div className="text-muted-foreground text-xs">Monthly Listeners</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">{epkData.stats.followers}</div>
-                <div className="text-xs text-muted-foreground">Followers</div>
+                <div className="text-muted-foreground text-xs">Followers</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">{epkData.stats.streamsTotal}</div>
-                <div className="text-xs text-muted-foreground">Total Streams</div>
+                <div className="text-muted-foreground text-xs">Total Streams</div>
               </div>
             </div>
 
@@ -744,18 +761,18 @@ Instagram: ${epkData.social.instagram}
               <h3 className="mb-3 text-lg font-semibold">Contact</h3>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div className="flex items-center gap-2 text-sm">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <Mail className="text-muted-foreground h-4 w-4" />
                   {epkData.contact.email}
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <Phone className="text-muted-foreground h-4 w-4" />
                   {epkData.contact.phone}
                 </div>
               </div>
             </div>
 
             {/* Export Buttons */}
-            <div className="flex gap-3 border-t border-border pt-6">
+            <div className="border-border flex gap-3 border-t pt-6">
               <Button onClick={copyToClipboard} variant="outline" className="gap-2">
                 {copied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 {copied ? 'Copied!' : 'Copy Text'}
