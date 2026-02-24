@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
-import { Pool } from 'pg';
+import { PrismaNeon } from '@prisma/adapter-neon';
+import { neon } from '@neondatabase/serverless';
 import type { Prisma } from '@prisma/client';
 
 type GlobalWithPrisma = typeof globalThis & {
@@ -15,13 +15,8 @@ function createPrismaClient(): PrismaClient {
     throw new Error('DATABASE_URL is required');
   }
 
-  let connStr = connectionString;
-  if (connStr.includes('neon.tech') && !connStr.includes('uselibpqcompat')) {
-    connStr += connStr.includes('?') ? '&uselibpqcompat=true' : '?uselibpqcompat=true';
-  }
-
-  const pool = new Pool({ connectionString: connStr, max: 5 });
-  const adapter = new PrismaPg(pool);
+  const sql = neon(connectionString);
+  const adapter = new PrismaNeon(sql);
 
   const client = new PrismaClient({
     adapter,
@@ -29,7 +24,7 @@ function createPrismaClient(): PrismaClient {
   });
 
   if (process.env.NODE_ENV !== 'production') {
-    console.log('[Prisma] Database connection initialized (v7 with pg adapter)');
+    console.log('[Prisma] Database connection initialized (v7 with Neon serverless adapter)');
   }
 
   return client;
@@ -98,15 +93,7 @@ const prisma = basePrisma.$extends({
 }) as unknown as PrismaClient;
 
 if (process.env.NODE_ENV === 'development') {
-  (async () => {
-    try {
-      await basePrisma.$queryRaw`SELECT 1`;
-      console.log('Database connected');
-      console.log('Production safety extensions active');
-    } catch (error) {
-      console.warn('Database connection failed', error);
-    }
-  })();
+  console.log('[Prisma] Neon serverless adapter active — connections use HTTP');
 }
 
 type PrismaModelDelegate = {
