@@ -39,7 +39,6 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@mux/mux-node": "^12.8.0",
     "@mux/mux-player-react": "^3.2.2",
-    "@neondatabase/serverless": "^0.10.4",
     "@next/bundle-analyzer": "^15.5.2",
     "@prisma/client": "^7.4.1",
     "@react-email/components": "^1.0.1",

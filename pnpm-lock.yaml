@@ -313,9 +313,6 @@ importers:
       '@mux/mux-player-react':
         specifier: ^3.2.2
         version: 3.9.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      '@neondatabase/serverless':
-        specifier: ^0.10.4
-        version: 0.10.4
       '@next/bundle-analyzer':
         specifier: ^15.5.2
         version: 15.5.2

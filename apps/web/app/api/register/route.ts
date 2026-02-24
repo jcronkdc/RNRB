@@ -110,18 +110,8 @@ export async function POST(request: Request) {
       console.error('[REGISTER] Stack:', error.stack);
     }
 
-    let dbHost = 'PARSE_FAILED';
-    try {
-      dbHost = process.env.DATABASE_URL
-        ? new URL(process.env.DATABASE_URL).host
-        : 'NOT_SET';
-    } catch { /* ignore */ }
-
     return NextResponse.json(
-      {
-        error: 'Failed to create account. Please try again.',
-        code: 'INTERNAL_ERROR',
-      },
+      { error: 'Failed to create account. Please try again.', code: 'INTERNAL_ERROR' },
       { status: 500 }
     );
   }
