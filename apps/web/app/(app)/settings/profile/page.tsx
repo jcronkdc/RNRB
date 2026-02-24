@@ -377,6 +377,22 @@ function ProfileSettingsContent() {
 
   const [uploadingPicture, setUploadingPicture] = useState(false);
 
+  // Music samples state
+  interface MusicSampleData {
+    id: string;
+    title: string;
+    audioUrl: string;
+    audioPath: string;
+    duration: number | null;
+    genre: string | null;
+  }
+  const [musicSamples, setMusicSamples] = useState<MusicSampleData[]>([]);
+  const [uploadingSample, setUploadingSample] = useState(false);
+  const [sampleTitle, setSampleTitle] = useState('');
+  const [sampleGenre, setSampleGenre] = useState('');
+  const [playingSampleId, setPlayingSampleId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   // Track completion of different sections for progress indicator
   const [sectionCompletion, setSectionCompletion] = useState({
     picture: false,
@@ -447,6 +463,20 @@ function ProfileSettingsContent() {
       };
 
       fetchProfile();
+
+      // Fetch music samples
+      const fetchSamples = async () => {
+        try {
+          const res = await fetch('/api/profile/music-samples');
+          if (res.ok) {
+            const data = await res.json();
+            setMusicSamples(data.samples || []);
+          }
+        } catch (error) {
+          console.error('[PROFILE] Failed to fetch music samples:', error);
+        }
+      };
+      fetchSamples();
     }
   }, [status, router, user]);
 
@@ -628,6 +658,172 @@ function ProfileSettingsContent() {
     } finally {
       setUploadingPicture(false);
     }
+  };
+
+  // Music sample upload handler
+  const handleMusicSampleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file
+    const MAX_AUDIO_SIZE = 50 * 1024 * 1024; // 50MB
+    if (file.size > MAX_AUDIO_SIZE) {
+      setMessage({ type: 'error', text: 'Audio file too large. Maximum size is 50MB.' });
+      return;
+    }
+    const allowedAudioTypes = [
+      'audio/mpeg',
+      'audio/mp3',
+      'audio/wav',
+      'audio/wave',
+      'audio/x-wav',
+      'audio/flac',
+      'audio/ogg',
+      'audio/aac',
+      'audio/mp4',
+      'audio/x-m4a',
+    ];
+    if (!allowedAudioTypes.includes(file.type)) {
+      setMessage({ type: 'error', text: 'Invalid audio format. Use MP3, WAV, FLAC, OGG, or AAC.' });
+      return;
+    }
+
+    if (!sampleTitle.trim()) {
+      setMessage({ type: 'error', text: 'Please enter a title for your music sample.' });
+      return;
+    }
+
+    if (musicSamples.length >= 10) {
+      setMessage({ type: 'error', text: 'Maximum of 10 music samples allowed.' });
+      return;
+    }
+
+    setUploadingSample(true);
+
+    try {
+      const supabase = createBrowserClient();
+      if (!supabase) throw new Error('Storage not available');
+
+      const fileExt =
+        file.name
+          .split('.')
+          .pop()
+          ?.toLowerCase()
+          .replace(/[^a-z0-9]/g, '') || 'mp3';
+      const audioPath = `${user.id}/samples/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('music-samples')
+        .upload(audioPath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('music-samples').getPublicUrl(audioPath);
+
+      // Save to database
+      const res = await fetch('/api/profile/music-samples', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: sampleTitle.trim(),
+          audioUrl: publicUrl,
+          audioPath,
+          genre: sampleGenre.trim() || undefined,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Clean up uploaded file on API error
+        await supabase.storage.from('music-samples').remove([audioPath]);
+        throw new Error(data.error || 'Failed to save music sample');
+      }
+
+      setMusicSamples((prev) => [...prev, data.sample]);
+      setSampleTitle('');
+      setSampleGenre('');
+      setMessage({ type: 'success', text: 'Music sample uploaded!' });
+
+      // Reset file input
+      e.target.value = '';
+    } catch (error: unknown) {
+      setMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Failed to upload music sample',
+      });
+    } finally {
+      setUploadingSample(false);
+    }
+  };
+
+  // Delete music sample handler
+  const handleDeleteSample = async (sampleId: string) => {
+    try {
+      const res = await fetch(`/api/profile/music-samples?id=${sampleId}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage({ type: 'error', text: data.error || 'Failed to delete sample' });
+        return;
+      }
+
+      // Clean up storage
+      if (data.audioPath) {
+        try {
+          const supabase = createBrowserClient();
+          if (supabase) {
+            await supabase.storage.from('music-samples').remove([data.audioPath]);
+          }
+        } catch {
+          // Storage cleanup failure is non-critical
+        }
+      }
+
+      // Stop playback if this sample was playing
+      if (playingSampleId === sampleId) {
+        audioRef.current?.pause();
+        setPlayingSampleId(null);
+      }
+
+      setMusicSamples((prev) => prev.filter((s) => s.id !== sampleId));
+      setMessage({ type: 'success', text: 'Sample deleted' });
+    } catch {
+      setMessage({ type: 'error', text: 'Failed to delete sample' });
+    }
+  };
+
+  // Play/pause music sample
+  const togglePlaySample = (sample: MusicSampleData) => {
+    if (playingSampleId === sample.id) {
+      audioRef.current?.pause();
+      setPlayingSampleId(null);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      const audio = new Audio(sample.audioUrl);
+      audio.onended = () => setPlayingSampleId(null);
+      audio.play();
+      audioRef.current = audio;
+      setPlayingSampleId(sample.id);
+    }
+  };
+
+  // Format duration helper
+  const formatSampleDuration = (seconds: number | null) => {
+    if (!seconds) return '';
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
   if (loading) {
@@ -1818,23 +2014,164 @@ function ProfileSettingsContent() {
                   Music Samples
                 </h2>
                 <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  Coming soon
+                  Showcase your work ({musicSamples.length}/10)
                 </p>
               </div>
             </div>
 
-            <div
-              className="rounded-xl border-2 border-dashed p-8 text-center transition-all"
-              style={{ borderColor: 'var(--border)', background: 'var(--panel)' }}
-            >
-              <Upload className="mx-auto mb-4 h-12 w-12" style={{ color: 'var(--muted)' }} />
-              <p className="mb-2 font-medium" style={{ color: 'var(--text-secondary)' }}>
-                Music upload feature coming soon
-              </p>
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                Showcase your work with audio samples • MP3, WAV, FLAC • Up to 50MB per track
-              </p>
-            </div>
+            {/* Existing samples list */}
+            {musicSamples.length > 0 && (
+              <div className="mb-6 space-y-3">
+                {musicSamples.map((sample) => (
+                  <div
+                    key={sample.id}
+                    className="flex items-center gap-3 rounded-xl p-3 transition-all"
+                    style={{
+                      background:
+                        playingSampleId === sample.id ? 'rgba(232, 93, 59, 0.1)' : 'var(--panel)',
+                      border:
+                        playingSampleId === sample.id
+                          ? '1px solid rgba(232, 93, 59, 0.3)'
+                          : '1px solid var(--border)',
+                    }}
+                  >
+                    <button
+                      onClick={() => togglePlaySample(sample)}
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-all hover:scale-105"
+                      style={{ background: 'var(--accent)', color: 'white' }}
+                    >
+                      {playingSampleId === sample.id ? (
+                        <div className="flex gap-0.5">
+                          <div className="h-3 w-0.5 animate-pulse rounded-full bg-white" />
+                          <div
+                            className="h-3 w-0.5 animate-pulse rounded-full bg-white"
+                            style={{ animationDelay: '0.15s' }}
+                          />
+                          <div
+                            className="h-3 w-0.5 animate-pulse rounded-full bg-white"
+                            style={{ animationDelay: '0.3s' }}
+                          />
+                        </div>
+                      ) : (
+                        <Music2 className="ml-0.5 h-4 w-4" />
+                      )}
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium" style={{ color: 'var(--text)' }}>
+                        {sample.title}
+                      </p>
+                      <div
+                        className="flex items-center gap-2 text-xs"
+                        style={{ color: 'var(--muted)' }}
+                      >
+                        {sample.genre && <span>{sample.genre}</span>}
+                        {sample.duration && <span>{formatSampleDuration(sample.duration)}</span>}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteSample(sample.id)}
+                      className="shrink-0 rounded-lg p-2 transition-colors hover:bg-red-500/10"
+                      title="Delete sample"
+                    >
+                      <Trash2 className="h-4 w-4" style={{ color: '#ef4444' }} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Upload new sample */}
+            {musicSamples.length < 10 && (
+              <div
+                className="space-y-4 rounded-xl p-5"
+                style={{ background: 'var(--panel)', border: '1px solid var(--border)' }}
+              >
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="sample-title"
+                      className="mb-1.5 block text-xs font-medium"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      Track Title *
+                    </label>
+                    <input
+                      id="sample-title"
+                      type="text"
+                      value={sampleTitle}
+                      onChange={(e) => setSampleTitle(e.target.value)}
+                      placeholder="e.g. Midnight Blues Demo"
+                      maxLength={100}
+                      className="w-full rounded-lg px-3 py-2.5 text-sm transition-all"
+                      style={{
+                        background: 'var(--bg)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text)',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="sample-genre"
+                      className="mb-1.5 block text-xs font-medium"
+                      style={{ color: 'var(--text-secondary)' }}
+                    >
+                      Genre (optional)
+                    </label>
+                    <input
+                      id="sample-genre"
+                      type="text"
+                      value={sampleGenre}
+                      onChange={(e) => setSampleGenre(e.target.value)}
+                      placeholder="e.g. Blues, Rock, Jazz"
+                      maxLength={50}
+                      className="w-full rounded-lg px-3 py-2.5 text-sm transition-all"
+                      style={{
+                        background: 'var(--bg)',
+                        border: '1px solid var(--border)',
+                        color: 'var(--text)',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <label className="cursor-pointer">
+                  <input
+                    type="file"
+                    accept="audio/mpeg,audio/mp3,audio/wav,audio/flac,audio/ogg,audio/aac,audio/mp4,audio/x-m4a"
+                    onChange={handleMusicSampleUpload}
+                    className="hidden"
+                    disabled={uploadingSample || !sampleTitle.trim()}
+                  />
+                  <div
+                    className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed p-4 text-sm font-medium transition-all hover:border-solid"
+                    style={{
+                      borderColor: sampleTitle.trim() ? 'rgba(232, 93, 59, 0.4)' : 'var(--border)',
+                      color: sampleTitle.trim() ? 'var(--accent)' : 'var(--muted)',
+                      opacity: uploadingSample ? 0.5 : 1,
+                    }}
+                  >
+                    {uploadingSample ? (
+                      <>
+                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        Uploading...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4" />
+                        {sampleTitle.trim()
+                          ? 'Choose Audio File'
+                          : 'Enter a title first, then upload'}
+                      </>
+                    )}
+                  </div>
+                </label>
+
+                <p className="text-center text-xs" style={{ color: 'var(--muted)' }}>
+                  MP3, WAV, FLAC, OGG, or AAC • Up to 50MB per track
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Action Button - Sticky Footer */}

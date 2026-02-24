@@ -2,6 +2,7 @@ import { prisma } from '@cronkwaters/db';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { getBlockedUserIds } from '@/lib/social';
 
 // GET - Fetch friends (mutual follows)
 export async function GET() {
@@ -14,9 +15,15 @@ export async function GET() {
 
     const userId = session.user.id;
 
+    // Get blocked users to exclude from results
+    const blockedIds = await getBlockedUserIds(userId);
+
     // Get users that current user follows
     const following = await prisma.userFollow.findMany({
-      where: { followerId: userId },
+      where: {
+        followerId: userId,
+        ...(blockedIds.size > 0 && { followingId: { notIn: Array.from(blockedIds) } }),
+      },
       select: { followingId: true },
     });
     const followingIds = following.map((f) => f.followingId);

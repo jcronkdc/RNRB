@@ -200,7 +200,7 @@ export const adminRouter = router({
               select: {
                 songs: true,
                 authoredPosts: true,
-                collaborationRequests: true,
+                collaborationNeeds: true,
               },
             },
           },
@@ -678,9 +678,7 @@ export const adminRouter = router({
       prisma.marketplaceListing.count().then((count) => ({ table: 'marketplace_listings', count })),
       prisma.masterclass.count().then((count) => ({ table: 'masterclasses', count })),
       prisma.transaction.count().then((count) => ({ table: 'transactions', count })),
-      prisma.collaborationRequest
-        .count()
-        .then((count) => ({ table: 'collaboration_requests', count })),
+      prisma.collaborationNeed.count().then((count) => ({ table: 'collaboration_needs', count })),
       prisma.collaborationRoom.count().then((count) => ({ table: 'collaboration_rooms', count })),
       prisma.notification.count().then((count) => ({ table: 'notifications', count })),
     ]);

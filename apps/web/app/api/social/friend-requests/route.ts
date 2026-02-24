@@ -1,7 +1,8 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
+import { getBlockedUserIds } from '@/lib/social';
 
 // GET - Fetch friend requests (people who follow you that you don't follow back)
 export async function GET(request: NextRequest) {
@@ -17,11 +18,16 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get('type') || 'received'; // received, sent
     const limit = parseInt(searchParams.get('limit') || '20');
 
+    // Get blocked users to exclude from results
+    const blockedIds = await getBlockedUserIds(userId);
+    const blockedArray = Array.from(blockedIds);
+
     if (type === 'received') {
       // People who follow you that you don't follow back (incoming friend requests)
       const requests = await prisma.userFollow.findMany({
         where: {
           followingId: userId,
+          ...(blockedIds.size > 0 && { followerId: { notIn: blockedArray } }),
           follower: {
             following: {
               none: {
@@ -65,6 +71,7 @@ export async function GET(request: NextRequest) {
       const sent = await prisma.userFollow.findMany({
         where: {
           followerId: userId,
+          ...(blockedIds.size > 0 && { followingId: { notIn: blockedArray } }),
         },
         include: {
           following: {

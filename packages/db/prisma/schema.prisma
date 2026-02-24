@@ -114,11 +114,7 @@ model User {
   sessions               Session[]
   uploadedAssets         Asset[]
   assetShares            AssetShare[]
-  collaborationRequests  CollaborationRequest[]
-  collaborationResponses CollaborationResponse[]
   comments               Comment[]
-  connectedTo            Connection[]            @relation("ConnectedToUser")
-  connections            Connection[]            @relation("UserConnections")
   forumPosts             ForumPost[]
   forumReplies           ForumReply[]
   memberships            Membership[]
@@ -252,6 +248,9 @@ model User {
   // Custom Workspaces - User-owned dashboard customization
   workspaces      UserWorkspace[]
   userPreferences UserPreferences?
+
+  // Profile Music Samples
+  musicSamples MusicSample[]
 
   // Social Safety - Blocking & Reporting
   blockedUsers              UserBlock[]            @relation("UserBlocker")
@@ -1091,47 +1090,9 @@ model Award {
   @@index([year])
 }
 
-model CollaborationRequest {
-  id           String                  @id @default(cuid())
-  userId       String
-  title        String
-  slug         String                  @unique
-  description  String
-  projectType  String
-  genre        String[]
-  skillsNeeded String[]
-  location     String?
-  isRemote     Boolean                 @default(true)
-  isPaid       Boolean                 @default(false)
-  compensation String?
-  deadline     DateTime?
-  status       CollaborationStatus     @default(open)
-  viewCount    Int                     @default(0)
-  createdAt    DateTime                @default(now())
-  updatedAt    DateTime                @updatedAt
-  user         User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  responses    CollaborationResponse[]
-
-  @@index([userId])
-  @@index([status])
-  @@index([genre])
-  @@index([skillsNeeded])
-}
-
-model CollaborationResponse {
-  id        String               @id @default(cuid())
-  requestId String
-  userId    String
-  message   String
-  portfolio String?
-  accepted  Boolean?
-  createdAt DateTime             @default(now())
-  request   CollaborationRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
-  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([requestId])
-  @@index([userId])
-}
+// NOTE: CollaborationRequest/CollaborationResponse models removed (2026-02-23)
+// Superseded by CollaborationNeed/CollaborationApplication — the richer marketplace system.
+// If migrating existing data, map CollaborationRequest → CollaborationNeed, CollaborationResponse → CollaborationApplication.
 
 model MusicianProfile {
   id                        String   @id @default(cuid())
@@ -1265,22 +1226,9 @@ model Message {
   @@index([isRead])
 }
 
-model Connection {
-  id              String    @id @default(cuid())
-  userId          String
-  connectedUserId String
-  status          String    @default("pending")
-  message         String?
-  createdAt       DateTime  @default(now())
-  acceptedAt      DateTime?
-  connectedUser   User      @relation("ConnectedToUser", fields: [connectedUserId], references: [id], onDelete: Cascade)
-  user            User      @relation("UserConnections", fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, connectedUserId])
-  @@index([userId])
-  @@index([connectedUserId])
-  @@index([status])
-}
+// NOTE: Connection model removed (2026-02-23)
+// Was unused — social connections are managed via Supabase social_connections table.
+// User-to-user relationships are handled by UserFollow (mutual follow = friendship).
 
 model StudioSession {
   id          String            @id @default(cuid())
@@ -1613,13 +1561,6 @@ enum ShowStatus {
   completed
 }
 
-enum CollaborationStatus {
-  open
-  in_progress
-  completed
-  cancelled
-}
-
 enum SkillLevel {
   beginner
   intermediate
@@ -1665,6 +1606,28 @@ enum TransactionStatus {
 // Force Prisma regeneration: 2025-11-27-DATABASE-URL-FIX
 // SongRequest table migration applied to Supabase successfully
 // Force Prisma regeneration - Sun Nov 23 21:54:49 CST 2025
+
+// ====================================
+// PROFILE MUSIC SAMPLES
+// ====================================
+
+model MusicSample {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  audioUrl    String // Supabase Storage URL
+  audioPath   String // Storage path for deletion
+  duration    Int? // Duration in seconds
+  genre       String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([sortOrder])
+}
 
 // ====================================
 // COMMUNITY FEATURES - Added Agent 89
@@ -1754,10 +1717,12 @@ model TrackComment {
 }
 
 model UserFollow {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   followerId  String // User who is following
   followingId String // User being followed
-  createdAt   DateTime @default(now())
+  message     String? // Optional message sent with the follow/friend request
+  acceptedAt  DateTime? // When the other user followed back (mutual = friends)
+  createdAt   DateTime  @default(now())
 
   follower  User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
   following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
@@ -2843,7 +2808,7 @@ enum LibraryFileType {
   chords // Chord charts, lead sheets
   sheet_music // Sheet music, notation (PDF/images)
   midi // MIDI files
-  // Visual Types  
+  // Visual Types
   image // Album art, stage plots, promo photos
   // General Document Types
   document // PDFs, contracts, riders, setlists

@@ -1,7 +1,8 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
+import { isBlocked } from '@/lib/social';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: targetUserId } = await params;
@@ -23,6 +24,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     });
 
     if (!targetUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Block check — if either party blocked the other, deny the interaction
+    const blocked = await isBlocked(session.user.id, targetUserId);
+    if (blocked) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
