@@ -11,19 +11,12 @@ export default async function DashboardPage() {
   }
 
   const userId = session.user.id;
-  const firstName = session.user.name?.split(' ')[0] || 'there';
+  const rawFirst = session.user.name?.split(' ')[0] || 'there';
+  const firstName = rawFirst.slice(0, 50).replace(/[<>"'&]/g, '');
   const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-  const [
-    songs,
-    projects,
-    totalSongs,
-    totalProjects,
-    collaboratorCount,
-    songsThisWeek,
-    unreadNotifications,
-    user,
-  ] = await Promise.all([
+  // Use allSettled so a single query failure doesn't crash the entire dashboard
+  const results = await Promise.allSettled([
     db.song.findMany({
       where: { userId, archived: false },
       orderBy: { updatedAt: 'desc' },
@@ -66,11 +59,18 @@ export default async function DashboardPage() {
       select: {
         subscriptionTier: true,
         isOwner: true,
-        aiRequestsUsed: true,
-        storageUsedGB: true,
       },
     }),
   ]);
+
+  const songs = results[0].status === 'fulfilled' ? results[0].value : [];
+  const projects = results[1].status === 'fulfilled' ? results[1].value : [];
+  const totalSongs = results[2].status === 'fulfilled' ? results[2].value : 0;
+  const totalProjects = results[3].status === 'fulfilled' ? results[3].value : 0;
+  const collaboratorCount = results[4].status === 'fulfilled' ? results[4].value : 0;
+  const songsThisWeek = results[5].status === 'fulfilled' ? results[5].value : 0;
+  const unreadNotifications = results[6].status === 'fulfilled' ? results[6].value : 0;
+  const user = results[7].status === 'fulfilled' ? results[7].value : null;
 
   const tier = user?.isOwner ? 'studio' : (user?.subscriptionTier ?? 'free');
 

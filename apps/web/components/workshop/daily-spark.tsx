@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Check, RefreshCw } from '@/components/ui/custom-icons';
+import { Check, Sparkles } from '@/components/ui/custom-icons';
 import { getDailySpark } from '@/lib/workshop-voice';
+import { AnimatePresence, motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 interface DailySparkProps {
   className?: string;
@@ -23,16 +23,24 @@ export function DailySpark({ className = '', onComplete }: DailySparkProps) {
 
   // Check if already completed today (stored in localStorage)
   useEffect(() => {
-    const today = new Date().toDateString();
-    const completedDate = localStorage.getItem('dailySparkCompleted');
-    if (completedDate === today) {
-      setCompleted(true);
+    try {
+      const today = new Date().toDateString();
+      const completedDate = localStorage.getItem('dailySparkCompleted');
+      if (completedDate === today) {
+        setCompleted(true);
+      }
+    } catch {
+      // localStorage unavailable (private browsing, SSR, etc.)
     }
   }, []);
 
   const handleComplete = () => {
-    const today = new Date().toDateString();
-    localStorage.setItem('dailySparkCompleted', today);
+    try {
+      const today = new Date().toDateString();
+      localStorage.setItem('dailySparkCompleted', today);
+    } catch {
+      // localStorage unavailable
+    }
     setCompleted(true);
     setCelebrating(true);
 

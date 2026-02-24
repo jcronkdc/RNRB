@@ -8,6 +8,7 @@ import { prisma } from '@cronkwaters/db';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { checkRateLimit, standardLimiter } from '@/lib/rate-limit';
 
 // Subscription tier storage limits (in bytes)
 const STORAGE_LIMITS: Record<string, number> = {
@@ -83,6 +84,14 @@ export async function GET() {
     }
 
     const userId = session.user.id;
+
+    // Rate limit: 100 requests per minute per user
+    try {
+      await checkRateLimit(standardLimiter, `dashboard-stats:${userId}`);
+    } catch {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
     // Run all queries in parallel for speed
@@ -94,6 +103,7 @@ export async function GET() {
       recentActivityCount,
       thisWeekSongs,
       streak,
+      thisWeekMessages,
     ] = await Promise.all([
       // Get user with storage and subscription info
       prisma.user.findUnique({
@@ -146,6 +156,14 @@ export async function GET() {
 
       // Calculate activity streak
       calculateStreak(userId),
+
+      // Count chat messages this week (for collaboration hours estimate)
+      prisma.chatMessage.count({
+        where: {
+          senderId: userId,
+          createdAt: { gte: oneWeekAgo },
+        },
+      }),
     ]);
 
     if (!user) {
@@ -161,14 +179,6 @@ export async function GET() {
 
     const usedGB = Number(user.storageUsedGB) || 0;
     const usedBytes = usedGB * 1024 * 1024 * 1024;
-
-    // Calculate this week hours from chat/collab activity (approximation)
-    const thisWeekMessages = await prisma.chatMessage.count({
-      where: {
-        senderId: userId,
-        createdAt: { gte: oneWeekAgo },
-      },
-    });
 
     // Estimate hours: ~5 messages per hour of active collaboration
     const thisWeekHours = Math.round(thisWeekMessages / 5);
@@ -187,7 +197,7 @@ export async function GET() {
       streakDays: streak,
     });
   } catch (error) {
-    console.error('Dashboard stats error:', error);
+    console.error('[DASHBOARD-STATS] Error:', error instanceof Error ? error.message : error);
     return NextResponse.json({ error: 'Failed to fetch dashboard stats' }, { status: 500 });
   }
 }
