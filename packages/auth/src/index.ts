@@ -1,12 +1,12 @@
 import { cookies } from 'next/headers';
 
-export { handlers, auth, signIn, signOut } from './auth';
+export { auth, handlers, signIn, signOut } from './auth';
 export { env } from './env';
+export { getOrgSession as getOrgSessionFromSession, requireOrgSession } from './session';
+export type { OrgAwareSession } from './session';
 
 // Compatibility shim for legacy authOptions pattern
 export const authOptions = {};
-export type { OrgAwareSession } from './session';
-export { getOrgSession as getOrgSessionFromSession, requireOrgSession } from './session';
 
 export type AppUser = {
   id: string;
@@ -103,24 +103,5 @@ export async function getOrgSession(): Promise<OrgSession> {
   };
 }
 
-/**
- * Sets the active organization cookie. Safe to invoke from server actions.
- */
-export async function setActiveOrgCookie(orgId: string | null): Promise<void> {
-  const store = await cookies();
-
-  if (!orgId) {
-    store.delete('sf_org');
-    return;
-  }
-
-  store.set({
-    name: 'sf_org',
-    value: orgId,
-    httpOnly: true,
-    secure: true,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 90,
-  });
-}
+// Re-export from session.ts (single source of truth)
+export { setActiveOrgCookie } from './session';

@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { sendEmail } from '@/lib/email';
 import { env } from '@/lib/env';
 import { handleApiError } from '@/lib/errors';
-import { strictLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { checkRateLimit, strictLimiter } from '@/lib/rate-limit';
 import { getClientIp, logSecurityEvent } from '@/lib/security';
 
 export const runtime = 'nodejs';
@@ -90,24 +90,24 @@ function buildEmailHtml(name: string | null, resetUrl: string): string {
         <div class="email-content">
           <p class="greeting">${name ? `Hey ${name},` : 'Hey there,'}</p>
           <h2 class="main-heading">Reset Your Password</h2>
-          
+
           <p class="body-text">
             We received a request to reset your password. Click the button below to create a new one.
           </p>
-          
+
           <div class="warning-box">
             <p class="warning-text">⏰ This link expires in 30 minutes for security</p>
           </div>
-          
+
           <div class="button-container">
             <a href="${resetUrl}" class="primary-button">Reset Password</a>
           </div>
-          
+
           <div class="info-card">
             <p style="color: #9c9ca5; font-size: 13px; margin: 0 0 8px;">Or copy this link:</p>
             <p style="color: #ff6347; font-size: 12px; margin: 0; word-break: break-all;">${resetUrl}</p>
           </div>
-          
+
           <p class="body-text" style="margin-top: 24px;">
             If you didn't request this password reset, you can safely ignore this email. Your password will remain unchanged.
           </p>
@@ -201,11 +201,15 @@ export async function POST(request: Request) {
       });
     }
 
+    // SECURITY: Never reveal whether the email exists in the database.
+    // Always return the same response regardless of user existence or email delivery.
+    if (emailResult && !emailResult.success) {
+      console.error('[PASSWORD-RESET] Email delivery failed:', emailResult.error);
+    }
+
     return NextResponse.json({
       success: true,
       message: 'If that email is registered, reset instructions are on the way.',
-      emailSent: emailResult?.success ?? false,
-      ...(emailResult && !emailResult.success ? { warning: emailResult.error } : {}),
     });
   } catch (error) {
     return handleApiError(error, {

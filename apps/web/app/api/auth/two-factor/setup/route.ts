@@ -6,17 +6,19 @@
  * DELETE /api/auth/two-factor/setup - Disable 2FA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@cronkwaters/db';
-import { auth } from '@cronkwaters/auth';
+import { checkRateLimit, strictLimiter } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security';
 import {
-  generateTOTPSecret,
-  generateTOTPUri,
-  generateBackupCodes,
-  hashBackupCodes,
   encryptSecret,
   formatBackupCode,
+  generateBackupCodes,
+  generateTOTPSecret,
+  generateTOTPUri,
+  hashBackupCodes,
 } from '@/lib/two-factor-auth';
+import { auth } from '@cronkwaters/auth';
+import { prisma } from '@cronkwaters/db';
+import { NextRequest, NextResponse } from 'next/server';
 
 function getEncryptionKey(): string {
   const key = process.env.TWO_FACTOR_ENCRYPTION_KEY || process.env.NEXTAUTH_SECRET;
@@ -31,6 +33,10 @@ function getEncryptionKey(): string {
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit to prevent secret generation spam
+    const clientIp = getClientIp(request);
+    await checkRateLimit(strictLimiter, `2fa-setup:${clientIp}`);
+
     const session = await auth();
 
     if (!session?.user?.id) {

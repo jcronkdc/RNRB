@@ -4,10 +4,12 @@
  * POST /api/auth/two-factor/verify - Verify TOTP code and enable 2FA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@cronkwaters/db';
+import { authLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security';
+import { decryptSecret, verifyBackupCode, verifyTOTP } from '@/lib/two-factor-auth';
 import { auth } from '@cronkwaters/auth';
-import { verifyTOTP, verifyBackupCode, decryptSecret } from '@/lib/two-factor-auth';
+import { prisma } from '@cronkwaters/db';
+import { NextRequest, NextResponse } from 'next/server';
 
 function getEncryptionKey(): string {
   const key = process.env.TWO_FACTOR_ENCRYPTION_KEY || process.env.NEXTAUTH_SECRET;
@@ -32,6 +34,10 @@ export async function POST(request: NextRequest) {
     if (!code || typeof code !== 'string') {
       return NextResponse.json({ error: 'Verification code required' }, { status: 400 });
     }
+
+    // Rate limit to prevent brute-force of 6-digit TOTP codes
+    const clientIp = getClientIp(request);
+    await checkRateLimit(authLimiter, `2fa-verify:${clientIp}`);
 
     // Get authenticated user
     const session = await auth();

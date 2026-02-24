@@ -1,17 +1,17 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
+import { checkRateLimit, standardLimiter, strictLimiter } from '@/lib/rate-limit';
 import {
+  getClientIp,
+  logSecurityEvent,
+  sanitizeContent,
+  validateContentType,
   validateCursor,
   validateLimit,
   validateUrl,
-  sanitizeContent,
   validateVisibility,
-  validateContentType,
-  rateLimitUser,
-  logSecurityEvent,
-  getClientIp,
 } from '@/lib/security';
 
 /**
@@ -30,7 +30,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Rate limiting
-    if (!rateLimitUser(session.user.id, 'feed-posts-read', 200)) {
+    try {
+      await checkRateLimit(standardLimiter, `feed-posts-read:${session.user.id}`);
+    } catch {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
@@ -214,7 +216,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Rate limiting - 30 posts per hour
-    if (!rateLimitUser(session.user.id, 'feed-posts-create', 30)) {
+    try {
+      await checkRateLimit(strictLimiter, `feed-posts-create:${session.user.id}`);
+    } catch {
       logSecurityEvent('rate_limit', {
         userId: session.user.id,
         action: 'post-create',

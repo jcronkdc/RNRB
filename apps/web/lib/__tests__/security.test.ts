@@ -6,25 +6,22 @@
  * and contribute to coverage metrics.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
-  validateId,
+  escapeSql,
+  getClientIp,
+  sanitizeContent,
+  sanitizeSearchQuery,
+  validateContentType,
   validateCursor,
+  validateEmail,
+  validateId,
+  validateIdArray,
   validateLimit,
   validateOffset,
-  sanitizeSearchQuery,
-  validateEmail,
-  sanitizeContent,
   validateUrl,
   validateVisibility,
-  validateContentType,
-  checkRateLimit,
-  rateLimitUser,
-  rateLimitIp,
-  getClientIp,
-  escapeSql,
-  validateIdArray,
 } from '../security';
 
 describe('Security Utilities', () => {
@@ -254,68 +251,6 @@ describe('Security Utilities', () => {
       expect(validateContentType(null)).toBe('text');
       expect(validateContentType(undefined)).toBe('text');
       expect(validateContentType('invalid')).toBe('text');
-    });
-  });
-
-  describe('checkRateLimit', () => {
-    beforeEach(() => {
-      // Clear the rate limit store between tests by waiting or using unique keys
-    });
-
-    it('should allow requests within limit', () => {
-      const key = `test-${Date.now()}-${Math.random()}`;
-      const result = checkRateLimit(key, 5, 60000);
-
-      expect(result.allowed).toBe(true);
-      expect(result.remaining).toBe(4);
-    });
-
-    it('should block requests over limit', () => {
-      const key = `test-block-${Date.now()}-${Math.random()}`;
-
-      // Make requests up to the limit
-      for (let i = 0; i < 5; i++) {
-        checkRateLimit(key, 5, 60000);
-      }
-
-      // Next request should be blocked
-      const result = checkRateLimit(key, 5, 60000);
-      expect(result.allowed).toBe(false);
-      expect(result.remaining).toBe(0);
-    });
-
-    it('should reset after window expires', async () => {
-      const key = `test-reset-${Date.now()}-${Math.random()}`;
-
-      // Make a request with very short window
-      const result1 = checkRateLimit(key, 5, 10);
-      expect(result1.allowed).toBe(true);
-
-      // Wait for window to expire
-      await new Promise((resolve) => setTimeout(resolve, 20));
-
-      // Should be reset
-      const result2 = checkRateLimit(key, 5, 10);
-      expect(result2.allowed).toBe(true);
-      expect(result2.remaining).toBe(4);
-    });
-  });
-
-  describe('rateLimitUser', () => {
-    it('should create unique key per user and action', () => {
-      const userId = `user-${Date.now()}-${Math.random()}`;
-
-      const allowed = rateLimitUser(userId, 'test-action', 100);
-      expect(allowed).toBe(true);
-    });
-  });
-
-  describe('rateLimitIp', () => {
-    it('should create unique key per IP and action', () => {
-      const ip = `127.0.0.${Date.now() % 255}`;
-
-      const allowed = rateLimitIp(ip, 'test-action', 50);
-      expect(allowed).toBe(true);
     });
   });
 

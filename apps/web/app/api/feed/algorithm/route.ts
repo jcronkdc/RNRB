@@ -1,14 +1,9 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
-import {
-  validateCursor,
-  validateLimit,
-  rateLimitUser,
-  logSecurityEvent,
-  getClientIp,
-} from '@/lib/security';
+import { checkRateLimit, standardLimiter } from '@/lib/rate-limit';
+import { getClientIp, logSecurityEvent, validateCursor, validateLimit } from '@/lib/security';
 
 /**
  * GET /api/feed/algorithm
@@ -22,7 +17,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Rate limiting - 100 requests per minute per user
-    if (!rateLimitUser(session.user.id, 'feed-algorithm', 100)) {
+    try {
+      await checkRateLimit(standardLimiter, `feed-algorithm:${session.user.id}`);
+    } catch {
       logSecurityEvent('rate_limit', {
         userId: session.user.id,
         action: 'feed-algorithm',
@@ -78,28 +75,28 @@ export async function GET(request: NextRequest) {
     const posts = cursor
       ? await prisma.$queryRaw`
           WITH scored_posts AS (
-            SELECT 
+            SELECT
               p.*,
               CASE
                 -- Posts from people you follow (highest priority)
                 WHEN p."userId" = ANY(${followingIds}::text[]) THEN 100
-                
+
                 -- Trending posts (high engagement in last 24 hours)
                 WHEN p."createdAt" > NOW() - INTERVAL '24 hours'
                   AND (p."likeCount" > 10 OR p."shareCount" > 3) THEN 80
-                
+
                 -- Posts matching your interests
                 WHEN p."genre" = ANY(${preferredGenres}::text[])
                   OR p."mood" = ANY(${preferredMoods}::text[]) THEN 60
-                
+
                 -- Popular public posts
                 WHEN p."visibility" = 'public'
                   AND (p."likeCount" > 5 OR p."commentCount" > 3) THEN 40
-                
+
                 -- New public posts (discovery)
-                WHEN p."visibility" = 'public' 
+                WHEN p."visibility" = 'public'
                   AND p."createdAt" > NOW() - INTERVAL '7 days' THEN 20
-                
+
                 ELSE 10
               END as score
             FROM "Post" p
@@ -113,28 +110,28 @@ export async function GET(request: NextRequest) {
         `
       : await prisma.$queryRaw`
           WITH scored_posts AS (
-            SELECT 
+            SELECT
               p.*,
               CASE
                 -- Posts from people you follow (highest priority)
                 WHEN p."userId" = ANY(${followingIds}::text[]) THEN 100
-                
+
                 -- Trending posts (high engagement in last 24 hours)
                 WHEN p."createdAt" > NOW() - INTERVAL '24 hours'
                   AND (p."likeCount" > 10 OR p."shareCount" > 3) THEN 80
-                
+
                 -- Posts matching your interests
                 WHEN p."genre" = ANY(${preferredGenres}::text[])
                   OR p."mood" = ANY(${preferredMoods}::text[]) THEN 60
-                
+
                 -- Popular public posts
                 WHEN p."visibility" = 'public'
                   AND (p."likeCount" > 5 OR p."commentCount" > 3) THEN 40
-                
+
                 -- New public posts (discovery)
-                WHEN p."visibility" = 'public' 
+                WHEN p."visibility" = 'public'
                   AND p."createdAt" > NOW() - INTERVAL '7 days' THEN 20
-                
+
                 ELSE 10
               END as score
             FROM "Post" p

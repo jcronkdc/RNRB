@@ -10,7 +10,7 @@ import Email from 'next-auth/providers/nodemailer';
 
 import { env } from './env';
 
-const OWNER_EMAIL = 'justincronk@pm.me';
+const OWNER_EMAIL = process.env.OWNER_EMAIL || 'justincronk@pm.me';
 
 // NextAuth v5 configuration
 export const { handlers, auth, signIn, signOut } = NextAuth({

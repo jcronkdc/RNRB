@@ -168,54 +168,6 @@ export function validateContentType(
 }
 
 // ============================================
-// RATE LIMITING
-// ============================================
-
-const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
-
-/**
- * Simple in-memory rate limiter
- * For production, use Redis-based rate limiting
- */
-export function checkRateLimit(
-  key: string,
-  limit: number = 100,
-  windowMs: number = 60000 // 1 minute
-): { allowed: boolean; remaining: number; resetAt: number } {
-  const now = Date.now();
-  const record = rateLimitStore.get(key);
-
-  if (!record || now > record.resetAt) {
-    // New window
-    rateLimitStore.set(key, { count: 1, resetAt: now + windowMs });
-    return { allowed: true, remaining: limit - 1, resetAt: now + windowMs };
-  }
-
-  if (record.count >= limit) {
-    return { allowed: false, remaining: 0, resetAt: record.resetAt };
-  }
-
-  record.count++;
-  return { allowed: true, remaining: limit - record.count, resetAt: record.resetAt };
-}
-
-/**
- * Rate limit by user ID
- */
-export function rateLimitUser(userId: string, action: string, limit: number = 100): boolean {
-  const key = `user:${userId}:${action}`;
-  return checkRateLimit(key, limit).allowed;
-}
-
-/**
- * Rate limit by IP address
- */
-export function rateLimitIp(ip: string, action: string, limit: number = 50): boolean {
-  const key = `ip:${ip}:${action}`;
-  return checkRateLimit(key, limit).allowed;
-}
-
-// ============================================
 // CSRF & REQUEST VALIDATION
 // ============================================
 

@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 import { authLimiter, checkRateLimit } from '@/lib/rate-limit';
 import { getClientIp, logSecurityEvent } from '@/lib/security';
 
-const OWNER_EMAIL = 'justincronk@pm.me';
+const OWNER_EMAIL = process.env.OWNER_EMAIL || 'justincronk@pm.me';
 
 export async function POST(request: Request) {
   try {
