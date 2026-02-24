@@ -117,18 +117,20 @@ export async function POST(request: Request) {
         : 'NOT_SET';
     } catch { /* ignore */ }
 
-    const neonUrl = process.env.NEON_DATABASE_URL || '';
-    const raw = neonUrl || process.env.DATABASE_URL || '';
-    const atIdx = raw.indexOf('@');
-    const colonIdx = raw.lastIndexOf(':', atIdx > 0 ? atIdx : undefined);
-    const pass = colonIdx > 0 && atIdx > 0 ? raw.slice(colonIdx + 1, atIdx) : 'N/A';
-    const sig = pass.length > 6 ? `${pass.slice(0, 4)}...${pass.slice(-3)} (${pass.length}c)` : 'SHORT';
+    const actualUrl =
+      process.env.NEON_DATABASE_URL_UNPOOLED ||
+      process.env.NEON_DATABASE_URL ||
+      process.env.DATABASE_URL || '';
+    let actualHost = 'N/A';
+    try { actualHost = new URL(actualUrl).host; } catch { /* */ }
+    const src = process.env.NEON_DATABASE_URL_UNPOOLED ? 'UNPOOLED' :
+      process.env.NEON_DATABASE_URL ? 'NEON' : 'DB_URL';
 
     return NextResponse.json(
       {
         error: 'Failed to create account. Please try again.',
         code: 'INTERNAL_ERROR',
-        _dbg: `${errMsg} [host=${dbHost}] [neon=${neonUrl ? 'SET' : 'UNSET'}] [pw=${sig}]`,
+        _dbg: `${errMsg} [src=${src}] [host=${actualHost}]`,
       },
       { status: 500 }
     );
