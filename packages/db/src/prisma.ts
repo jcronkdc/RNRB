@@ -11,10 +11,13 @@ const globalForPrisma = globalThis as GlobalWithPrisma;
 
 function createPrismaClient(): PrismaClient {
   const connectionString = (
-    process.env.NEON_DATABASE_URL || process.env.DATABASE_URL || ''
+    process.env.NEON_DATABASE_URL_UNPOOLED ||
+    process.env.NEON_DATABASE_URL ||
+    process.env.DATABASE_URL ||
+    ''
   ).trim();
   if (!connectionString) {
-    throw new Error('DATABASE_URL (or NEON_DATABASE_URL) is required');
+    throw new Error('DATABASE_URL is required');
   }
 
   const sql = neon(connectionString);
@@ -53,7 +56,7 @@ function createBuildTimeStub(): PrismaClient {
   return new Proxy({}, handler) as unknown as PrismaClient;
 }
 
-const hasDbUrl = !!(process.env.NEON_DATABASE_URL || process.env.DATABASE_URL);
+const hasDbUrl = !!(process.env.NEON_DATABASE_URL_UNPOOLED || process.env.NEON_DATABASE_URL || process.env.DATABASE_URL);
 const basePrisma: PrismaClient =
   globalForPrisma.__cronkwatersPrisma ??
   (hasDbUrl ? createPrismaClient() : createBuildTimeStub());
