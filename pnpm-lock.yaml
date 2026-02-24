@@ -313,6 +313,9 @@ importers:
       '@mux/mux-player-react':
         specifier: ^3.2.2
         version: 3.9.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@neondatabase/serverless':
+        specifier: ^1.0.2
+        version: 1.0.2
       '@next/bundle-analyzer':
         specifier: ^15.5.2
         version: 15.5.2
@@ -11984,14 +11987,14 @@ snapshots:
       chai: 6.2.1
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.15(msw@2.12.3(@types/node@22.15.3)(typescript@5.9.3))(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))':
+  '@vitest/mocker@4.0.15(msw@2.12.3(@types/node@22.15.3)(typescript@5.9.3))(vite@7.2.6(@types/node@22.15.3)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
       '@vitest/spy': 4.0.15
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.12.3(@types/node@22.15.3)(typescript@5.9.3)
-      vite: 7.2.6(@types/node@22.19.1)(jiti@1.21.7)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
+      vite: 7.2.6(@types/node@22.15.3)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/mocker@4.0.15(msw@2.12.3(@types/node@22.19.1)(typescript@5.9.3))(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))':
     dependencies:
@@ -12040,7 +12043,7 @@ snapshots:
       sirv: 3.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vitest: 4.0.15(@opentelemetry/api@1.9.0)(@types/node@22.19.1)(@vitest/ui@4.0.15)(jiti@1.21.7)(jsdom@26.1.0)(lightningcss@1.31.1)(msw@2.12.3(@types/node@22.19.1)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
+      vitest: 4.0.15(@opentelemetry/api@1.9.0)(@types/node@22.15.3)(@vitest/ui@4.0.15)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.31.1)(msw@2.12.3(@types/node@22.15.3)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
 
   '@vitest/utils@2.0.5':
     dependencies:
@@ -16366,7 +16369,7 @@ snapshots:
   vitest@4.0.15(@opentelemetry/api@1.9.0)(@types/node@22.15.3)(@vitest/ui@4.0.15)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.31.1)(msw@2.12.3(@types/node@22.15.3)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2):
     dependencies:
       '@vitest/expect': 4.0.15
-      '@vitest/mocker': 4.0.15(msw@2.12.3(@types/node@22.15.3)(typescript@5.9.3))(vite@7.2.6(@types/node@22.19.1)(jiti@1.21.7)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/mocker': 4.0.15(msw@2.12.3(@types/node@22.15.3)(typescript@5.9.3))(vite@7.2.6(@types/node@22.15.3)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0)(yaml@2.8.2))
       '@vitest/pretty-format': 4.0.15
       '@vitest/runner': 4.0.15
       '@vitest/snapshot': 4.0.15
