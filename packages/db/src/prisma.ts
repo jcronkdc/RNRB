@@ -15,13 +15,12 @@ function createPrismaClient(): PrismaClient {
     throw new Error('DATABASE_URL is required');
   }
 
-  const pool = new Pool({
-    connectionString,
-    ssl: connectionString.includes('neon.tech')
-      ? { rejectUnauthorized: false }
-      : undefined,
-    max: 5,
-  });
+  let connStr = connectionString;
+  if (connStr.includes('neon.tech') && !connStr.includes('uselibpqcompat')) {
+    connStr += connStr.includes('?') ? '&uselibpqcompat=true' : '?uselibpqcompat=true';
+  }
+
+  const pool = new Pool({ connectionString: connStr, max: 5 });
   const adapter = new PrismaPg(pool);
 
   const client = new PrismaClient({
