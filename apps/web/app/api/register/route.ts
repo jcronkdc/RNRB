@@ -8,6 +8,11 @@ import { getClientIp, logSecurityEvent } from '@/lib/security';
 const OWNER_EMAIL = 'justincronk@pm.me';
 
 export async function POST(request: Request) {
+  // Temporary: log masked DATABASE_URL to diagnose auth failure
+  const rawDbUrl = process.env.DATABASE_URL || '';
+  const maskedUrl = rawDbUrl.replace(/:([^@]{3})[^@]*@/, ':$1***@');
+  console.log('[REGISTER] DATABASE_URL (masked):', maskedUrl, 'len:', rawDbUrl.length);
+
   try {
     // 🔒 RATE LIMITING: Prevent brute-force account creation (5 attempts per minute per IP)
     const clientIp = getClientIp(request);
@@ -117,11 +122,12 @@ export async function POST(request: Request) {
         : 'NOT_SET';
     } catch { /* ignore */ }
 
+    const masked = (process.env.DATABASE_URL || '').replace(/:([^@]{3})[^@]*@/, ':$1***@');
     return NextResponse.json(
       {
         error: 'Failed to create account. Please try again.',
         code: 'INTERNAL_ERROR',
-        _dbg: `${errMsg} [host=${dbHost}]`,
+        _dbg: `${errMsg} [host=${dbHost}] [url=${masked}] [len=${(process.env.DATABASE_URL || '').length}]`,
       },
       { status: 500 }
     );
