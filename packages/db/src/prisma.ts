@@ -1,7 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { PrismaNeon } from '@prisma/adapter-neon';
-import { neon } from '@neondatabase/serverless';
+import { PrismaPg } from '@prisma/adapter-pg';
 import type { Prisma } from '@prisma/client';
+
+// Override DATABASE_URL with NEON_DATABASE_URL if available.
+// Vercel's Neon integration can inject a stale DATABASE_URL that
+// can't be updated via env var settings. NEON_DATABASE_URL bypasses it.
+if (process.env.NEON_DATABASE_URL_UNPOOLED) {
+  process.env.DATABASE_URL = process.env.NEON_DATABASE_URL_UNPOOLED;
+} else if (process.env.NEON_DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.NEON_DATABASE_URL;
+}
 
 type GlobalWithPrisma = typeof globalThis & {
   __cronkwatersPrisma?: PrismaClient;
@@ -10,27 +18,20 @@ type GlobalWithPrisma = typeof globalThis & {
 const globalForPrisma = globalThis as GlobalWithPrisma;
 
 function createPrismaClient(): PrismaClient {
-  const connectionString = (
-    process.env.NEON_DATABASE_URL_UNPOOLED ||
-    process.env.NEON_DATABASE_URL ||
-    process.env.DATABASE_URL ||
-    ''
-  ).trim();
+  const connectionString = (process.env.DATABASE_URL || '').trim();
   if (!connectionString) {
     throw new Error('DATABASE_URL is required');
   }
 
-  const sql = neon(connectionString);
-  const adapter = new PrismaNeon(sql);
+  const adapter = new PrismaPg({ connectionString });
 
   const client = new PrismaClient({
     adapter,
-    datasourceUrl: connectionString,
     log: process.env.NODE_ENV === 'development' ? ['query', 'warn', 'error'] : ['error'],
   });
 
   if (process.env.NODE_ENV !== 'production') {
-    console.log('[Prisma] Database connection initialized (v7 with Neon serverless adapter)');
+    console.log('[Prisma] Database connection initialized (v7 with pg adapter)');
   }
 
   return client;
@@ -57,10 +58,9 @@ function createBuildTimeStub(): PrismaClient {
   return new Proxy({}, handler) as unknown as PrismaClient;
 }
 
-const hasDbUrl = !!(process.env.NEON_DATABASE_URL_UNPOOLED || process.env.NEON_DATABASE_URL || process.env.DATABASE_URL);
 const basePrisma: PrismaClient =
   globalForPrisma.__cronkwatersPrisma ??
-  (hasDbUrl ? createPrismaClient() : createBuildTimeStub());
+  (process.env.DATABASE_URL ? createPrismaClient() : createBuildTimeStub());
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.__cronkwatersPrisma = basePrisma;
@@ -100,7 +100,14 @@ const prisma = basePrisma.$extends({
 }) as unknown as PrismaClient;
 
 if (process.env.NODE_ENV === 'development') {
-  console.log('[Prisma] Neon serverless adapter active — connections use HTTP');
+  (async () => {
+    try {
+      await basePrisma.$queryRaw`SELECT 1`;
+      console.log('Database connected');
+    } catch (error) {
+      console.warn('Database connection failed', error);
+    }
+  })();
 }
 
 type PrismaModelDelegate = {
