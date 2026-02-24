@@ -17,10 +17,11 @@ import Stripe from 'stripe';
 
 import { AppError } from '@/lib/errors';
 
-// Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 /**
  * Get user's Stripe customer ID (required for all Stripe operations)
@@ -63,7 +64,7 @@ export async function getOrCreateStripeCustomer(userId: string): Promise<string>
   }
 
   // Create new Stripe customer
-  const customer = await stripe.customers.create({
+  const customer = await getStripe().customers.create({
     email: user.email,
     name: user.name || undefined,
     metadata: {
@@ -115,7 +116,7 @@ export async function getUserSubscription(userId: string): Promise<UserSubscript
   }
 
   // Fetch subscriptions for THIS customer only
-  const subscriptions = await stripe.subscriptions.list({
+  const subscriptions = await getStripe().subscriptions.list({
     customer: customerId,
     status: 'all',
     limit: 1,
@@ -188,7 +189,7 @@ export async function getUserInvoices(
   const { limit = 10, startingAfter } = options;
 
   // Fetch invoices for THIS customer only
-  const invoices = await stripe.invoices.list({
+  const invoices = await getStripe().invoices.list({
     customer: customerId,
     limit: limit + 1, // Fetch one extra to check if there are more
     starting_after: startingAfter,
@@ -240,7 +241,7 @@ export async function getUserPaymentMethods(userId: string): Promise<UserPayment
   }
 
   // Get customer's default payment method
-  const customer = await stripe.customers.retrieve(customerId);
+  const customer = await getStripe().customers.retrieve(customerId);
   const defaultPaymentMethodId =
     typeof customer !== 'string' && !customer.deleted
       ? typeof customer.invoice_settings?.default_payment_method === 'string'
@@ -249,7 +250,7 @@ export async function getUserPaymentMethods(userId: string): Promise<UserPayment
       : null;
 
   // Fetch payment methods for THIS customer only
-  const paymentMethods = await stripe.paymentMethods.list({
+  const paymentMethods = await getStripe().paymentMethods.list({
     customer: customerId,
     type: 'card',
   });
@@ -279,7 +280,7 @@ export async function createBillingPortalSession(
 ): Promise<{ url: string }> {
   const customerId = await getOrCreateStripeCustomer(userId);
 
-  const session = await stripe.billingPortal.sessions.create({
+  const session = await getStripe().billingPortal.sessions.create({
     customer: customerId,
     return_url: returnUrl,
   });
@@ -303,7 +304,7 @@ export async function createCheckoutSession(
 ): Promise<{ url: string }> {
   const customerId = await getOrCreateStripeCustomer(userId);
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
     payment_method_types: ['card'],
@@ -347,7 +348,7 @@ export async function getUserConnectAccount(
     return { hasAccount: false, accountId: null, status: null };
   }
 
-  const account = await stripe.accounts.retrieve(user.stripeConnectAccountId);
+  const account = await getStripe().accounts.retrieve(user.stripeConnectAccountId);
 
   return {
     hasAccount: true,
