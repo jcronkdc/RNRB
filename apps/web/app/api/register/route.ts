@@ -122,12 +122,17 @@ export async function POST(request: Request) {
         : 'NOT_SET';
     } catch { /* ignore */ }
 
-    const masked = (process.env.DATABASE_URL || '').replace(/:([^@]{3})[^@]*@/, ':$1***@');
+    const raw = process.env.DATABASE_URL || '';
+    const atIdx = raw.indexOf('@');
+    const colonIdx = raw.lastIndexOf(':', atIdx > 0 ? atIdx : undefined);
+    const pass = colonIdx > 0 && atIdx > 0 ? raw.slice(colonIdx + 1, atIdx) : 'N/A';
+    const sig = pass.length > 6 ? `${pass.slice(0, 4)}...${pass.slice(-3)} (${pass.length}c)` : 'SHORT';
+
     return NextResponse.json(
       {
         error: 'Failed to create account. Please try again.',
         code: 'INTERNAL_ERROR',
-        _dbg: `${errMsg} [host=${dbHost}] [url=${masked}] [len=${(process.env.DATABASE_URL || '').length}]`,
+        _dbg: `${errMsg} [host=${dbHost}] [pw=${sig}]`,
       },
       { status: 500 }
     );
