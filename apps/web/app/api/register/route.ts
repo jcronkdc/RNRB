@@ -122,7 +122,8 @@ export async function POST(request: Request) {
         : 'NOT_SET';
     } catch { /* ignore */ }
 
-    const raw = process.env.DATABASE_URL || '';
+    const neonUrl = process.env.NEON_DATABASE_URL || '';
+    const raw = neonUrl || process.env.DATABASE_URL || '';
     const atIdx = raw.indexOf('@');
     const colonIdx = raw.lastIndexOf(':', atIdx > 0 ? atIdx : undefined);
     const pass = colonIdx > 0 && atIdx > 0 ? raw.slice(colonIdx + 1, atIdx) : 'N/A';
@@ -132,7 +133,7 @@ export async function POST(request: Request) {
       {
         error: 'Failed to create account. Please try again.',
         code: 'INTERNAL_ERROR',
-        _dbg: `${errMsg} [host=${dbHost}] [pw=${sig}]`,
+        _dbg: `${errMsg} [host=${dbHost}] [neon=${neonUrl ? 'SET' : 'UNSET'}] [pw=${sig}]`,
       },
       { status: 500 }
     );
