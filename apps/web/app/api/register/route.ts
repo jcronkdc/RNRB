@@ -1,5 +1,4 @@
 import { prisma } from '@cronkwaters/db';
-import { neon } from '@neondatabase/serverless';
 import bcrypt from 'bcryptjs';
 import { NextResponse } from 'next/server';
 
@@ -118,25 +117,10 @@ export async function POST(request: Request) {
         : 'NOT_SET';
     } catch { /* ignore */ }
 
-    const actualUrl =
-      process.env.NEON_DATABASE_URL_UNPOOLED ||
-      process.env.NEON_DATABASE_URL ||
-      process.env.DATABASE_URL || '';
-
-    let directTest = 'SKIP';
-    try {
-      const sql = neon(actualUrl);
-      const r = await sql('SELECT 1 as ok');
-      directTest = r?.[0]?.ok === 1 ? 'PASS' : `UNEXPECTED:${JSON.stringify(r)}`;
-    } catch (e) {
-      directTest = `FAIL:${e instanceof Error ? e.message : String(e)}`;
-    }
-
     return NextResponse.json(
       {
         error: 'Failed to create account. Please try again.',
         code: 'INTERNAL_ERROR',
-        _dbg: `prisma: ${errMsg.slice(0, 100)} | direct: ${directTest}`,
       },
       { status: 500 }
     );
