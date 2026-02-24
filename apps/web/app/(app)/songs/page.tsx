@@ -1,43 +1,42 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  Music,
-  Search,
-  Folder,
-  FolderOpen,
-  Plus,
+  AlertCircle,
+  CheckCircle2,
+  CheckSquare,
   ChevronRight,
   Clock,
-  CheckCircle2,
-  FileEdit,
-  AlertCircle,
-  Loader2,
-  Grid3x3,
-  List,
-  SlidersHorizontal,
-  Music2,
-  Sparkles,
-  ExternalLink,
-  Star,
-  Eye,
   Download,
-  CheckSquare,
-  Square,
-  X,
-  RefreshCw,
+  ExternalLink,
+  Eye,
+  FileEdit,
+  Folder,
+  FolderOpen,
+  Grid3x3,
   Keyboard,
+  List,
+  Loader2,
+  Music,
+  Music2,
+  Plus,
+  RefreshCw,
+  Search,
+  SlidersHorizontal,
+  Square,
+  Star,
+  X,
 } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { ProjectSelector } from '@/components/project-selector';
-import { useRequireAuth } from '@/hooks/use-require-auth';
-import { EmptyState } from '@/components/workshop';
-import { microCopy } from '@/lib/workshop-voice';
 import { ProjectsSkeleton } from '@/components/loading-skeletons';
+import { ProjectSelector } from '@/components/project-selector';
+import { EmptyState } from '@/components/workshop';
+import { useRequireAuth } from '@/hooks/use-require-auth';
+import { microCopy } from '@/lib/workshop-voice';
 
 // Types
 type Song = {
@@ -799,14 +798,20 @@ export default function SongsPage() {
     } finally {
       setLoading(false);
     }
-  }, [user, filterType, statusFilter, searchQuery, sortBy, sortOrder]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, filterType, statusFilter, sortBy, sortOrder]);
 
   useEffect(() => {
     fetchSongs();
   }, [fetchSongs]);
 
-  // Debounced search
+  // Debounced search — only triggers on searchQuery changes, not on mount
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     const timer = setTimeout(fetchSongs, 300);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps

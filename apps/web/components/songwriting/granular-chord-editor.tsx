@@ -1,9 +1,9 @@
 'use client';
 
+import { Music, Plus, X } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'motion/react';
-import { Music, X, Plus } from '@/components/ui/custom-icons';
-import { useState, useRef, useMemo, useCallback, useEffect, memo } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 export type ChordPlacement = {
   wordIndex: number;
@@ -376,7 +376,7 @@ export const GranularChordEditor = memo(function GranularChordEditor({
                     type="text"
                     value={customChord}
                     onChange={(e) => setCustomChord(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addCustomChord()}
+                    onKeyDown={(e) => e.key === 'Enter' && addCustomChord()}
                     placeholder="e.g., Cmaj7, Dsus4, Fadd9"
                     className="focus:border-brand-primary focus:ring-brand-primary/20 flex-1 rounded-lg border-2 border-zinc-700 bg-zinc-900 px-3 py-2.5 text-sm text-white outline-hidden placeholder:text-zinc-500 focus:ring-2"
                     aria-label="Custom chord input"

@@ -20,16 +20,16 @@
  * - Sections are rendered as a vertical list with subtle type indicators
  */
 
-import { motion, AnimatePresence } from 'motion/react';
-import { Plus, X, GripVertical, ChevronDown } from '@/components/ui/custom-icons';
+import { ChevronDown, Plus, Redo, Undo, X } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
 import {
-  useState,
-  useCallback,
-  useRef,
-  useEffect,
   memo,
-  type KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
   type ChangeEvent,
+  type KeyboardEvent,
 } from 'react';
 
 // ============================================
@@ -393,7 +393,7 @@ const SectionEditor = memo(function SectionEditor({
       )}
 
       {/* The textarea — the actual writing surface */}
-      {/* 
+      {/*
         Using native <textarea> because:
         1. Click/tap targets are pixel-accurate (browser handles it)
         2. Cursor placement is exact (no contentEditable quirks)
@@ -478,6 +478,19 @@ export function SongEditor({
   const redoStackRef = useRef<string[]>([]);
   const lastSnapshotRef = useRef<string>(JSON.stringify(initialSections || []));
 
+  // Track undo/redo availability for button state
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
+
+  // Debounced undo snapshot for content edits — captures state after 1s pause
+  const contentEditTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Update button state whenever stacks change
+  const updateUndoRedoState = useCallback(() => {
+    setCanUndo(undoStackRef.current.length > 0);
+    setCanRedo(redoStackRef.current.length > 0);
+  }, []);
+
   const pushUndoState = useCallback(() => {
     const snapshot = JSON.stringify(sections);
     if (snapshot !== lastSnapshotRef.current) {
@@ -488,32 +501,43 @@ export function SongEditor({
     }
   }, [sections]);
 
+  // Undo/redo actions (used by both keyboard shortcuts and buttons)
+  const performUndo = useCallback(() => {
+    if (undoStackRef.current.length > 0) {
+      redoStackRef.current.push(JSON.stringify(sections));
+      const previous = undoStackRef.current.pop()!;
+      lastSnapshotRef.current = previous;
+      setSections(JSON.parse(previous));
+      updateUndoRedoState();
+    }
+  }, [sections, updateUndoRedoState]);
+
+  const performRedo = useCallback(() => {
+    if (redoStackRef.current.length > 0) {
+      undoStackRef.current.push(JSON.stringify(sections));
+      const next = redoStackRef.current.pop()!;
+      lastSnapshotRef.current = next;
+      setSections(JSON.parse(next));
+      updateUndoRedoState();
+    }
+  }, [sections, updateUndoRedoState]);
+
   // Keyboard shortcuts: Cmd+Z / Cmd+Shift+Z
   useEffect(() => {
     if (readOnly) return;
     const handleKeyDown = (e: globalThis.KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey) {
-        if (undoStackRef.current.length > 0) {
-          e.preventDefault();
-          redoStackRef.current.push(JSON.stringify(sections));
-          const previous = undoStackRef.current.pop()!;
-          lastSnapshotRef.current = previous;
-          setSections(JSON.parse(previous));
-        }
+        e.preventDefault();
+        performUndo();
       }
       if ((e.metaKey || e.ctrlKey) && e.key === 'z' && e.shiftKey) {
-        if (redoStackRef.current.length > 0) {
-          e.preventDefault();
-          undoStackRef.current.push(JSON.stringify(sections));
-          const next = redoStackRef.current.pop()!;
-          lastSnapshotRef.current = next;
-          setSections(JSON.parse(next));
-        }
+        e.preventDefault();
+        performRedo();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [sections, readOnly]);
+  }, [performUndo, performRedo, readOnly]);
 
   // Notify parent of changes
   useEffect(() => {
@@ -525,14 +549,30 @@ export function SongEditor({
   }, [title, onTitleChange]);
 
   // Update section content
-  const updateSectionContent = useCallback((id: string, content: string) => {
-    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, content } : s)));
-  }, []);
+  const updateSectionContent = useCallback(
+    (id: string, content: string) => {
+      setSections((prev) => prev.map((s) => (s.id === id ? { ...s, content } : s)));
+      // Debounced save to undo history after user pauses typing
+      if (contentEditTimerRef.current) {
+        clearTimeout(contentEditTimerRef.current);
+      }
+      contentEditTimerRef.current = setTimeout(() => {
+        pushUndoState();
+        updateUndoRedoState();
+      }, 1000);
+    },
+    [pushUndoState, updateUndoRedoState]
+  );
 
   // Update section chords
-  const updateSectionChords = useCallback((id: string, chords: ChordAnnotation[]) => {
-    setSections((prev) => prev.map((s) => (s.id === id ? { ...s, chords } : s)));
-  }, []);
+  const updateSectionChords = useCallback(
+    (id: string, chords: ChordAnnotation[]) => {
+      pushUndoState();
+      setSections((prev) => prev.map((s) => (s.id === id ? { ...s, chords } : s)));
+      updateUndoRedoState();
+    },
+    [pushUndoState, updateUndoRedoState]
+  );
 
   // Change section type
   const changeSectionType = useCallback(
@@ -648,6 +688,41 @@ export function SongEditor({
 
   return (
     <div className="mx-auto w-full max-w-2xl" style={{ minHeight: '70vh' }}>
+      {/* Undo/Redo Toolbar */}
+      {!readOnly && (
+        <div className="mb-4 flex items-center gap-2">
+          <button
+            onClick={performUndo}
+            disabled={!canUndo}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all disabled:opacity-30"
+            style={{
+              color: 'var(--muted)',
+              background: canUndo ? 'var(--panel)' : 'transparent',
+            }}
+            title="Undo (⌘Z)"
+          >
+            <Undo className="h-3.5 w-3.5" />
+            Undo
+          </button>
+          <button
+            onClick={performRedo}
+            disabled={!canRedo}
+            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all disabled:opacity-30"
+            style={{
+              color: 'var(--muted)',
+              background: canRedo ? 'var(--panel)' : 'transparent',
+            }}
+            title="Redo (⌘⇧Z)"
+          >
+            <Redo className="h-3.5 w-3.5" />
+            Redo
+          </button>
+          <div className="ml-auto text-xs" style={{ color: 'var(--muted)', opacity: 0.6 }}>
+            Auto-saving
+          </div>
+        </div>
+      )}
+
       {/* Title */}
       <div className="mb-8">
         <input

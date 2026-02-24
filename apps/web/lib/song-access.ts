@@ -30,7 +30,7 @@ export async function getSongAccessLevel(
 
   // Accepted collaborator
   const isCollaborator = song.collaborators.some(
-    (c) => (c.userId === userId || c.email === null) && c.acceptedAt !== null
+    (c) => c.userId === userId && c.acceptedAt !== null
   );
   if (isCollaborator) {
     return { level: 'collaborator', song };

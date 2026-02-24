@@ -1,7 +1,7 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
-import { Book, Sparkles, Loader2, Hash, TrendingUp } from '@/components/ui/custom-icons';
+import { Book, Hash, Loader2, Sparkles, TrendingUp } from '@/components/ui/custom-icons';
+import { Button, Card } from '@cronkwaters/ui';
 import { useState } from 'react';
 
 type LyricsAssistantProps = {
@@ -338,7 +338,7 @@ export function LyricsAssistant({ currentLyrics, onInsert }: LyricsAssistantProp
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder={
                 mode === 'rhyme'
                   ? 'Enter a word to find rhymes...'

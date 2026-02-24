@@ -2,11 +2,11 @@
 
 import { motion } from 'motion/react';
 import { useSession } from 'next-auth/react';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { InviteCollaborator } from '@/components/songwriting/invite-collaborator';
 import { SongEditor, type SongSection } from '@/components/songwriting/song-editor';
 import { TalkbackStrip } from '@/components/songwriting/talkback-strip';
-import { InviteCollaborator } from '@/components/songwriting/invite-collaborator';
 import { ToolsDrawer } from '@/components/songwriting/tools-drawer';
 import { UserPlus, Wrench } from '@/components/ui/custom-icons';
 import { useRequireAuth } from '@/hooks/use-require-auth';
@@ -104,7 +104,7 @@ export default function SongwritingPage() {
 
   // Debounced auto-save
   const autoSave = useCallback(
-    async (data: { title?: string; lyrics?: string }) => {
+    async (data: { title?: string; lyrics?: string; chords?: string }) => {
       if (!songId) return;
 
       const dataString = JSON.stringify(data);
@@ -133,13 +133,18 @@ export default function SongwritingPage() {
     [songId]
   );
 
-  // Handle sections change with debounced save
+  // Handle sections change with debounced save (lyrics + chords)
   const handleSectionsChange = useCallback(
     (sections: SongSection[]) => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
 
       const lyrics = sectionsToLyrics(sections);
-      saveTimerRef.current = setTimeout(() => autoSave({ lyrics }), 2000);
+      // Extract chord data from all sections so it persists to the database
+      const allChords = sections.flatMap((s) =>
+        (s.chords || []).map((c) => ({ sectionId: s.id, sectionType: s.type, ...c }))
+      );
+      const chords = allChords.length > 0 ? JSON.stringify(allChords) : undefined;
+      saveTimerRef.current = setTimeout(() => autoSave({ lyrics, chords }), 2000);
     },
     [autoSave]
   );

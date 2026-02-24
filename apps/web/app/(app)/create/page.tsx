@@ -1,33 +1,31 @@
 'use client';
 
-import { Card } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles,
-  Music2,
-  Clock,
-  Zap,
-  Hash,
-  Mic2,
-  Sliders,
-  RefreshCw,
-  ChevronDown,
-  Info,
-  Loader2,
   AlertCircle,
   CheckCircle2,
-  HelpCircle,
+  ChevronDown,
+  Clock,
   Coins,
+  Hash,
+  HelpCircle,
+  Info,
+  Loader2,
+  Mic2,
+  Music2,
+  RefreshCw,
+  Sliders,
+  Sparkles,
   Volume2,
-  Download,
-  FolderPlus,
   X,
+  Zap,
 } from '@/components/ui/custom-icons';
+import { Card } from '@cronkwaters/ui';
+import { AnimatePresence, motion } from 'motion/react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ProjectSelector } from '@/components/project-selector';
 
@@ -82,13 +80,15 @@ export default function CreatePage() {
   const [estimatedCredits, setEstimatedCredits] = useState(10);
   const [showProjectSelector, setShowProjectSelector] = useState(false);
   const [showTutorial, setShowTutorial] = useState(true); // Show tutorial by default for new users
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
-  // Calculate estimated credits based on parameters
+  // Calculate estimated credits based on parameters (must match backend CREDIT_COSTS)
   useEffect(() => {
     let credits = 10; // Base cost
-    if (duration > 60) credits += 5;
-    if (duration > 120) credits += 10;
-    if (selectedInstruments.length > 4) credits += 5;
+    if (duration > 10) {
+      credits += Math.ceil((duration - 10) / 10) * 5; // 5 credits per 10s over 10s
+    }
+    if (selectedInstruments.length > 3) credits += 5; // Extra instruments surcharge
     setEstimatedCredits(credits);
   }, [duration, selectedInstruments.length]);
 
@@ -165,16 +165,9 @@ export default function CreatePage() {
       setStatus('success');
 
       // Handle both demo mode and production mode responses
-      if (data.mode === 'demo') {
-        setGeneratedTrackId(data.song?.id || data.trackId);
-        setGeneratedSongId(data.songId || data.song?.id);
-        // Store demo mode flag for UI
-        (window as any).__rnrbDemoMode = true;
-      } else {
-        setGeneratedTrackId(data.song?.id || data.trackId);
-        setGeneratedSongId(data.songId || data.song?.id);
-        (window as any).__rnrbDemoMode = false;
-      }
+      setGeneratedTrackId(data.song?.id || data.trackId);
+      setGeneratedSongId(data.songId || data.song?.id);
+      setIsDemoMode(data.mode === 'demo');
 
       setShowProjectSelector(true); // Show project selector after success
 
@@ -777,7 +770,7 @@ export default function CreatePage() {
                 </p>
 
                 {/* Demo Mode Notice */}
-                {(window as any).__rnrbDemoMode && (
+                {isDemoMode && (
                   <div className="mb-6 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-left">
                     <div className="flex items-start gap-3">
                       <Info className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
@@ -831,7 +824,7 @@ export default function CreatePage() {
                       setShowProjectSelector(false);
                       setPrompt('');
                       setSelectedInstruments([]);
-                      (window as any).__rnrbDemoMode = false;
+                      setIsDemoMode(false);
                     }}
                     className="rnrb-button-secondary w-full rounded-xl px-6 py-3 sm:w-auto"
                   >

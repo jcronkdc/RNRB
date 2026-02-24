@@ -16,14 +16,14 @@
  *   Late joiner -> HTTP GET /api/songs/:id/yjs -> applies full state -> then subscribes to Ably
  */
 
-import type { RealtimeChannel, Realtime } from 'ably';
-import * as Y from 'yjs';
+import type { Realtime, RealtimeChannel } from 'ably';
 import {
   Awareness,
-  encodeAwarenessUpdate,
   applyAwarenessUpdate,
+  encodeAwarenessUpdate,
   removeAwarenessStates,
 } from 'y-protocols/awareness';
+import * as Y from 'yjs';
 
 export interface YjsAblyProviderOptions {
   /** The Yjs document to sync */
@@ -57,6 +57,13 @@ export class YjsAblyProvider {
   // Track whether we should persist (are we the "leader"?)
   private isLeader = false;
   private lastDocState: string = '';
+
+  // Store listener references for proper cleanup
+  private docUpdateHandler: ((update: Uint8Array, origin: unknown) => void) | null = null;
+  private awarenessUpdateHandler:
+    | ((changes: { added: number[]; updated: number[]; removed: number[] }) => void)
+    | null = null;
+  private awarenessLeaderHandler: (() => void) | null = null;
 
   constructor(options: YjsAblyProviderOptions) {
     this.doc = options.doc;
@@ -188,28 +195,35 @@ export class YjsAblyProvider {
    */
   private setupLocalListeners() {
     // When the local doc changes, broadcast to Ably
-    this.doc.on('update', (update: Uint8Array, origin: unknown) => {
+    this.docUpdateHandler = (update: Uint8Array, origin: unknown) => {
       if (this.isDestroyed) return;
       // Don't re-broadcast updates we received from Ably or server
       if (origin === 'ably' || origin === 'server' || origin === 'sync-response') return;
 
       const encoded = btoa(String.fromCharCode(...update));
       this.channel.publish('yjs-update', { update: encoded });
-    });
+    };
+    this.doc.on('update', this.docUpdateHandler);
 
     // When awareness changes, broadcast to Ably
-    this.awareness.on(
-      'update',
-      ({ added, updated, removed }: { added: number[]; updated: number[]; removed: number[] }) => {
-        if (this.isDestroyed) return;
+    this.awarenessUpdateHandler = ({
+      added,
+      updated,
+      removed,
+    }: {
+      added: number[];
+      updated: number[];
+      removed: number[];
+    }) => {
+      if (this.isDestroyed) return;
 
-        const changedClients = added.concat(updated).concat(removed);
-        const awarenessUpdate = encodeAwarenessUpdate(this.awareness, changedClients);
-        const encoded = btoa(String.fromCharCode(...awarenessUpdate));
+      const changedClients = added.concat(updated).concat(removed);
+      const awarenessUpdate = encodeAwarenessUpdate(this.awareness, changedClients);
+      const encoded = btoa(String.fromCharCode(...awarenessUpdate));
 
-        this.channel.publish('yjs-awareness', { update: encoded });
-      }
-    );
+      this.channel.publish('yjs-awareness', { update: encoded });
+    };
+    this.awareness.on('update', this.awarenessUpdateHandler);
   }
 
   /**
@@ -235,11 +249,12 @@ export class YjsAblyProvider {
     this.isLeader = clientIds.length === 0 || clientIds[0] === this.doc.clientID;
 
     // Re-evaluate when awareness changes
-    this.awareness.on('update', () => {
+    this.awarenessLeaderHandler = () => {
       const currentStates = this.awareness.getStates();
       const currentIds = Array.from(currentStates.keys()).sort();
       this.isLeader = currentIds.length === 0 || currentIds[0] === this.doc.clientID;
-    });
+    };
+    this.awareness.on('update', this.awarenessLeaderHandler);
   }
 
   /**
@@ -316,8 +331,15 @@ export class YjsAblyProvider {
     // Unsubscribe from Ably
     this.channel.unsubscribe();
 
-    // Remove doc listeners
-    this.doc.off('update', () => {});
-    this.awareness.off('update', () => {});
+    // Remove doc listeners (using stored references so they actually detach)
+    if (this.docUpdateHandler) {
+      this.doc.off('update', this.docUpdateHandler);
+    }
+    if (this.awarenessUpdateHandler) {
+      this.awareness.off('update', this.awarenessUpdateHandler);
+    }
+    if (this.awarenessLeaderHandler) {
+      this.awareness.off('update', this.awarenessLeaderHandler);
+    }
   }
 }

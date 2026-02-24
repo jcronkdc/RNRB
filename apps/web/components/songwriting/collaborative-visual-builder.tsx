@@ -1,54 +1,54 @@
 'use client';
 
-import { Card, Button } from '@cronkwaters/ui';
+import {
+  AlertCircle,
+  Check,
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  Download,
+  GripVertical,
+  History,
+  Keyboard,
+  Mail,
+  MessageSquare,
+  Music,
+  Redo,
+  Sparkles,
+  Undo,
+  UserPlus,
+  Users,
+  Video,
+  X,
+  XCircle,
+} from '@/components/ui/custom-icons';
+import { Button, Card } from '@cronkwaters/ui';
 import {
   DndContext,
-  closestCenter,
   PointerSensor,
+  closestCenter,
   useSensor,
   useSensors,
   type DragEndEvent,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
-  verticalListSortingStrategy,
+  arrayMove,
   useSortable,
+  verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { motion, AnimatePresence } from 'motion/react';
-import {
-  Music,
-  Sparkles,
-  GripVertical,
-  X,
-  Users,
-  Download,
-  History,
-  Undo,
-  Redo,
-  Video,
-  MessageSquare,
-  ChevronUp,
-  ChevronDown,
-  Check,
-  Mail,
-  UserPlus,
-  Clock,
-  Keyboard,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-} from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
 import dynamic from 'next/dynamic';
 import {
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
-  memo,
-  useRef,
   Component,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
   type ReactNode,
 } from 'react';
 
@@ -260,6 +260,8 @@ function CollaborativeVisualBuilderInner({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [copied, setCopied] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteStatus, setInviteStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [inviteError, setInviteError] = useState<string | null>(null);
   const [history, setHistory] = useState<{ blocks: SongBlock[]; timestamp: Date }[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
@@ -439,13 +441,22 @@ function CollaborativeVisualBuilderInner({
     [onSongChange, saveToHistory]
   );
 
+  // Debounced history save for content edits — captures state after 1s of inactivity
+  const editHistoryTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const editBlock = (id: string, content: string) => {
     const updated = blocks.map((b) => (b.id === id ? { ...b, content } : b));
     setBlocks(updated);
     onSongChange?.(updated);
     // Notify editing
     notifyEditing(id);
-    // Don't save to history on every keystroke - only on significant changes
+    // Debounced save to history — captures state after user pauses typing
+    if (editHistoryTimerRef.current) {
+      clearTimeout(editHistoryTimerRef.current);
+    }
+    editHistoryTimerRef.current = setTimeout(() => {
+      saveToHistory(updated);
+    }, 1000);
   };
 
   const updateBlockChords = (id: string, chordPlacements: ChordPlacement[]) => {
@@ -507,14 +518,34 @@ function CollaborativeVisualBuilderInner({
   };
 
   // TOKYO SUBWAY RULE: Invite = 1 click to modal, type email, 1 click to send (3 total)
-  const sendInvite = () => {
-    if (!inviteEmail.trim()) return;
-    // TODO: Integrate with actual invite API
-    alert(
-      `Invitation sent to ${inviteEmail}! They'll receive an email to collaborate on this song.`
-    );
-    setInviteEmail('');
-    setShowCollaborators(false);
+  const sendInvite = async () => {
+    if (!inviteEmail.trim() || !inviteEmail.includes('@')) return;
+
+    setInviteStatus('sending');
+    setInviteError(null);
+
+    try {
+      const response = await fetch(`/api/projects/${projectSlug}/members`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: inviteEmail.trim(), role: 'member' }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to send invite');
+      }
+
+      setInviteStatus('sent');
+      setInviteEmail('');
+      setTimeout(() => {
+        setInviteStatus('idle');
+        setShowCollaborators(false);
+      }, 2000);
+    } catch (err) {
+      setInviteStatus('error');
+      setInviteError(err instanceof Error ? err.message : 'Failed to send invite');
+    }
   };
 
   // TOKYO SUBWAY RULE: Restore version = 1 click on history item
@@ -709,7 +740,9 @@ function CollaborativeVisualBuilderInner({
           <div className="flex items-center gap-3">
             <MessageSquare className="text-brand-primary h-5 w-5" />
             <span className="font-semibold">Team Chat</span>
-            <span className="text-muted-foreground text-xs">• 2 online</span>
+            <span className="text-muted-foreground text-xs">
+              • {remoteCursors.length + 1} online
+            </span>
           </div>
           {chatExpanded ? <ChevronDown className="h-5 w-5" /> : <ChevronUp className="h-5 w-5" />}
         </button>
@@ -776,19 +809,33 @@ function CollaborativeVisualBuilderInner({
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && sendInvite()}
+                  onKeyDown={(e) => e.key === 'Enter' && sendInvite()}
                   placeholder="friend@email.com"
                   className="border-border bg-surface text-foreground placeholder:text-muted-foreground focus:border-brand-primary focus:ring-brand-primary/10 flex-1 rounded-xl border-2 px-4 py-3 outline-hidden transition focus:ring-4"
                 />
                 <Button
                   onClick={sendInvite}
-                  disabled={!inviteEmail.trim()}
+                  disabled={!inviteEmail.trim() || inviteStatus === 'sending'}
                   className="bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary/90 rounded-xl px-6 py-3 font-semibold"
                 >
-                  <Mail className="mr-2 h-4 w-4" />
-                  Send
+                  {inviteStatus === 'sending' ? (
+                    <>Sending...</>
+                  ) : inviteStatus === 'sent' ? (
+                    <>
+                      <Check className="mr-2 h-4 w-4" />
+                      Sent!
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Send
+                    </>
+                  )}
                 </Button>
               </div>
+              {inviteStatus === 'error' && inviteError && (
+                <p className="mt-2 text-xs text-red-400">{inviteError}</p>
+              )}
               <p className="text-muted-foreground mt-3 flex items-center gap-1 text-xs">
                 <Sparkles className="h-3 w-3 text-purple-400" />
                 They&apos;ll get an email invite to join this songwriting session

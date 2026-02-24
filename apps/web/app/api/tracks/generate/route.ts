@@ -16,7 +16,7 @@ import { z } from 'zod';
 
 import { auth } from '@/auth';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
-import { getUsageSummary, trackUsage } from '@/lib/usage-tracking';
+import { getUsageSummary, refundUsage, trackUsage } from '@/lib/usage-tracking';
 
 export const runtime = 'nodejs';
 export const maxDuration = 120; // 2 minute timeout for AI generation
@@ -82,14 +82,6 @@ export async function POST(req: NextRequest) {
     // Parse and validate request body
     const body = await req.json();
     const validatedData = generateTrackSchema.parse(body);
-
-    // Validate prompt is provided
-    if (!validatedData.prompt) {
-      return NextResponse.json(
-        { error: 'Please describe what kind of track you want' },
-        { status: 400 }
-      );
-    }
 
     // 🔒 Check usage quotas
     const usage = await getUsageSummary(userId);
@@ -176,154 +168,162 @@ export async function POST(req: NextRequest) {
     await trackUsage(userId, 'aiRequests', creditsNeeded);
 
     // 🎵 Generate music using Replicate MusicGen
-    console.log(`[AI Music] Generating track for user ${userId}:`);
-    console.log(`[AI Music] Prompt: "${prompt.slice(0, 100)}..."`);
-    console.log(
-      `[AI Music] Duration: ${validatedData.duration}s, Tempo: ${validatedData.tempo} BPM`
-    );
-
-    let output: unknown;
-
+    // Wrap in try/catch to refund credits on any failure after pre-deduction
     try {
-      // Use the latest MusicGen stereo model
-      // See: https://replicate.com/meta/musicgen
-      output = await replicate.run(
-        'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3550b9bdb1a48910f',
-        {
-          input: {
-            prompt: prompt,
-            duration: Math.min(validatedData.duration, 30), // MusicGen max is 30s
-            model_version: 'stereo-large', // Options: melody, large, stereo-melody, stereo-large
-            output_format: 'mp3',
-            normalization_strategy: 'peak',
-            ...(validatedData.seed !== undefined && { seed: validatedData.seed }),
-          },
-        }
+      console.log(`[AI Music] Generating track for user ${userId}:`);
+      console.log(`[AI Music] Prompt: "${prompt.slice(0, 100)}..."`);
+      console.log(
+        `[AI Music] Duration: ${validatedData.duration}s, Tempo: ${validatedData.tempo} BPM`
       );
 
-      console.log(`[AI Music] Replicate response type: ${typeof output}`);
-      console.log(`[AI Music] Replicate response:`, JSON.stringify(output).slice(0, 200));
-    } catch (replicateError: any) {
-      console.error('[AI Music] Replicate API error:', replicateError);
+      let output: unknown;
 
-      // Check for specific error types
-      if (replicateError.message?.includes('Invalid model version')) {
-        // Try with default model (no model_version specified) - this lets Replicate choose
-        console.log('[AI Music] Retrying with default model (no model_version)...');
-        output = await replicate.run('meta/musicgen', {
-          input: {
-            prompt: prompt,
-            duration: Math.min(validatedData.duration, 30),
-            output_format: 'mp3',
-            // Omit model_version to use Replicate's default
-          },
-        });
-      } else {
-        throw replicateError;
+      try {
+        // Use the latest MusicGen stereo model
+        // See: https://replicate.com/meta/musicgen
+        output = await replicate.run(
+          'meta/musicgen:671ac645ce5e552cc63a54a2bbff63fcf798043ac92924f3550b9bdb1a48910f',
+          {
+            input: {
+              prompt: prompt,
+              duration: Math.min(validatedData.duration, 30), // MusicGen max is 30s
+              model_version: 'stereo-large', // Options: melody, large, stereo-melody, stereo-large
+              output_format: 'mp3',
+              normalization_strategy: 'peak',
+              ...(validatedData.seed !== undefined && { seed: validatedData.seed }),
+            },
+          }
+        );
+
+        console.log(`[AI Music] Replicate response type: ${typeof output}`);
+        console.log(`[AI Music] Replicate response:`, JSON.stringify(output).slice(0, 200));
+      } catch (replicateError: any) {
+        console.error('[AI Music] Replicate API error:', replicateError);
+
+        // Check for specific error types
+        if (replicateError.message?.includes('Invalid model version')) {
+          // Try with default model (no model_version specified) - this lets Replicate choose
+          console.log('[AI Music] Retrying with default model (no model_version)...');
+          output = await replicate.run('meta/musicgen', {
+            input: {
+              prompt: prompt,
+              duration: Math.min(validatedData.duration, 30),
+              output_format: 'mp3',
+              // Omit model_version to use Replicate's default
+            },
+          });
+        } else {
+          throw replicateError;
+        }
       }
-    }
 
-    // MusicGen returns audio URL - could be string directly or in an object/array
-    let audioUrl: string;
+      // MusicGen returns audio URL - could be string directly or in an object/array
+      let audioUrl: string;
 
-    if (typeof output === 'string') {
-      audioUrl = output;
-    } else if (Array.isArray(output) && output.length > 0 && typeof output[0] === 'string') {
-      // Some versions return an array of URLs
-      audioUrl = output[0];
-    } else if (output && typeof output === 'object' && 'audio' in output) {
-      // Some versions return { audio: "url" }
-      audioUrl = (output as { audio: string }).audio;
-    } else if (output && typeof output === 'object' && 'output' in output) {
-      // Some versions return { output: "url" }
-      audioUrl = (output as { output: string }).output;
-    } else {
-      console.error('[AI Music] Unexpected output format:', JSON.stringify(output));
-      throw new Error('AI generation failed - unexpected response format');
-    }
+      if (typeof output === 'string') {
+        audioUrl = output;
+      } else if (Array.isArray(output) && output.length > 0 && typeof output[0] === 'string') {
+        // Some versions return an array of URLs
+        audioUrl = output[0];
+      } else if (output && typeof output === 'object' && 'audio' in output) {
+        // Some versions return { audio: "url" }
+        audioUrl = (output as { audio: string }).audio;
+      } else if (output && typeof output === 'object' && 'output' in output) {
+        // Some versions return { output: "url" }
+        audioUrl = (output as { output: string }).output;
+      } else {
+        console.error('[AI Music] Unexpected output format:', JSON.stringify(output));
+        throw new Error('AI generation failed - unexpected response format');
+      }
 
-    if (!audioUrl || typeof audioUrl !== 'string' || !audioUrl.startsWith('http')) {
-      console.error('[AI Music] Invalid audio URL:', audioUrl);
-      throw new Error('AI generation failed - invalid audio URL returned');
-    }
+      if (!audioUrl || typeof audioUrl !== 'string' || !audioUrl.startsWith('http')) {
+        console.error('[AI Music] Invalid audio URL:', audioUrl);
+        throw new Error('AI generation failed - invalid audio URL returned');
+      }
 
-    console.log(`[AI Music] Generated audio URL: ${audioUrl.slice(0, 100)}...`);
+      console.log(`[AI Music] Generated audio URL: ${audioUrl.slice(0, 100)}...`);
 
-    // Download the generated audio
-    const audioResponse = await fetch(audioUrl);
-    if (!audioResponse.ok) {
-      throw new Error('Failed to download generated audio');
-    }
-    const audioBuffer = Buffer.from(await audioResponse.arrayBuffer());
+      // Download the generated audio
+      const audioResponse = await fetch(audioUrl);
+      if (!audioResponse.ok) {
+        throw new Error('Failed to download generated audio');
+      }
+      const audioBuffer = Buffer.from(await audioResponse.arrayBuffer());
 
-    // Upload to Supabase Storage
-    const supabase = getSupabaseStorageClient();
-    const timestamp = Date.now();
-    const filename = `ai-generated/${userId}/${timestamp}-${sanitizeFilename(prompt.slice(0, 30))}.mp3`;
+      // Upload to Supabase Storage
+      const supabase = getSupabaseStorageClient();
+      const timestamp = Date.now();
+      const filename = `ai-generated/${userId}/${timestamp}-${sanitizeFilename(prompt.slice(0, 30))}.mp3`;
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('audio-files')
-      .upload(filename, audioBuffer, {
-        contentType: 'audio/mpeg',
-        cacheControl: '3600',
-        upsert: false,
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('audio-files')
+        .upload(filename, audioBuffer, {
+          contentType: 'audio/mpeg',
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw new Error('Failed to save generated audio');
+      }
+
+      // Get public URL
+      const { data: urlData } = supabase.storage.from('audio-files').getPublicUrl(filename);
+
+      // Calculate file size in GB for storage tracking
+      const fileSizeGB = audioBuffer.length / (1024 * 1024 * 1024);
+
+      // Update storage usage
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          storageUsedGB: { increment: fileSizeGB },
+        },
       });
 
-    if (uploadError) {
-      console.error('Upload error:', uploadError);
-      throw new Error('Failed to save generated audio');
+      // Create song record (genre and mood stored in description for now since Song model doesn't have these fields)
+      const song = await prisma.song.create({
+        data: {
+          title: generateTrackTitle(validatedData),
+          userId,
+          tempo: validatedData.tempo,
+          visibility: 'private',
+          description: validatedData.prompt || prompt,
+          audioUrl: urlData.publicUrl,
+          audioPath: filename,
+        },
+      });
+
+      console.log(`[AI Music] Track generated successfully: ${song.id}`);
+
+      return NextResponse.json({
+        success: true,
+        song: {
+          id: song.id,
+          title: song.title,
+          audioUrl: urlData.publicUrl,
+          duration: validatedData.duration,
+          instruments: validatedData.instruments,
+        },
+        songId: song.id, // For project selector
+        trackId: song.id, // Legacy compatibility
+        generation: {
+          creditsUsed: creditsNeeded,
+          model: 'musicgen-stereo-large',
+          prompt: prompt,
+        },
+        storage: {
+          path: filename,
+          sizeBytes: audioBuffer.length,
+        },
+      });
+    } catch (generationError) {
+      // Refund pre-deducted credits on any failure during generation/upload/save
+      console.error('[AI Music] Generation failed, refunding credits:', generationError);
+      await refundUsage(userId, 'aiRequests', creditsNeeded);
+      throw generationError; // Re-throw to be caught by outer error handler
     }
-
-    // Get public URL
-    const { data: urlData } = supabase.storage.from('audio-files').getPublicUrl(filename);
-
-    // Calculate file size in GB for storage tracking
-    const fileSizeGB = audioBuffer.length / (1024 * 1024 * 1024);
-
-    // Update storage usage
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        storageUsedGB: { increment: fileSizeGB },
-      },
-    });
-
-    // Create song record (genre and mood stored in description for now since Song model doesn't have these fields)
-    const song = await prisma.song.create({
-      data: {
-        title: generateTrackTitle(validatedData),
-        userId,
-        tempo: validatedData.tempo,
-        visibility: 'private',
-        description: validatedData.prompt || prompt,
-        audioUrl: urlData.publicUrl,
-        audioPath: filename,
-      },
-    });
-
-    console.log(`[AI Music] Track generated successfully: ${song.id}`);
-
-    return NextResponse.json({
-      success: true,
-      song: {
-        id: song.id,
-        title: song.title,
-        audioUrl: urlData.publicUrl,
-        duration: validatedData.duration,
-        instruments: validatedData.instruments,
-      },
-      songId: song.id, // For project selector
-      trackId: song.id, // Legacy compatibility
-      generation: {
-        creditsUsed: creditsNeeded,
-        model: 'musicgen-stereo-large',
-        prompt: prompt,
-      },
-      storage: {
-        path: filename,
-        sizeBytes: audioBuffer.length,
-      },
-    });
   } catch (error) {
     console.error('POST /api/tracks/generate error:', error);
 

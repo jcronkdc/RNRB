@@ -268,6 +268,38 @@ export async function trackUsage(
   }
 }
 
+/**
+ * Refund usage after a failed request (e.g., AI generation failure after pre-deduction)
+ */
+export async function refundUsage(
+  userId: string,
+  type: UsageType,
+  amount: number = 1
+): Promise<void> {
+  try {
+    const updateData =
+      type === 'aiRequests'
+        ? { aiRequestsUsed: { decrement: amount } }
+        : type === 'videoMinutes'
+          ? { videoMinutesUsed: { decrement: amount } }
+          : type === 'imageCredits'
+            ? { imageCreditsUsed: { decrement: amount } }
+            : type === 'stemCredits'
+              ? { stemCreditsUsed: { decrement: amount } }
+              : { assistantConversationsUsed: { decrement: amount } };
+
+    await db.user.update({
+      where: { id: userId },
+      data: updateData,
+    });
+
+    console.log(`[Usage] Refunded ${amount} ${type} credits to user ${userId}`);
+  } catch (error) {
+    console.error('Error refunding usage:', error);
+    // Don't throw - refund failure shouldn't break error handling
+  }
+}
+
 // Feature flags per tier - must match SUBSCRIPTION_TIERS in subscription-access.ts
 const TIER_FEATURES = {
   free: {

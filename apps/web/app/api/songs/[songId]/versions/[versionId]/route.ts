@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
@@ -138,6 +138,32 @@ export async function PATCH(
     }
 
     if (action === 'restore') {
+      // Auto-snapshot current state before restoring, so work is never lost
+      const latestVersion = await db.songVersion.findFirst({
+        where: { songId },
+        orderBy: { versionNum: 'desc' },
+        select: { versionNum: true },
+      });
+      const nextVersionNum = (latestVersion?.versionNum || 0) + 1;
+
+      await db.songVersion.create({
+        data: {
+          songId,
+          versionNum: nextVersionNum,
+          label: `Auto-save before restoring v${version.versionNum}`,
+          description: `Automatic snapshot created before restoring to "${version.label || `Version ${version.versionNum}`}"`,
+          title: song.title,
+          lyrics: song.lyrics,
+          chords: song.chords,
+          key: song.key,
+          tempo: song.tempo,
+          timeSignature: song.timeSignature,
+          audioUrl: song.audioUrl,
+          audioPath: song.audioPath,
+          createdById: userId,
+        },
+      });
+
       // Restore this version to current song state
       await db.song.update({
         where: { id: songId },
@@ -157,6 +183,7 @@ export async function PATCH(
       return NextResponse.json({
         message: 'Version restored successfully',
         versionNum: version.versionNum,
+        autoSavedVersion: nextVersionNum,
       });
     } else if (action === 'publish') {
       // Mark as published version
