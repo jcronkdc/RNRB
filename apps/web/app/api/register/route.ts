@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Create user (auto-flag platform owner)
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
@@ -94,15 +94,10 @@ export async function POST(request: Request) {
         profileCompleted: false,
         isOwner: email === OWNER_EMAIL,
       },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-      },
+      select: { id: true },
     });
 
-    return NextResponse.json({ message: 'Account created successfully', user }, { status: 201 });
+    return NextResponse.json({ message: 'Account created successfully' }, { status: 201 });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
     console.error('[REGISTER] Error:', errMsg);

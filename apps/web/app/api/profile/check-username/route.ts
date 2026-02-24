@@ -1,12 +1,26 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
+import { checkRateLimit, standardLimiter } from '@/lib/rate-limit';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get('username');
+
+    // Require authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Rate limit: prevent rapid enumeration
+    try {
+      await checkRateLimit(standardLimiter, `check-username:${session.user.id}`);
+    } catch {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
 
     if (!username) {
       return NextResponse.json({ error: 'Username is required' }, { status: 400 });
@@ -22,14 +36,12 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Check if username is taken
-    const session = await auth();
-    const currentUserId = session?.user?.id;
+    const currentUserId = session.user.id;
 
     // Find any profile with this username (excluding current user's profile)
     const existingProfile = await prisma.$queryRaw<{ id: string; userId: string }[]>`
-      SELECT id, "userId" FROM "MusicianProfile" 
-      WHERE "socialLinks" IS NOT NULL 
+      SELECT id, "userId" FROM "MusicianProfile"
+      WHERE "socialLinks" IS NOT NULL
       AND "socialLinks"->>'username' = ${username}
       LIMIT 1
     `;

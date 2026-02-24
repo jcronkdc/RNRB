@@ -581,6 +581,18 @@ function ProfileSettingsContent() {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
+    // Validate file size (max 5MB) and type
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_FILE_SIZE) {
+      setMessage({ type: 'error', text: 'File too large. Maximum size is 5MB.' });
+      return;
+    }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage({ type: 'error', text: 'Invalid file type. Use JPG, PNG, GIF, or WebP.' });
+      return;
+    }
+
     setUploadingPicture(true);
 
     try {
@@ -588,8 +600,13 @@ function ProfileSettingsContent() {
       const supabase = createBrowserClient();
       if (!supabase) throw new Error('Storage not available');
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
+      const fileExt =
+        file.name
+          .split('.')
+          .pop()
+          ?.toLowerCase()
+          .replace(/[^a-z0-9]/g, '') || 'jpg';
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
 
       const { error } = await supabase.storage.from('profile-pictures').upload(fileName, file, {
         cacheControl: '3600',
@@ -747,10 +764,12 @@ function ProfileSettingsContent() {
                   }}
                 >
                   {profile.profile_picture_url ? (
-                    <img
+                    <Image
                       src={profile.profile_picture_url}
                       alt="Profile"
-                      className="h-full w-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center text-4xl font-bold text-white">

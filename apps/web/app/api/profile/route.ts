@@ -2,6 +2,7 @@ import { prisma } from '@cronkwaters/db';
 import { NextResponse } from 'next/server';
 
 import { auth } from '@/auth';
+import { checkRateLimit, standardLimiter } from '@/lib/rate-limit';
 
 export async function PATCH(request: Request) {
   try {
@@ -11,8 +12,21 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const data = await request.json();
     const userId = session.user.id;
+
+    // Rate limit: 20 profile updates per minute
+    try {
+      await checkRateLimit(standardLimiter, `profile-update:${userId}`);
+    } catch {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
+    const data = await request.json();
+
+    // Validate body is a plain object
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
 
     // Extract profile completion flag and musician profile data
     const {
@@ -39,68 +53,125 @@ export async function PATCH(request: Request) {
       ...rest
     } = data;
 
+    // ── Input validation & sanitization ──────────────────────────────
+    const safeName =
+      typeof display_name === 'string' ? display_name.trim().slice(0, 100) : undefined;
+    const safeUsername =
+      typeof username === 'string'
+        ? username
+            .toLowerCase()
+            .replace(/[^a-z0-9_-]/g, '')
+            .slice(0, 30)
+        : undefined;
+    const safeBio = typeof bio === 'string' ? bio.slice(0, 2000) : undefined;
+    const safeLocation = typeof location === 'string' ? location.trim().slice(0, 200) : null;
+    const safeStageName = typeof stageName === 'string' ? stageName.trim().slice(0, 100) : null;
+    const safeRecordLabel =
+      typeof recordLabel === 'string' ? recordLabel.trim().slice(0, 200) : null;
+    const safeManagement = typeof management === 'string' ? management.trim().slice(0, 200) : null;
+    const safeYearsExp =
+      typeof yearsExperience === 'string' ? yearsExperience.trim().slice(0, 50) : null;
+    const safePhone = typeof phone === 'string' ? phone.trim().slice(0, 30) : null;
+
+    // Validate email fields
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const safeBookingEmail =
+      typeof bookingEmail === 'string' && emailRegex.test(bookingEmail.trim())
+        ? bookingEmail.trim().slice(0, 254)
+        : null;
+    const safePressEmail =
+      typeof pressEmail === 'string' && emailRegex.test(pressEmail.trim())
+        ? pressEmail.trim().slice(0, 254)
+        : null;
+
+    // Validate profile picture URL (must be https or empty)
+    const safePicUrl =
+      typeof profile_picture_url === 'string' &&
+      (profile_picture_url === '' || profile_picture_url.startsWith('https://'))
+        ? profile_picture_url
+        : undefined;
+
+    // Validate arrays (cap at reasonable sizes)
+    const safeInstruments = Array.isArray(instruments)
+      ? instruments
+          .filter((i: unknown) => typeof i === 'string')
+          .slice(0, 20)
+          .map((i: string) => i.slice(0, 100))
+      : [];
+    const safeGenres = Array.isArray(genres)
+      ? genres
+          .filter((g: unknown) => typeof g === 'string')
+          .slice(0, 20)
+          .map((g: string) => g.slice(0, 100))
+      : [];
+
+    // Validate websites array
+    const safeWebsites = Array.isArray(websites)
+      ? websites.slice(0, 10).map((w: { id?: string; label?: string; url?: string }) => ({
+          id: String(w.id || '').slice(0, 50),
+          label: String(w.label || '').slice(0, 100),
+          url: String(w.url || '').slice(0, 500),
+        }))
+      : [];
+
+    // Sanitize social links (only allow string values, cap length)
+    const safeSocialLinks: Record<string, string> = {};
+    if (socialLinks && typeof socialLinks === 'object' && !Array.isArray(socialLinks)) {
+      for (const [key, val] of Object.entries(socialLinks as Record<string, unknown>)) {
+        if (typeof val === 'string') {
+          safeSocialLinks[key.slice(0, 50)] = val.slice(0, 500);
+        }
+      }
+    }
+
     // Update user profile completion status and basic info
     await prisma.user.update({
       where: { id: userId },
       data: {
         profileCompleted: profileCompleted ?? false,
         // Update name if provided in display_name
-        ...(display_name && { name: display_name }),
+        ...(safeName && { name: safeName }),
         // Update profile picture if provided
-        ...(profile_picture_url && { image: profile_picture_url }),
+        ...(safePicUrl && { image: safePicUrl }),
       },
     });
 
     // Upsert MusicianProfile with all the extended data
+    // Build the combined socialLinks JSON payload
+    const socialLinksPayload = {
+      ...safeSocialLinks,
+      websites: safeWebsites,
+      phone: safePhone,
+      bookingEmail: safeBookingEmail,
+      pressEmail: safePressEmail,
+      management: safeManagement,
+      stageName: safeStageName,
+      recordLabel: safeRecordLabel,
+      yearsExperience: safeYearsExp,
+      username: safeUsername || null,
+      bio: safeBio || null,
+    };
+
     await prisma.musicianProfile.upsert({
       where: { userId },
       create: {
         userId,
-        instruments: instruments || [],
-        genres: genres || [],
+        instruments: safeInstruments,
+        genres: safeGenres,
         skills: [],
-        location: location || null,
+        location: safeLocation,
         availableForCollaboration: availableForCollaboration ?? true,
         availableForGigs: availableForGigs ?? false,
-        socialLinks: {
-          // Store all social links and additional data in JSON
-          ...socialLinks,
-          // Store websites array
-          websites: websites || [],
-          // Store contact info
-          phone: phone || null,
-          bookingEmail: bookingEmail || null,
-          pressEmail: pressEmail || null,
-          management: management || null,
-          // Store additional musician info
-          stageName: stageName || null,
-          recordLabel: recordLabel || null,
-          yearsExperience: yearsExperience || null,
-          // Store profile basics for convenience
-          username: username || null,
-          bio: bio || null,
-        },
+        socialLinks: socialLinksPayload,
         portfolio: undefined,
       },
       update: {
-        instruments: instruments || [],
-        genres: genres || [],
-        location: location || null,
+        instruments: safeInstruments,
+        genres: safeGenres,
+        location: safeLocation,
         availableForCollaboration: availableForCollaboration ?? true,
         availableForGigs: availableForGigs ?? false,
-        socialLinks: {
-          ...socialLinks,
-          websites: websites || [],
-          phone: phone || null,
-          bookingEmail: bookingEmail || null,
-          pressEmail: pressEmail || null,
-          management: management || null,
-          stageName: stageName || null,
-          recordLabel: recordLabel || null,
-          yearsExperience: yearsExperience || null,
-          username: username || null,
-          bio: bio || null,
-        },
+        socialLinks: socialLinksPayload,
       },
     });
 

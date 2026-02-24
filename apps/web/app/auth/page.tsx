@@ -387,6 +387,7 @@ function AuthForm() {
                     placeholder="Min. 8 characters"
                     required
                     minLength={8}
+                    maxLength={128}
                     disabled={loading}
                     className={`${inputClass} pr-12`}
                     style={{
