@@ -126,7 +126,7 @@ export async function POST(request: Request) {
     let directTest = 'SKIP';
     try {
       const sql = neon(actualUrl);
-      const r = await sql.query('SELECT 1 as ok');
+      const r = await sql('SELECT 1 as ok');
       directTest = r?.[0]?.ok === 1 ? 'PASS' : `UNEXPECTED:${JSON.stringify(r)}`;
     } catch (e) {
       directTest = `FAIL:${e instanceof Error ? e.message : String(e)}`;
