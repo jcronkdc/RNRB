@@ -105,15 +105,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Account created successfully', user }, { status: 201 });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
-    const errStack = error instanceof Error ? error.stack : undefined;
     console.error('[REGISTER] Error:', errMsg);
-    if (errStack) console.error('[REGISTER] Stack:', errStack);
+    if (error instanceof Error && error.stack) {
+      console.error('[REGISTER] Stack:', error.stack);
+    }
+
+    let dbHost = 'PARSE_FAILED';
+    try {
+      dbHost = process.env.DATABASE_URL
+        ? new URL(process.env.DATABASE_URL).host
+        : 'NOT_SET';
+    } catch { /* ignore */ }
 
     return NextResponse.json(
       {
         error: 'Failed to create account. Please try again.',
         code: 'INTERNAL_ERROR',
-        ...(process.env.NODE_ENV === 'development' && { details: errMsg }),
+        _dbg: `${errMsg} [host=${dbHost}]`,
       },
       { status: 500 }
     );
