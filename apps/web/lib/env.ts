@@ -85,12 +85,14 @@ type Env = z.infer<typeof envSchema>;
  * Logs warnings for missing optional vars in development
  */
 function getValidatedEnv(): Env {
-  // In build time or when process.env is empty, return defaults
   if (typeof process === 'undefined' || !process.env) {
-    console.warn('[env] Running without process.env - using defaults');
+    return { NODE_ENV: 'development', DATABASE_URL: '' } as Env;
+  }
+
+  if (process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL_ENV === undefined && !process.env.DATABASE_URL) {
     return {
-      NODE_ENV: 'development',
-      DATABASE_URL: '',
+      NODE_ENV: (process.env.NODE_ENV as 'development' | 'production' | 'test') || 'development',
+      DATABASE_URL: process.env.DATABASE_URL || '',
     } as Env;
   }
 
@@ -138,9 +140,10 @@ function getValidatedEnv(): Env {
     }
 
     return parsed;
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const missing = error.errors.map((e) => `${e.path.join('.')}: ${e.message}`);
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'issues' in error) {
+      const zodErr = error as { issues: Array<{ path: string[]; message: string }> };
+      const missing = zodErr.issues.map((e) => `${e.path.join('.')}: ${e.message}`);
       console.error('[env] Invalid environment variables:', missing);
 
       // In development, continue with warnings
