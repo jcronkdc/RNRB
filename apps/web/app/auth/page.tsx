@@ -1,12 +1,12 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
-import { Loader2, Eye, EyeOff } from '@/components/ui/custom-icons';
+import { Eye, EyeOff, Loader2 } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { signIn } from 'next-auth/react';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 // ─── Auth Form ───────────────────────────────────────────────────────────────
 
@@ -175,7 +175,7 @@ function AuthForm() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] }}
+          transition={{ duration: 0.8, ease: [0.25, 0.4, 0.25, 1] as const }}
           className="flex flex-col items-center text-center"
         >
           {/* Logo */}
@@ -237,7 +237,7 @@ function AuthForm() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+          transition={{ duration: 0.6, ease: [0.25, 0.4, 0.25, 1] as const }}
           className="w-full max-w-md"
         >
           {/* Mobile Logo */}

@@ -5,7 +5,7 @@
  * a consistent, premium feel across the app.
  */
 
-import type { Variants, Transition } from 'motion/react';
+import type { Transition, Variants } from 'motion/react';
 
 // =============================================================================
 // BUTTON ANIMATIONS
@@ -309,7 +309,10 @@ export function springTransition(stiffness = 400, damping = 25): Transition {
 /**
  * Generate ease transition with custom duration
  */
-export function easeTransition(duration = 0.3, ease = 'easeOut'): Transition {
+export function easeTransition(
+  duration = 0.3,
+  ease: import('framer-motion').Easing = 'easeOut'
+): Transition {
   return {
     duration,
     ease,

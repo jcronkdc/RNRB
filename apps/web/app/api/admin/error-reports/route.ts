@@ -6,10 +6,11 @@
  * PATCH - Update error report (mark resolved, add notes)
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { publicLimiter, rateLimitRequest } from '@/lib/rate-limit';
 import { prisma } from '@cronkwaters/db';
 import crypto from 'crypto';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Generate fingerprint for deduplication
 function generateFingerprint(message: string, stack?: string, url?: string): string {
@@ -23,6 +24,10 @@ function generateFingerprint(message: string, stack?: string, url?: string): str
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit unauthenticated error submissions to prevent DB flooding
+    const rateLimited = await rateLimitRequest(publicLimiter, request);
+    if (rateLimited) return rateLimited;
+
     const body = await request.json();
 
     const {
@@ -247,7 +252,7 @@ export async function GET(request: NextRequest) {
 
     const reports = await prisma.$queryRawUnsafe(
       `
-      SELECT 
+      SELECT
         id,
         timestamp,
         severity,
@@ -273,7 +278,7 @@ export async function GET(request: NextRequest) {
         "createdAt"
       FROM "ErrorReport"
       WHERE ${conditions.join(' AND ')}
-      ORDER BY 
+      ORDER BY
         CASE severity
           WHEN 'critical' THEN 1
           WHEN 'high' THEN 2
@@ -290,7 +295,7 @@ export async function GET(request: NextRequest) {
 
     // Get counts
     const counts = (await prisma.$queryRaw`
-      SELECT 
+      SELECT
         COUNT(*) FILTER (WHERE resolved = false) as unresolved,
         COUNT(*) FILTER (WHERE severity = 'critical' AND resolved = false) as critical,
         COUNT(*) FILTER (WHERE severity = 'high' AND resolved = false) as high,
@@ -360,7 +365,7 @@ export async function PATCH(request: NextRequest) {
 
     await prisma.$executeRaw`
       UPDATE "ErrorReport"
-      SET 
+      SET
         resolved = COALESCE(${resolved}, resolved),
         "resolvedAt" = CASE WHEN ${resolved} = true THEN NOW() ELSE "resolvedAt" END,
         "resolvedBy" = CASE WHEN ${resolved} = true THEN ${session.user.id} ELSE "resolvedBy" END,

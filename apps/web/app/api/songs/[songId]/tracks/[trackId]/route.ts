@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 import { auth } from '@/auth';
@@ -214,7 +214,7 @@ export async function PATCH(
       return NextResponse.json(
         {
           error: 'Invalid input parameters',
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 }
       );

@@ -1,27 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'motion/react';
 import {
-  Newspaper,
-  Download,
-  Image,
-  Music,
   Calendar,
-  MapPin,
-  Globe,
-  Instagram,
-  Youtube,
-  Twitter,
-  Mail,
-  Phone,
-  FileText,
-  Sparkles,
-  Eye,
-  Copy,
   CheckCircle,
+  Copy,
+  Download,
+  Eye,
+  FileText,
+  Globe,
+  Mail,
+  MapPin,
+  Music,
+  Newspaper,
+  Phone,
+  Sparkles,
 } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
+import { useState } from 'react';
 
 interface EPKData {
   artistName: string;
@@ -391,14 +386,14 @@ Instagram: ${epkData.social.instagram}
         </div>
         <div className="flex gap-2">
           <Button
-            variant={activeTab === 'edit' ? 'default' : 'outline-solid'}
+            variant={activeTab === 'edit' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setActiveTab('edit')}
           >
             Edit
           </Button>
           <Button
-            variant={activeTab === 'preview' ? 'default' : 'outline-solid'}
+            variant={activeTab === 'preview' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setActiveTab('preview')}
             className="gap-2"

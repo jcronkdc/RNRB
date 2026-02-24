@@ -10,13 +10,13 @@
 
 import { prisma } from '@cronkwaters/db';
 import { createClient } from '@supabase/supabase-js';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import Replicate from 'replicate';
 import { z } from 'zod';
 
 import { auth } from '@/auth';
 import { aiLimiter, checkRateLimit } from '@/lib/rate-limit';
-import { trackUsage, getUsageSummary } from '@/lib/usage-tracking';
+import { getUsageSummary, trackUsage } from '@/lib/usage-tracking';
 
 export const runtime = 'nodejs';
 export const maxDuration = 120; // 2 minute timeout for AI generation
@@ -329,7 +329,7 @@ export async function POST(req: NextRequest) {
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Invalid input parameters', details: error.errors },
+        { error: 'Invalid input parameters', details: error.issues },
         { status: 400 }
       );
     }

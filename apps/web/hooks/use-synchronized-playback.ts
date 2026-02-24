@@ -43,7 +43,7 @@ type UseSynchronizedPlaybackOptions = {
   channelName: string;
   userId: string;
   userName: string;
-  audioRef: React.RefObject<HTMLAudioElement>;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
   isHost?: boolean; // Only host can control playback
   enabled?: boolean;
 };

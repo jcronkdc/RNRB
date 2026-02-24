@@ -10,21 +10,21 @@
  * - No fake financial projections
  */
 
-import { Card, Button } from '@cronkwaters/ui';
-import { motion } from 'motion/react';
 import {
-  Users,
-  MapPin,
-  Calendar,
-  Download,
   AlertCircle,
-  Navigation,
-  Loader2,
+  Calendar,
   Clock,
-  Ticket,
+  Download,
   ExternalLink,
+  Loader2,
+  MapPin,
+  Navigation,
+  Ticket,
+  Users,
 } from '@/components/ui/custom-icons';
-import { useState, useEffect } from 'react';
+import { Button, Card } from '@cronkwaters/ui';
+import { motion } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 interface TourAnalyticsProps {
   tourId: string;
@@ -114,7 +114,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <Button
-            variant={activeTab === 'schedule' ? 'default' : 'outline-solid'}
+            variant={activeTab === 'schedule' ? 'default' : 'outline'}
             onClick={() => setActiveTab('schedule')}
             className="flex items-center gap-2"
           >
@@ -122,7 +122,7 @@ export function TourAnalyticsDashboard({ tourId, tourSlug }: TourAnalyticsProps)
             Schedule
           </Button>
           <Button
-            variant={activeTab === 'routing' ? 'default' : 'outline-solid'}
+            variant={activeTab === 'routing' ? 'default' : 'outline'}
             onClick={() => setActiveTab('routing')}
             className="flex items-center gap-2"
           >

@@ -1,8 +1,7 @@
 import type { Membership, Organization } from '@cronkwaters/db';
 import { prisma } from '@cronkwaters/db';
-import { cookies } from 'next/headers';
 import type { Session } from 'next-auth';
-import crypto from 'crypto';
+import { cookies } from 'next/headers';
 
 import { auth } from './auth';
 
@@ -110,96 +109,7 @@ export async function setActiveOrgCookie(orgId: string | null): Promise<void> {
   });
 }
 
-// Session management enhancements
-
-// Track active sessions per user (in-memory for now, use Redis in production)
-const activeSessions = new Map<string, Set<string>>();
-const MAX_CONCURRENT_SESSIONS = 3;
-
-// Session timeout configuration
-const SESSION_IDLE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-const SESSION_ABSOLUTE_TIMEOUT = 8 * 60 * 60 * 1000; // 8 hours
-
-/**
- * Track active session for a user
- */
-export function trackUserSession(userId: string, sessionId: string): void {
-  if (!activeSessions.has(userId)) {
-    activeSessions.set(userId, new Set());
-  }
-
-  const userSessions = activeSessions.get(userId)!;
-  userSessions.add(sessionId);
-
-  // Enforce concurrent session limit
-  if (userSessions.size > MAX_CONCURRENT_SESSIONS) {
-    const sessionsArray = Array.from(userSessions);
-    // Remove oldest sessions
-    for (let i = 0; i < sessionsArray.length - MAX_CONCURRENT_SESSIONS; i++) {
-      userSessions.delete(sessionsArray[i]);
-    }
-  }
-}
-
-/**
- * Invalidate all sessions for a user
- */
-export async function invalidateUserSessions(userId: string): Promise<void> {
-  activeSessions.delete(userId);
-
-  // In production: Also invalidate sessions in database/Redis
-  // await redis.del(`sessions:${userId}:*`);
-}
-
-/**
- * Check if session has been idle too long
- */
-export function isSessionIdle(lastActivity: Date): boolean {
-  const now = Date.now();
-  const lastActivityTime = lastActivity.getTime();
-  return now - lastActivityTime > SESSION_IDLE_TIMEOUT;
-}
-
-/**
- * Check if session has exceeded absolute timeout
- */
-export function isSessionExpired(sessionStart: Date): boolean {
-  const now = Date.now();
-  const startTime = sessionStart.getTime();
-  return now - startTime > SESSION_ABSOLUTE_TIMEOUT;
-}
-
-/**
- * Generate secure session fingerprint
- */
-export function generateSessionFingerprint(userAgent: string, ip: string): string {
-  const data = `${userAgent}:${ip}`;
-  return crypto.createHash('sha256').update(data).digest('hex');
-}
-
-/**
- * Validate session fingerprint to detect session hijacking
- */
-export function validateSessionFingerprint(
-  storedFingerprint: string,
-  currentUserAgent: string,
-  currentIp: string
-): boolean {
-  const currentFingerprint = generateSessionFingerprint(currentUserAgent, currentIp);
-  return crypto.timingSafeEqual(Buffer.from(storedFingerprint), Buffer.from(currentFingerprint));
-}
-
-// Cleanup expired sessions periodically (server-side only)
-if (typeof window === 'undefined') {
-  setInterval(
-    () => {
-      // Cleanup inactive sessions
-      for (const [userId, sessions] of activeSessions.entries()) {
-        if (sessions.size === 0) {
-          activeSessions.delete(userId);
-        }
-      }
-    },
-    5 * 60 * 1000
-  ); // Every 5 minutes
-}
+// NOTE: Session concurrency limits, idle timeouts, and fingerprinting require
+// a persistent store (Redis/Vercel KV) to work in serverless. The previous
+// in-memory implementation was non-functional on Vercel. Implement with a
+// persistent store before re-enabling these features.

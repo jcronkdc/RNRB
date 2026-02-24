@@ -35,14 +35,18 @@ function getEnv() {
         process.env.npm_lifecycle_event === 'build' ||
         process.env.NEXT_PHASE === 'phase-production-build';
       if (!isBuild) {
-        console.error(
-          '[AUTH] CRITICAL: NEXTAUTH_SECRET is not set. JWTs will not be signed securely.'
+        throw new Error(
+          '[AUTH] FATAL: NEXTAUTH_SECRET is not set. Refusing to start — JWTs would not be signed securely.'
         );
       }
     }
 
     return parsed;
-  } catch {
+  } catch (error) {
+    // Re-throw fatal runtime errors (e.g. missing NEXTAUTH_SECRET)
+    if (error instanceof Error && error.message.includes('[AUTH] FATAL')) {
+      throw error;
+    }
     // During build time, return safe defaults so the build doesn't fail.
     return {
       NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || '',

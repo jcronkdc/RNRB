@@ -20,9 +20,9 @@
  * - Renders as a fixed bar at the bottom of the editor
  */
 
-import { motion, AnimatePresence } from 'motion/react';
-import { Mic, MicOff, Video, PhoneOff } from '@/components/ui/custom-icons';
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { Mic, MicOff, PhoneOff } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface TalkbackParticipant {
   userId: string;
@@ -211,7 +211,7 @@ export function TalkbackStrip({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] as const }}
           className="fixed right-0 bottom-0 left-0 z-40 lg:left-[240px]"
           style={{
             background: 'var(--panel)',

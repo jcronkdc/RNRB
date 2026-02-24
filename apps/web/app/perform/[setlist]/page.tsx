@@ -11,23 +11,23 @@
  * - Works offline (PWA-ready)
  */
 
-import { Button } from '@cronkwaters/ui';
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  ChevronLeft,
-  ChevronRight,
-  Music,
-  Clock,
-  Key as KeyIcon,
   Activity,
   Check,
-  X,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
   Home,
+  Key as KeyIcon,
   Maximize2,
   Minimize2,
+  Music,
+  X,
 } from '@/components/ui/custom-icons';
+import { Button } from '@cronkwaters/ui';
+import { AnimatePresence, motion } from 'motion/react';
 import { useParams, useRouter } from 'next/navigation';
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type SetlistSong = {
   id: string;
@@ -305,14 +305,14 @@ export default function PerformerModePage() {
             <div className="mb-4 flex justify-center gap-3">
               <Button
                 onClick={() => setShowDetails(false)}
-                variant={!showDetails ? 'default' : 'outline-solid'}
+                variant={!showDetails ? 'default' : 'outline'}
                 className="px-6 py-3 text-base"
               >
                 Lyrics
               </Button>
               <Button
                 onClick={() => setShowDetails(true)}
-                variant={showDetails ? 'default' : 'outline-solid'}
+                variant={showDetails ? 'default' : 'outline'}
                 className="px-6 py-3 text-base"
               >
                 Chords
@@ -344,7 +344,7 @@ export default function PerformerModePage() {
             <div className="mt-6 text-center">
               <Button
                 onClick={toggleCompleted}
-                variant={completedSongs.has(currentSong.song.id) ? 'default' : 'outline-solid'}
+                variant={completedSongs.has(currentSong.song.id) ? 'default' : 'outline'}
                 className="px-8 py-4 text-lg"
               >
                 {completedSongs.has(currentSong.song.id) ? (

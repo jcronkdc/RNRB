@@ -152,7 +152,7 @@ export function handleApiError(
 
   // Handle Zod validation errors
   if (error instanceof ZodError) {
-    const fieldErrors = error.errors.map((e) => ({
+    const fieldErrors = error.issues.map((e) => ({
       field: e.path.join('.'),
       message: e.message,
     }));

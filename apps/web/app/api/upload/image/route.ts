@@ -1,8 +1,8 @@
 import { auth } from '@cronkwaters/auth';
 import { createClient } from '@supabase/supabase-js';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
-import { uploadLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { checkRateLimit, uploadLimiter } from '@/lib/rate-limit';
 
 // Lazy initialization to avoid build-time errors
 function getSupabaseClient() {
@@ -146,7 +146,11 @@ export async function DELETE(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const path = searchParams.get('path');
-    const bucket = searchParams.get('bucket') || 'site-images';
+    const requestedBucket = searchParams.get('bucket') || 'site-images';
+
+    // Restrict to allowed buckets only (same as POST)
+    const ALLOWED_BUCKETS = ['site-images', 'profile-images', 'merch-designs', 'project-covers'];
+    const bucket = ALLOWED_BUCKETS.includes(requestedBucket) ? requestedBucket : 'site-images';
 
     if (!path) {
       return NextResponse.json({ error: 'Path required' }, { status: 400 });

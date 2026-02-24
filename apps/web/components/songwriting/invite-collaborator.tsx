@@ -12,9 +12,9 @@
  * Just: "I want this person in my song."
  */
 
-import { motion, AnimatePresence } from 'motion/react';
-import { UserPlus, X, Check, Loader2, Copy } from '@/components/ui/custom-icons';
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { Check, Copy, Loader2, UserPlus, X } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface InviteCollaboratorProps {
   songId: string;
@@ -116,7 +116,7 @@ export function InviteCollaborator({
             initial={{ opacity: 0, y: -8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.97 }}
-            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] as const }}
             className="fixed top-20 right-6 z-50 w-80 overflow-hidden rounded-xl"
             style={{
               background: 'var(--panel)',

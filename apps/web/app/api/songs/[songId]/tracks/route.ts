@@ -1,9 +1,9 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
-import { standardLimiter, strictLimiter, uploadLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { checkRateLimit, standardLimiter, uploadLimiter } from '@/lib/rate-limit';
 
 // Validation schema for creating tracks
 // TrackType values must match Prisma enum values
@@ -273,7 +273,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ son
       return NextResponse.json(
         {
           error: 'Invalid input parameters',
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 }
       );
@@ -382,7 +382,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ so
       return NextResponse.json(
         {
           error: 'Invalid input parameters',
-          details: error.errors,
+          details: error.issues,
         },
         { status: 400 }
       );

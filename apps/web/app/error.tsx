@@ -1,7 +1,7 @@
 'use client';
 
+import { AlertTriangle, Home, RefreshCw } from '@/components/ui/custom-icons';
 import { motion } from 'motion/react';
-import { AlertTriangle, RefreshCw, Home } from '@/components/ui/custom-icons';
 import Link from 'next/link';
 import { useEffect } from 'react';
 
@@ -24,7 +24,7 @@ export default function Error({
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.25, 0.4, 0.25, 1] }}
+        transition={{ duration: 0.4, ease: [0.25, 0.4, 0.25, 1] as const }}
         className="w-full max-w-sm text-center"
       >
         <div className="mb-6 flex justify-center">

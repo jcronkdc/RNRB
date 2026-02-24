@@ -96,9 +96,9 @@ export async function POST(request: NextRequest) {
         timestamp: location?.timestamp,
         selection: location?.selection,
         threadId,
-        userId: userId || session.user.id,
-        userName: userName || session.user.name || 'Unknown',
-        userAvatar: userAvatar || session.user.image,
+        userId: session.user.id,
+        userName: session.user.name || 'Unknown',
+        userAvatar: session.user.image,
         isResolved: false,
       },
     });

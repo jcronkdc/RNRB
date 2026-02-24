@@ -1,31 +1,28 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  Play,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Download,
+  List,
+  Lock,
+  Maximize,
+  MessageSquare,
+  Minimize,
   Pause,
+  Play,
   SkipBack,
   SkipForward,
   Volume2,
   VolumeX,
-  Maximize,
-  Minimize,
-  CheckCircle,
-  Lock,
-  Clock,
-  BookOpen,
-  Download,
-  MessageSquare,
-  ChevronLeft,
-  ChevronRight,
-  Settings,
-  List,
   X,
 } from 'lucide-react';
-import Image from 'next/image';
+import { AnimatePresence, motion } from 'motion/react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface Lesson {
   id: string;
@@ -96,7 +93,7 @@ function VideoPlayer({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const controlsTimeoutRef = useRef<NodeJS.Timeout>();
+  const controlsTimeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
     const video = videoRef.current;

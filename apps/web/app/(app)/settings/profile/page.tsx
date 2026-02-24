@@ -1,44 +1,44 @@
 'use client';
 
+import { AppVersionDisplay } from '@/components/app-version-checker';
 import {
-  Phone,
-  Globe,
-  Music,
-  Upload,
-  Save,
+  ArrowRight,
+  AtSign,
+  Camera,
+  CheckCircle2,
+  Disc3,
   Eye,
   EyeOff,
-  Instagram,
-  Youtube,
-  Twitter,
-  User,
-  Link as LinkIcon,
-  Shield,
-  CheckCircle2,
-  ArrowRight,
-  Camera,
-  Plus,
-  Trash2,
-  MapPin,
   Facebook,
-  Linkedin,
-  Music2,
+  Globe,
   Headphones,
-  Radio,
-  Disc3,
-  Video,
+  Instagram,
+  Link as LinkIcon,
+  Linkedin,
+  MapPin,
   MessageCircle,
-  AtSign,
+  Music,
+  Music2,
+  Phone,
+  Plus,
+  Radio,
+  Save,
+  Shield,
+  Trash2,
+  Twitter,
+  Upload,
+  User,
+  Video,
+  Youtube,
 } from '@/components/ui/custom-icons';
-import { AppVersionDisplay } from '@/components/app-version-checker';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState, useRef, Suspense } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 
-import { createBrowserClient } from '@/lib/supabase';
 import { SettingsSkeleton } from '@/components/loading-skeletons';
+import { createBrowserClient } from '@/lib/supabase';
 
 // All social media platforms a musician might use
 type SocialLinks = {
@@ -130,7 +130,7 @@ function ProfileSettingsContent() {
     available: boolean | null;
     error: string | null;
   }>({ checking: false, available: null, error: null });
-  const usernameCheckTimeout = useRef<NodeJS.Timeout>();
+  const usernameCheckTimeout = useRef<NodeJS.Timeout>(undefined);
 
   // Check if this is first-time setup
   const isSetup = searchParams.get('setup') === 'true';
@@ -139,7 +139,7 @@ function ProfileSettingsContent() {
   const redirectAfterSetup = searchParams.get('redirect');
 
   // Track timeout for cleanup on unmount
-  const redirectTimeoutRef = useRef<NodeJS.Timeout>();
+  const redirectTimeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   const [profile, setProfile] = useState<ProfileData>({
     username: '',

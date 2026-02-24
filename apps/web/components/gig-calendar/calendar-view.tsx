@@ -16,25 +16,25 @@
  * - Mobile responsive
  */
 
-import { Button, Card } from '@cronkwaters/ui';
-import { motion } from 'motion/react';
 import {
+  AlertTriangle,
   Calendar,
+  Calendar as CalendarIcon,
+  Car,
   ChevronLeft,
   ChevronRight,
   Clock,
-  MapPin,
-  Music,
   DollarSign,
-  AlertTriangle,
-  Car,
-  Plus,
   Grid3x3,
   List,
-  Calendar as CalendarIcon,
+  MapPin,
+  Music,
+  Plus,
   Sun,
 } from '@/components/ui/custom-icons';
-import { useState, useMemo } from 'react';
+import { Button, Card } from '@cronkwaters/ui';
+import { motion } from 'motion/react';
+import { useMemo, useState } from 'react';
 
 import { formatDateWithDay, formatTime } from '@/lib/format-date';
 
@@ -233,7 +233,7 @@ export function CalendarView({
         <div className="flex items-center gap-2 overflow-x-auto">
           <Button
             onClick={() => setViewMode('month')}
-            variant={viewMode === 'month' ? 'default' : 'outline-solid'}
+            variant={viewMode === 'month' ? 'default' : 'outline'}
             size="sm"
             className="flex items-center gap-1"
           >
@@ -242,7 +242,7 @@ export function CalendarView({
           </Button>
           <Button
             onClick={() => setViewMode('week')}
-            variant={viewMode === 'week' ? 'default' : 'outline-solid'}
+            variant={viewMode === 'week' ? 'default' : 'outline'}
             size="sm"
             className="flex items-center gap-1"
           >
@@ -251,7 +251,7 @@ export function CalendarView({
           </Button>
           <Button
             onClick={() => setViewMode('day')}
-            variant={viewMode === 'day' ? 'default' : 'outline-solid'}
+            variant={viewMode === 'day' ? 'default' : 'outline'}
             size="sm"
             className="flex items-center gap-1"
           >
@@ -260,7 +260,7 @@ export function CalendarView({
           </Button>
           <Button
             onClick={() => setViewMode('agenda')}
-            variant={viewMode === 'agenda' ? 'default' : 'outline-solid'}
+            variant={viewMode === 'agenda' ? 'default' : 'outline'}
             size="sm"
             className="flex items-center gap-1"
           >

@@ -1,25 +1,25 @@
 'use client';
 
-import { Button } from '@cronkwaters/ui';
-import DailyIframe, { type DailyCall, type DailyParticipant } from '@daily-co/daily-js';
 import {
-  useDaily,
-  useLocalParticipant,
-  useScreenShare,
-  useParticipantIds,
-  DailyProvider,
-} from '@daily-co/daily-react';
-import { motion, AnimatePresence } from 'motion/react';
-import {
-  Video,
-  VideoOff,
   Mic,
   MicOff,
   Monitor,
   MonitorOff,
   Users,
+  Video,
+  VideoOff,
 } from '@/components/ui/custom-icons';
-import React, { useEffect, useState, useCallback, useMemo, useRef, memo } from 'react';
+import { Button } from '@cronkwaters/ui';
+import DailyIframe, { type DailyCall, type DailyParticipant } from '@daily-co/daily-js';
+import {
+  DailyProvider,
+  useDaily,
+  useLocalParticipant,
+  useParticipantIds,
+  useScreenShare,
+} from '@daily-co/daily-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 interface CollaborativeRoomProps {
   roomUrl: string;
@@ -234,7 +234,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
       <div className="border-border bg-surface flex items-center justify-center gap-3 rounded-2xl border p-4">
         <Button
           onClick={toggleVideo}
-          variant={isVideoEnabled ? 'solid' : 'outline-solid'}
+          variant={isVideoEnabled ? 'solid' : 'outline'}
           size="lg"
           className="gap-2"
         >
@@ -244,7 +244,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
         <Button
           onClick={toggleAudio}
-          variant={isAudioEnabled ? 'solid' : 'outline-solid'}
+          variant={isAudioEnabled ? 'solid' : 'outline'}
           size="lg"
           className="gap-2"
         >
@@ -254,7 +254,7 @@ function RoomContent({ roomUrl, roomName, userName }: CollaborativeRoomProps) {
 
         <Button
           onClick={toggleScreenShare}
-          variant={isSharingScreen ? 'solid' : 'outline-solid'}
+          variant={isSharingScreen ? 'solid' : 'outline'}
           size="lg"
           className="gap-2"
         >

@@ -1,5 +1,5 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export async function GET(request: NextRequest) {
   // SECURITY: In production, require a secret key to access detailed health info
@@ -7,11 +7,11 @@ export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('x-health-key');
   const healthKey = process.env.HEALTH_CHECK_KEY;
 
-  // In production, only show detailed info if authenticated
+  // Require secret key for detailed health info in ALL environments
   const isAuthenticated = healthKey && authHeader === healthKey;
 
   // Quick health check for load balancers (always available)
-  if (!isAuthenticated && isProduction) {
+  if (!isAuthenticated) {
     try {
       await prisma.$queryRaw`SELECT 1`;
       return NextResponse.json({ status: 'healthy', timestamp: new Date().toISOString() });

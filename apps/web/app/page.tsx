@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import Link from 'next/link';
 import { useRef } from 'react';
 
-import { HeroLogo, FooterLogo } from './components/landing-logos';
+import { FooterLogo, HeroLogo } from './components/landing-logos';
 
 // ─── Animation Variants ──────────────────────────────────────────────────────
 
@@ -13,7 +13,7 @@ const fadeUp = {
   visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, delay, ease: [0.25, 0.4, 0.25, 1] },
+    transition: { duration: 0.6, delay, ease: [0.25, 0.4, 0.25, 1] as const },
   }),
 };
 
@@ -363,7 +363,7 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
+            transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] as const }}
           >
             <div
               className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-medium"
@@ -377,7 +377,7 @@ export default function HomePage() {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.4, 0.25, 1] as const }}
             className="mx-auto max-w-3xl text-4xl leading-[1.15] font-bold tracking-tight sm:text-5xl md:text-6xl"
             style={{ color: 'var(--text)' }}
           >
@@ -388,7 +388,7 @@ export default function HomePage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.4, 0.25, 1] }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.4, 0.25, 1] as const }}
             className="mx-auto mt-6 max-w-xl text-base leading-relaxed sm:text-lg"
             style={{ color: 'var(--muted)' }}
           >
@@ -399,7 +399,7 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
+            transition={{ duration: 0.7, delay: 0.3, ease: [0.25, 0.4, 0.25, 1] as const }}
             className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
           >
             <Link

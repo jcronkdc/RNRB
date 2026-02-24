@@ -1,7 +1,7 @@
 'use client';
 
+import { ExternalLink, MousePointer2, Sparkles, Video } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
-import { Video, Sparkles, ExternalLink, MousePointer2 } from '@/components/ui/custom-icons';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
@@ -259,7 +259,7 @@ export function ProjectVideoRoom({ projectSlug, projectName }: ProjectVideoRoomP
       <div className="border-border bg-surface-muted flex items-center justify-center gap-3 rounded-xl border p-4">
         <Button
           onClick={() => setShowCursors(!showCursors)}
-          variant={showCursors ? 'solid' : 'outline-solid'}
+          variant={showCursors ? 'solid' : 'outline'}
           className="gap-2"
         >
           <MousePointer2 className="h-4 w-4" />

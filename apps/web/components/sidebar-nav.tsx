@@ -1,27 +1,27 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  Home,
-  Music2,
-  FolderOpen,
-  Library,
-  Video,
-  Calendar,
   Activity,
-  Globe,
-  Settings,
+  Calendar,
   ChevronLeft,
   ChevronRight,
-  LogOut,
+  FolderOpen,
+  Globe,
+  Home,
+  Library,
   Loader2,
-  X,
+  LogOut,
+  Music2,
   Plus,
+  Settings,
+  Video,
+  X,
 } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
-import { useState, useEffect, createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 import { useThemeSafe } from '@/components/theme';
 
@@ -213,7 +213,7 @@ export function SidebarNav() {
           width: isMobile ? 260 : sidebarWidth,
           x: showSidebar ? 0 : isMobile ? -260 : 0,
         }}
-        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+        transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] as const }}
         className={`fixed top-0 left-0 z-50 flex h-screen flex-col border-r ${isMobile ? '' : ''}`}
         style={{ background: 'var(--bg)', borderColor: 'var(--border)' }}
       >

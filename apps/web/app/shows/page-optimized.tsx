@@ -11,23 +11,23 @@
  * - Efficient re-renders
  */
 
-import { Button, Card } from '@cronkwaters/ui';
-import { motion } from 'motion/react';
 import {
   Calendar,
-  MapPin,
+  ChevronDown,
   Clock,
-  Plus,
-  Music,
-  Users,
   DollarSign,
   Edit,
-  Trash2,
   Filter,
-  Search,
   Loader2,
-  ChevronDown,
+  MapPin,
+  Music,
+  Plus,
+  Search,
+  Trash2,
+  Users,
 } from '@/components/ui/custom-icons';
+import { Button, Card } from '@cronkwaters/ui';
+import { motion } from 'motion/react';
 import Link from 'next/link';
 import { memo, useCallback, useMemo, useState } from 'react';
 
@@ -202,7 +202,7 @@ export default function ShowsPage() {
               <Button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                variant={statusFilter === status ? 'default' : 'outline-solid'}
+                variant={statusFilter === status ? 'default' : 'outline'}
                 className="shrink-0 rounded-xl px-3 py-2 text-xs capitalize sm:px-4 sm:text-sm"
               >
                 {status}

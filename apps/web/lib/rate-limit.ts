@@ -1,16 +1,17 @@
 /**
  * RATE LIMITING
  *
- * In-memory rate limiting for API routes.
- * For production, consider using Redis or Upstash.
+ * Distributed rate limiting via Upstash Redis when configured.
+ * Falls back to in-memory limiting (per-instance only) otherwise.
+ *
+ * Setup for production:
+ *   1. Create a Redis database at https://upstash.com
+ *   2. Set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN env vars
  *
  * Usage:
- *   import { rateLimit, RateLimitConfig } from '@/lib/rate-limit';
- *
- *   // In API route:
+ *   import { rateLimit, checkRateLimit } from '@/lib/rate-limit';
  *   const limiter = rateLimit({ interval: 60000, limit: 10 });
- *   const { success } = await limiter.check(userId);
- *   if (!success) throw AppError.rateLimited();
+ *   await checkRateLimit(limiter, userId);
  */
 
 import { AppError } from '@/lib/errors';
@@ -24,107 +25,136 @@ interface RateLimitConfig {
   prefix?: string;
 }
 
+interface RateLimitResult {
+  success: boolean;
+  remaining: number;
+  reset: number;
+}
+
+// ============================================
+// UPSTASH REDIS BACKEND
+// ============================================
+
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL;
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+const USE_REDIS = Boolean(UPSTASH_URL && UPSTASH_TOKEN);
+
+async function checkRedis(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {
+  const now = Date.now();
+  const windowStart = now - windowMs;
+
+  try {
+    const pipeline = [
+      ['ZREMRANGEBYSCORE', key, '0', windowStart.toString()],
+      ['ZCARD', key],
+      ['ZADD', key, now.toString(), `${now}-${Math.random()}`],
+      ['PEXPIRE', key, (windowMs + 1000).toString()],
+    ];
+
+    const response = await fetch(`${UPSTASH_URL}/pipeline`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${UPSTASH_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(pipeline),
+      signal: AbortSignal.timeout(3000),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Redis error: ${response.status}`);
+    }
+
+    const results = await response.json();
+    const currentCount = results[1]?.result || 0;
+
+    return {
+      success: currentCount < limit,
+      remaining: Math.max(0, limit - currentCount - 1),
+      reset: now + windowMs,
+    };
+  } catch (error) {
+    console.warn('[Rate Limit] Redis error, falling back to memory:', error);
+    return checkMemory(key, limit, windowMs);
+  }
+}
+
+// ============================================
+// IN-MEMORY FALLBACK
+// ============================================
+
 interface RateLimitEntry {
   count: number;
   resetTime: number;
 }
 
-// In-memory store (use Redis in production for distributed rate limiting)
 const rateLimitStore = new Map<string, RateLimitEntry>();
 
-// Cleanup old entries periodically (every 5 minutes)
-// Server-side only - rate limiting should only run on the server
-let cleanupInterval: NodeJS.Timeout | null = null;
+function checkMemory(key: string, limit: number, windowMs: number): RateLimitResult {
+  const now = Date.now();
+  let entry = rateLimitStore.get(key);
 
-if (typeof window === 'undefined') {
-  // Server-side only
-  cleanupInterval = setInterval(
-    () => {
-      const now = Date.now();
-      const entries = Array.from(rateLimitStore.entries());
-      for (let i = 0; i < entries.length; i++) {
-        const [key, entry] = entries[i];
-        if (entry.resetTime < now) {
-          rateLimitStore.delete(key);
-        }
-      }
-    },
-    5 * 60 * 1000
-  );
-
-  // Cleanup on process exit (for serverless environments)
-  if (typeof process !== 'undefined') {
-    const cleanup = () => {
-      if (cleanupInterval) {
-        clearInterval(cleanupInterval);
-        cleanupInterval = null;
-      }
-    };
-
-    process.on('SIGTERM', cleanup);
-    process.on('SIGINT', cleanup);
-    process.on('exit', cleanup);
+  if (!entry || entry.resetTime < now) {
+    entry = { count: 0, resetTime: now + windowMs };
   }
+
+  if (entry.count >= limit) {
+    return { success: false, remaining: 0, reset: entry.resetTime };
+  }
+
+  entry.count++;
+  rateLimitStore.set(key, entry);
+
+  return {
+    success: true,
+    remaining: limit - entry.count,
+    reset: entry.resetTime,
+  };
 }
 
-/**
- * Create a rate limiter
- */
+// ============================================
+// PUBLIC API
+// ============================================
+
 export function rateLimit(config: RateLimitConfig) {
   const { interval, limit, prefix = 'rl' } = config;
 
   return {
-    /**
-     * Check if request is allowed
-     * @param identifier - User ID, IP, or other unique identifier
-     * @returns { success, remaining, reset }
-     */
-    async check(identifier: string): Promise<{
-      success: boolean;
-      remaining: number;
-      reset: number;
-    }> {
+    async check(identifier: string): Promise<RateLimitResult> {
       const key = `${prefix}:${identifier}`;
-      const now = Date.now();
-
-      let entry = rateLimitStore.get(key);
-
-      // Create new entry or reset if expired
-      if (!entry || entry.resetTime < now) {
-        entry = {
-          count: 0,
-          resetTime: now + interval,
-        };
+      if (USE_REDIS) {
+        return checkRedis(key, limit, interval);
       }
-
-      // Check if limit exceeded
-      if (entry.count >= limit) {
-        return {
-          success: false,
-          remaining: 0,
-          reset: entry.resetTime,
-        };
-      }
-
-      // Increment count
-      entry.count++;
-      rateLimitStore.set(key, entry);
-
-      return {
-        success: true,
-        remaining: limit - entry.count,
-        reset: entry.resetTime,
-      };
+      return checkMemory(key, limit, interval);
     },
 
-    /**
-     * Reset rate limit for identifier
-     */
     async reset(identifier: string): Promise<void> {
       const key = `${prefix}:${identifier}`;
+      if (USE_REDIS) {
+        try {
+          await fetch(`${UPSTASH_URL}/DEL/${key}`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+            signal: AbortSignal.timeout(3000),
+          });
+        } catch {
+          // Ignore errors on reset
+        }
+      }
       rateLimitStore.delete(key);
     },
   };
+}
+
+// Log backend on startup (server-side only)
+if (typeof window === 'undefined') {
+  if (USE_REDIS) {
+    console.log('[Rate Limit] Using Upstash Redis for distributed rate limiting');
+  } else {
+    console.warn(
+      '[Rate Limit] Using in-memory rate limiting (set UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN for production)'
+    );
+  }
 }
 
 // ============================================

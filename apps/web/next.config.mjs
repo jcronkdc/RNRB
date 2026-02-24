@@ -69,7 +69,7 @@ const nextConfig = {
   // Fix for monorepo: explicitly set the workspace root for file tracing
   outputFileTracingRoot: join(__dirname, '../../'),
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   // Externalize packages that use Node.js built-ins (required for nodemailer/auth)
   serverExternalPackages: ['nodemailer', 'bcryptjs'],
@@ -105,8 +105,6 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
     // Disable blur placeholder to reduce initial bundle
     disableStaticImages: false,
-    // Allow dangerous SVG (for custom icons)
-    dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {

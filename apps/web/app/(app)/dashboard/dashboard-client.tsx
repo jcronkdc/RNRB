@@ -1,22 +1,22 @@
 'use client';
 
-import { motion } from 'motion/react';
 import {
-  Plus,
-  Music2,
-  Clock,
   ArrowRight,
+  Bell,
+  Clock,
+  FlaskConical,
   FolderOpen,
-  Video,
+  Music2,
+  Plus,
+  ShoppingBag,
   Sparkles,
   Users,
+  Video,
   Zap,
-  Bell,
-  FlaskConical,
-  ShoppingBag,
 } from '@/components/ui/custom-icons';
-import Link from 'next/link';
 import { DailySpark } from '@/components/workshop/daily-spark';
+import { motion } from 'motion/react';
+import Link from 'next/link';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -85,7 +85,7 @@ const fadeUp = {
   visible: (delay: number = 0) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, delay, ease: [0.25, 0.4, 0.25, 1] },
+    transition: { duration: 0.4, delay, ease: [0.25, 0.4, 0.25, 1] as const },
   }),
 };
 

@@ -44,7 +44,7 @@ type UseTeleprompterSyncOptions = {
   channelName: string;
   userId: string;
   userName: string;
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
   isHost?: boolean;
   sections?: Array<{ id: string; name: string; position: number }>;
   enabled?: boolean;

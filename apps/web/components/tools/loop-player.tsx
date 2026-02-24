@@ -1,23 +1,18 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { motion } from 'motion/react';
 import {
-  Play,
-  Pause,
-  RotateCcw,
-  Upload,
-  Repeat,
-  Volume2,
-  VolumeX,
   Gauge,
-  Scissors,
-  ZoomIn,
-  ZoomOut,
+  Pause,
+  Play,
+  Repeat,
   SkipBack,
   SkipForward,
+  Upload,
+  Volume2,
+  VolumeX,
 } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface LoopRegion {
   start: number;
@@ -368,7 +363,7 @@ export function LoopPlayer() {
               {speedPresets.map((speed) => (
                 <Button
                   key={speed}
-                  variant={playbackRate === speed ? 'default' : 'outline-solid'}
+                  variant={playbackRate === speed ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setPlaybackRate(speed)}
                   className="rounded-full px-4"

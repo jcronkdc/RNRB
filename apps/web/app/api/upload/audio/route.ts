@@ -10,11 +10,11 @@
 
 import { prisma } from '@cronkwaters/db';
 import { createClient } from '@supabase/supabase-js';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
 import { handleApiError } from '@/lib/errors';
-import { uploadLimiter, checkRateLimit } from '@/lib/rate-limit';
+import { checkRateLimit, uploadLimiter } from '@/lib/rate-limit';
 import { logSecurityEvent } from '@/lib/security';
 import { getUsageSummary, type TierName } from '@/lib/usage-tracking';
 
@@ -153,10 +153,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique file path
+    // Generate unique file path (scoped to userId for ownership verification on delete)
     const timestamp = Date.now();
     const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filePath = `${projectSlug}/${songId}/${trackType}/${timestamp}-${sanitizedFileName}`;
+    const filePath = `${userId}/${projectSlug}/${songId}/${trackType}/${timestamp}-${sanitizedFileName}`;
 
     // Upload to Supabase Storage
     const supabase = getSupabaseStorageClient();
@@ -261,8 +261,24 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Delete from Supabase Storage
+    // Get file metadata from Supabase to determine actual size before deleting
     const supabase = getSupabaseStorageClient();
+
+    let fileSizeGB = 0;
+    try {
+      const { data: fileList } = await supabase.storage
+        .from('audio-files')
+        .list(normalizedPath.substring(0, normalizedPath.lastIndexOf('/')), {
+          search: normalizedPath.substring(normalizedPath.lastIndexOf('/') + 1),
+          limit: 1,
+        });
+      if (fileList && fileList.length > 0 && fileList[0].metadata?.size) {
+        fileSizeGB = fileList[0].metadata.size / (1024 * 1024 * 1024);
+      }
+    } catch (err) {
+      console.warn('[AUDIO-DELETE] Could not fetch file metadata for size:', err);
+    }
+
     const { error: deleteError } = await supabase.storage
       .from('audio-files')
       .remove([normalizedPath]);
@@ -275,17 +291,17 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get file size to update storage usage (approximate from path or track record)
-    // In production, you'd fetch this from a Track record
-    // For now, we'll decrement a small amount as a safety measure
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        storageUsedGB: {
-          decrement: 0.001, // Approximate 1MB - should be actual file size from DB
+    // Decrement storage usage by actual file size (or skip if unknown)
+    if (fileSizeGB > 0) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          storageUsedGB: {
+            decrement: fileSizeGB,
+          },
         },
-      },
-    });
+      });
+    }
 
     return NextResponse.json({
       success: true,

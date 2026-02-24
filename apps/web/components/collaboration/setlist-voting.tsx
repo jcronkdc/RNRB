@@ -7,18 +7,18 @@
  * Democratic setlist building with live vote counts.
  */
 
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  ThumbsUp,
-  ThumbsDown,
-  Lock,
-  Unlock,
-  Music,
-  Clock,
   Check,
+  Clock,
+  Lock,
+  Music,
+  ThumbsDown,
+  ThumbsUp,
+  Unlock,
   Users,
 } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { useSetlistVoting, type SetlistSong } from '@/hooks/use-setlist-voting';
 
@@ -109,7 +109,7 @@ export function SetlistVoting({
 
         <div className="flex items-center gap-2">
           <Button
-            variant={isLocked ? 'default' : 'outline-solid'}
+            variant={isLocked ? 'default' : 'outline'}
             size="sm"
             onClick={toggleLock}
             className="flex items-center gap-2"

@@ -1,12 +1,12 @@
-import { prisma } from '@cronkwaters/db';
 import { PrismaAdapter } from '@auth/prisma-adapter';
+import { prisma } from '@cronkwaters/db';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import NextAuth from 'next-auth';
 import type { Adapter } from 'next-auth/adapters';
 import Credentials from 'next-auth/providers/credentials';
-import Email from 'next-auth/providers/nodemailer';
 import Google from 'next-auth/providers/google';
+import Email from 'next-auth/providers/nodemailer';
 
 import { env } from './env';
 
@@ -175,7 +175,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       // Rotate session token every 60 minutes
       const ROTATION_INTERVAL = 60 * 60 * 1000;
-      if (token.rotatedAt && Date.now() - token.rotatedAt > ROTATION_INTERVAL) {
+      if (token.rotatedAt && Date.now() - (token.rotatedAt as number) > ROTATION_INTERVAL) {
         token.jti = crypto.randomBytes(32).toString('hex');
         token.rotatedAt = Date.now();
       }
@@ -219,10 +219,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.userId as string;
-        session.user.organizationIds = token.organizationIds ?? [];
-        session.user.activeOrganizationId = token.activeOrganizationId;
-        session.user.profileCompleted = token.profileCompleted ?? false;
+        const user = session.user as unknown as Record<string, unknown>;
+        user.id = token.userId as string;
+        user.organizationIds = token.organizationIds ?? [];
+        user.activeOrganizationId = token.activeOrganizationId;
+        user.profileCompleted = token.profileCompleted ?? false;
       }
 
       return session;

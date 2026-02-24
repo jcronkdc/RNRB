@@ -73,5 +73,6 @@ for web.zip
 # MASTER_DOCUMENT.md is tracked
 # Other system prompts are tracked
 
+.env.vercel
 .env.vercel.*
 .env*.local

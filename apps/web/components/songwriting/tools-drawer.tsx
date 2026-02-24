@@ -17,8 +17,8 @@
  * - Chord reference
  */
 
-import { motion, AnimatePresence } from 'motion/react';
-import { X, Shield, GitBranch, Wrench } from '@/components/ui/custom-icons';
+import { GitBranch, Shield, Wrench, X } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 
@@ -80,7 +80,7 @@ export function ToolsDrawer({
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] as const }}
             className="fixed top-0 right-0 z-50 flex h-full w-full max-w-md flex-col"
             style={{
               background: 'var(--bg)',

@@ -1,18 +1,18 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  Play,
-  Pause,
   Download,
+  Drum,
+  Music,
+  Pause,
+  Play,
+  Settings,
   Volume2,
   VolumeX,
-  Settings,
-  Music,
-  Drum,
 } from '@/components/ui/custom-icons';
 import { Button } from '@cronkwaters/ui';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface TimeSignature {
   beats: number;
@@ -420,7 +420,7 @@ export function ClickTrackGenerator() {
           {[60, 80, 100, 120, 140, 160, 180].map((preset) => (
             <Button
               key={preset}
-              variant={bpm === preset ? 'default' : 'outline-solid'}
+              variant={bpm === preset ? 'default' : 'outline'}
               size="sm"
               onClick={() => setBpm(preset)}
               className="rounded-full px-4"
@@ -462,7 +462,7 @@ export function ClickTrackGenerator() {
               variant={
                 timeSignature.beats === ts.beats && timeSignature.noteValue === ts.noteValue
                   ? 'default'
-                  : 'outline-solid'
+                  : 'outline'
               }
               size="sm"
               onClick={() => {
