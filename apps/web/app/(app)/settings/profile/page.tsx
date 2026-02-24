@@ -783,7 +783,7 @@ function ProfileSettingsContent() {
                 <label className="cursor-pointer">
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/gif,image/webp"
                     onChange={handleProfilePictureUpload}
                     className="hidden"
                   />
@@ -936,6 +936,7 @@ function ProfileSettingsContent() {
                   value={profile.display_name}
                   onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
                   placeholder="John Doe"
+                  maxLength={100}
                   className="w-full rounded-lg px-4 py-3 transition-all duration-200"
                   style={{
                     background: 'var(--panel)',
@@ -959,6 +960,7 @@ function ProfileSettingsContent() {
                   onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                   placeholder="Tell the world about your music... What instruments do you play? What's your style?"
                   rows={4}
+                  maxLength={2000}
                   className="w-full resize-none rounded-lg px-4 py-3 transition-all duration-200"
                   style={{
                     background: 'var(--panel)',

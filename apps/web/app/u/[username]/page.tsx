@@ -1,42 +1,40 @@
 'use client';
 
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  Music,
-  Play,
-  Pause,
-  MapPin,
   Calendar,
-  Users,
-  Heart,
-  Share2,
-  MessageCircle,
-  ExternalLink,
-  CheckCircle,
-  Clock,
-  Loader2,
-  User,
-  Disc3,
-  Sparkles,
-  Flame,
-  Trophy,
-  Guitar,
-  Mic,
-  Music2,
-  Headphones,
-  Radio,
-  Video,
-  Globe,
-  LinkIcon,
-  ChevronRight,
-  Copy,
   Check,
+  CheckCircle,
+  ChevronRight,
+  Clock,
+  Copy,
+  Disc3,
+  ExternalLink,
+  Flame,
+  Globe,
+  Headphones,
+  Heart,
+  LinkIcon,
+  Loader2,
+  MapPin,
+  MessageCircle,
+  Music,
+  Music2,
+  Pause,
+  Play,
+  Radio,
+  Share2,
   ShoppingBag,
+  Sparkles,
+  Trophy,
+  User,
+  Users,
+  Video,
 } from '@/components/ui/custom-icons';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Types
 interface Track {
@@ -1435,7 +1433,7 @@ export default function PublicProfilePage() {
                 {/* Social Share Buttons */}
                 <div className="mt-4 flex justify-center gap-3">
                   <a
-                    href={`https://twitter.com/intent/tweet?text=Check out ${profile?.displayName}'s music!&url=https://cronkwaters.com/u/${username}`}
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out ${profile?.displayName}'s music!`)}&url=${encodeURIComponent(`https://cronkwaters.com/u/${username}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="rounded-lg p-3 transition-all hover:bg-white/10"
@@ -1453,7 +1451,7 @@ export default function PublicProfilePage() {
                     <Globe className="h-5 w-5" style={{ color: '#1877F2' }} />
                   </a>
                   <a
-                    href={`mailto:?subject=Check out ${profile?.displayName}'s music!&body=https://cronkwaters.com/u/${username}`}
+                    href={`mailto:?subject=${encodeURIComponent(`Check out ${profile?.displayName}'s music!`)}&body=${encodeURIComponent(`https://cronkwaters.com/u/${username}`)}`}
                     className="rounded-lg p-3 transition-all hover:bg-white/10"
                     style={{ background: 'rgba(255, 99, 71, 0.2)' }}
                   >

@@ -334,6 +334,7 @@ function AuthForm() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Your name (optional)"
+                    maxLength={100}
                     disabled={loading}
                     className={inputClass}
                     style={{

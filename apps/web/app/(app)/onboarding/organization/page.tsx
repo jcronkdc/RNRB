@@ -1,7 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { Button } from '@cronkwaters/ui';
-import { Users, Building2, UserPlus } from '@/components/ui/custom-icons';
+import { Building2, UserPlus, Users } from '@/components/ui/custom-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -43,14 +42,18 @@ export default function OrganizationOnboardingPage() {
             </p>
           </header>
 
+          <p className="text-center text-sm" style={{ color: 'var(--muted)' }}>
+            Organizations let you manage band members, share projects, and split royalties fairly.
+            This feature is coming soon — for now, head to your dashboard to start creating!
+          </p>
+
           <div className="flex flex-col gap-4 sm:flex-row">
-            <button
-              className="flex flex-1 flex-col items-center gap-3 rounded-xl p-6 transition-all hover:scale-[1.02]"
+            <div
+              className="flex flex-1 flex-col items-center gap-3 rounded-xl p-6 opacity-50"
               style={{
                 background: 'rgba(232, 93, 59, 0.1)',
                 border: '1px solid rgba(232, 93, 59, 0.3)',
               }}
-              disabled
             >
               <Building2 className="h-8 w-8" style={{ color: 'var(--accent)' }} />
               <div className="text-center">
@@ -61,15 +64,14 @@ export default function OrganizationOnboardingPage() {
                   Coming Soon
                 </p>
               </div>
-            </button>
+            </div>
 
-            <button
-              className="flex flex-1 flex-col items-center gap-3 rounded-xl p-6 transition-all hover:scale-[1.02]"
+            <div
+              className="flex flex-1 flex-col items-center gap-3 rounded-xl p-6 opacity-50"
               style={{
                 background: 'var(--panel)',
                 border: '1px solid var(--border)',
               }}
-              disabled
             >
               <UserPlus className="h-8 w-8" style={{ color: 'var(--gold)' }} />
               <div className="text-center">
@@ -80,20 +82,19 @@ export default function OrganizationOnboardingPage() {
                   Coming Soon
                 </p>
               </div>
-            </button>
+            </div>
           </div>
 
-          <p className="text-center text-xs" style={{ color: 'var(--muted)' }}>
-            Organizations let you manage band members, share projects, and split royalties fairly.
-          </p>
-
-          <div className="border-t pt-4" style={{ borderColor: 'var(--border)' }}>
+          <div className="pt-2">
             <Link
               href="/dashboard"
-              className="block text-center text-sm font-medium transition-colors hover:underline"
-              style={{ color: 'var(--accent)' }}
+              className="flex w-full items-center justify-center gap-2 rounded-xl py-3 font-medium text-white transition-all hover:opacity-90"
+              style={{
+                background: 'linear-gradient(135deg, var(--accent), #ff6b4a)',
+                boxShadow: '0 4px 16px rgba(232, 93, 59, 0.3)',
+              }}
             >
-              Skip for now →
+              Go to Dashboard →
             </Link>
           </div>
         </div>

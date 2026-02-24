@@ -1,7 +1,9 @@
 import { prisma } from '@cronkwaters/db';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 import { auth } from '@/auth';
+import { checkRateLimit, standardLimiter } from '@/lib/rate-limit';
+import { getClientIp } from '@/lib/security';
 
 export async function GET(
   request: NextRequest,
@@ -10,12 +12,18 @@ export async function GET(
   const { username } = await params;
 
   try {
-    // Validate username
-    if (!username || typeof username !== 'string') {
+    // Validate username format
+    if (!username || typeof username !== 'string' || !/^[a-zA-Z0-9_-]{1,30}$/.test(username)) {
       return NextResponse.json({ error: 'Invalid username' }, { status: 400 });
     }
 
-    console.log('[Public Profile] Looking for username:', username);
+    // Rate limit by IP to prevent scraping
+    const clientIp = getClientIp(request);
+    try {
+      await checkRateLimit(standardLimiter, `public-profile:${clientIp}`);
+    } catch {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
 
     // Step 1: Find the MusicianProfile by username using raw SQL
     // This handles the JSON field query properly
@@ -23,8 +31,8 @@ export async function GET(
 
     try {
       const profiles = await prisma.$queryRaw<{ id: string }[]>`
-        SELECT id FROM "MusicianProfile" 
-        WHERE "socialLinks" IS NOT NULL 
+        SELECT id FROM "MusicianProfile"
+        WHERE "socialLinks" IS NOT NULL
         AND "socialLinks"->>'username' = ${username}
         LIMIT 1
       `;
@@ -47,7 +55,6 @@ export async function GET(
             id: true,
             name: true,
             image: true,
-            email: true,
             createdAt: true,
             profileCompleted: true,
             communityTracks: {
@@ -97,17 +104,13 @@ export async function GET(
       },
     });
 
-    console.log('[Public Profile] Found profile:', musicianProfile ? 'yes' : 'no');
-
     if (!musicianProfile) {
       // Profile not found by username in socialLinks
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
     if (!musicianProfile.user) {
-      // Profile exists but user data is missing (shouldn't happen)
-      console.error('[Public Profile] Profile found but user is null');
-      return NextResponse.json({ error: 'Profile data incomplete' }, { status: 404 });
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
     const user = musicianProfile.user;
