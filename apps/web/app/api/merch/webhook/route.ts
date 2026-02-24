@@ -3,9 +3,11 @@ import { prisma, Prisma } from '@cronkwaters/db';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 const webhookSecret = process.env.STRIPE_MERCH_WEBHOOK_SECRET || '';
 const PRINTFUL_API_URL = 'https://api.printful.com';
@@ -62,7 +64,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
@@ -128,7 +130,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session) {
   }
 
   // Retrieve line items with product metadata
-  const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+  const lineItems = await getStripe().checkout.sessions.listLineItems(session.id, {
     expand: ['data.price.product'],
   });
 

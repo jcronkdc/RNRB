@@ -3,9 +3,11 @@ import { prisma } from '@cronkwaters/db';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 // Email Pro Price ID from Stripe
 const EMAIL_PRO_PRICE_ID = process.env.STRIPE_EMAIL_PRO_PRICE_ID;
@@ -66,7 +68,7 @@ export async function POST(request: Request) {
     let customerId = user.stripeCustomerId;
 
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: user.email,
         metadata: {
           userId: user.id,
@@ -81,7 +83,7 @@ export async function POST(request: Request) {
     }
 
     // Create Checkout Session for Email Pro subscription
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const checkoutSession = await getStripe().checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
       mode: 'subscription',

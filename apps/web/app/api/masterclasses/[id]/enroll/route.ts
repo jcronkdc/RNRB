@@ -7,9 +7,11 @@ import { checkStrictLimit } from '@/lib/rate-limit';
 import { requireAuth } from '@/lib/session';
 import { createStripeCustomer } from '@/lib/stripe-subscriptions';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 // POST - Enroll in masterclass (create checkout session or free enrollment)
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -141,7 +143,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Create or get Stripe product
     let stripeProductId = masterclass.stripeProductId;
     if (!stripeProductId) {
-      const product = await stripe.products.create({
+      const product = await getStripe().products.create({
         name: masterclass.title,
         description: masterclass.shortDesc || masterclass.description?.substring(0, 500),
         images: masterclass.thumbnailUrl ? [masterclass.thumbnailUrl] : [],
@@ -156,7 +158,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     // Create or get Stripe price
     let stripePriceId = masterclass.stripePriceId;
     if (!stripePriceId) {
-      const price = await stripe.prices.create({
+      const price = await getStripe().prices.create({
         product: stripeProductId,
         unit_amount: priceInCents,
         currency: masterclass.currency.toLowerCase(),
@@ -179,7 +181,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       process.env.NEXT_PUBLIC_APP_URL ||
       'https://www.cronkwaters.com';
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'payment',
       payment_method_types: ['card'],

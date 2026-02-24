@@ -11,9 +11,11 @@ import Stripe from 'stripe';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 const PLATFORM_FEE_PERCENT = 10;
 
@@ -136,7 +138,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Create Stripe checkout session with Connect
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const checkoutSession = await getStripe().checkout.sessions.create({
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: [

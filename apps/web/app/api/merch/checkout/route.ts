@@ -3,10 +3,11 @@ import Stripe from 'stripe';
 import { auth } from '@/auth';
 import { getBaseUrl } from '@/lib/get-base-url';
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 // Products with real Stripe Price IDs
 const SAMPLE_PRODUCTS: Record<string, { name: string; price: number; stripePriceId: string }> = {
@@ -68,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Stripe Checkout Session
-    const checkoutSession = await stripe.checkout.sessions.create({
+    const checkoutSession = await getStripe().checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
       success_url: `${getBaseUrl()}/merch/success?session_id={CHECKOUT_SESSION_ID}`,

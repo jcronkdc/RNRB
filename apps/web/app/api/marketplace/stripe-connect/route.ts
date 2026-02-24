@@ -11,9 +11,11 @@ import Stripe from 'stripe';
 import { auth } from '@cronkwaters/auth';
 import { prisma } from '@cronkwaters/db';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2025-02-24.acacia',
+  });
+}
 
 const PLATFORM_FEE_PERCENT = 10; // 10% platform fee
 
@@ -42,7 +44,7 @@ export async function POST(request: NextRequest) {
     let accountId = provider.stripeConnectId;
 
     if (!accountId) {
-      const account = await stripe.accounts.create({
+      const account = await getStripe().accounts.create({
         type: 'express',
         country: 'US',
         email: provider.user.email,
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create account link for onboarding
-    const accountLink = await stripe.accountLinks.create({
+    const accountLink = await getStripe().accountLinks.create({
       account: accountId,
       refresh_url: `${baseUrl}/marketplace/providers/${provider.slug}/edit?stripe=refresh`,
       return_url: `${baseUrl}/marketplace/providers/${provider.slug}/edit?stripe=success`,
@@ -109,7 +111,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const account = await stripe.accounts.retrieve(provider.stripeConnectId);
+    const account = await getStripe().accounts.retrieve(provider.stripeConnectId);
 
     const isOnboarded = account.details_submitted && account.charges_enabled;
 
